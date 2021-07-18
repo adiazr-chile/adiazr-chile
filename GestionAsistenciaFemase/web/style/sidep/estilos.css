@@ -1,0 +1,15 @@
+.fondoAzulTabla {
+	background-color: #CBF5FA;
+	color: #000000;
+}
+.fondoAzulOscuroTabla {
+	background-color: #F1FDFE;
+	color: #000000;
+}
+.BordeTabla {
+	border: thin solid #000000;
+}
+.seleccion {
+	color: #FFFFFF;
+	background-color: #000099;
+}

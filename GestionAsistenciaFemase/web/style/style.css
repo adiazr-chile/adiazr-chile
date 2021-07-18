@@ -1,0 +1,279 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+
+body {
+background: #D0D0D0;
+font-family: "Trebuchet MS", "Helvetica", "Arial",  "Verdana", "sans-serif";
+font-size: 25.5%;
+color: #f7f1e3;
+}
+
+a {
+text-decoration: none;
+color: #f7f1e3;
+}
+a:hover {
+text-decoration: none;
+color: #0079dc;
+font-weight: 600;
+}
+
+#wrap {
+margin: 0 auto;
+width: 100%;
+background: #fff;
+}
+#wrapLogin {
+margin: 0 auto;
+width: 50%;
+background: #fff;
+}
+#headerTop {
+height: 125px;
+}
+#headerLogin {
+height: 130px;
+}
+#headerMenu {
+height: 65px;
+}
+#header h1 {
+	font-size: 28px;
+	letter-spacing: -1px;
+	padding: 23px 0 0 20px;
+	color: #00F;
+}
+#header h1 a { 
+color: #aaa;
+text-decoration: none;
+font-weight: 100;
+letter-spacing: -2px;
+}
+#header h1 a:hover {
+color: #111;
+}
+#header h2 {
+font-size: 12px;
+color: #0079dc;
+padding: 5px 0 0 20px;
+letter-spacing: -1px;
+font-weight: 100;
+}
+
+#header h3 {
+font-size: 65%;
+color: #8A8A8A;
+padding: 5px 0 0 20px;
+letter-spacing: -1px;
+font-weight: 100;
+}
+
+#header h7 {
+font-size: 10px;
+color: #FF0000;
+padding: 5px 0 0 20px;
+letter-spacing: -1px;
+font-weight: 100;
+}
+
+#menu {
+height: 50px;
+line-height: 30px;
+border-top: 1px #555;
+border-bottom: 1px #555;
+}
+#menu ul {
+list-style-type: none;
+padding-left: 20px;
+}
+#menu ul li {
+display: block;
+float: left;
+}
+#menu ul li a {
+padding: 0 20px 0 0;
+text-decoration: none;
+font-weight: 100;
+font-size: 14px;
+color: #0079dc;
+}
+#menu ul li a:hover {
+color: #0079dc;
+text-decoration: none;
+font-weight: 600;
+}
+
+#content {
+padding: 0 20px 20px 20px;
+}
+
+.right {
+float: right;
+width: 520px;
+text-align: justify;
+}
+.right h2 {
+font-size: 18px;
+font-weight: 100;
+padding: 15px 0 7px 0;
+}
+.right h2 a {
+text-decoration: none;
+color: #dee8ef;
+}
+.right h2 a:hover {
+color: #0079dc;
+}
+
+.left {
+float: left;
+width: 200px;
+margin-top: 10px;
+background: #dee8ef;
+}
+.left h2 {
+margin: 10px 0 0 0;
+padding-left: 10px;
+height: 28px;
+line-height: 28px;
+color: #fff;
+font-size: 13px;
+background: #0079dc;
+}
+.left ul {
+padding: 10px 0 15px 20px;
+list-style-type: square;
+color: #0079dc;
+}
+.left ul li a {
+color: #000000;
+text-decoration: none;
+font-size: 13px;
+font-weight: 100;
+}
+.left ul li a:hover {
+color: #0079dc;
+font-weight: 600;
+}
+
+.tableHeader1 {
+	float: center;
+	margin-top: 10px;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10px;
+}
+
+.tableHeaderSpecial {
+float: center;
+margin-top: 10px;
+font-family:Arial, Helvetica, sans-serif;
+font-size:12px;
+vertical-align:top;
+line-height: 17px;
+}
+
+.tableHeader {
+float: center;
+width: 200px;
+margin-top: 10px;
+font-family:Arial, Helvetica, sans-serif;
+font-size:11px;
+}
+
+.tableCellContent {
+float: center;
+width: 200px;
+margin-top: 10px;
+font-family:Arial, Helvetica, sans-serif;
+font-size:10px;
+}
+
+#footer {
+height: 30px;
+line-height: 30px;
+background: #657983;
+text-align: center;
+font-size: 11px;
+color: #fff;
+}
+#footer a { color: #fff; }
+
+#footer2 {
+height: 30px;
+line-height: 30px;
+background: #fff;
+text-align: right;
+font-size: 11px;
+color: #000;
+}
+#footer2 a { color: #fff; }
+
+.tbCss1 {background: #FFFFFF;color: #333377;font-size:11px;padding: 6px;margin: 3px;border:2px groove #C8C8F2;line-height: 1.5em;white-space: nowrap;font-family: verdana,arial,helvetica,sans-serif;}
+.tbCss2 {background: #FFFFFF;color: #333377;font-size:10px;padding: 0px;margin: 0px;border:2px groove #C8C8F2;line-height: 1.5em;white-space: nowrap;font-family: verdana,arial,helvetica,sans-serif;}
+.tb1CaptionTop {
+	caption-side: top;
+	color: #191970;
+	font-weight: normal;
+	font-size: 9px;
+	font-family: verdana,arial,helvetica,sans-serif;
+}
+.tb1CaptionBottom {caption-side: bottom;color:#191970;font-weight: normal;font-size:11px;font-family: verdana,arial,helvetica,sans-serif;}
+.tbHeader1 {background: #dee8ef;color: #000000;font-size:11px;font-weight: bold;padding: 6px;border:2px groove #C8C8F2;line-height: 1.5em;white-space: nowrap;font-family: verdana,arial,helvetica,sans-serif;}
+.tbSubHeader1 {background: #ACB8D7;color: #191970;font-size:10px;font-weight: normal;padding: 6px;border:2px groove #C8C8F2;line-height: 1.5em;white-space: nowrap;font-family: verdana,arial,helvetica,sans-serif;}
+.tdCss1 {padding: 4px;} 
+
+
+h4{ 
+position: relative; 
+top: 30px;
+left: 50px;
+z-index: 2;
+background-color: #336699;
+}
+
+h5 {  
+  position: relative; 
+  z-index: 1; 
+  background-color: #FFCCCC;
+} 
+
+.visible,
+.hidden {
+  overflow: hidden;
+  /* This container should not have padding, borders, etc. */
+}
+.visible {
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 2s linear;
+}
+.hidden {
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s 2s, opacity 2s linear;
+}
+.visible > div,
+.hidden > div {
+  /* Put any padding, border, min-height, etc. here. */
+}
+.hidden > div {
+  margin-top: -10000px;
+  transition: margin-top 0s 2s;
+}
+
+.textOnly {
+font-family: Arial, Helvetica, sans-serif;
+font-size: 14px;
+line-height: 17px;
+color: #0079dc;
+font-weight: bold;
+}
+.headerPrincipal {
+font-family: Arial, Helvetica, sans-serif;
+font-size: 16px;
+line-height: 17px;
+color: #0079dc;
+font-weight: bold;
+}

@@ -1,0 +1,8 @@
+<jboss>
+  <enterprise-beans>
+    <message-driven>
+      <ejb-name>TestScheduler</ejb-name>
+      <resource-adapter-name>quartz-ra.rar</resource-adapter-name>
+    </message-driven>
+  </enterprise-beans>
+</jboss>

@@ -1,0 +1,49 @@
+#test {
+  margin: 2em 0;
+}
+#test > div {
+  overflow: hidden;
+}
+#test > .visible {
+  visibility: visible;
+  opacity: 1;
+  /* When showing the content we only need to transition the
+     opacity, and everything else should be applied instantly */
+  -webkit-transition: opacity 2s linear;
+  -moz-transition: opacity 2s linear;
+  -o-transition: opacity 2s linear;
+  transition: opacity 2s linear;
+}
+#test > .hidden {
+  visibility: hidden;
+  opacity: 0;
+  /* When hiding the content we should delay the transition
+     of the visibility value, so that it happens at the end
+     of the opacity transition. Note that even though it works
+     with visibility, the same trick doesn’t work with display,
+     position, or height (barring a fixed height). */
+  -webkit-transition: visibility 0s 2s, opacity 2s linear;
+  -moz-transition: visibility 0s 2s, opacity 2s linear;
+  -o-transition: visibility 0s 2s, opacity 2s linear;
+  transition: visibility 0s 2s, opacity 2s linear;
+}
+/* Any formatting that results in the content taking up vertical
+   space should be applied to the element’s content, not to
+   the shown/hidden element itself, that that the element can
+   collapse to a 0px height. */
+#test > div > div {
+  margin-top: 0px;
+  padding: 15px;
+  border: solid 5px black;
+  background: #EEE;
+}
+/* We’re hiding the content with a negative top margin, after
+   a 2s delay. We’re not using display:none or position:absolute
+   because we can’t delay those. */
+#test > .hidden > div {
+  margin-top: -10000px;
+  -webkit-transition: margin-top 0s 2s;
+  -moz-transition: margin-top 0s 2s;
+  -o-transition: margin-top 0s 2s;
+  transition: margin-top 0s 2s;
+}

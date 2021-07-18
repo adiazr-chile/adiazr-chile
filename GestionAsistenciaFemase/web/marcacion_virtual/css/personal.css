@@ -1,0 +1,294 @@
+@CHARSET "ISO-8859-1";
+
+
+
+.z-loading, .z-apply-loading {
+	border: none;
+	padding: 3px;
+	background: #e3e3e3;
+	position: absolute;
+	cursor: wait;
+	white-space: nowrap;
+	moz-box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+	box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+	border-radius: 4px;
+}
+
+.z-loading-indicator {
+	padding: 25px;
+	white-space: pre;
+	text-align: center;
+}
+
+.z-loading-indicator, .z-apply-loading-indicator {
+	color: #494c43;
+	border: 1px solid #cfcfcf;
+	background: #f5f5f5;
+	font-weight: 600;
+}
+
+.label {
+	font-size: 10px !important;
+	text-shadow: none !important;
+	font-weight: 600 !important;
+	box-shadow: none !important;
+}
+
+.caption_hide>.z-caption-content {
+	width: 100%
+}
+
+.badge-dark-green {
+	background: #2baf2b !important;
+	box-shadow: 0 0 0 1px #589043 !important;
+}
+
+.titulo_google {
+	background: inherit;
+	display: block;
+	font-size: 1.5em;
+	-webkit-margin-after: 0.83em;
+	-webkit-margin-start: 0px;
+	-webkit-margin-end: 0px;
+	font-weight: bold;
+}
+
+/* Wrapper for page content to push down footer */
+.wrap {
+	min-height: 100% !important;
+	height: auto !important;
+	/* Negative indent footer by it's height */
+	margin: 0 auto -35px !important;
+}
+
+/* Set the fixed height of the footer here */
+#push, #footer {
+	height: 25px;
+}
+
+#footer {
+	background-color: #FFFFFF;
+}
+
+/* Lastly, apply responsive CSS fixes as necessary */
+@media ( max-width : 767px) {
+	#footer {
+		margin-left: -20px;
+		margin-right: -20px;
+		padding-left: 20px;
+		padding-right: 20px;
+	}
+}
+
+.pop_help {
+	width: 300px;
+	margin: 15px;
+	background: lightyellow;
+	border: 1px solid rgb(154, 148, 148);
+	border-radius: 10px;
+}
+
+.help_question {
+	cursor: help;
+}
+
+.help_bar {
+	vertical-align: middle !important;
+	vertical-align: -webkit-baseline-middle !important;
+	vertical-align: -moz-middle-with-baseline !important;
+}
+
+/* line 36, /home/andrei/core-admin-release/core-admin/source/stylesheets/base.scss */
+.link {
+	color: #009ee3;
+}
+/* line 40, /home/andrei/core-admin-release/core-admin/source/stylesheets/base.scss */
+.link:hover, .link:active, .link:focus {
+	cursor: pointer;
+	outline: 0px none;
+	text-decoration: none;
+	color: #42CAFB;
+}
+
+.error_label>span.z-label {
+	color: white;
+}
+
+.noclass {
+	
+}
+
+.navbar-toggle i {
+	color: #000000 !important;
+}
+
+.primary-sidebar .nav>li.active>a {
+	color: #FFFFFF !important;
+}
+
+.primary-sidebar .nav>li>a {
+	color: #B0B3B5 !important;
+}
+
+.msj-hov:hover, .msj-hov-a:hover {
+	background: #4b9efc;
+	border-radius: 25px;
+	color: white;
+}
+
+/* lado superior (donde aparece logo y menús de usuario)*/
+.navbar-brand {
+	padding: 0 !important;
+	padding-top: 10px !important;
+}
+
+.navbar-inverse .navbar-nav>li>a {
+	font-weight: 700;
+	font-size: 14px;
+}
+
+/* lado superior (fondo y tamaño) */
+.navbar-inverse {
+	border-bottom: 1px solid #ccc !important;
+	background: #FFFFFF !important;
+	border-left: 0;
+	border-right: 0;
+}
+
+.navbar-inverse .navbar-nav>.open>a, .navbar-inverse .navbar-nav>.open>a:hover,
+	.navbar-inverse .navbar-nav>.open>a:focus {
+	color: white;
+	border-radius: 25px;
+	background-color: #4b9efc !important;
+}
+
+.navbar-inverse .navbar-nav>li>a:hover, .navbar-inverse .navbar-nav>li>a:focus
+	{
+	color: white;
+	background-color: #4b9efc !important;
+	border-radius: 25px;
+}
+
+.check_falso>input {
+	height: 0px;
+	width: 0px;
+}
+
+.error_label {
+	font-family: Arial, Sans-serif;
+	font-size: 11px;
+	font-weight: normal;
+	font-style: normal;
+	color: #FFFFFF;
+	width: 100%;
+	border: 1px solid #000;
+	padding: 5px 20px 5px 10px;
+	background: #202020;;
+	vertical-align: middle;
+	position: relative;
+	overflow: hidden;
+	cursor: context-menu;
+	border-radius: 10px;
+	-webkit-box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.35);
+	box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.35);
+}
+
+.error_div {
+	margin-top: 7px;
+}
+
+.fc-header-title h2 {
+	font-size: 15px;
+}
+
+.box .box-header .title, .box .box-footer .title {
+	font-weight: 700;
+}
+
+.separate-sections>li, .separate-sections>div {
+	margin-bottom: 10px !important;
+}
+
+.row {
+	margin-bottom: 10px;
+}
+
+.label_form {
+	cursor: default;
+	display: inline-block;
+	margin-bottom: 5px;
+	font-weight: 700 !important;
+}
+
+.iconos-side {
+	float: left;
+	margin-right: 10px;
+}
+
+.titulo-main {
+	font-size: 23px;
+	color: #888;
+	font-weight: 300;
+}
+
+.subtitulo-main {
+	display: block;
+	font-size: 15px;
+	color: #888;
+	font-weight: 300;
+}
+
+.subr {
+	font-weight: 700;
+	font-size: 12px;
+}
+
+.news {
+	min-height: 10px;
+}
+
+.news-time span {
+	font-size: 15px;
+}
+
+.news .avatar.orange {
+	background: #F48A12;
+	background-size: 100%;
+	background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #F7C77C),
+		color-stop(100%, #FF8F23));
+	background-image: -webkit-linear-gradient(top, #F7C77C, #FF8F23);
+	background-image: -moz-linear-gradient(top, #F7C77C, #FF8F23);
+	background-image: -o-linear-gradient(top, #F7C77C, #8cc079);
+	background-image: linear-gradient(top, #F7C77C, #FF8F23);
+	border: 1px solid #FF8700;
+}
+
+.news .avatar.red {
+	background: #E6220F;
+	background-size: 100%;
+	background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #EE8989),
+		color-stop(100%, #B00E0E));
+	background-image: -webkit-linear-gradient(top, #EE8989, #B00E0E);
+	background-image: -moz-linear-gradient(top, #EE8989, #B00E0E);
+	background-image: -o-linear-gradient(top, #EE8989, #B00E0E);
+	background-image: linear-gradient(top, #EE8989, #B00E0E);
+	border: 1px solid #F41414;
+}
+
+.news-time {
+	color: #6C6767;
+}
+
+.fc-center h2 {
+	font-size: 15px;
+	font-weight: 600;
+	padding-top: 5px;
+}
+
+.li_wz_active>.wizard-nav-link>.icon-chevron-right {
+	opacity: 1;
+}
+
+.li_wz_active>.wizard-nav-link {
+	font-weight: 600;
+}

@@ -1,0 +1,72 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <title>Searchable Multi-select Dropdown Demos</title>
+  <link href="css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+  <!--<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">-->
+  <!--<script type="text/javascript" src="./mock.js"></script>-->
+  <script src="./jquery-1.12.4.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="./jquery.dropdown.css">
+  <script src="./jquery.dropdown.js"></script>
+  <script language="javascript1.5">
+  	function sendData(){
+		var fld = document.getElementById('empleados');
+		var values = [];
+		for (var i = 0; i < fld.options.length; i++) {
+		  if (fld.options[i].selected) {
+			alert(fld.options[i].value);
+		  }
+		}
+	}
+  </script>
+  
+  <style>
+    .container { margin:150px auto;}
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+  <h2> Searchable Multi-select Dropdown Demos</h2>
+  <br>
+  <div class="row">
+    <div class="col-sm-4">
+      <div class="text-info">Empleados</div><br>
+      <div class="dropdown-mul-1">
+        <select style="display:none"  name="empleados" id="empleados" multiple placeholder="Select"> 
+        	<option value="1-1">Juan Arias</option>
+          	<option value="2-2">Antonia Jeria</option>
+            <option value="3-3">Renato Diaz</option>
+            <option value="4-4">Evelyn Reyes</option>
+            <option value="5-5">Alexander Diaz</option>
+            <option value="6-6">Wladimir Pino</option>
+            <option value="7-7">Denisse Perez</option>
+            <option value="8-8">Carlos Caszely</option>
+            <option value="9-9">Cristiano Ronaldo</option>
+            <option value="10-10">Lionel Messi</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <br>
+  <button type="button" id="boton1" 
+  onClick="sendData()">Buscar</button>
+  <br>
+  </div>
+  <script>
+    $('.dropdown-mul-1').dropdown({
+      limitCount: 40,
+      multipleMode: 'label',
+	  input: '<input type="text" maxLength="20" placeholder="Buscar">',
+	  choice: function () {
+        //alert('valor: '+this);// console.log(arguments,this);
+      }
+    });
+  </script>
+</div>
+</html>

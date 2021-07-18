@@ -1,0 +1,114 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+package cl.femase.gestionweb.business;
+
+import cl.femase.gestionweb.vo.MaintenanceEventVO;
+import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ParametroVO;
+import cl.femase.gestionweb.vo.PropertiesVO;
+import java.util.List;
+
+/**
+ *
+ * @author Alexander
+ */
+public class ParametroBp {
+
+    public PropertiesVO props;
+    /** para guardar los eventos de mantencion de informacion*/
+    private final cl.femase.gestionweb.dao.MaintenanceEventsDAO eventsService;
+    private final cl.femase.gestionweb.dao.ParametroDAO parametrosService;
+    
+    public ParametroBp(PropertiesVO props) {
+        this.props = props;
+        eventsService = new cl.femase.gestionweb.dao.MaintenanceEventsDAO(this.props);
+        parametrosService = new cl.femase.gestionweb.dao.ParametroDAO(this.props);
+    }
+
+    /**
+    * 
+    * @param _empresaId
+    * @param _jtStartIndex
+    * @param _jtPageSize
+    * @param _jtSorting
+    * @return 
+    */
+    public List<ParametroVO> getParametros(String _empresaId,
+            int _jtStartIndex, 
+            int _jtPageSize, 
+            String _jtSorting){
+        
+        List<ParametroVO> lista = 
+            parametrosService.getParametros(_empresaId, _jtStartIndex, 
+                _jtPageSize, _jtSorting);
+
+        return lista;
+    }
+
+    /**
+    * Obtiene parametro by code
+    * 
+    * @param _empresaId
+    * @param _paramCode
+    * 
+    * @return 
+    */
+    public ParametroVO getParametroByKey(String _empresaId,String _paramCode){
+        
+        ParametroVO parametro = 
+            parametrosService.getParametroByKey(_empresaId, _paramCode);
+
+        return parametro;
+    }
+    
+    /**
+    * 
+    * @param _objectToUpdate
+    * @param _eventdata
+    * @return 
+    */
+    public MaintenanceVO update(ParametroVO _objectToUpdate, 
+            MaintenanceEventVO _eventdata){
+        MaintenanceVO updValues = parametrosService.update(_objectToUpdate);
+        
+        //if (!updValues.isThereError()){
+            String msgFinal = updValues.getMsg();
+            updValues.setMsg(msgFinal);
+            _eventdata.setDescription(msgFinal);
+            //insertar evento 
+            eventsService.addEvent(_eventdata); 
+        //}
+        
+        return updValues;
+    }
+    
+    /**
+    * 
+    * @param _objToInsert
+    * @param _eventdata
+    * @return 
+    */
+    public MaintenanceVO insert(ParametroVO _objToInsert, 
+            MaintenanceEventVO _eventdata){
+        
+        MaintenanceVO insValues = parametrosService.insert(_objToInsert);
+        
+        //if (!updValues.isThereError()){
+            String msgFinal = insValues.getMsg();
+            insValues.setMsg(msgFinal);
+            _eventdata.setDescription(msgFinal);
+            //insertar evento 
+            eventsService.addEvent(_eventdata); 
+        //}
+        
+        return insValues;
+    }
+    
+    public int getParametrosCount(String _empresaId){
+        return parametrosService.getParametrosCount(_empresaId);
+    }
+
+}

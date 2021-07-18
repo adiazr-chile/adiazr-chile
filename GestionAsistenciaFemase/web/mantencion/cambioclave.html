@@ -1,0 +1,93 @@
+<%@ page import="cl.bolchile.intranet.vo.UsuarioVO"%>
+<%
+UsuarioVO theUser	= (UsuarioVO)session.getAttribute("usuarioObj");
+%>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<script type="text/javascript">
+	function submitForm(){
+		//validar re-ingreso de clave
+		if (document.form1.clave.value!=document.form1.reclave.value){
+			alert('Las claves no coinciden.');
+			document.form1.clave.focus();
+			return false;
+		}
+		
+		document.form1.submit();
+	}
+	
+</script>
+
+<link href="<%=request.getContextPath()%>/style/formulario.css" rel="stylesheet" type="text/css" />
+<title>Cambio de clave</title>
+</head>
+
+<body>
+<div class="table-container fullWidth float-left">
+<form id="form1" name="form1" method="post" action="<%=request.getContextPath()%>/UsersMgr" target="_self">
+  <div class="widget-header"><span>Cambio de Contrase&ntilde;a
+      <input name="accion" type="hidden" id="accion" value="update" />
+        <input name="tipo" type="hidden" id="tipo" value="USR" />
+  </span></div>
+  <div class="table-container float-left mediumPercentWidth">
+    <div class="property-row">
+      <div class="property-name">
+        <label>Username</label>
+      </div>
+      <div>
+        <input type="text" name="username" id="username" readonly="readonly" tabindex="0"
+                maxlength="30"
+                class="mediumPercentWidth" />
+      </div>
+    </div>
+    <div class="property-row">
+      <div class="property-name">
+        <label>Contrase&ntilde;a actual</label>
+      </div>
+      <div>
+        <input type="text" maxlength="35" name="nombre" id="nombre" class="mediumPercentWidth" />
+      </div>
+    </div>
+    <div class="property-row">
+      <div class="property-name">
+        <label>Nueva contrase&ntilde;a</label>
+      </div>
+      <div>
+        <input name="clave" maxlength="15" type="password" id="clave" class="mediumPercentWidth" />
+      </div>
+    </div>
+    <div class="property-row">
+      <div class="property-name">
+        <label>Reingrese contrase&ntilde;a</label>
+      </div>
+      <div>
+        <input maxlength="15" name="reclave" type="password" id="reclave" class="mediumPercentWidth" />
+      </div>
+    </div>
+    
+  </div>
+  <div class="table-container float-left mediumPercentWidth">
+    <div class="property-row">
+      <div class="property-name">
+        <label></label>
+      </div>
+      <div class="float-left"></div>
+    </div>
+    
+  </div></form>
+</div>
+<div class="property-row">
+  <div class="property-name">
+        <label></label>
+    </div>
+    <div >
+        <input type="button" name="updbtn" id="updbtn" value="Guardar" onClick="submitForm()"/>
+
+    </div>
+</div>
+</body>
+</html>

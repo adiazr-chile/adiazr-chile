@@ -1,0 +1,102 @@
+.fullWidth
+			{
+				width: 95%!important;
+			}
+		   .float-left
+			{
+				float: left;
+			}
+			.smallPercentWidth
+			{
+				width: 10%!important;
+			}
+			.mediumPercentWidth
+			{
+				width: 45%!important;
+			}
+			.property-row
+			{
+				margin: 5px;
+				overflow: hidden;
+			}
+			.property-name
+			{
+				width: 150px;
+				text-align: right;
+				padding: 5px;
+				color: #777777;
+				vertical-align: middle;
+				float: left;
+			} 
+			.property-name > label
+			{
+				line-height: 1em;
+				font-family: "Lucida Sans Unicode" , "Lucida Grande" , Sans-Serif;
+				font-size: 0.9em;
+			}
+			.table-container
+			{
+				margin: 2px;
+				border: 1px solid #e7e7e7;
+				background: #fff;
+				box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+				width: auto;
+				height: auto;
+				position: relative;
+			}
+			.widget-header
+			{
+				margin: 0px;
+				padding: 3px 0 0 0;
+				position: relative;
+				height: 30px;
+				width: 100%;
+				text-align: left;
+				vertical-align: middle;
+				display: inline-block;
+				font-size: 16px;
+				color: #63b3d1;
+				text-shadow: 1px 1px 0 #fff;
+				border: 1px solid #dbdbdb;
+				background: #e7e7e7;
+				background: -moz-linear-gradient(top, #f8f8f8 0%, #e7e7e7 100%);
+				background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #f8f8f8), color-stop(100%, #e7e7e7));
+				background: -webkit-linear-gradient(top, #f8f8f8 0%, #e7e7e7 100%);
+				background: -o-linear-gradient(top, #f8f8f8 0%, #e7e7e7 100%);
+				background: -ms-linear-gradient(top, #f8f8f8 0%, #e7e7e7 100%);
+				background: linear-gradient(top, #f8f8f8 0%, #e7e7e7 100%);
+			}
+			.widget-header:hover
+			{
+				margin: 0px;
+				padding: 3px 0 0 0;
+				position: relative;
+				height: 30px;
+				width: 100%;
+				text-align: left;
+				vertical-align: middle;
+				display: inline-block;
+				font-size: 16px;
+				text-decoration: none;
+				background: #eeeeee;
+				background: -moz-linear-gradient(top, #ffffff 0%, #eeeeee 100%);
+				background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #ffffff), color-stop(100%, #eeeeee));
+				background: -webkit-linear-gradient(top, #ffffff 0%, #eeeeee 100%);
+				background: -o-linear-gradient(top, #ffffff 0%, #eeeeee 100%);
+				background: -ms-linear-gradient(top, #ffffff 0%, #eeeeee 100%);
+				background: linear-gradient(top, #ffffff 0%, #eeeeee 100%);
+			}
+			.widget-header > span
+			{
+				color: #666666;
+				margin: 8px 10px 0 10px;
+				font-size: 20px;
+				line-height: 1.5em;
+			}
+			.widget-header:hover > span
+			{
+				color: #AAAAAA;
+				margin: 8px 10px 0 10px;
+				font-size: 20px;
+				line-height: 1.5em;
+			}
