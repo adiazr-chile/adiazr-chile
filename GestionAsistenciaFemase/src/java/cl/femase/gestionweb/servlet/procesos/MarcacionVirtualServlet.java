@@ -44,6 +44,43 @@ public class MarcacionVirtualServlet extends BaseServlet {
 
     GetPropertyValues m_properties = new GetPropertyValues();
     
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession(true);
+        if (session!=null) session.removeAttribute("mensaje");else session = request.getSession();
+        UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
+
+        if (userConnected != null){
+            setResponseHeaders(response);
+            processRequest(request, response);
+        }else{
+            session.setAttribute("mensaje", "Sesion de usuario "+request.getParameter("username")
+                + " no valida");
+            System.err.println("[GestionFemase.MarcacionVirtualServlet.doPost]Sesion de usuario "+request.getParameter("username")
+                + " no valida");
+            request.getRequestDispatcher("/mensaje.jsp").forward(request, response);
+        }
+
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession(true);
+        if (session!=null) session.removeAttribute("mensaje");else session = request.getSession();
+        UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
+
+        if (userConnected != null){
+            setResponseHeaders(response);
+            processRequest(request, response);
+        }else{
+            session.setAttribute("mensaje", "Sesion de usuario "+request.getParameter("username")
+                + " no valida");
+            System.err.println("[GestionFemase.MarcacionVirtualServlet.doPost]Sesion de usuario "+request.getParameter("username")
+                + " no valida");
+            request.getRequestDispatcher("/mensaje.jsp").forward(request, response);
+        }
+    }
+    
     /**
     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
     * methods.
@@ -53,13 +90,14 @@ public class MarcacionVirtualServlet extends BaseServlet {
     * @throws ServletException if a servlet-specific error occurs
     * @throws IOException if an I/O error occurs
     */
+    @Override
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         HttpSession session = request.getSession(true);
         ServletContext application = this.getServletContext();
         PropertiesVO appProperties=(PropertiesVO)application.getAttribute("appProperties");
-        if (session!=null) session.removeAttribute("mensaje");
+        if (session!=null) session.removeAttribute("mensaje");else session = request.getSession();
         UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
         EmpleadosBp empleadosbp = new EmpleadosBp(appProperties); 
         CentroCostoBp cencobp   = new CentroCostoBp(appProperties); 
@@ -147,7 +185,7 @@ public class MarcacionVirtualServlet extends BaseServlet {
         String keyPhrase = infomarca.getRutEmpleado()+infomarca.getFechaHora()+infomarca.getTipoMarca();
         infomarca.setHashcode(Utilidades.getMD5EncryptedValue(keyPhrase));
 
-        System.out.println("[MarcacionVirtualServlet]Insertar marca. "
+        System.out.println("[GestionFemase.MarcacionVirtualServlet]Insertar marca. "
             + "Empresa: " + userConnected.getEmpresaId()
             + ", rut: " + infomarca.getRutEmpleado()
             + ", fechaHora: " + infomarca.getFechaHora()
@@ -156,7 +194,7 @@ public class MarcacionVirtualServlet extends BaseServlet {
             + ", hashcode(md5: " + infomarca.getHashcode());
 
         MaintenanceVO doCreate = marcasBp.insertWithLog(infomarca, resultado);
-        System.out.println("[MarcacionVirtualServlet]Mensaje "
+        System.out.println("[GestionFemase.MarcacionVirtualServlet]Mensaje "
             + "del sp new_inserta_marca_manual: " + doCreate.getMsgFromSp());
         //if (!doCreate.isThereError()){
             informaCreacionMarca(doCreate.getMsgFromSp(), infomarca, userConnected, request);
@@ -176,16 +214,16 @@ public class MarcacionVirtualServlet extends BaseServlet {
         //Return Json in the format required by jTable plugin
         String jsonMsgFromSp = gson.toJson(doCreate.getMsgFromSp());
         String jsonOkMessage="{\"Result\":\"OK\",\"Record\":"+json+"}";
-        System.out.println("[MarcacionVirtualServlet]result sp: "+ jsonMsgFromSp);
+        System.out.println("[GestionFemase.MarcacionVirtualServlet]result sp: "+ jsonMsgFromSp);
         String resultMessage = "";
         
         if (!doCreate.getMsgFromSp().startsWith("00-")){
             resultMessage = "Error al registrar marca virtual: " + jsonMsgFromSp;//jsonMsgFromSp;
-            System.out.println("[MarcacionVirtualServlet]"+ resultMessage);
+            System.out.println("[GestionFemase.MarcacionVirtualServlet]"+ resultMessage);
             request.setAttribute("isOk", false);
         }else{
             resultMessage = "Marca Virtual registrada exitosamente";//jsonOkMessage;
-            System.out.println("[MarcacionVirtualServlet]"+ resultMessage);
+            System.out.println("[GestionFemase.MarcacionVirtualServlet]"+ resultMessage);
             request.setAttribute("isOk", true);
         }
         request.setAttribute("resultMessage", resultMessage);        
@@ -266,40 +304,11 @@ public class MarcacionVirtualServlet extends BaseServlet {
         
     }
     
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        setResponseHeaders(response);processRequest(request, response);
-    }
-
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        setResponseHeaders(response);processRequest(request, response);
-    }
-
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
+    * Returns a short description of the servlet.
+    *
+    * @return a String containing servlet description
+    */
     @Override
     public String getServletInfo() {
         return "Short description";

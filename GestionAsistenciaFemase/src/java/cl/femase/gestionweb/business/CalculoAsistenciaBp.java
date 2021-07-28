@@ -7,6 +7,7 @@ package cl.femase.gestionweb.business;
 
 import cl.femase.gestionweb.common.Constantes;
 import cl.femase.gestionweb.common.Utilidades;
+import cl.femase.gestionweb.dao.CalendarioFeriadoDAO;
 import cl.femase.gestionweb.dao.LogErrorDAO;
 import cl.femase.gestionweb.vo.CalculoAsistenciaEstadoEjecucionVO;
 import cl.femase.gestionweb.vo.DetalleAsistenciaToInsertVO;
@@ -20,6 +21,7 @@ import cl.femase.gestionweb.vo.PropertiesVO;
 import cl.femase.gestionweb.vo.TurnoVO;
 import cl.femase.gestionweb.vo.DiferenciaHorasVO;
 import cl.femase.gestionweb.vo.EstadoVO;
+import cl.femase.gestionweb.vo.InfoFeriadoJsonObjectVO;
 import cl.femase.gestionweb.vo.InfoFeriadoVO;
 import cl.femase.gestionweb.vo.LogErrorVO;
 import cl.femase.gestionweb.vo.MaintenanceVO;
@@ -82,6 +84,7 @@ public class CalculoAsistenciaBp {
     private final TurnoRotativoBp m_turnoRotativoBp=new TurnoRotativoBp(new PropertiesVO());
     private List<TurnoVO> m_listaTurnos;
     private String[] m_fechasCalculo;
+    
     private final LinkedHashMap<Integer, LinkedHashMap<Integer,DetalleTurnoVO>> m_listaDetalleTurnos = 
         new LinkedHashMap<>();
     private HashMap<String,Integer> m_hashTiposHE;
@@ -108,6 +111,16 @@ public class CalculoAsistenciaBp {
      */
     private final LinkedHashMap<String, DetalleTurnoVO> m_listaAsignacionTurnosRotativos = 
         new LinkedHashMap<>();
+    
+    /**
+    * 20210725-001:
+    * 
+    *   Lista con las fechas y los datos existentes en calendario_feriados.
+    *   Los datos son los resultantes de invocar a la funcion validaFechaFeriado por cada fecha del rango
+    * 
+    */
+    LinkedHashMap<String, InfoFeriadoVO> m_fechasCalendarioFeriados = 
+        new LinkedHashMap<>(); 
     
     /**
      * Lista con detalle de dias libres para turnos rotativos para cada rut
@@ -509,7 +522,7 @@ public class CalculoAsistenciaBp {
             String _startDate, 
             String _endDate){
         MaintenanceVO resultado=new MaintenanceVO();
-            
+        Gson gson = new Gson();     
         System.out.println("[GestionFemase."
             + "CalculoAsistenciaBp]calculaAsistencia."
             + "Empresa=" + _empresaId    
@@ -520,8 +533,8 @@ public class CalculoAsistenciaBp {
         ArrayList<DetalleAsistenciaToInsertVO> listaAsistencia = 
             new ArrayList<>();
         
-        DetalleAsistenciaBp calculoBp = new DetalleAsistenciaBp(new PropertiesVO()); 
-        
+        DetalleAsistenciaBp calculoBp       = new DetalleAsistenciaBp(new PropertiesVO()); 
+        CalendarioFeriadoBp bpFeriados    = new CalendarioFeriadoBp(new PropertiesVO());
         List<EmpleadoVO> listaEmpleadosConMarcas = new ArrayList<>();
         List<EmpleadoVO> listaEmpleados          = new ArrayList<>();
         
@@ -591,7 +604,23 @@ public class CalculoAsistenciaBp {
             for (EmpleadoVO empleado : listaEmpleados) {
                 ArrayList<DetalleAsistenciaVO> dataFechasRut = new ArrayList<>();
                 listaEmpleadosConMarcas.add(empleado);
-
+                
+                /**
+                * Inicio 20210725-001
+                * Carga en memoria la info de la tabla calendario_feriado segun rango de fechas
+                * seleccionado. En cada fecha se tiene la info de si es feriado o no.
+                * De ser feriado, se indica que feriado es y su tipo.
+                * 
+                */
+                m_fechasCalendarioFeriados = bpFeriados.getFechas(empleado.getEmpresaId(), 
+                    empleado.getRut(), 
+                    _startDate, 
+                    _endDate);
+                
+                /**
+                * Fin 20210725-001
+                */
+                
                 /**
                  * Ejecuta el calculo de asistencia segun
                  * marcas para las fechas solicitadas
@@ -894,7 +923,9 @@ public class CalculoAsistenciaBp {
                     }
                 }
                 
-                InfoFeriadoVO infoFeriado = m_feriadosBp.validaFeriado(_fechasCalculo[i], _empleado.getEmpresaid(), _empleado.getRut());
+//////          comentado      InfoFeriadoVO infoFeriado = m_feriadosBp.validaFeriado(_fechasCalculo[i], _empleado.getEmpresaid(), _empleado.getRut());
+                String strKey = _empleado.getEmpresaid() + "|" + _empleado.getRut() + "|" + _fechasCalculo[i];
+                InfoFeriadoVO infoFeriado = m_fechasCalendarioFeriados.get(strKey);
                 boolean esFeriado = infoFeriado.isFeriado();
                 if (esFeriado){
                     System.out.println("[GestionFemase.CalculoAsistenciaBp]"
@@ -1637,10 +1668,13 @@ public class CalculoAsistenciaBp {
                 detalleCalculo.setObservacion("Sin turno");
             }
             
-            InfoFeriadoVO infoFeriado = 
-                m_feriadosBp.validaFeriado(currentMarca.getFechaEntrada(), 
-                    _empleado.getEmpresaid(), 
-                    _empleado.getRut());
+            
+//////       comentado     InfoFeriadoVO infoFeriado = 
+//////                m_feriadosBp.validaFeriado(currentMarca.getFechaEntrada(), 
+//////                    _empleado.getEmpresaid(), 
+//////                    _empleado.getRut());
+            String strKey = _empleado.getEmpresaid() + "|" + _empleado.getRut() + "|" + currentMarca.getFechaEntrada();
+            InfoFeriadoVO infoFeriado = m_fechasCalendarioFeriados.get(strKey);
             boolean esFeriado = infoFeriado.isFeriado();
             
             ////detalleCalculo.setEsFeriado(_hashFeriados.containsKey(currentMarca.getFechaEntrada()));//

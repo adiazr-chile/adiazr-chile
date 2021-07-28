@@ -8,7 +8,6 @@ package cl.femase.gestionweb.dao;
 import cl.femase.gestionweb.common.DatabaseException;
 import cl.femase.gestionweb.vo.MaintenanceVO;
 import cl.femase.gestionweb.vo.CalendarioFeriadoVO;
-import cl.femase.gestionweb.vo.InfoFeriadoVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -478,6 +477,61 @@ public class CalendarioFeriadoDAO extends BaseDAO{
                 dbLocator.freeConnection(dbConn);
             } catch (SQLException ex) {
                 System.err.println("[CalendarioFeriadoDAO.esFeriadoJson]"
+                    + "Error: " + ex.toString());
+            }
+        }
+        
+        return strJson;
+    }
+    
+    /**
+    * Retorna info de una fecha, respecto a si es feriado o no
+    * 
+    * @param _empresaId
+    * @param _cencoId
+    * @param _rutEmpleado
+    * @param _fechaInicio
+    * @param _fechaFin
+    * @return 
+    */
+    public String getValidaFechasJson(String _empresaId, 
+            int _cencoId,
+            String _rutEmpleado,
+            String _fechaInicio, 
+            String _fechaFin){
+
+        String strJson = "";
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        
+        try{
+            String sql = "select json_agg(f.*) json_it "
+                + "from generate_series( '" + _fechaInicio + "', '" + _fechaFin + "', '1 day'::interval) as fecha_it "
+                + "cross join validaFechaFeriado('" + _empresaId + "'," + _cencoId + ",'" + _rutEmpleado + "',fecha_it::date) f";
+            
+            System.out.println("[CalendarioFeriadoDAO.getValidaFechasJson]Sql: "+sql);
+            
+            dbConn = dbLocator.getConnection(m_dbpoolName,"[CalendarioFeriadoDAO.getValidaFechasJson]");
+            ps = dbConn.prepareStatement(sql);
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                strJson += rs.getString("json_it");
+            }
+
+            ps.close();
+            rs.close();
+            dbLocator.freeConnection(dbConn);
+        }catch(SQLException|DatabaseException sqle){
+            System.err.println("[CalendarioFeriadoDAO.getValidaFechasJson]"
+                + "Error: " + sqle.toString());
+        }finally{
+            try {
+                if (ps != null) ps.close();
+                if (rs != null) rs.close();
+                dbLocator.freeConnection(dbConn);
+            } catch (SQLException ex) {
+                System.err.println("[CalendarioFeriadoDAO.getValidaFechasJson]"
                     + "Error: " + ex.toString());
             }
         }

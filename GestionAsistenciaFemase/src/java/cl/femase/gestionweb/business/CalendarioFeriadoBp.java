@@ -17,6 +17,7 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -105,6 +106,57 @@ public class CalendarioFeriadoBp {
         return infoFeriado;
     }
     
+    /**
+    * 
+    * Invoca en un solo SQL a la funcion 'validafechaferiado', de tal forma
+    * de invocarla por cada fecha en el rango especificado.
+    * Luego cada registro JSON obtenido es parseado a un objeto InfoFeriadoVO.
+    * La key de cada item en el hash es empresaId|runEmpleado|fecha
+    * 
+    * @param _empresaId
+    * @param _runEmpleado
+    * @param _startDate
+    * @param _endDate
+    * @return 
+    */
+    public LinkedHashMap<String, InfoFeriadoVO> getFechas(String _empresaId, 
+            String _runEmpleado, 
+            String _startDate, 
+            String _endDate){
+    
+        System.out.println("[CalendarioFeriadoBp.getFechas]"
+            + "empresaId: " + _empresaId
+            + ", runEmpleado: " + _runEmpleado
+            + ", startDate: " + _startDate
+            + ", endDate: " + _endDate);
+        
+        LinkedHashMap<String, InfoFeriadoVO> hashFechas = new LinkedHashMap<>();
+        EmpleadosBp empleadobp=new EmpleadosBp();
+        EmpleadoVO auxEmpleado = 
+            empleadobp.getEmpleado(_empresaId, _runEmpleado);
+        Gson gson = new Gson();
+        int cencoId = auxEmpleado.getCencoId();
+        String jsonOutput = feriadosDao.getValidaFechasJson(_empresaId, cencoId, _runEmpleado, _startDate, _endDate);
+        InfoFeriadoJsonObjectVO datos[] = gson.fromJson(jsonOutput, InfoFeriadoJsonObjectVO[].class);
+        for (int x = 0; x < datos.length ; x++){
+            InfoFeriadoJsonObjectVO dataFeriadoFromJson = datos[x];
+            if (dataFeriadoFromJson != null){
+                System.out.println("[CalendarioFeriadoBp.getFechas]"
+                    + "Objeto from json: " + dataFeriadoFromJson.toString());
+                InfoFeriadoVO infoFeriado = new InfoFeriadoVO();
+                infoFeriado.setFecha(dataFeriadoFromJson.getFecha());
+                infoFeriado.setFeriado(dataFeriadoFromJson.isFeriado());
+                infoFeriado.setTipoFeriado(dataFeriadoFromJson.getTipoferiado());
+                infoFeriado.setDescripcion(dataFeriadoFromJson.getDescripcion());
+                infoFeriado.setRespaldoLegal(dataFeriadoFromJson.getRespaldo_legal());
+                hashFechas.put(_empresaId + "|" + _runEmpleado + "|" + infoFeriado.getFecha(), infoFeriado);
+            }
+            
+            
+        }
+        
+        return hashFechas;
+    }
     
     public MaintenanceVO update(CalendarioFeriadoVO _objectToUpdate, 
             MaintenanceEventVO _eventdata){

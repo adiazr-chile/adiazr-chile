@@ -53,7 +53,6 @@ public class AdmAccesosModuloPerfilServlet extends BaseServlet {
             HttpSession session = request.getSession(true);
             ServletContext application = this.getServletContext();
             PropertiesVO appProperties=(PropertiesVO)application.getAttribute("appProperties");
-            if (session!=null) session.removeAttribute("mensaje");
             UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
         
             MaintenanceEventVO resultado=new MaintenanceEventVO();

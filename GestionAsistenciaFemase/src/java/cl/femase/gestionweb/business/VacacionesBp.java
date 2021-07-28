@@ -25,6 +25,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -697,6 +698,18 @@ public class VacacionesBp {
                 + "getDiasEfectivos]Usar fechas sin formatear...");
             fechas = Utilidades.getFechas(_inicioVacaciones, _finVacaciones);
         }
+        /**
+        * Inicio 20210725-001
+        * Carga en memoria la info de la tabla calendario_feriado segun rango de fechas
+        * seleccionado. En cada fecha se tiene la info de si es feriado o no.
+        * De ser feriado, se indica que feriado es y su tipo.
+        * 
+        */
+        CalendarioFeriadoBp bpFeriados    = new CalendarioFeriadoBp(new PropertiesVO());
+        LinkedHashMap<String, InfoFeriadoVO> fechasCalendarioFeriados = bpFeriados.getFechas(_empresaId, 
+            _runEmpleado, 
+            fechaInicioVacaciones, fechaFinVacaciones);
+        
         for (String itfecha : fechas) {
             System.out.println("[VacacionesBp."
                 + "getDiasEfectivos]"
@@ -709,10 +722,14 @@ public class VacacionesBp {
                 LocalDate localdate = Utilidades.getLocalDate(itfecha);
                 int diaSemana = localdate.getDayOfWeek().getValue();
                 if (diaSemana >= 1 && diaSemana <= 5){
-                    InfoFeriadoVO infoFeriado = 
-                        m_feriadosBp.validaFeriado(itfecha, 
-                            _empresaId, 
-                            _runEmpleado);
+                    
+                    String strKey = _empresaId + "|" + _runEmpleado + "|" + itfecha;
+                    InfoFeriadoVO infoFeriado = fechasCalendarioFeriados.get(strKey);
+                    
+//////              comentado  InfoFeriadoVO infoFeriado = 
+//////                        m_feriadosBp.validaFeriado(itfecha, 
+//////                            _empresaId, 
+//////                            _runEmpleado);
                     boolean esFeriado = infoFeriado.isFeriado();
 ////                    boolean esFeriado = hashFeriados.containsKey(itfecha);
                     if (!esFeriado) diasEfectivos++;

@@ -841,7 +841,7 @@ public class AsistenciaReport extends BaseServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(true);
         System.out.println("[AsistenciaReport.doGet]entrando...");
-        if (session!=null) session.removeAttribute("mensaje");
+        if (session!=null) session.removeAttribute("mensaje");else session = request.getSession();
         UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
 //
 //        String startDateParam = request.getParameter("startDate");

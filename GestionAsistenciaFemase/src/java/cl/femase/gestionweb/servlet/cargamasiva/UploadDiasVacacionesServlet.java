@@ -45,7 +45,7 @@ public class UploadDiasVacacionesServlet extends BaseServlet {
         HttpSession session = request.getSession(true);
         ServletContext application = this.getServletContext();
         PropertiesVO appProperties=(PropertiesVO)application.getAttribute("appProperties");
-        if (session!=null) session.removeAttribute("mensaje");
+        if (session!=null) session.removeAttribute("mensaje");else session = request.getSession();
         UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
         if (userConnected != null){
             //process only if its multipart content

@@ -13,6 +13,7 @@ import cl.femase.gestionweb.vo.DetalleAsistenciaVO;
 import cl.femase.gestionweb.vo.DetalleAusenciaJsonVO;
 import cl.femase.gestionweb.vo.DetalleTurnoVO;
 import cl.femase.gestionweb.vo.EmpleadoVO;
+import cl.femase.gestionweb.vo.InfoFeriadoVO;
 import cl.femase.gestionweb.vo.LogErrorVO;
 import cl.femase.gestionweb.vo.MarcaJsonVO;
 import cl.femase.gestionweb.vo.MarcaVO;
@@ -81,6 +82,18 @@ public class CalculoAsistenciaRunnable implements Runnable{
     private static final LinkedHashMap<String, DetalleTurnoVO> m_listaAsignacionTurnosRotativos = 
         new LinkedHashMap<>();
     
+    /**
+    * 20210725-001:
+    * 
+    *   Lista con las fechas y los datos existentes en calendario_feriados.
+    *   Los datos son los resultantes de invocar a la funcion validaFechaFeriado por cada fecha del rango
+    * 
+    */
+    private static LinkedHashMap<String, InfoFeriadoVO> m_fechasCalendarioFeriados = 
+        new LinkedHashMap<>();
+    private static String m_startDate;
+    private static String m_endDate;
+    private static String m_empresaId;
     
     public CalculoAsistenciaRunnable(EmpleadoVO empleado, CalculoAsistenciaNew calculadorAsistencia) {
         this.empleado = empleado;
@@ -135,6 +148,7 @@ public class CalculoAsistenciaRunnable implements Runnable{
     public static void setHebras(List<EmpleadoVO> _listaEmpleados){
          
         int i = 0;
+        CalendarioFeriadoBp bpFeriados    = new CalendarioFeriadoBp(new PropertiesVO());
         //long init = System.currentTimeMillis();  // Instante inicial del procesamiento
         ExecutorService executor = Executors.newFixedThreadPool(_listaEmpleados.size());
         for (EmpleadoVO empleado: _listaEmpleados) {
@@ -150,6 +164,19 @@ public class CalculoAsistenciaRunnable implements Runnable{
                 calculador1.m_listaMarcas=m_listaMarcas;
                 calculador1.m_listaAusencias=m_listaAusencias;
             
+                /**
+                * Inicio 20210725-001
+                * Carga en memoria la info de la tabla calendario_feriado segun rango de fechas
+                * seleccionado. En cada fecha se tiene la info de si es feriado o no.
+                * De ser feriado, se indica que feriado es y su tipo.
+                * 
+                */
+                m_fechasCalendarioFeriados = bpFeriados.getFechas(m_empresaId, 
+                    empleado.getRut(), 
+                    m_startDate, 
+                    m_endDate);
+                calculador1.m_fechasCalendarioFeriados = m_fechasCalendarioFeriados;
+                
                 Runnable proceso = new CalculoAsistenciaRunnable(empleado, calculador1);
                 System.out.println("[GestionFemase.CalculoAsistenciaRunnable."
                     + "setHebras]add hebra para rut--> "+empleado.getRut());
@@ -269,7 +296,9 @@ public class CalculoAsistenciaRunnable implements Runnable{
     /**
     * 
     */
-    private static void setParameters(String _empresaId, String _startDate, String _endDate){
+    private static void setParameters(String _empresaId, 
+            String _startDate, 
+            String _endDate){
         System.out.println("[GestionFemase."
             + "CalculoAsistenciaRunnable.setParameters()]INICIO "
             + ". StartDate: " + _startDate+", endDate: "+_endDate);
@@ -280,7 +309,11 @@ public class CalculoAsistenciaRunnable implements Runnable{
             + "CalculoAsistenciaRunnable.setParameters()]INICIO "
             + ". getFeriados para el rango de fechas seleccionado");
         //m_hashFeriados = m_feriadosBp.getHashFeriados(_startDate, _endDate);
-                
+        
+        m_startDate = _startDate;
+        m_endDate   = _endDate;
+        m_empresaId = _empresaId;
+        
         m_listaTurnos = m_turnosBp.getTurnos(_empresaId, null, 0, 0, "id_turno");
         List<TurnoVO> listaTurnos = 
             m_turnosBp.getTurnos(_empresaId, null, 0, 0, "id_turno");

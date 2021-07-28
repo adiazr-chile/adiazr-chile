@@ -49,7 +49,7 @@ public class AsignacionTurnosCencosServlet extends BaseServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(true);
-        if (session!=null) session.removeAttribute("mensaje");
+        if (session!=null) session.removeAttribute("mensaje");else session = request.getSession();
         UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
         System.out.println("[AsignacionTurnosCencosServlet]doGet...");
         if (userConnected != null){
@@ -67,7 +67,7 @@ public class AsignacionTurnosCencosServlet extends BaseServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(true);
-        if (session!=null) session.removeAttribute("mensaje");
+        if (session!=null) session.removeAttribute("mensaje");else session = request.getSession();
         UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
         System.out.println("[AsignacionTurnosCencosServlet]doPost...");
         if (userConnected != null){
@@ -82,19 +82,19 @@ public class AsignacionTurnosCencosServlet extends BaseServlet {
     }
 
     /**
-     * 
-     * @param request
-     * @param response
-     * 
-     * @throws javax.servlet.ServletException
-     * @throws java.io.IOException
-     */
+    * 
+    * @param request
+    * @param response
+    * 
+    * @throws javax.servlet.ServletException
+    * @throws java.io.IOException
+    */
+    @Override
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         HttpSession session = request.getSession(true);
         ServletContext application = this.getServletContext();
         PropertiesVO appProperties=(PropertiesVO)application.getAttribute("appProperties");
-        if (session!=null) session.removeAttribute("mensaje");
         UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
         response.setContentType("text/html;charset=UTF-8");
         request.setCharacterEncoding("UTF-8");

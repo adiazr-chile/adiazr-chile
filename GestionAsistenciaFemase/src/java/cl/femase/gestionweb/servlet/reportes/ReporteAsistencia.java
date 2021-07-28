@@ -78,11 +78,11 @@ public class ReporteAsistencia extends BaseServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+    @Override
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
         HttpSession session = request.getSession(true);
-        if (session!=null) session.removeAttribute("mensaje");
         UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
         
         int intCencoId = -1;
@@ -694,7 +694,7 @@ public class ReporteAsistencia extends BaseServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession(true);
-        if (session!=null) session.removeAttribute("mensaje");
+        if (session!=null) session.removeAttribute("mensaje");else session = request.getSession();
         UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
 
         if (userConnected != null){
@@ -720,7 +720,7 @@ public class ReporteAsistencia extends BaseServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession(true);
-        if (session!=null) session.removeAttribute("mensaje");
+        if (session!=null) session.removeAttribute("mensaje");else session = request.getSession();
         UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
 
         if (userConnected != null){

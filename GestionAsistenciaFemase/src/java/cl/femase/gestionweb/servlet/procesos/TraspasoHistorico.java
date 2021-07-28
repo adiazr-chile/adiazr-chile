@@ -50,7 +50,7 @@ public class TraspasoHistorico extends HttpServlet {
         HttpSession session         = request.getSession(true);
         ServletContext application  = this.getServletContext();
         PropertiesVO appProperties  = (PropertiesVO)application.getAttribute("appProperties");
-        if (session!=null) session.removeAttribute("mensaje");
+        if (session!=null) session.removeAttribute("mensaje");else session = request.getSession();
         UsuarioVO userConnected     = (UsuarioVO)session.getAttribute("usuarioObj");
         
         String fecha            = request.getParameter("fecha");
@@ -379,7 +379,7 @@ public class TraspasoHistorico extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession(true);
-        if (session!=null) session.removeAttribute("mensaje");
+        if (session!=null) session.removeAttribute("mensaje");else session = request.getSession();
         UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
 
         if (userConnected != null){
@@ -417,7 +417,7 @@ public class TraspasoHistorico extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession(true);
-        if (session!=null) session.removeAttribute("mensaje");
+        if (session!=null) session.removeAttribute("mensaje");else session = request.getSession();
         UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
 
         if (userConnected != null){

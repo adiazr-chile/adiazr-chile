@@ -91,11 +91,11 @@ public class TurnosBp {
     
     public List<TurnoVO> getTurnosByCencos(String _empresaId, 
             List<UsuarioCentroCostoVO> _cencosUsuario){
-        
-        List<TurnoVO> lista = 
-            turnosDao.getTurnosByCencos(_empresaId, _cencosUsuario);
-
-        return lista;
+        List<TurnoVO> turnos = new ArrayList<>();
+        if (_cencosUsuario!=null && !_cencosUsuario.isEmpty()){
+            turnos = turnosDao.getTurnosByCencos(_empresaId, _cencosUsuario);
+        }
+        return turnos;
     }
     
     public int getTurnoRotativo(String _empresaId){

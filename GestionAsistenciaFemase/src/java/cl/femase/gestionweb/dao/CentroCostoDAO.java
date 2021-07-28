@@ -924,9 +924,9 @@ public class CentroCostoDAO extends BaseDAO{
                     + " and dispositivo.estado = 1 "
                 + "order by asignacion.device_id";
             
-            System.out.println("cl.femase.gestionweb.service."
-                + "CentroCostoDAO.getDispositivosAsignados() "
-                + "cencoId: "+_cencoId);  
+////            System.out.println("cl.femase.gestionweb.service."
+////                + "CentroCostoDAO.getDispositivosAsignados() "
+////                + "cencoId: "+_cencoId);  
             rs = statement.executeQuery(sql);		
             while (rs.next()) {
                 data = new DispositivoVO();

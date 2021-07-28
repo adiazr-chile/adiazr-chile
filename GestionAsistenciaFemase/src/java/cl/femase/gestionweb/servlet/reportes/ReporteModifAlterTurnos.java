@@ -71,19 +71,19 @@ public class ReporteModifAlterTurnos extends BaseServlet {
     ExcelReportWriter excelReportWriter = new ExcelReportWriter();
             
     /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
+    * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
+    * methods.
+    *
+    * @param request servlet request
+    * @param response servlet response
+    * @throws ServletException if a servlet-specific error occurs
+    * @throws IOException if an I/O error occurs
+    */
+    @Override
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
         HttpSession session = request.getSession(true);
-        if (session!=null) session.removeAttribute("mensaje");
         UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
         
         int intCencoId = -1;
@@ -651,7 +651,7 @@ public class ReporteModifAlterTurnos extends BaseServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession(true);
-        if (session!=null) session.removeAttribute("mensaje");
+        if (session!=null) session.removeAttribute("mensaje");else session = request.getSession();
         UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
 
         if (userConnected != null){
@@ -677,7 +677,7 @@ public class ReporteModifAlterTurnos extends BaseServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession(true);
-        if (session!=null) session.removeAttribute("mensaje");
+        if (session!=null) session.removeAttribute("mensaje");else session = request.getSession();
         UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
 
         if (userConnected != null){

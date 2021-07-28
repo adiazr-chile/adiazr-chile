@@ -56,7 +56,7 @@ public class EmpleadosController extends BaseServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(true);
-        if (session!=null) session.removeAttribute("mensaje");
+        if (session!=null) session.removeAttribute("mensaje");else session = request.getSession();
         UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
         System.out.println("[EmpleadosController.doGet]"
             + "param action: "+request.getParameter("action"));
@@ -75,7 +75,7 @@ public class EmpleadosController extends BaseServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(true);
-        if (session!=null) session.removeAttribute("mensaje");
+        if (session!=null) session.removeAttribute("mensaje");else session = request.getSession();
         UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
         System.out.println("[EmpleadosController.doPost]"
             + "userConnected.nombres: " + userConnected.getUsername());
@@ -96,7 +96,6 @@ public class EmpleadosController extends BaseServlet {
         HttpSession session = request.getSession(true);
         ServletContext application = this.getServletContext();
         PropertiesVO appProperties=(PropertiesVO)application.getAttribute("appProperties");
-        if (session!=null) session.removeAttribute("mensaje");
         UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
         request.setCharacterEncoding("UTF-8");
         EmpleadosBp empleadoBp = new EmpleadosBp(appProperties);

@@ -1002,9 +1002,9 @@ public class EmpleadosDAO extends BaseDAO{
             if (_empleado.getRut() != null && _empleado.getRut().compareTo("")!=0){        
                 sql += " and upper(empl.empl_rut) like '" + _empleado.getRut().toUpperCase() + "%'";
             }
-            //if (_empleado.isArticulo22()){        
-                sql += " and art_22 = " + _empleado.isArticulo22();
-            //}
+            if (_empleado.isArticulo22()){        
+                sql += " and art_22 = true ";
+            }else sql += " and art_22 in (true,false) ";
                         
             sql += " order by empl.empl_rut";
             

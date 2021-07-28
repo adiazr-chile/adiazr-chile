@@ -37,7 +37,7 @@ public class ProveedorCorreoController extends BaseServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(true);
-        if (session!=null) session.removeAttribute("mensaje");
+        if (session!=null) session.removeAttribute("mensaje");else session = request.getSession();
         UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
 
         if (userConnected != null){
@@ -55,7 +55,7 @@ public class ProveedorCorreoController extends BaseServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(true);
-        if (session!=null) session.removeAttribute("mensaje");
+        if (session!=null) session.removeAttribute("mensaje");else session = request.getSession();
         UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
 
         if (userConnected != null){
@@ -76,13 +76,13 @@ public class ProveedorCorreoController extends BaseServlet {
     * @throws javax.servlet.ServletException
     * @throws java.io.IOException
     */
+    @Override
     protected void processRequest(HttpServletRequest request, 
             HttpServletResponse response) throws ServletException, IOException {
 
         HttpSession session = request.getSession(true);
         ServletContext application = this.getServletContext();
         PropertiesVO appProperties=(PropertiesVO)application.getAttribute("appProperties");
-        if (session!=null) session.removeAttribute("mensaje");
         UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
 
         ProveedorCorreoDAO dao = new ProveedorCorreoDAO();

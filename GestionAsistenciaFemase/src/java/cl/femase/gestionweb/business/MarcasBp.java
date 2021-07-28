@@ -16,6 +16,8 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -251,6 +253,19 @@ public class MarcasBp {
     
         LinkedHashMap<String, MarcaVO> hashMarcasFinal = 
             new LinkedHashMap<>();
+        
+        SimpleDateFormat sdf3 = new SimpleDateFormat("yyyy-MM-dd", new Locale("es","CL"));
+        Calendar calendart1 = Calendar.getInstance(new Locale("ES","cl"));
+        Date auxfechaactual = calendart1.getTime();
+        // Set the day of the month to the first day of the month
+        calendart1.set(Calendar.DAY_OF_MONTH,
+        calendart1.getActualMinimum(Calendar.DAY_OF_MONTH));
+        // Extract the Date from the Calendar instance
+        Date firstDayOfTheMonth = calendart1.getTime();
+        //System.out.println("1er dia del mes: " + sdf3.format(calendart1.getTime()) + ", fecha actual: " + sdf3.format(auxfechaactual));        
+        
+        if (_startDate == null || _startDate.compareTo("") == 0) _startDate = sdf3.format(calendart1.getTime());
+        if (_endDate == null || _endDate.compareTo("") == 0) _endDate = sdf3.format(auxfechaactual);
         
         LinkedHashMap<String, InfoMarcaVO> fechasMarcas;
         if (_turnoRotativo){

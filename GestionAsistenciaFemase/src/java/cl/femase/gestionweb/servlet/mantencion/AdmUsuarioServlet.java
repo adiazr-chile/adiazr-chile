@@ -40,6 +40,7 @@ public class AdmUsuarioServlet extends BaseServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+    @Override
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -48,7 +49,6 @@ public class AdmUsuarioServlet extends BaseServlet {
             HttpSession session = request.getSession(true);
             ServletContext application = this.getServletContext();
             PropertiesVO appProperties=(PropertiesVO)application.getAttribute("appProperties");
-            if (session!=null) session.removeAttribute("mensaje");
             UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
         
             MaintenanceEventVO resultado=new MaintenanceEventVO();
