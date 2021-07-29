@@ -1,3 +1,4 @@
+<%@page import="cl.femase.gestionweb.vo.PropertiesVO"%>
 <%@page import="cl.femase.gestionweb.vo.SolicitudVacacionesVO"%>
 <%@page import="cl.femase.gestionweb.vo.UsuarioCentroCostoVO"%>
 <%@page import="java.util.List"%>
@@ -7,8 +8,11 @@
 <%@ page import="cl.femase.gestionweb.vo.UsuarioVO"%>
 
 <%
-    String version="4.1.3";
-    String appAnios = "2017-2021";
+    PropertiesVO appProperties=(PropertiesVO)application.getAttribute("appProperties");
+    String version      = appProperties.getVersion();
+    String startYear    = appProperties.getStartYear();
+    String currentYear  = appProperties.getCurrentYear();
+    String labelAnios = startYear + "-" + currentYear;
     
     UsuarioVO userInSession = (UsuarioVO)session.getAttribute("usuarioObj");
     System.out.println("[UserAuth]Usuario perfil Director");
@@ -171,7 +175,7 @@
            	  <div class="divTableCell"><img src="images/<%=logoEmpresa%>" alt="" /></div>
            	  <div class="divTableCellBig">&nbsp;</div>
            	  <div class="divTableCell"></div>
-           	  <div class="divTableCell"><img src="images/logo_femase_2020.png">v<%=version%>. By FEMASE&copy; <%=appAnios%></div>
+           	  <div class="divTableCell"><img src="images/logo_femase_2020.png">v<%=version%>. By FEMASE&copy; <%=labelAnios%></div>
             </div>
           <div class="divTableRowBlack">
             	<div class="divTableCell"><img src="images/icon_home.gif" alt="Home" width="13" height="12"  border="0"/>

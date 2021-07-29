@@ -11,10 +11,10 @@ import cl.femase.gestionweb.vo.PropertiesVO;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
@@ -88,6 +88,15 @@ public class LoadParams extends BaseServlet {
 	m_logger.debug("Cargando parametros en sesion");
         System.out.println("[GestionFemase.LoadParams.init]Cargando parametros en sesion...");
         appProperties=new PropertiesVO();
+        
+        Calendar currentCalendar = Calendar.getInstance(new Locale("es","CL"));
+        SimpleDateFormat yearFmt = new SimpleDateFormat("yyyy");
+        appProperties.setVersion(m_properties.getKeyValue("version"));
+        appProperties.setStartYear(m_properties.getKeyValue("launchYear"));
+        appProperties.setCurrentYear(yearFmt.format(currentCalendar.getTime()));
+        
+        System.out.println("[GestionFemase.LoadParams.init]Version del Sistema: " + appProperties.getVersion());
+        
 //        appProperties.setCalendarWSEndPoint(m_properties.getKeyValue("calendarWSEndPoint"));
         appProperties.setMailHost(m_properties.getKeyValue("mailHost"));
         appProperties.setMailPort(m_properties.getKeyValue("mailPort"));

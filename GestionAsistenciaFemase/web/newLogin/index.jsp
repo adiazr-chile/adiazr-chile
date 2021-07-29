@@ -1,6 +1,10 @@
+<%@page import="cl.femase.gestionweb.vo.PropertiesVO"%>
 <%
-    String version  = "4.1.3";
-    String appAnios = "2017-2021";
+    PropertiesVO appProperties=(PropertiesVO)application.getAttribute("appProperties");
+    String version      = appProperties.getVersion();
+    String startYear    = appProperties.getStartYear();
+    String currentYear  = appProperties.getCurrentYear();
+    String labelAnios = startYear + "-" + currentYear;
     String mensaje = (String) session.getAttribute("mensaje");
     System.out.println("[login/index.jsp]mensaje: " + mensaje);
 	//if (mensaje==null) mensaje="&nbsp;";
@@ -55,17 +59,15 @@
 			<div class="wrap-login100 p-l-50 p-r-50 p-t-72 p-b-50">
 				<form method="post" action="<%=request.getContextPath()%>/UserAuth">
 					<span class="login100-form-title p-b-59"><img src="images/logo_femase_01.png" width="335" height="121"></span>
-
-					
-					<div class="wrap-input100 validate-input" data-validate="Se requiere nombre de usuario">
+                                        <div class="wrap-input100 validate-input" data-validate="Se requiere nombre de usuario">
 						<span class="label-input100">Nombre de usuario</span>
-						<input class="input100" type="text" id="username" name="username" placeholder="Nombre de usuario..." tabindex="0">
+						<input class="input100" type="text" id="username" name="username" placeholder="Nombre de usuario..." tabindex="0" required>
 						<span class="focus-input100"></span>
 					</div>
 
 					<div class="wrap-input100 validate-input" data-validate = "Se requiere clave">
 						<span class="label-input100">Clave</span>
-						<input class="input100" type="password" id="password" name="password" placeholder="*************" tabindex="1">
+						<input class="input100" type="password" id="password" name="password" placeholder="*************" tabindex="1" required>
 						<span class="focus-input100"></span>
 					</div>
 
@@ -84,7 +86,7 @@
         	</div>
 				</form>
                 <div>
-          <h6>Versi&oacute;n <%=version%> Designed by <a href="http://www.femase.cl">FEMASE</a>&copy; <%=appAnios%>
+          <h6>Versi&oacute;n <%=version%> Designed by <a href="http://www.femase.cl">FEMASE</a>&copy; <%=labelAnios%>
           </h6>
         </div>
 			</div>

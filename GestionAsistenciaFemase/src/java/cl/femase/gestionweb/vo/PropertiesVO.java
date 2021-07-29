@@ -31,6 +31,34 @@ public class PropertiesVO {
     private String uploadsPath;
     private String reportesPath;
     
+    private String version;
+    private String startYear;
+    private String currentYear;
+
+    public String getCurrentYear() {
+        return currentYear;
+    }
+
+    public void setCurrentYear(String currentYear) {
+        this.currentYear = currentYear;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    public String getStartYear() {
+        return startYear;
+    }
+
+    public void setStartYear(String startYear) {
+        this.startYear = startYear;
+    }
+    
     public String getMailUsername() {
         return mailUsername;
     }

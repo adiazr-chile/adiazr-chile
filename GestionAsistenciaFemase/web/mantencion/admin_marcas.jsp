@@ -1,3 +1,6 @@
+<%@page import="java.util.Calendar"%>
+<%@page import="java.util.Locale"%>
+<%@page import="java.text.SimpleDateFormat"%>
 <%@ include file="/include/check_session.jsp" %>
 
 <%@page import="cl.femase.gestionweb.vo.UsuarioCentroCostoVO"%>
@@ -17,8 +20,19 @@
     List<CargoVO> cargos                = (List<CargoVO>)session.getAttribute("cargos"); 
     List<UsuarioCentroCostoVO> cencos   = (List<UsuarioCentroCostoVO>)session.getAttribute("cencos_empleado"); 
     
-    String startDate = (String)session.getAttribute("startDate");
-    String endDate = (String)session.getAttribute("endDate");
+    SimpleDateFormat sdf3 = new SimpleDateFormat("yyyy-MM-dd", new Locale("es","CL"));
+    Calendar calendart1 = Calendar.getInstance(new Locale("ES","cl"));
+    Date auxfechaactual = calendart1.getTime();
+    // Set the day of the month to the first day of the month
+    calendart1.set(Calendar.DAY_OF_MONTH,
+    calendart1.getActualMinimum(Calendar.DAY_OF_MONTH));
+    // Extract the Date from the Calendar instance
+    Date firstDayOfTheMonth = calendart1.getTime();
+    //System.out.println("1er dia del mes: " + sdf3.format(calendart1.getTime()) + ", fecha actual: " + sdf3.format(auxfechaactual));        
+    
+    String startDate = sdf3.format(calendart1.getTime());
+    String endDate = sdf3.format(auxfechaactual);
+    
     System.out.println("[adminMarcas.jsp]"
         + "startDate= "+startDate
         + ",endDate= "+endDate);
@@ -294,8 +308,8 @@
             </label>    
             
             <label>Fecha desde:
-                <input name="startDate" type="text" id="startDate">
-                hasta <input name="endDate" type="text" id="endDate">
+                <input name="startDate" type="text" id="startDate" value="<%=startDate%>">
+                hasta <input name="endDate" type="text" id="endDate" value="<%=endDate%>">
             </label>
         <button type="submit" id="LoadRecordsButton">Buscar</button>
         <a href="<%=request.getContextPath()%>/mantencion/marcas_historicas.jsp">&nbsp;Ver Hist&oacute;rico</a>

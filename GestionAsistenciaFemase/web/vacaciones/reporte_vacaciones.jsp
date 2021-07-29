@@ -86,7 +86,7 @@
                 var empresaSelected = $("select#empresa").val();
                 var deptoSelected = $("select#depto").val();
                 var cencoSelected = $("select#cenco").val();
-                var sourceSelected = 'reporte_asistencia';
+                var sourceSelected = 'reporte_vacaciones';
                  
                 $.get('<%=request.getContextPath()%>/JsonListServlet', {
                     empresaID : empresaSelected,deptoID : deptoSelected,cencoID : cencoSelected,source: sourceSelected
