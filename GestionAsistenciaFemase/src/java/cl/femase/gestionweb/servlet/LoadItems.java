@@ -471,11 +471,13 @@ public class LoadItems extends BaseServlet {
                 String userSolicita     = request.getParameter("userSolicita");
                 System.out.println("[servlet.LoadItems]"
                     + "estadoSolicitud: " + estadoSolicitud
-                    + ", userSolicita: " + userSolicita);
+                    + ", userSolicita: " + userSolicita
+                    + ", username_conectado: " + userConnected.getUsername()
+                    + ", perfilUsuario: " + userConnected.getIdPerfil());
                 LinkedHashMap<String,String> estados = 
                     new LinkedHashMap<>();
                 //if (userConnected.getIdPerfil() == Constantes.ID_PERFIL_DIRECTOR) {
-                        System.out.println("[servlet.LoadItems]Perfil Director...");
+                        //System.out.println("[servlet.LoadItems]Perfil Director...");
                         //Si es Director
                         if (userSolicita != null && userConnected.getUsername().compareTo(userSolicita) != 0){    
                             if (estadoSolicitud.compareTo(Constantes.ESTADO_SOLICITUD_PENDIENTE) == 0){

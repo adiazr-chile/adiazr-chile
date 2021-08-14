@@ -932,9 +932,9 @@ public class UsersDAO extends BaseDAO{
                     data.setDeptoNombre(rs.getString("depto_nombre"));
                     data.setZonaExtrema(rs.getString("es_zona_extrema"));
 
-                    System.err.println("[UsersDAO.getCencosUsuario]"
-                        + "Usuario " + _usuario.getUsername() 
-                        + ", add cenco= " + data.getCcostoId());
+//                    System.err.println("[UsersDAO.getCencosUsuario]"
+//                        + "Usuario " + _usuario.getUsername() 
+//                        + ", add cenco= " + data.getCcostoId());
                     listaCencosUsuario.add(data);
                 }
 

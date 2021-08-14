@@ -28,11 +28,41 @@ public class Constantes {
     public static final String CAMBIO_FECHA_MARCA = "FECHA MODIFICADA";
     public static final String CAMBIO_HORA_MARCA = "HORA MODIFICADA";
     public static int ID_PERFIL_SUPER_ADMIN         = 100;
+    
+    /** 
+    * perfil id = 1
+    */
     public static int ID_PERFIL_ADMIN               = 1;
+    
+    /** 
+    * perfil id = 4
+    */
+    public static int ID_PERFIL_FISCALIZADOR        = 4;
+    
+    /** 
+    * perfil id = 7
+    */
     public static int ID_PERFIL_EMPLEADO            = 7;
+    /** 
+    * perfil id = 5
+    */
     public static int ID_PERFIL_DIRECTOR            = 5;
+    
+    /** 
+    * perfil id = 6
+    */
     public static int ID_PERFIL_DIRECTOR_TR         = 6;
+    
+    /** 
+    * perfil id = 9
+    */
     public static int ID_PERFIL_DIRECTOR_GENERAL    = 9;
+    
+    /** 
+    * perfil id = 12
+    */
+    public static int ID_PERFIL_JEFE_TECNICO_NACIONAL = 12;
+    
     public static int ID_AUSENCIA_VACACIONES        = 1;
     public static String FECHA_FIN_CONTRATO_INDEFINIDO = "3000-12-31";
     

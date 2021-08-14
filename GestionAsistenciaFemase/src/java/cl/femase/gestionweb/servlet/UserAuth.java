@@ -109,12 +109,17 @@ public class UserAuth extends BaseServlet {
             userBp.openDbConnection();
             UsuarioVO userOk = userBp.getLogin(user);
             
-            System.out.println("[UserAuth]Autenticando "
+            System.out.println("[UserAuth]Intentando Autenticar "
                 + "usuario: " + user.getUsername());
             
             if (userOk != null){
                 log.setUserName(userOk.getUsername());
                 log.setIp(request.getRemoteAddr());
+                
+                System.out.println("[UserAuth]Autenticando "
+                    + "usuario: " + user.getUsername()
+                    + ", perfil_usuario: " + user.getNomPerfil());
+                
                 //test
                 //session = null;
                 //Setea maximo tiempo de inactividad (en segundos)
@@ -455,7 +460,13 @@ public class UserAuth extends BaseServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        setResponseHeaders(response);processRequest(request, response);
+        if (request.getParameter("username") != null && request.getParameter("username").compareTo("null") != 0){
+            setResponseHeaders(response);
+            processRequest(request, response);
+        }else{
+            //newLogin/index.jsp
+            request.getRequestDispatcher("/").forward(request, response);
+        }
     } 
 
     /** 
@@ -468,7 +479,13 @@ public class UserAuth extends BaseServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        setResponseHeaders(response);processRequest(request, response);
+         if (request.getParameter("username") != null && request.getParameter("username").compareTo("null") != 0){
+            setResponseHeaders(response);
+            processRequest(request, response);
+        }else{
+            //newLogin/index.jsp
+            request.getRequestDispatcher("/").forward(request, response);
+        }
     }
 
     /** 

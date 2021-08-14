@@ -127,10 +127,10 @@ public class MaintenanceEventsBp {
         return rows;
     }
     
-    public void openDbConnection(){
-        eventosDao.openDbConnection();
-    }
-    public void closeDbConnection(){
-        eventosDao.closeDbConnection();
-    }
+//    public void openDbConnection(){
+//        eventosDao.openDbConnection();
+//    }
+//    public void closeDbConnection(){
+//        eventosDao.closeDbConnection();
+//    }
 }

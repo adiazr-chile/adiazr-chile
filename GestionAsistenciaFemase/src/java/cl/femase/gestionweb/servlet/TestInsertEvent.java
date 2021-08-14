@@ -5,8 +5,9 @@
  */
 package cl.femase.gestionweb.servlet;
 
-import cl.femase.gestionweb.common.Utilidades;
-import cl.femase.gestionweb.dao.CalendarioFeriadoDAO;
+import cl.femase.gestionweb.dao.MaintenanceEventsDAO;
+import cl.femase.gestionweb.vo.MaintenanceEventVO;
+import cl.femase.gestionweb.vo.MaintenanceVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import java.io.IOException;
 import java.util.Date;
@@ -20,8 +21,8 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author aledi
  */
-@WebServlet(name = "TestValidaFechaFeriadoServlet", urlPatterns = {"/TestValidaFechaFeriadoServlet"})
-public class TestValidaFechaFeriadoServlet extends HttpServlet {
+@WebServlet(name = "TestInsertEvent", urlPatterns = {"/TestInsertEvent"})
+public class TestInsertEvent extends HttpServlet {
 
     /**
     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -36,53 +37,45 @@ public class TestValidaFechaFeriadoServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try {
-            System.out.println("[TestValidaFechaFeriadoServlet]Entrando...");
             //parametros de entrada de la funcion
-            String startDate    = request.getParameter("startDate");
-            String endDate      = request.getParameter("endDate");
-            String empresaId    = request.getParameter("empresaId");
-            int cencoId         = Integer.parseInt(request.getParameter("cencoId"));
-            String runEmpleado = request.getParameter("runEmpleado");
             int iteraciones = Integer.parseInt(request.getParameter("iteraciones"));
+            System.out.println("[TestInsertEvent]Num iteraciones= " + iteraciones);
             for (int x = 0; x <= iteraciones; x++){
-                invokeFunction(empresaId, cencoId, runEmpleado, startDate, endDate);
+                insertEvent(request, x);
             }
         }catch(NumberFormatException ex){
-            System.err.println("[TestValidaFechaFeriadoServlet]Error: " + ex.toString());
+            System.err.println("[TestInsertEvent]Error: " + ex.toString());
         }
     }
 
     /**
     * 
     */
-    private void invokeFunction(String _empresaId, 
-            int _cencoId, 
-            String _runEmpleado, 
-            String _startDate,
-            String _endDate){
-        CalendarioFeriadoDAO daoFeriados = new CalendarioFeriadoDAO(new PropertiesVO());
+    private void insertEvent(HttpServletRequest _request, 
+            int _iteracion){
+        MaintenanceEventsDAO daoEventos = new MaintenanceEventsDAO(new PropertiesVO());
         
         //***********************************************************************************************
-        System.out.println("[TestValidaFechaFeriadoServlet]date:[ " 
-            + new Date() + "] INICIO invocar funcion validaFechaFeriado en un solo SQL...");
-        String strFechasJson = daoFeriados.getValidaFechasJson(_empresaId, _cencoId, _runEmpleado, _startDate, _endDate);
-        System.out.println("[TestValidaFechaFeriadoServlet]"
-            + "retorno JSON: " + strFechasJson);
-        System.out.println("[TestValidaFechaFeriadoServlet]date:[ " 
-            + new Date() + "] INICIO invocar funcion validaFechaFeriado en un solo SQL...");
-        //***********************************************************************************************
-        System.out.println("[TestValidaFechaFeriadoServlet]date:[ " 
-            + new Date() + "] INICIO invocando funcion validaFechaFeriado fecha x fecha...");
-        String[] fechas = Utilidades.getFechas(_startDate, _endDate);
-        for (int x = 0; x < fechas.length ; x++){
-            System.out.println("[TestValidaFechaFeriadoServlet]"
-                + "invocando funcion validaFechaFeriado con fecha : " + fechas[x]);
-            String strRetorno = daoFeriados.esFeriadoJson(_empresaId, _cencoId, _runEmpleado, fechas[x]);
-            System.out.println("[TestValidaFechaFeriadoServlet]"
-                + "retorno JSON: " + strRetorno);
+        
+        MaintenanceEventVO resultado=new MaintenanceEventVO();
+        resultado.setUsername("dummy_" + _iteracion );
+        resultado.setDatetime(new Date());
+        resultado.setUserIP(_request.getRemoteAddr());
+        resultado.setType("DUMMY");
+        resultado.setEmpresaIdSource("emp99");
+        resultado.setDescription("Evento dummy, it_" + _iteracion);
+        
+        MaintenanceVO respuesta = daoEventos.addLogAuditoria(resultado);
+        
+        if (respuesta.isThereError()){
+            System.err.println("[TestInsertEvent]"
+                + "Error al insertar log de auditoria. "
+                + "Detalle: " + respuesta.getMsgError());
+        }else{
+            System.out.println("[TestInsertEvent]date:[ " 
+                + new Date() + "] Inserta Log auditoria OK");
         }
-        System.out.println("[TestValidaFechaFeriadoServlet]date:[ " 
-            + new Date() + "] FIN invocando funcion validaFechaFeriado fecha x fecha...");
+        
         //***********************************************************************************************
     }
     

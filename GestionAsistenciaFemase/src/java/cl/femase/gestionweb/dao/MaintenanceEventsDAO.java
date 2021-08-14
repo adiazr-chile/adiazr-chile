@@ -27,7 +27,7 @@ import org.apache.log4j.Logger;
  */
 public class MaintenanceEventsDAO extends BaseDAO{
 
-    public boolean m_usedGlobalDbConnection = false;
+    //public boolean m_usedGlobalDbConnection = false;
     /**
      *
      */
@@ -201,7 +201,7 @@ public class MaintenanceEventsDAO extends BaseDAO{
                     + "?,?,"
                     + "?,?)";
             
-            if (!m_usedGlobalDbConnection) dbConn = dbLocator.getConnection(m_dbpoolName,"[MaintenanceEventsDAO.addEvent]");
+            dbConn = dbLocator.getConnection(m_dbpoolName,"[MaintenanceEventsDAO.addEvent]");
             ps = dbConn.prepareStatement(sql);
             ps.setString(1, _eventdata.getUsername());
             //ps.setTimestamp(2, new Timestamp(_eventdata.getDatetime().getTime()));
@@ -220,10 +220,9 @@ public class MaintenanceEventsDAO extends BaseDAO{
             ps.executeUpdate(); 
             
             ps.close();
-            if (!m_usedGlobalDbConnection){
-                dbConn.close();
-                dbLocator.freeConnection(dbConn);
-            }
+            dbConn.close();
+            dbLocator.freeConnection(dbConn);
+            
         }catch(SQLException|DatabaseException sqle){
             System.out.println("[MaintenanceEventsDAO.addEvent]Error: "+sqle.toString());
             objresultado.setThereError(true);
@@ -232,12 +231,93 @@ public class MaintenanceEventsDAO extends BaseDAO{
         }finally {
             try {
                 ps.close();
-                if (!m_usedGlobalDbConnection){
-                    dbConn.close();
-                    dbLocator.freeConnection(dbConn);
-                }
+                dbConn.close();
+                dbLocator.freeConnection(dbConn);
             } catch (SQLException ex) {
                 System.err.println("[MaintenanceEventsDAO.addEvent]Error: "+ ex.toString());
+            }
+        }
+        return objresultado;
+    }
+    
+    /**
+    * Inserta un registro de evento
+    * @param _eventdata
+    * @return 
+    */
+    public MaintenanceVO addLogAuditoria(MaintenanceEventVO _eventdata){
+        MaintenanceVO objresultado = new MaintenanceVO();
+        PreparedStatement ps = null;
+        int result=0;
+        String headerError = "Error al insertar auditoria_log ";
+        String datosEvento = "[usuario,tipo,descripcion]="
+            + "["+_eventdata.getUsername()
+            + "," + _eventdata.getType()+","
+            + _eventdata.getDescription()+"]";     
+        
+        System.out.println("[MaintenanceEventsDAO.addLogAuditoria]"
+            + "tipo_evento = " + _eventdata.getType()
+            + ", descripcion: " + _eventdata.getDescription()
+            + ", deptoId: " + _eventdata.getDeptoId());
+        try{
+            SimpleDateFormat sdf = 
+                new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            
+            String sql = "insert into auditoria_logs "
+                + "(username, "
+                    + "fecha_hora, "
+                + "descripcion_evento, "
+                + "ip_usuario, "
+                + "tipo_evento, "
+                + "empresa_id, "
+                + "depto_id,"
+                + "cenco_id,"
+                + "empleado_rut,"
+                + "empresa_id_source,"
+                    + "operating_system,"
+                    + "browser_name) " 
+                + " values (?, current_timestamp,"
+                    + "?,?,"
+                    + "?,?,"
+                    + "?,?,"
+                    + "?,?,"
+                    + "?,?)";
+            
+            dbConn = dbLocator.getConnection(m_dbpoolName,
+                "[MaintenanceEventsDAO.addLogAuditoria]");
+            ps = dbConn.prepareStatement(sql);
+            ps.setString(1, _eventdata.getUsername());
+            ps.setString(2, _eventdata.getDescription());
+            ps.setString(3, _eventdata.getUserIP());
+            ps.setString(4, _eventdata.getType().trim());
+            ps.setString(5, _eventdata.getEmpresaIdSource());
+            ps.setString(6, _eventdata.getDeptoId());
+            ps.setInt(7, _eventdata.getCencoId());
+            ps.setString(8, _eventdata.getRutEmpleado());
+            ps.setString(9, _eventdata.getEmpresaIdSource());
+            ps.setString(10, _eventdata.getOperatingSystem());
+            ps.setString(11, _eventdata.getBrowserName());
+            ps.executeUpdate(); 
+            
+            ps.close();
+            dbConn.close();
+            dbLocator.freeConnection(dbConn);
+            
+        }catch(SQLException|DatabaseException sqle){
+            System.out.println("[MaintenanceEventsDAO.addLogAuditoria]"
+                + "Error: "+sqle.toString());
+            objresultado.setThereError(true);
+            objresultado.setCodError(result);
+            objresultado.setMsgError(headerError + datosEvento+" :" 
+                + sqle.toString());
+        }finally {
+            try {
+                ps.close();
+                dbConn.close();
+                dbLocator.freeConnection(dbConn);
+            } catch (SQLException ex) {
+                System.err.println("[MaintenanceEventsDAO.addLogAuditoria]"
+                    + "Error: "+ ex.toString());
             }
         }
         return objresultado;
@@ -552,23 +632,23 @@ public class MaintenanceEventsDAO extends BaseDAO{
         return count;
     }
     
-    public void openDbConnection(){
-        try {
-            m_usedGlobalDbConnection = true;
-            dbConn = dbLocator.getConnection(m_dbpoolName,"[MaintenanceEventsDAO.openDbConnection]");
-        } catch (DatabaseException ex) {
-            System.err.println("[UsersDAO.openDbConnection]"
-                + "Error: " + ex.toString());
-        }
-    }
-    
-    public void closeDbConnection(){
-        try {
-            m_usedGlobalDbConnection = false;
-            dbLocator.freeConnection(dbConn);
-        } catch (Exception ex) {
-            System.err.println("[MaintenanceEventsDAO.closeDbConnection]"
-                + "Error: "+ex.toString());
-        }
-    }
+////    public void openDbConnection(){
+////        try {
+////            m_usedGlobalDbConnection = true;
+////            dbConn = dbLocator.getConnection(m_dbpoolName,"[MaintenanceEventsDAO.openDbConnection]");
+////        } catch (DatabaseException ex) {
+////            System.err.println("[UsersDAO.openDbConnection]"
+////                + "Error: " + ex.toString());
+////        }
+////    }
+////    
+////    public void closeDbConnection(){
+////        try {
+////            m_usedGlobalDbConnection = false;
+////            dbLocator.freeConnection(dbConn);
+////        } catch (Exception ex) {
+////            System.err.println("[MaintenanceEventsDAO.closeDbConnection]"
+////                + "Error: "+ex.toString());
+////        }
+////    }
 }

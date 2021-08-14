@@ -2505,7 +2505,7 @@ public class MarcasDAO extends BaseDAO{
                         + " left outer join calendario_feriados "
                             + "	on ("
                             + "	(fecha_it::date = calendario_feriados.fecha) "
-                            + "	and (calendario_feriados.cal_region_id = " + _regionId + " or calendario_feriados.cal_comuna_id = " + _comunaId + ") "
+                            + "	and (calendario_feriados.cal_region_id = " + _regionId + " or calendario_feriados.cal_comuna_id = " + _comunaId + " or cal_id_tipo_feriado is not null) "
                             + ") "
                         + "left outer join tipo_marca_manual on (marca.cod_tpo_marca_manual = tipo_marca_manual.code) "
                         + "left outer join detalle_ausencia on (detalle_ausencia.rut_empleado='" + _rutEmpleado + "' " +
@@ -2680,7 +2680,7 @@ public class MarcasDAO extends BaseDAO{
                     + " left outer join calendario_feriados "
                         + "	on ("
                         + "	(fecha_it::date = calendario_feriados.fecha) "
-                        + "	and (calendario_feriados.cal_region_id = " + _regionId + " or calendario_feriados.cal_comuna_id = " + _comunaId + ") "
+                        + "	and (calendario_feriados.cal_region_id = " + _regionId + " or calendario_feriados.cal_comuna_id = " + _comunaId + " or cal_id_tipo_feriado is not null) "
                         + ") "
                     + "left outer join tipo_marca_manual on (marca.cod_tpo_marca_manual = tipo_marca_manual.code) "
                     + "left outer join detalle_ausencia on (detalle_ausencia.rut_empleado='" + _rutEmpleado + "' " +

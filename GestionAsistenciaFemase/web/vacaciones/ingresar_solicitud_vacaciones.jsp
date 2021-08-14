@@ -1,3 +1,4 @@
+<%@page import="cl.femase.gestionweb.common.Constantes"%>
 <%@page import="cl.femase.gestionweb.vo.UsuarioVO"%>
 <%@page import="cl.femase.gestionweb.business.VacacionesBp"%>
 <%@page import="cl.femase.gestionweb.vo.VacacionesVO"%>
@@ -8,9 +9,15 @@
     int intSaldoVacaciones = 0;
     boolean haySaldo = true;
     String msgSaldo="";
+    String runEmpleado = userConnected.getUsername();
+    if (userConnected.getIdPerfil() == Constantes.ID_PERFIL_DIRECTOR 
+        || userConnected.getIdPerfil() == Constantes.ID_PERFIL_DIRECTOR_TR){
+            runEmpleado = userConnected.getRunEmpleado();
+    }    
+    
     List<VacacionesVO> infoVacaciones = 
         vacacionesBp.getInfoVacaciones(userConnected.getEmpresaId(), 
-            userConnected.getUsername(), -1, -1, -1, "vac.rut_empleado");
+            runEmpleado, -1, -1, -1, "vac.rut_empleado");
     if (infoVacaciones.isEmpty()){
         System.out.println("[ingresar_solicitud_vacaciones]"
             + "EmpresaId: " + userConnected.getEmpresaId()

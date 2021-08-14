@@ -930,53 +930,38 @@ public class EmpleadosDAO extends BaseDAO{
         
         try{
             String sql = "SELECT "
-                + "empl.empl_rut,"
-                + "empl.empl_nombres,"
-                + "empl.empl_ape_paterno,"
-                + "empl.empl_ape_materno,"
-                + "empl.empl_fecha_nacimiento,"
-                + "empl.empl_direccion direccion,"
-                + "empl.empl_email email,"
+                + "empl.empl_rut,empl.empl_nombres,empl.empl_ape_paterno,"
+                + "empl.empl_ape_materno,empl.empl_fecha_nacimiento,"
+                + "empl.empl_direccion direccion,empl.empl_email email,"
                 + "empl.empl_fec_ini_contrato,"
                 + "coalesce(empl.empl_fec_fin_contrato,'3000-12-31') empl_fec_fin_contrato,"
-                + "empl.empl_estado,"
-                + "empl.empl_path_foto,"
-                + "empl.empl_sexo,"
+                + "empl.empl_estado,empl.empl_path_foto,empl.empl_sexo,"
                 + "coalesce(empl.empl_fono_fijo,'') empl_fono_fijo,"
                 + "coalesce(empl.empl_fono_movil,'') empl_fono_movil,"
-                + "empl.id_comuna,"
-                + "comuna.comuna_nombre,"
-                + "comuna.region_id,"
-                + "region.region_nombre,"
-                + "empl.empresa_id,"
-                + "empresa.empresa_nombre,"
-                + "empresa.empresa_rut,"
-                + "empl.depto_id,"
-                + "depto.depto_nombre,"
-                + "empl.cenco_id,"
-                + "cenco.ccosto_nombre,"
-                + "empl_id_turno,"
-                + "autoriza_ausencia,"
-                + "coalesce(empl_id_cargo,-1) empl_id_cargo,"
-                + "contrato_indefinido,"
-                + "art_22,"
-                + "cod_interno,clave_marcacion,"
-                + "turno.nombre_turno "
+                + "empl.id_comuna,comuna.comuna_nombre,comuna.region_id,"
+                + "region.region_nombre,empl.empresa_id,empresa.empresa_nombre,"
+                + "empresa.empresa_rut,empl.depto_id,depto.depto_nombre,"
+                + "empl.cenco_id,cenco.ccosto_nombre,empl_id_turno,"
+                + "autoriza_ausencia,coalesce(empl_id_cargo,-1) empl_id_cargo,"
+                + "contrato_indefinido,art_22,cod_interno,clave_marcacion,"
+                + "turno.nombre_turno,cargo.cargo_nombre "
                 + "FROM "
-                + "empleado empl,"
-                + "comuna,"
-                + "region,"
-                + "empresa,"
-                + "departamento depto,"
-                + "centro_costo cenco, "
-                + "turno "
+                    + "empleado empl,"
+                    + "comuna,"
+                    + "region,"
+                    + "empresa,"
+                    + "departamento depto,"
+                    + "centro_costo cenco, "
+                    + "turno, "
+                    + "cargo "
                 + " WHERE "
-                + "empl.id_comuna = comuna.comuna_id AND "
-                + "empl.empresa_id = empresa.empresa_id AND "
-                + "empl.depto_id = depto.depto_id AND "
-                + "empl.cenco_id = cenco.ccosto_id AND "
-                + "comuna.region_id = region.region_id "
-                + "and empl.empl_id_turno = turno.id_turno ";
+                    + "empl.id_comuna = comuna.comuna_id AND "
+                    + "empl.empresa_id = empresa.empresa_id AND "
+                    + "empl.depto_id = depto.depto_id AND "
+                    + "empl.cenco_id = cenco.ccosto_id AND "
+                    + "comuna.region_id = region.region_id "
+                    + "and empl.empl_id_turno = turno.id_turno "
+                    + "and empl.empl_id_cargo=cargo.cargo_id ";
                     
             if (_empleado.getEmpresaId() != null && _empleado.getEmpresaId().compareTo("-1")!=0){        
                 sql += " and empl.empresa_id= '"+_empleado.getEmpresaId()+"'";
@@ -1071,13 +1056,15 @@ public class EmpleadosDAO extends BaseDAO{
                 data.setIdTurno(rs.getInt("empl_id_turno"));
                 data.setAutorizaAusencia(rs.getBoolean("autoriza_ausencia"));
                 data.setIdCargo(rs.getInt("empl_id_cargo"));
-                
+                data.setCodInterno(rs.getString("cod_interno"));
                 data.setArticulo22(rs.getBoolean("art_22"));
                 data.setContratoIndefinido(rs.getBoolean("contrato_indefinido"));
                 
-                data.setCodInterno(rs.getString("cod_interno"));
                 data.setClaveMarcacion(rs.getString("clave_marcacion"));
                 data.setNombreTurno(rs.getString("nombre_turno"));
+                
+                data.setNombreCargo(rs.getString("cargo_nombre"));
+                
                 lista.add(data);
             }
 

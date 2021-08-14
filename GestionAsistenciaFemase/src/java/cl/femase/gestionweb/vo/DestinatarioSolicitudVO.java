@@ -12,10 +12,13 @@ public class DestinatarioSolicitudVO implements Serializable{
 
     private final String nombre;
     private final String email;
+    private final String cargo;
 
-    public DestinatarioSolicitudVO(String nombre, String email) {
-        this.nombre = nombre;
-        this.email = email;
+    public DestinatarioSolicitudVO(String _nombre, 
+            String _email, String _cargo) {
+        this.nombre = _nombre;
+        this.email  = _email;
+        this.cargo  = _cargo;
     }
 
     public String getNombre() {
@@ -26,4 +29,8 @@ public class DestinatarioSolicitudVO implements Serializable{
         return email;
     }
 
+    public String getCargo() {
+        return cargo;
+    }
+    
 }

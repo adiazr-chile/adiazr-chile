@@ -29,10 +29,19 @@ public class SolicitudVacacionesVO implements Serializable{
     private String fechaHoraCancela;
     private String fechaHoraApruebaRechaza;
     private String notaObservacion;
+    private String labelEmpleado;
     
     private int diasEfectivosVacacionesSolicitadas;
     private int saldoVacaciones;
     private String diasEspeciales;
+
+    public String getLabelEmpleado() {
+        return labelEmpleado;
+    }
+
+    public void setLabelEmpleado(String labelEmpleado) {
+        this.labelEmpleado = labelEmpleado;
+    }
 
     public int getDiasEfectivosVacacionesSolicitadas() {
         return diasEfectivosVacacionesSolicitadas;

@@ -1,3 +1,4 @@
+<%@page import="cl.femase.gestionweb.common.Constantes"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="java.util.Locale"%>
 <%@page import="java.util.Calendar"%>
@@ -27,8 +28,9 @@
     List<AusenciaVO> ausencias = 
         (List<AusenciaVO>)session.getAttribute("ausencias");
     boolean readOnly = false;
+    System.out.println("[sol_vacaciones_aprobar_rechazar.jsp]perfil de usuario= " + theUser.getIdPerfil());
     //perfil empleado y fiscalizador solo pueden ver
-    if (theUser.getIdPerfil() == 4 || theUser.getIdPerfil() == 7){
+    if (theUser.getIdPerfil() == Constantes.ID_PERFIL_FISCALIZADOR || theUser.getIdPerfil() == Constantes.ID_PERFIL_EMPLEADO){
         readOnly = true;
     }
 %>
@@ -252,7 +254,7 @@
             defaultSorting: 'sv.solic_fec_ingreso desc', //Set default sorting
             actions: {
                 listAction: '<%=request.getContextPath()%>/servlet/SolicitudVacacionesController?action=listDirector',
-				updateAction:'<%=request.getContextPath()%>/servlet/SolicitudVacacionesController?action=apruebaRechaza'
+                updateAction:'<%=request.getContextPath()%>/servlet/SolicitudVacacionesController?action=apruebaRechaza'
             },
             fields: {
 		id:{
@@ -282,8 +284,8 @@
                         } 
                     }
                 },
-                nombreEmpleado: {
-                    title:'Nombre Empleado',
+                labelEmpleado: {
+                    title:'Nombre',
                     width: '14%',
                     list: true,
                     create:false,
@@ -291,7 +293,7 @@
                     edit:true,
                     input: function (data) {
                         if (data.record) {
-                            return '<input type="text" id="nombreEmpleado" name="nombreEmpleado" style="width:200px" value="' + data.record.nombreEmpleado + '" readonly />';
+                            return '<input type="text" id="labelEmpleado" name="labelEmpleado" style="width:200px" value="' + data.record.labelEmpleado + '" readonly />';
                         } 
                     }
                 },

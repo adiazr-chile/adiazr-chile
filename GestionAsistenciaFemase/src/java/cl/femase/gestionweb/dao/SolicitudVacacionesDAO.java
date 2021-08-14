@@ -209,7 +209,7 @@ public class SolicitudVacacionesDAO extends BaseDAO{
                 + "sv.solic_fin,"
                 + "sv.empresa_id,"
                 + "sv.rut_empleado,"
-                + "e.empl_nombres || ' ' || e.empl_ape_paterno|| ' ' || e.empl_ape_materno nombre_empleado,"
+                + "e.empl_nombres || ' ' || e.empl_ape_paterno nombre_empleado,"
                 + "sv.username_solicita,"
                 + "sv.username_aprueba_rechaza,"
                 + "sv.fechahora_aprueba_rechaza,"
@@ -217,12 +217,12 @@ public class SolicitudVacacionesDAO extends BaseDAO{
                 + "coalesce(sv.nota_observacion,'') nota_observacion,"
                 + "vac.saldo_dias saldo_vacaciones,"
                     + "vac.dias_especiales, "
-                    + "sv.dias_efectivos_solicitados "
+                    + "sv.dias_efectivos_solicitados,cargo.cargo_nombre "
                 + "FROM solicitud_vacaciones sv "
                     + " inner join empleado e on (sv.empresa_id=e.empresa_id and sv.rut_empleado=e.empl_rut) "
                     + " inner join estado_solicitud estado on (sv.status_id = estado.status_id) "
-                    + " left outer join vacaciones vac "
-                    + " on (sv.empresa_id = vac.empresa_id and sv.rut_empleado = vac.rut_empleado) "
+                    + " left outer join vacaciones vac on (sv.empresa_id = vac.empresa_id and sv.rut_empleado = vac.rut_empleado) "
+                    + " left outer join cargo on (e.empl_id_cargo = cargo.cargo_id) "
                 + " where 1 = 1 ";
 
             String strCencos = "";
@@ -283,6 +283,8 @@ public class SolicitudVacacionesDAO extends BaseDAO{
                 data.setNotaObservacion(rs.getString("nota_observacion"));
                 data.setSaldoVacaciones(rs.getInt("saldo_vacaciones"));
                 data.setDiasEspeciales(rs.getString("dias_especiales"));
+                
+                data.setLabelEmpleado(data.getNombreEmpleado() + "(" + rs.getString("cargo_nombre") + ")");
                 
 //                int diasSolicitados = 
 //                vacacionesBp.getDiasEfectivos(data.getInicioVacaciones(), 

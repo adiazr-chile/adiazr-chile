@@ -15,10 +15,10 @@
     String labelAnios = startYear + "-" + currentYear;
     
     UsuarioVO userInSession = (UsuarioVO)session.getAttribute("usuarioObj");
-    System.out.println("[UserAuth]Usuario perfil Director");
-    System.out.println("[UserAuth]Rescatar solicitudes "
+    System.out.println("[topFrame.jsp]Usuario perfil Director/TR o Jefe Nacional");
+    System.out.println("[topFrame.jsp]Rescatar solicitudes "
         + "de vacaciones pendientes de algunos de los empleados "
-        + "en alguno de los cencos del usuario Director");
+        + "en alguno de los cencos del usuario");
     SolicitudVacacionesBp solicitudesBp = new SolicitudVacacionesBp(null);
 
     /**
@@ -181,14 +181,16 @@
             	<div class="divTableCell"><img src="images/icon_home.gif" alt="Home" width="13" height="12"  border="0"/>
                 	<a href="<%=request.getContextPath()%>/quick_menu/quick_menu.jsp" target="mainFrame" title="Acceso rapido">Acceso r&aacute;pido</a></div>
             	<div class="divTableCell">Bienvenido&nbsp;<%=theUser.getNombreCompleto()%>,&nbsp;<%=theUser.getNomPerfil()%>
-                	<%if (userInSession.getIdPerfil() == Constantes.ID_PERFIL_DIRECTOR || userInSession.getIdPerfil() == Constantes.ID_PERFIL_DIRECTOR_TR){%>
-                        <%if (numSolicitudesPendientes > 0){%>
-                            <a href="<%=request.getContextPath()%>/vacaciones/sol_vacaciones_aprobar_rechazar.jsp" 
-                               class="notification" target="mainFrame">
-                              <span>Solicitudes Vacaciones Pendientes</span>
-                              <span class="badge"><%=numSolicitudesPendientes%></span>
-                            </a>
-                        <%}%>
+                	<%if (userInSession.getIdPerfil() == Constantes.ID_PERFIL_DIRECTOR 
+                                || userInSession.getIdPerfil() == Constantes.ID_PERFIL_DIRECTOR_TR
+                                || userInSession.getIdPerfil() == Constantes.ID_PERFIL_JEFE_TECNICO_NACIONAL){%>
+                            <%if (numSolicitudesPendientes > 0){%>
+                                <a href="<%=request.getContextPath()%>/vacaciones/sol_vacaciones_aprobar_rechazar.jsp" 
+                                   class="notification" target="mainFrame">
+                                  <span>Solicitudes Vacaciones Pendientes</span>
+                                  <span class="badge"><%=numSolicitudesPendientes%></span>
+                                </a>
+                            <%}%>
                     <%}%>
             	</div>
             	<div class="divTableCell">Ingreso: <%=sdfhora.format(ahora)%></div>

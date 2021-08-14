@@ -359,8 +359,8 @@ public class CentroCostoDAO extends BaseDAO{
             String sql = "select distinct(empl_rut) rut,"
                 + "empl_nombres || ' ' || empl_ape_paterno|| ' ' || empl_ape_materno nombre, "
                 + "empl_email email,"
-                + "autoriza_ausencia, empl_estado "
-                + "from empleado "
+                + "autoriza_ausencia, empl_estado,cargo.cargo_nombre "
+                + "from empleado inner join admingestionweb.cargo on (empleado.empl_id_cargo=cargo.cargo_id) "
                 + "where cenco_id = " + _cencoId
                 + " and empl_id_cargo = " + Constantes.ID_CARGO_DIRECTOR 
                 + " and empl_estado = 1 and autoriza_ausencia=true ";//
@@ -377,6 +377,7 @@ public class CentroCostoDAO extends BaseDAO{
                 data.setEmail(rs.getString("email"));
                 data.setAutorizaAusencia(rs.getBoolean("autoriza_ausencia"));
                 data.setEstado(rs.getInt("empl_estado"));
+                data.setNombreCargo(rs.getString("cargo_nombre"));
                 
                 lista.add(data);
             }

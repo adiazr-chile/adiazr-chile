@@ -188,7 +188,18 @@ public class SolicitudVacacionesController extends BaseServlet {
             if(request.getParameter("notaObservacion") != null){
                 solicitud.setNotaObservacion(request.getParameter("notaObservacion"));
             }
-                                
+                    
+            String runEmpleado = userConnected.getUsername();
+            if (userConnected.getIdPerfil() == Constantes.ID_PERFIL_DIRECTOR 
+                || userConnected.getIdPerfil() == Constantes.ID_PERFIL_DIRECTOR_TR
+                || userConnected.getIdPerfil() == Constantes.ID_PERFIL_JEFE_TECNICO_NACIONAL){
+                    runEmpleado = null;//userConnected.getRunEmpleado();
+            }
+            solicitud.setRutEmpleado(runEmpleado);
+            System.out.println("[SolicitudVacacionesController]"
+                + "action: " + action 
+                + ", set RunEmpleado: " + solicitud.getRutEmpleado());
+                    
             if (action.compareTo("listPropias") == 0) {//**********************************************************************************
                 try{
                     System.out.println("[SolicitudVacacionesController]"
@@ -332,9 +343,9 @@ public class SolicitudVacacionesController extends BaseServlet {
                     String strFechaHoraActual = sdf.format(fechaActual);
                     String reqDesde = request.getParameter("fechaDesde");
                     String reqHasta = request.getParameter("fechaHasta");
+                    
                     solicitud.setUsernameSolicita(userConnected.getUsername());
                     solicitud.setEmpresaId(userConnected.getEmpresaId());
-                    solicitud.setRutEmpleado(userConnected.getUsername());
                     solicitud.setFechaIngreso(strFechaHoraActual);
                     solicitud.setEstadoId(Constantes.ESTADO_SOLICITUD_PENDIENTE);
                     solicitud.setEstadoLabel(Constantes.ESTADO_SOLICITUD_PENDIENTE_LABEL);
@@ -361,12 +372,19 @@ public class SolicitudVacacionesController extends BaseServlet {
                     int intSaldoVacaciones = 0;
                     List<VacacionesVO> infoVacaciones = 
                         vacacionesBp.getInfoVacaciones(userConnected.getEmpresaId(), 
-                            userConnected.getUsername(), -1, -1, -1, "vac.rut_empleado");
+                            solicitud.getRutEmpleado(), -1, -1, -1, "vac.rut_empleado");
                     if (!infoVacaciones.isEmpty()){
                         VacacionesVO saldoVacaciones = infoVacaciones.get(0);
                         intSaldoVacaciones = saldoVacaciones.getSaldoDias();
                     }
+                    
                     int saldoPostVacaciones = intSaldoVacaciones - diasEfectivosSolicitados;
+                    System.out.println("[SolicitudVacacionesController]"
+                        + ", empresaId: : " + solicitud.getEmpresaId()    
+                        + ", rut_empleado: : " + solicitud.getRutEmpleado()
+                        + ", saldo_vacaciones: : " + intSaldoVacaciones
+                        + ", diasEfectivosSolicitados: : " + diasEfectivosSolicitados
+                        + ", saldoPostVacaciones: : " + saldoPostVacaciones);
                     
                     ArrayList<DestinatarioSolicitudVO> destinatarios = 
                         getDestinatariosSolicitud(solicitud);
@@ -374,7 +392,9 @@ public class SolicitudVacacionesController extends BaseServlet {
                     for (int i=0;i<destinatarios.size();i++) {
                         DestinatarioSolicitudVO destinatario = destinatarios.get(i);
                         strDestinatarios += destinatario.getNombre() 
-                            + "[" + destinatario.getEmail() + "],";
+                            + "[" + destinatario.getEmail() + "],"
+                            + "[" + destinatario.getCargo() + "],";
+                        
                         System.out.println("[SolicitudVacacionesController]"
                             + "strDestinatarios: " + strDestinatarios);
                     }
@@ -414,7 +434,6 @@ public class SolicitudVacacionesController extends BaseServlet {
                     
                     solicitud.setUsernameSolicita(userConnected.getUsername());
                     solicitud.setEmpresaId(userConnected.getEmpresaId());
-                    solicitud.setRutEmpleado(userConnected.getUsername());
                     solicitud.setFechaIngreso(strFechaHoraActual);
                     solicitud.setEstadoId(Constantes.ESTADO_SOLICITUD_PENDIENTE);
                     solicitud.setEstadoLabel(Constantes.ESTADO_SOLICITUD_PENDIENTE_LABEL);
@@ -454,7 +473,8 @@ public class SolicitudVacacionesController extends BaseServlet {
                     for (int i=0;i<destinatarios.size();i++) {
                         DestinatarioSolicitudVO destinatario = destinatarios.get(i);
                         strDestinatarios += destinatario.getNombre() 
-                            + "[" + destinatario.getEmail() + "],";
+                            + "[" + destinatario.getEmail() + "],"
+                            + "[" + destinatario.getCargo() + "],";
                         System.out.println("[SolicitudVacacionesController]"
                             + "strDestinatarios: " + strDestinatarios);
                     }
@@ -531,15 +551,15 @@ public class SolicitudVacacionesController extends BaseServlet {
                         + ", finVacaciones: " + solicitudFromBd.getFinVacaciones()
                         + ", diasEfectivosSolicitados: " + solicitudFromBd.getDiasEfectivosVacacionesSolicitadas()    
                         + ", username: : " + userConnected.getUsername()
-                        + ", empresaId: : " + solicitud.getEmpresaId()    
-                        + ", rut_empleado: : " + solicitud.getRutEmpleado()
+                        + ", empresaId: : " + solicitudFromBd.getEmpresaId()    
+                        + ", rut_empleado: : " + solicitudFromBd.getRutEmpleado()
                         + ", accion a realizar: " + strAccion
                         + ", nota_observacion: " + solicitud.getNotaObservacion());
 
                     solicitud.setDiasEfectivosVacacionesSolicitadas(solicitudFromBd.getDiasEfectivosVacacionesSolicitadas());
                     
-                    EmpleadoVO infoEmpleado = empleadosbp.getEmpleado(solicitud.getEmpresaId(), 
-                        solicitud.getRutEmpleado());
+                    EmpleadoVO infoEmpleado = empleadosbp.getEmpleado(solicitudFromBd.getEmpresaId(), 
+                        solicitudFromBd.getRutEmpleado());
                     resultado.setEmpresaId(infoEmpleado.getEmpresa().getId());
                     resultado.setDeptoId(infoEmpleado.getDepartamento().getId());
                     resultado.setCencoId(infoEmpleado.getCentroCosto().getId());
@@ -551,7 +571,7 @@ public class SolicitudVacacionesController extends BaseServlet {
                              * se debe verificar que no haya conflicto con otra ausencia existente.
                              */
                         //validar ausencias conflicto
-                         ArrayList<DetalleAusenciaVO> ausenciasConflicto = detAusenciaBp.getAusenciasConflicto(solicitud.getRutEmpleado(),
+                         ArrayList<DetalleAusenciaVO> ausenciasConflicto = detAusenciaBp.getAusenciasConflicto(solicitudFromBd.getRutEmpleado(),
                                 false,
                                 solicitudFromBd.getInicioVacaciones(),
                                 solicitudFromBd.getFinVacaciones(), 
@@ -570,7 +590,7 @@ public class SolicitudVacacionesController extends BaseServlet {
                             solicitud.setEstadoLabel(Constantes.ESTADO_SOLICITUD_APROBADA_LABEL);
                             notificaEventoSolicitud("SOLICITUD_APROBADA",
                                 "Solicitud de Vacaciones Aprobada", 
-                                solicitud, userConnected, 
+                                solicitudFromBd, userConnected, 
                                 request, 
                                 solicitudFromBd.getInicioVacaciones(), 
                                 solicitudFromBd.getFinVacaciones(),
@@ -585,8 +605,8 @@ public class SolicitudVacacionesController extends BaseServlet {
                             //Insertar vacacion
                             DetalleAusenciaVO newAusencia;
                             newAusencia = new DetalleAusenciaVO();
-                            newAusencia.setEmpresaId(solicitud.getEmpresaId());
-                            newAusencia.setRutEmpleado(solicitud.getRutEmpleado());
+                            newAusencia.setEmpresaId(solicitudFromBd.getEmpresaId());
+                            newAusencia.setRutEmpleado(solicitudFromBd.getRutEmpleado());
                             newAusencia.setFechaInicioAsStr(auxSolicitud.getInicioVacaciones());
                             newAusencia.setFechaFinAsStr(auxSolicitud.getFinVacaciones());
                             //fijos
@@ -620,7 +640,7 @@ public class SolicitudVacacionesController extends BaseServlet {
                                 + "Rechazar solicitud de vacaciones. Dias solicitados: " + solicitud.getDiasEfectivosVacacionesSolicitadas());
                             notificaEventoSolicitud("SOLICITUD_RECHAZADA",
                                 "Solicitud de Vacaciones Rechazada", 
-                                solicitud, userConnected, request,
+                                solicitudFromBd, userConnected, request,
                                 solicitudFromBd.getInicioVacaciones(), 
                                 solicitudFromBd.getFinVacaciones(),
                                 solicitudFromBd.getDiasEfectivosVacacionesSolicitadas());
@@ -638,7 +658,7 @@ public class SolicitudVacacionesController extends BaseServlet {
                             + "Rechazar solicitud de vacaciones. Dias solicitados: " + solicitud.getDiasEfectivosVacacionesSolicitadas());
                         notificaEventoSolicitud("SOLICITUD_RECHAZADA",
                             "Solicitud de Vacaciones Rechazada", 
-                            solicitud, userConnected, request,
+                            solicitudFromBd, userConnected, request,
                             solicitudFromBd.getInicioVacaciones(), 
                             solicitudFromBd.getFinVacaciones(),
                             solicitudFromBd.getDiasEfectivosVacacionesSolicitadas());
@@ -914,7 +934,8 @@ public class SolicitudVacacionesController extends BaseServlet {
             _solicitud.getRutEmpleado());    
         ArrayList<DestinatarioSolicitudVO> destinatarios = new ArrayList<>();
         String strNombre= "";
-        String strEmail= "";
+        String strEmail = "";
+        String strCargo = "";
         String mailTo               = empleado.getEmail();
         boolean hayJefeNacional     = true;
         boolean hayJefeDirecto      = true;
@@ -931,16 +952,18 @@ public class SolicitudVacacionesController extends BaseServlet {
             List<EmpleadoVO> directoresCenco = 
                 cencosbp.getDirectoresCenco(empleado.getEmpresaId(), empleado.getDeptoId(), empleado.getCencoId());
             for(EmpleadoVO itDirectores : directoresCenco){
-                strEmail = itDirectores.getEmail();
-                strNombre= itDirectores.getNombres();
+                strEmail    = itDirectores.getEmail();
+                strNombre   = itDirectores.getNombres();
+                strCargo    = itDirectores.getNombreCargo();
                 if (itDirectores.getApePaterno() != null) strNombre += " " + itDirectores.getApePaterno();
                 if (itDirectores.getApeMaterno() != null) strNombre += " " + itDirectores.getApeMaterno();
                 System.out.println("[SolicitudVacacionesController."
                     + "getDestinatarioSolicitud]add destinatario. "
                     + "strNombre: " + strNombre
-                    + ", strEmail: " + strEmail);
+                    + ", strEmail: " + strEmail
+                    + ", strCargo: " + strCargo);
                 DestinatarioSolicitudVO destinatario = 
-                    new DestinatarioSolicitudVO(strNombre, strEmail);
+                    new DestinatarioSolicitudVO(strNombre, strEmail, strCargo);
                 //add destinatarios
                 destinatarios.add(destinatario);
             }
@@ -971,9 +994,10 @@ public class SolicitudVacacionesController extends BaseServlet {
                 for(EmpleadoVO itJefazos : listaJefesTecnicosNacional){
                     strEmail    = itJefazos.getEmail();
                     strNombre   = itJefazos.getNombres();
+                    strCargo    = itJefazos.getNombreCargo();
                     if (itJefazos.getApePaterno() != null) strNombre += " " + itJefazos.getApePaterno();
                     if (itJefazos.getApeMaterno() != null) strNombre += " " + itJefazos.getApeMaterno();
-                    DestinatarioSolicitudVO destinatario = new DestinatarioSolicitudVO(strNombre, strEmail);
+                    DestinatarioSolicitudVO destinatario = new DestinatarioSolicitudVO(strNombre, strEmail, strCargo);
                     destinatarios.add(destinatario);
                 }
             }else{
