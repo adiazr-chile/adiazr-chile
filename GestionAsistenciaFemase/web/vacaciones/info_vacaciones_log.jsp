@@ -205,15 +205,6 @@
                     sorting: false,
                     defaultValue: '0'
                 },
-                numActualCotizaciones:{
-                    title: 'Nro cotizaciones',
-                    width: '6%',
-                    list: true,
-                    edit:true,
-                    create:true,
-                    sorting: false,
-                    defaultValue: '0'
-                },
                 afpCode:{
                     title: 'AFP Certif',
                     width: '6%',
@@ -234,6 +225,21 @@
                     edit:true,
                     create:true,
                     sorting: false
+                },
+                numCotizaciones:{
+                    title: 'Num cotiz. certif.',
+                    width: '6%',
+                    list: true,
+                    sorting: false,
+                    defaultValue: '0'
+                },
+                fechaBaseVp:{
+                    title: 'FVP',
+                    width: '5%',
+                    list: true,
+                    edit: false,
+                    sorting: false,
+                    defaultValue: '0'
                 },    
                 diasProgresivos:{
                     title: 'Dias Progresivos',

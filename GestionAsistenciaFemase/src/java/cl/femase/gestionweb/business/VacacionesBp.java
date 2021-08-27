@@ -280,15 +280,8 @@ public class VacacionesBp {
         Calendar calHoy = Calendar.getInstance(new Locale("es","CL"));
         Date fechaActual = calHoy.getTime();
         
-//        Calendar calHoy1erDia = Calendar.getInstance(new Locale("es","CL"));
-//        calHoy1erDia.set(Calendar.DATE, 1);
-//        Date fecha1erDiaMes = calHoy1erDia.getTime();
-//        System.out.println("[VacacionesBp."
-//            + "calculaDiasVacaciones]"
-//            + "fecha1erDiaMes: " + fecha1erDiaMes);
         boolean insertar=false;
         /**
-        * 
         * Rescatar valor de parametros.
         * Valores por defecto
         */
@@ -321,23 +314,6 @@ public class VacacionesBp {
             + "getFechaMesVencido]Calcular antiguedad entre:"
             + "Fecha inicio contrato: " + fechaInicioContrato
             +", fechaMesVencido: " + fechaMesVencido);
-        
-//////        long diasAntiguedad = Utilidades.getDifferenceInDays(fechaInicioContrato, fechaMesVencido);
-//////        //int mesesAntiguedad = Integer.parseInt(String.valueOf(diasAntiguedad)) / 30;
-//////        System.out.println("[VacacionesBp."
-//////            + "getFechaMesVencido]"
-//////            + "Dias antiguedad (long)= " + diasAntiguedad);
-//////        
-//////        BigDecimal bgDiasAntiguedad, bgTreinta, bgMesesAntiguedad;
-//////        bgDiasAntiguedad = new BigDecimal(diasAntiguedad);
-//////        System.out.println("[VacacionesBp."
-//////            + "getFechaMesVencido]"
-//////            + "Dias antiguedad (bigDecimal.double)= " + bgDiasAntiguedad.doubleValue());
-//////        bgTreinta = new BigDecimal("30");
-        // divide bg1 with bg2 with 3 scale
-//////        bgMesesAntiguedad = bgDiasAntiguedad.divide(bgTreinta, 2, RoundingMode.HALF_DOWN);
-        
-        //20201116-001
         DiferenciaEntreFechasVO difFechas = Utilidades.getDiferenciaEntreFechas(fechaInicioContrato, fechaMesVencido);
         BigDecimal bgMesesAntiguedad = new BigDecimal(difFechas.getMonths());
         System.out.println("[VacacionesBp."
@@ -380,168 +356,36 @@ public class VacacionesBp {
         }
         bgMesesAntiguedad = new BigDecimal(bgMesesAntiguedad.intValue());
         BigDecimal bgDiasDiasAFavor = bgMesesAntiguedad.multiply(new BigDecimal(paramFactorVacaciones));
-        double diasNormales = bgDiasDiasAFavor.intValue();
+        double diasNormales = bgDiasDiasAFavor.doubleValue();
         System.out.println("[VacacionesBp."
             + "calculaDiasVacaciones]"
             + "rut_empleado: " + _runEmpleado
             + ", dias a favor(int): " + bgDiasDiasAFavor.intValue()
             + ", dias a favor(double): " + bgDiasDiasAFavor.doubleValue());
-        /**
-        * 2.- Calcular dias progresivos segun formula
-        */
-        BigDecimal bdmmc = new BigDecimal(paramMinMesesCotizando);
-        bdmmc = bdmmc.setScale(0,BigDecimal.ROUND_HALF_DOWN);
         
-        int diasProgresivos = 0;
-//        int mesesExceso = 0;
-        int numCotizaciones =  bdmmc.intValue(); //dataVacaciones.getNumActualCotizaciones();
-        
-        System.out.println("[VacacionesBp."
-            + "calculaDiasVacaciones]"
-            + "rut_empleado: " + _runEmpleado
-            + ", afp_code: " + dataVacaciones.getAfpCode()
-            + ", fecha certif afp(vac prog): " + dataVacaciones.getFechaCertifVacacionesProgresivas());
-        
-        if (dataVacaciones.getFechaCertifVacacionesProgresivas() == null 
-            || dataVacaciones.getAfpCode() == null){
-                numCotizaciones = 0;
-        }else{
-            System.out.println("[VacacionesBp."
-                + "calculaDiasVacaciones]"
-                + "rut_empleado: " + _runEmpleado
-                + "Tiene certificado. "
-                + "Setear num actual cotizaciones segun datos "
-                + "en info vacacionesa. "
-                + "Num cotizaciones=" + dataVacaciones.getNumActualCotizaciones());
-            numCotizaciones =  dataVacaciones.getNumActualCotizaciones();
-        }
-        
-        BigDecimal bdmavp = new BigDecimal(paramMesesAddVacProgresivas);
-        bdmavp = bdmavp.setScale(0,BigDecimal.ROUND_HALF_DOWN);
-        
-        System.out.println("[VacacionesBp."
-            + "calculaDiasVacaciones]"
-            + "numCotizaciones(segun certificado afp): A= " + numCotizaciones
-            + ", mesesAntiguedad en la empresa: B= " + bgMesesAntiguedad.doubleValue()
-            + ", ( A + B ): " + (numCotizaciones + bgMesesAntiguedad.doubleValue())    
-            + ", paramMinMesesCotizando: " + bdmmc.intValue());
-        
-        /**
-        *   Actualizar numero de cotizaciones, 
-        *   de acuerdo a la fecha de presentacion del certificado de vacaciones progresivas.
-        *   Dicho certificado es emitido por la AFP del empleado.
-        *
-        */
-        System.out.println("[VacacionesBp.calculaDiasVacaciones]CALCULAR NUM COTIZACIONES");
-        boolean tieneCertifAFP          = false;
-        BigDecimal bgMesesCertificado   = new BigDecimal(0);
+        //datos para despues guardar en la tabla 'vacaciones'
+        double diasProgresivos = 0;
+        boolean tieneCertifAFP = false;
+        String mensajeVP    = "";
+        String fechaBaseVP = null;
         if (dataVacaciones.getAfpCode()!=null && dataVacaciones.getAfpCode().compareTo("NINGUNA") != 0 &&
                 dataVacaciones.getFechaCertifVacacionesProgresivas() != null){
-            try {
-                numCotizaciones = bdmmc.intValue();
-                System.out.println("[VacacionesBp."
-                    + "calculaDiasVacaciones]"
-                    + "Set num cotizaciones. "
-                    + "Num cotizaciones inicial= " + numCotizaciones);
-                
-                tieneCertifAFP = true;
-                
-                Date fechaCertificado = m_sdf.parse(dataVacaciones.getFechaCertifVacacionesProgresivas());
-                //20201116-001
-                DiferenciaEntreFechasVO difFechas2 = Utilidades.getDiferenciaEntreFechas(fechaCertificado, fechaActual);
-                bgMesesCertificado = new BigDecimal(difFechas2.getMonths());
-                //long diasCertif = Utilidades.getDifferenceInDays(fechaCertificado, fechaActual);
-                System.out.println("[VacacionesBp."
-                    + "calculaDiasVacaciones]"
-                    + "Diferencia en dias entre "
-                    + "la Fecha certificado: " + fechaCertificado
-                    + " y la fecha actual: " + fechaActual
-                    + ", dif en meses = " + bgMesesCertificado.intValue());
-                //BigDecimal bgDiasCertif, bgMesesCertificado;
-                //bgDiasCertif = new BigDecimal(diasCertif);
-                
-                if (bgMesesCertificado.intValue() > 0){
-                    numCotizaciones += bgMesesCertificado.intValue();
-                }
-                System.out.println("[[VacacionesBp."
-                    + "calculaDiasVacaciones]"
-                    + "Num cotizaciones actualizado= " + numCotizaciones);
-            } catch (ParseException ex) {
-                System.err.println("[[VacacionesBp."
-                    + "calculaDiasVacaciones]"
-                    + "Error al parsear fecha de emision del "
-                    + "certificado AFP vacaciones progresivas: "+ex.toString());
-            }
-        }
-        
-        System.out.println("[VacacionesBp.calculaDiasVacaciones]Validar si aplican DIAS PROGRESIVOS");
-        System.out.println("[VacacionesBp.calculaDiasVacaciones]"
-            + "tieneCertifAFP: " + tieneCertifAFP
-            + ", numCotizaciones: " + numCotizaciones
-            + ", meses antiguedad: " + bgMesesAntiguedad.doubleValue()
-            + ", minimo meses cotizando: " + bdmmc.intValue()
-            + ", minimo num de meses para sumar dia progresivo= " + bdmavp.intValue()
-            + ", meses entre fecha del certificado y fecha actual: " + bgMesesCertificado.intValue());
-        //calcular dias progresivos
-        //if (tieneCertifAFP && (numCotizaciones + bgMesesAntiguedad.doubleValue()) > bdmmc.intValue()) {
-        if (tieneCertifAFP && (numCotizaciones > bdmmc.intValue()) && (bgMesesCertificado.intValue() > bdmavp.intValue())) {
-//            //mesesExceso = (numCotizaciones + bgMesesAntiguedad.intValue()) - bdmmc.intValue();
-            System.out.println("[VacacionesBp.calculaDiasVacaciones]"
-                + "cada cuantos meses sumar dia progresivo= " + bdmavp.intValue());
-//            if (mesesExceso >= bdmavp.intValue()){
-                //parte entera exacta
-//                diasProgresivos = mesesExceso / bdmavp.intValue();
-                diasProgresivos = bgMesesCertificado.intValue() / bdmavp.intValue();
-                System.out.println("[VacacionesBp."
-                    + "calculaDiasVacaciones]APLICAN DIAS PROGRESIVOS. "
-                    + "dias progresivos= " + diasProgresivos);
-//            }else{
-//                System.out.println("[VacacionesBp."
-//                    + "calculaDiasVacaciones]"
-//                    + "rut_empleado: " + _rutEmpleado 
-//                    + " Los meses de exceso (" + mesesExceso + ") "
-//                    + "no superan el minimo de meses para sumar dias progresivos (" + bdmavp.intValue() + ")");
-//            }	
-        }else{
-            System.out.println("[VacacionesBp."
-                + "calculaDiasVacaciones]"
-                + "rut_empleado: " + _runEmpleado 
-                + " no cumple con requisito para dias progresivos");
-        }
-        
-//        /**
-//        * 3.- rescatar dias especiales
-//        */
-//        int diasEspeciales = dataVacaciones.getDiasEspeciales();
-//        System.out.println("[VacacionesBp."
-//            + "calculaDiasVacaciones]"
-//            + "rut_empleado: " + _rutEmpleado
-//            + ", dias especiales: " + diasEspeciales);
-        /**
-        * 4.- Rescatar dias por zona extrema (esto lo determina el centro de costo del empleado)
-        */
-////        int diasZonaExtrema = 0;
-////        System.out.println("[VacacionesBp."
-////            + "calculaDiasVacaciones]"
-////            + "rut_empleado: " + _rutEmpleado
-////            + ", cenco: " + infoEmpleado.getCentroCosto().getNombre()
-////            +", es zona extrema?: "+infoEmpleado.getCentroCosto().getZonaExtrema());
-////        if (infoEmpleado.getCentroCosto().getZonaExtrema().compareTo("S") == 0){ 
-////            String aux = String.valueOf(paramDiasZonaExtrema);
-////            System.out.println("[VacacionesBp."
-////                + "calculaDiasVacaciones]"
-////                + "diasZonaExtrema valor param: "+paramDiasZonaExtrema);
-////            int idx = aux.indexOf(".");
-////            String strDZE = aux.substring(0, idx);
-////            diasZonaExtrema = Integer.parseInt(strDZE);
-////            System.out.println("[VacacionesBp."
-////                + "calculaDiasVacaciones]"
-////                + "rut_empleado: " + _rutEmpleado
-////                + ", cenco: " + infoEmpleado.getCentroCosto().getNombre()
-////                +", es zona extrema?: " + infoEmpleado.getCentroCosto().getZonaExtrema()
-////                +", dias zona extrema?: " + diasZonaExtrema);
-////        }
-                
+            
+            /**
+            * 2.- Calcular dias progresivos segun formula
+            */
+            CalculoDiasProgresivosVO auxProgresivos = 
+                calculaDiasProgresivos(infoEmpleado, 
+                    dataVacaciones, 
+                    bgMesesAntiguedad, 
+                    paramMinMesesCotizando, 
+                    paramMesesAddVacProgresivas);
+
+            diasProgresivos  = auxProgresivos.getDiasProgresivos();
+            tieneCertifAFP  = auxProgresivos.isTieneCertifAFP();
+            mensajeVP       = auxProgresivos.getMensajeVP();
+            fechaBaseVP     = auxProgresivos.getFechaBaseVP();
+        }       
         /**
         *   5.- dias a favor= dias_normales + dias_progresivos + dias_especiales
         *     nuevo_saldo_dias = saldo_dias - dias_vacaciones_tomadas en la empresa  
@@ -587,31 +431,35 @@ public class VacacionesBp {
             + ", fin ultima vacacion(reciente): " + finVacacionReciente);
         
         BigDecimal diasNormalesBigDecimal = new BigDecimal(String.valueOf(diasNormales));
-        diasNormalesBigDecimal = diasNormalesBigDecimal.setScale(0,BigDecimal.ROUND_HALF_DOWN);
+        diasNormalesBigDecimal = diasNormalesBigDecimal.setScale(2,BigDecimal.ROUND_HALF_DOWN);
         System.out.println("[VacacionesBp."
             + "calculaDiasVacaciones]"
             + "rut_empleado: " + _runEmpleado
-            + ", dias normales redondeados: " + diasNormalesBigDecimal.intValue());
+            + ", dias normales con decimales: " + diasNormalesBigDecimal.doubleValue());
                         
-        int diasAFavor = diasNormalesBigDecimal.intValue() 
+        double diasAFavor = diasNormalesBigDecimal.doubleValue() 
             + diasProgresivos;
-        int nuevoSaldoDias = diasAFavor - diasVacacionesTomadas;
+        double nuevoSaldoDias = diasAFavor - diasVacacionesTomadas;
         System.out.println("[VacacionesBp."
             + "calculaDiasVacaciones]"
             + "rut_empleado: " + _runEmpleado
             + ", dias a favor: " + diasAFavor
             + ", dias vacaciones tomadas: " + diasVacacionesTomadas
-            + ", nuevo saldo dias: " + nuevoSaldoDias
-            + ", numCotizaciones: " + numCotizaciones);    
+            + ", nuevo saldo dias: " + nuevoSaldoDias);    
             
         dataVacaciones.setSaldoDias(nuevoSaldoDias);
         dataVacaciones.setDiasProgresivos(diasProgresivos);
         dataVacaciones.setDiasZonaExtrema(0);
-        dataVacaciones.setNumActualCotizaciones(numCotizaciones);
         dataVacaciones.setDiasAcumulados(diasAFavor);
         dataVacaciones.setDiasEfectivos(diasVacacionesTomadas);
         
         if (tieneCertifAFP) dataVacaciones.setComentario("");
+        
+        /**
+        * 21-08-2021: campos para calculo de Vacaciones progresivas
+        */
+        dataVacaciones.setFechaBaseVp(fechaBaseVP);
+        dataVacaciones.setMensajeVp(mensajeVP);
         
         /**
         * 6.- Si el empleado no tiene informacion de vacaciones, 
@@ -624,7 +472,7 @@ public class VacacionesBp {
                 + "calculaDiasVacaciones]"
                 + "empresa_id: "+_empresaId
                 +", rut_empleado: " + _runEmpleado
-                +". Actualizar informacion de vacaciones...");
+                +". Actualizar informacion de vacaciones existente (update)...");
             vacacionesdao.updateFromCalculo(dataVacaciones);
         }else{
             System.out.println("[VacacionesBp."
@@ -715,9 +563,9 @@ public class VacacionesBp {
                 + "getDiasEfectivos]"
                 + "Itera fecha= " + itfecha);
             if (_vacacionesEspeciales != null && _vacacionesEspeciales.compareTo("N") == 0){    
-                System.out.println("[VacacionesBp."
-                    + "getDiasEfectivos]"
-                    + "Verificar dia de la semana para la fecha: " + itfecha);
+//                System.out.println("[VacacionesBp."
+//                    + "getDiasEfectivos]"
+//                    + "Verificar dia de la semana para la fecha: " + itfecha);
                 
                 LocalDate localdate = Utilidades.getLocalDate(itfecha);
                 int diaSemana = localdate.getDayOfWeek().getValue();
@@ -746,7 +594,193 @@ public class VacacionesBp {
         return diasEfectivos;    
     }
     
+    /**
+    *   Calcula dias de vacaciones progresivas 
+    * 
+    * @param _dataVacaciones
+    * @param _bgMesesAntiguedad
+    * @param _paramMinMesesCotizando
+    * @param _paramMesesAddVacProgresivas
+    * @return 
+    */
+    public CalculoDiasProgresivosVO calculaDiasProgresivos(EmpleadoVO _infoEmpleado, 
+            VacacionesVO _dataVacaciones, 
+            BigDecimal _bgMesesAntiguedad, 
+            double _paramMinMesesCotizando,
+            double _paramMesesAddVacProgresivas){
+        
+        double diasProgresivos = 0;
+        SimpleDateFormat sdf3 = new SimpleDateFormat("yyyy-MM-dd",
+            new Locale("es","CL"));
+        Calendar auxcalendar = Calendar.getInstance(new Locale("es","CL"));
+        Date fechaActual = auxcalendar.getTime();
+        BigDecimal bdmmc = new BigDecimal(_paramMinMesesCotizando);//120
+        bdmmc = bdmmc.setScale(0,BigDecimal.ROUND_HALF_DOWN);
+        
+        int numCotizaciones =  _dataVacaciones.getNumCotizaciones();         
+        System.out.println("[VacacionesBp."
+            + "calculaDiasProgresivos]"
+            + "run_empleado: " + _dataVacaciones.getRutEmpleado()
+            + ", afp_code: " + _dataVacaciones.getAfpCode()
+            + ", fecha certif afp(vac prog): " + _dataVacaciones.getFechaCertifVacacionesProgresivas()
+            + ", numCotizaciones segun certif AFP: " + numCotizaciones);
+        
+        BigDecimal bdmavp = new BigDecimal(_paramMesesAddVacProgresivas);
+        bdmavp = bdmavp.setScale(0,BigDecimal.ROUND_HALF_DOWN);
+        
+        System.out.println("[VacacionesBp."
+            + "calculaDiasProgresivos]"
+            + "numCotizaciones(segun certificado afp): A= " + numCotizaciones
+            + ", mesesAntiguedad en la empresa: B= " + _bgMesesAntiguedad.doubleValue()
+            + ", ( A + B ): " + (numCotizaciones + _bgMesesAntiguedad.doubleValue())    
+            + ", paramMinMesesCotizando: " + bdmmc.intValue());
+        //tieneCertifAFP = true;
+        /**
+        * valores necesarios para calcular la fecha base de vacaciones progresivas
+        */
+        Date fechaCertificado = null;
+        try{
+            fechaCertificado = m_sdf.parse(_dataVacaciones.getFechaCertifVacacionesProgresivas());
+        }catch(ParseException pex){
+            System.err.println("Error al parsear fecha certif vac progresivas: " + pex.toString());
+        }
+        
+        Date fechaInicioContrato = _infoEmpleado.getFechaInicioContrato();
+        Date fechaBaseVacProgresivas = 
+            getFechaBaseVP(fechaInicioContrato, fechaCertificado, numCotizaciones, _paramMinMesesCotizando);
+        
+        DiferenciaEntreFechasVO difFechas2 = 
+            Utilidades.getDiferenciaEntreFechas(fechaBaseVacProgresivas, fechaActual);
+        BigDecimal bgMesesTranscurridos = new BigDecimal(difFechas2.getMonths());
+
+        System.out.println("[VacacionesBp.calculaDiasProgresivos]"
+            + "numCotizaciones: " + numCotizaciones
+            + ", meses antiguedad: " + _bgMesesAntiguedad.doubleValue()
+            + ", minimo meses cotizando: " + bdmmc.intValue()
+            + ", minimo num de meses para sumar dia progresivo= " + bdmavp.intValue()
+            + ", meses entre fecha base de vac progresivas y la fecha actual: " + bgMesesTranscurridos.intValue());
+        
+        Date fechaVacacionesBasicas = null;
+        try{
+            int currentYear = auxcalendar.get(Calendar.YEAR);
+            auxcalendar.setTime(fechaInicioContrato);
+            auxcalendar.set(Calendar.YEAR, currentYear);
+            fechaVacacionesBasicas = auxcalendar.getTime();
+        } catch (Exception ex) {
+            System.err.println("[VacacionesBp.calculaDiasProgresivos]"
+                + "Error al setear fecha vacaciones basicas: " + ex.toString());
+        }
+        
+        System.out.println("[VacacionesBp.calculaDiasProgresivos]"
+            + "Validar si aplican DIAS PROGRESIVOS");
+        System.out.println("[VacacionesBp.calculaDiasProgresivos]"
+            + "Fecha Actual= " + fechaActual
+            + ", fechaBaseVacProgresivas: " + fechaBaseVacProgresivas
+            + ", fechaCertificado: " + fechaCertificado
+            + ", fechaVacacionesBasicas: " + fechaVacacionesBasicas    
+        );
+        
+        String mensajeVP = "";
+        /**
+        *   2.2 (FECHA_CALCULO_ACTUAL > FECHA_BASE_VP) 
+        *   2.3 (FECHA_CALCULO_ACTUAL > FECHA_CERTIFICADO)
+        *   2.4 (FECHA_VACACIONES_BASICAS >= FECHA_CALCULO_ACTUAL) (esto es cuando se haya cumplido la fecha de vacaciones básicas anuales) 
+        */
+        boolean calcularVacacionesProgresivas = false;
+        if (numCotizaciones > bdmmc.intValue()){
+            if (bgMesesTranscurridos.intValue() > bdmavp.intValue()){    
+                if (fechaActual.after(fechaBaseVacProgresivas)){
+                    if (fechaActual.after(fechaCertificado)){
+                        if (fechaActual.after(fechaVacacionesBasicas) || fechaActual.equals(fechaVacacionesBasicas)){
+                            calcularVacacionesProgresivas = true;
+                        }else{
+                            mensajeVP = "La fecha de calculo de vacaciones: "
+                                + sdf3.format(fechaActual) 
+                                + ", es menor a la fecha de vacaciones basicas: " + sdf3.format(fechaVacacionesBasicas);
+                            System.out.println("[VacacionesBp.calculaDiasProgresivos]"
+                                + mensajeVP);
+                        }
+                    }else{
+                        mensajeVP = "La fecha de calculo de vacaciones: "
+                            + sdf3.format(fechaActual) 
+                            + ", es menor a la fecha de emision del certificado AFP u otro: " + sdf3.format(fechaCertificado);
+                        System.out.println("[VacacionesBp.calculaDiasProgresivos]"
+                            + mensajeVP);
+                    }
+                }else{
+                    mensajeVP = "La fecha de calculo de vacaciones "
+                        + sdf3.format(fechaActual) 
+                        + ", es menor a la fecha base de VP: " + sdf3.format(fechaBaseVacProgresivas);
+                    System.out.println("[VacacionesBp.calculaDiasProgresivos]"
+                        + mensajeVP);
+                }
+            }else{
+                mensajeVP = "Los meses transcurridos entre la fecha base de VP "
+                    + "y la fecha de calculo no es mayor al minimo para VP: " + bdmavp.intValue();
+                System.out.println("[VacacionesBp.calculaDiasProgresivos]"
+                    + mensajeVP);
+            }
+        }else{
+            mensajeVP = "No cumple con el minimo de " + bdmmc.intValue() + " cotizaciones "
+                + "para VP";
+            System.out.println("[VacacionesBp.calculaDiasProgresivos]"
+                + mensajeVP);
+        }
+        
+        if (calcularVacacionesProgresivas) {
+            mensajeVP = "Cumple requisitos para dias de vacaciones progresivas";
+            diasProgresivos = bgMesesTranscurridos.intValue() / bdmavp.intValue();
+            System.out.println("[VacacionesBp."
+                + "calculaDiasProgresivos]"
+                + "Dias de vacaciones progresivas calculados= " + diasProgresivos);
+        }else{
+            System.out.println("[VacacionesBp."
+                + "calculaDiasProgresivos]"
+                + "Run empleado: " + _dataVacaciones.getRutEmpleado() 
+                + " no cumple con requisito para dias progresivos");
+        }
     
+        CalculoDiasProgresivosVO valoresRetornar = 
+            new CalculoDiasProgresivosVO(diasProgresivos, 
+                true, sdf3.format(fechaBaseVacProgresivas), mensajeVP);
+        
+        return valoresRetornar;
+    }
+    
+    /**
+    * Obtiene fecha base para vacaciones progresivas
+    */
+    private static Date getFechaBaseVP(
+            Date _fechaInicioContrato,
+            Date _fechaCertificado,
+            int _numCotizaciones,
+            double _paramMinMesesCotizando){
+        
+        System.out.println("[VacacionesBp."
+            + "getFechaBaseVP]"
+            + "fecha inicio contrato: = " + _fechaInicioContrato
+            + ", fecha certificaco= " + _fechaCertificado
+            + ", _numCotizaciones: " + _numCotizaciones    
+            + ", paramMinMesesCotizando: " + _paramMinMesesCotizando);
+        
+        SimpleDateFormat sdf3 = new SimpleDateFormat("yyyy-MM-dd", new Locale("es","CL"));
+        BigDecimal aux1= new BigDecimal(_paramMinMesesCotizando);
+        int minMesesCotizando   = aux1.intValue();
+        int diferenciaEnMeses   = minMesesCotizando - _numCotizaciones;
+        
+        Date fechaBaseVP = Utilidades.sumaRestarFecha(_fechaCertificado, diferenciaEnMeses, "MONTHS");
+        //Si FECHA_BASE_VP < FECHA_INICIO_CONTRATO ===> FECHA_BASE_VP = FECHA_INICIO_CONTRATO
+        if (fechaBaseVP.before(_fechaInicioContrato)) fechaBaseVP = _fechaInicioContrato;
+        return fechaBaseVP;
+    }
+    
+    /**
+    * 
+     * @param _empresaId
+     * @param _rutEmpleado
+     * @param _cencoId
+     * @return 
+    */
     public int getInfoVacacionesCount(String _empresaId, 
             String _rutEmpleado,
             int _cencoId){
@@ -754,6 +788,11 @@ public class VacacionesBp {
             _rutEmpleado, _cencoId);
     }
     
+    /**
+    * 
+     * @param _vacaciones
+     * @throws java.sql.SQLException
+    */
     public void saveListVacaciones(ArrayList<VacacionesVO> _vacaciones) throws SQLException {
         vacacionesdao.saveListVacaciones(_vacaciones);
     }
@@ -817,5 +856,40 @@ public class VacacionesBp {
         }
         
         return FMV;
+    }
+
+    private static class CalculoDiasProgresivosVO {
+        
+        private double diasProgresivos = 0;
+        private boolean tieneCertifAFP = false;
+        private final String fechaBaseVP;
+        private final String mensajeVP;
+        
+        public CalculoDiasProgresivosVO(double _diasProgresivos,
+                boolean _tieneCertifAFP, 
+                String _fechaBaseVP,
+                String _mensajeVP) {
+            this.diasProgresivos = _diasProgresivos;
+            this.tieneCertifAFP = _tieneCertifAFP;
+            this.fechaBaseVP = _fechaBaseVP;
+            this.mensajeVP = _mensajeVP;
+        }
+
+        public double getDiasProgresivos() {
+            return diasProgresivos;
+        }
+
+        public boolean isTieneCertifAFP() {
+            return tieneCertifAFP;
+        }
+
+        public String getFechaBaseVP() {
+            return fechaBaseVP;
+        }
+
+        public String getMensajeVP() {
+            return mensajeVP;
+        }
+        
     }
 }

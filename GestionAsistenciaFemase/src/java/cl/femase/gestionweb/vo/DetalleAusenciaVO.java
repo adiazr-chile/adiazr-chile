@@ -52,10 +52,10 @@ public class DetalleAusenciaVO implements Serializable{
     private String permiteHora="N";
     private int tipoAusencia=1;
     
-    private int diasAcumulados;
-    private int diasProgresivos;
-    private int saldoDias;
-    private int diasEfectivosVacaciones;
+    private double diasAcumulados;
+    private double diasProgresivos;
+    private double saldoDias;
+    private double diasEfectivosVacaciones;
     private String diasEspeciales  = "N";
     private String esZonaExtrema  = "N";
     private String mensajeError;
@@ -123,11 +123,11 @@ public class DetalleAusenciaVO implements Serializable{
         this.fechafin = fechafin;
     }
 
-    public int getDiasEfectivosVacaciones() {
+    public double getDiasEfectivosVacaciones() {
         return diasEfectivosVacaciones;
     }
 
-    public void setDiasEfectivosVacaciones(int diasEfectivosVacaciones) {
+    public void setDiasEfectivosVacaciones(double diasEfectivosVacaciones) {
         this.diasEfectivosVacaciones = diasEfectivosVacaciones;
     }
 
@@ -163,34 +163,30 @@ public class DetalleAusenciaVO implements Serializable{
         this.deptoNombre = deptoNombre;
     }
 
-    
-    
-    public int getDiasAcumulados() {
+    public double getDiasAcumulados() {
         return diasAcumulados;
     }
 
-    public void setDiasAcumulados(int diasAcumulados) {
+    public void setDiasAcumulados(double diasAcumulados) {
         this.diasAcumulados = diasAcumulados;
     }
 
-    public int getDiasProgresivos() {
+    public double getDiasProgresivos() {
         return diasProgresivos;
     }
 
-    public void setDiasProgresivos(int diasProgresivos) {
+    public void setDiasProgresivos(double diasProgresivos) {
         this.diasProgresivos = diasProgresivos;
     }
 
-    public int getSaldoDias() {
+    public double getSaldoDias() {
         return saldoDias;
     }
 
-    public void setSaldoDias(int saldoDias) {
+    public void setSaldoDias(double saldoDias) {
         this.saldoDias = saldoDias;
     }
 
-    
-    
     public int getTipoAusencia() {
         return tipoAusencia;
     }

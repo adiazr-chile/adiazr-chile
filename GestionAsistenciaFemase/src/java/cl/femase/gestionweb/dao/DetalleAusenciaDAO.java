@@ -174,7 +174,7 @@ public class DetalleAusenciaDAO extends BaseDAO{
             dbConn = dbLocator.getConnection(m_dbpoolName,
                 "[DetalleAusenciaDAO.updateDiasEfectivosVacaciones]");
             psupdate = dbConn.prepareStatement(sql);
-            psupdate.setInt(1,  _data.getDiasEfectivosVacaciones());
+            psupdate.setDouble(1,  _data.getDiasEfectivosVacaciones());
             psupdate.setString(2,  _data.getRutEmpleado());
             
             int rowAffected = psupdate.executeUpdate();
@@ -718,9 +718,9 @@ public class DetalleAusenciaDAO extends BaseDAO{
                 data.setSoloMinsFin(strMinsFin);
                 
                 //tabla vacaciones
-                data.setDiasAcumulados(rs.getInt("dias_acumulados"));
-                data.setDiasProgresivos(rs.getInt("dias_progresivos"));
-                data.setSaldoDias(rs.getInt("saldo_dias"));
+                data.setDiasAcumulados(rs.getDouble("dias_acumulados"));
+                data.setDiasProgresivos(rs.getDouble("dias_progresivos"));
+                data.setSaldoDias(rs.getDouble("saldo_dias"));
                 data.setDiasEspeciales(rs.getString("dias_especiales"));
                 
                 data.setDiasEfectivosVacaciones(rs.getInt("dias_efectivos_vacaciones"));
@@ -913,7 +913,7 @@ public class DetalleAusenciaDAO extends BaseDAO{
                 data.setRutAutorizador(rs.getString("autorizador_rut"));
                 data.setNombreAutorizador(rs.getString("autorizador_nombre"));
                 data.setNomCencoAutorizador(rs.getString("autorizador_cenco"));                
-                data.setSaldoDias(rs.getInt("saldo_dias"));
+                data.setSaldoDias(rs.getDouble("saldo_dias"));
                 data.setHoraInicioFullAsStr(rs.getString("hora_inicio"));
                 data.setHoraFinFullAsStr(rs.getString("hora_fin"));
                 lista.add(data);

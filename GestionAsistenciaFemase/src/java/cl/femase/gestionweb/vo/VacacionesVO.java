@@ -25,28 +25,79 @@ public class VacacionesVO implements Serializable{
     private String nombreEmpleado;
     private String fechaCalculo;
     private String fechaEvento;
-    private int diasAcumulados;
-    private int diasProgresivos = 0;
+    
+    private double diasAcumulados;
+    private double diasProgresivos = 0;
+    private double saldoDias       = 0;
+    private double diasZonaExtrema;
+    private double diasAdicionales;
+        
     private String diasEspeciales  = "N";
-    private int saldoDias       = 0;
+    
     private String fechaInicioUltimasVacaciones;
     private String fechaFinUltimasVacaciones;
     private int cencoId = -1;
     private String cencoNombre;
     private String mensajeValidacion;
-    private int diasEfectivos = 0;
+    private double diasEfectivos = 0;
     
     //nuevos atributos. 23-02-2020
+    /**
+    * @deprecated
+    */
     private int numActualCotizaciones;
-    private int diasZonaExtrema;
+    
     private String comentario;
     private String fechaInicioContrato;
     private String esZonaExtrema;
     private String afpCode;
     private String afpName;
     private String fechaCertifVacacionesProgresivas;
-    private int diasAdicionales;
+    
+    /**
+     * 19-08-2021: agregados para implementar cambios a calculo de vacaciones progresivas
+     */
+    private String fechaBaseVp;
+    private String mensajeVp;
+    private int numCotizaciones;
+    private String otraInstitucionEmisoraCertif;
 
+    public String getMensajeVp() {
+        return mensajeVp;
+    }
+
+    public void setMensajeVp(String mensajeVp) {
+        this.mensajeVp = mensajeVp;
+    }
+
+    
+    
+    public String getFechaBaseVp() {
+        return fechaBaseVp;
+    }
+
+    public void setFechaBaseVp(String fechaBaseVp) {
+        this.fechaBaseVp = fechaBaseVp;
+    }
+
+    public int getNumCotizaciones() {
+        return numCotizaciones;
+    }
+
+    public void setNumCotizaciones(int numCotizaciones) {
+        this.numCotizaciones = numCotizaciones;
+    }
+
+    public String getOtraInstitucionEmisoraCertif() {
+        return otraInstitucionEmisoraCertif;
+    }
+
+    public void setOtraInstitucionEmisoraCertif(String otraInstitucionEmisoraCertif) {
+        this.otraInstitucionEmisoraCertif = otraInstitucionEmisoraCertif;
+    }
+    
+    
+    
     public String getEmpresaKey() {
         return empresaKey;
     }
@@ -71,14 +122,6 @@ public class VacacionesVO implements Serializable{
         this.fechaEvento = fechaEvento;
     }
     
-    public int getDiasAdicionales() {
-        return diasAdicionales;
-    }
-
-    public void setDiasAdicionales(int diasAdicionales) {
-        this.diasAdicionales = diasAdicionales;
-    }
-
     public String getAfpCode() {
         return afpCode;
     }
@@ -127,14 +170,6 @@ public class VacacionesVO implements Serializable{
         this.comentario = comentario;
     }
 
-    public int getDiasZonaExtrema() {
-        return diasZonaExtrema;
-    }
-
-    public void setDiasZonaExtrema(int diasZonaExtrema) {
-        this.diasZonaExtrema = diasZonaExtrema;
-    }
-
     public int getNumActualCotizaciones() {
         return numActualCotizaciones;
     }
@@ -143,11 +178,11 @@ public class VacacionesVO implements Serializable{
         this.numActualCotizaciones = numActualCotizaciones;
     }
 
-    public int getDiasEfectivos() {
+    public double getDiasEfectivos() {
         return diasEfectivos;
     }
 
-    public void setDiasEfectivos(int diasEfectivos) {
+    public void setDiasEfectivos(double diasEfectivos) {
         this.diasEfectivos = diasEfectivos;
     }
     
@@ -239,28 +274,44 @@ public class VacacionesVO implements Serializable{
         this.diasEspeciales = diasEspeciales;
     }
 
-    public int getDiasAcumulados() {
+    public double getDiasAcumulados() {
         return diasAcumulados;
     }
 
-    public void setDiasAcumulados(int diasAcumulados) {
+    public void setDiasAcumulados(double diasAcumulados) {
         this.diasAcumulados = diasAcumulados;
     }
 
-    public int getDiasProgresivos() {
+    public double getDiasProgresivos() {
         return diasProgresivos;
     }
 
-    public void setDiasProgresivos(int diasProgresivos) {
+    public void setDiasProgresivos(double diasProgresivos) {
         this.diasProgresivos = diasProgresivos;
     }
 
-    public int getSaldoDias() {
+    public double getSaldoDias() {
         return saldoDias;
     }
 
-    public void setSaldoDias(int saldoDias) {
+    public void setSaldoDias(double saldoDias) {
         this.saldoDias = saldoDias;
+    }
+
+    public double getDiasZonaExtrema() {
+        return diasZonaExtrema;
+    }
+
+    public void setDiasZonaExtrema(double diasZonaExtrema) {
+        this.diasZonaExtrema = diasZonaExtrema;
+    }
+
+    public double getDiasAdicionales() {
+        return diasAdicionales;
+    }
+
+    public void setDiasAdicionales(double diasAdicionales) {
+        this.diasAdicionales = diasAdicionales;
     }
 
     public String getFechaInicioUltimasVacaciones() {

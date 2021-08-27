@@ -877,9 +877,9 @@ public class DetalleAusenciaController extends BaseServlet {
                 + "Inicio: " + fechaInicioVacaciones
                 + ", Fin: " + fechaFinVacaciones);
             saldoVacaciones = infoVacaciones.get(0);
-            int saldoDias = saldoVacaciones.getSaldoDias();
+            double saldoDias = saldoVacaciones.getSaldoDias();
             
-            int diasEfectivosActuales = 0;
+            double diasEfectivosActuales = 0;
             if (_datosAusenciaExistente != null) diasEfectivosActuales = _datosAusenciaExistente.getDiasEfectivosVacaciones();
             
             diasSolicitados = 
@@ -888,7 +888,7 @@ public class DetalleAusenciaController extends BaseServlet {
                     saldoVacaciones.getDiasEspeciales(),
                     _datosAusencia.getEmpresaId(),
                     _datosAusencia.getRutEmpleado());
-            int nuevoSaldoDias = saldoDias + diasEfectivosActuales;
+            double nuevoSaldoDias = saldoDias + diasEfectivosActuales;
             
             System.out.println("[servlet."
                 + "DetalleAusenciaController.validarVacaciones]"
@@ -919,7 +919,7 @@ public class DetalleAusenciaController extends BaseServlet {
                     + ", rutEmpleado: " + _datosAusencia.getRutEmpleado()
                     + ", dias solicitados(A): " + diasSolicitados);
      
-                int saldoFinal = nuevoSaldoDias - diasSolicitados;
+                double saldoFinal = nuevoSaldoDias - diasSolicitados;
                 saldoVacaciones.setSaldoDias(saldoFinal);
                 saldoVacaciones.setDiasEfectivos(diasSolicitados);
                 //_datosAusencia.getFechaInicioAsStr(), _datosAusencia.getFechaFinAsStr()

@@ -506,7 +506,7 @@ public class CalendarioFeriadoDAO extends BaseDAO{
         
         try{
             String sql = "select json_agg(f.*) json_it "
-                + "from generate_series( '" + _fechaInicio + "', '" + _fechaFin + "', '1 day'::interval) as fecha_it "
+                + "from generate_series( '" + _fechaInicio + "'::timestamp, '" + _fechaFin + "'::timestamp, '1 day'::interval) as fecha_it "
                 + "cross join validaFechaFeriado('" + _empresaId + "'," + _cencoId + ",'" + _rutEmpleado + "',fecha_it::date) f";
             
             System.out.println("[CalendarioFeriadoDAO.getValidaFechasJson]Sql: "+sql);

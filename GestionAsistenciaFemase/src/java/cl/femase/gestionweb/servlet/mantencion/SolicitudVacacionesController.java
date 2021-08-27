@@ -369,20 +369,20 @@ public class SolicitudVacacionesController extends BaseServlet {
                             solicitud.getRutEmpleado());
                     solicitud.setDiasEfectivosVacacionesSolicitadas(diasEfectivosSolicitados);
                     
-                    int intSaldoVacaciones = 0;
+                    double doubleSaldoVacaciones = 0;
                     List<VacacionesVO> infoVacaciones = 
                         vacacionesBp.getInfoVacaciones(userConnected.getEmpresaId(), 
                             solicitud.getRutEmpleado(), -1, -1, -1, "vac.rut_empleado");
                     if (!infoVacaciones.isEmpty()){
                         VacacionesVO saldoVacaciones = infoVacaciones.get(0);
-                        intSaldoVacaciones = saldoVacaciones.getSaldoDias();
+                        doubleSaldoVacaciones = saldoVacaciones.getSaldoDias();
                     }
                     
-                    int saldoPostVacaciones = intSaldoVacaciones - diasEfectivosSolicitados;
+                    double saldoPostVacaciones = doubleSaldoVacaciones - diasEfectivosSolicitados;
                     System.out.println("[SolicitudVacacionesController]"
                         + ", empresaId: : " + solicitud.getEmpresaId()    
                         + ", rut_empleado: : " + solicitud.getRutEmpleado()
-                        + ", saldo_vacaciones: : " + intSaldoVacaciones
+                        + ", saldo_vacaciones: : " + doubleSaldoVacaciones
                         + ", diasEfectivosSolicitados: : " + diasEfectivosSolicitados
                         + ", saldoPostVacaciones: : " + saldoPostVacaciones);
                     

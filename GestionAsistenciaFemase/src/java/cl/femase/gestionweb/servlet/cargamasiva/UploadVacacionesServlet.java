@@ -485,8 +485,7 @@ public class UploadVacacionesServlet extends BaseServlet {
                 + "Inicio: " + fechaInicioVacaciones
                 + ", Fin: " + fechaFinVacaciones);
             saldoVacaciones = infoVacaciones.get(0);
-            int saldoDias = 0;
-            saldoDias = saldoVacaciones.getSaldoDias();
+            double saldoDias = saldoVacaciones.getSaldoDias();
             diasSolicitados = 
                 vacacionesBp.getDiasEfectivos(fechaInicioVacaciones, 
                     fechaFinVacaciones, 
@@ -518,7 +517,7 @@ public class UploadVacacionesServlet extends BaseServlet {
                     + ", rutEmpleado: " + _datosAusencia.getRutEmpleado()
                     + ", dias solicitados(A): " + diasSolicitados);
      
-                int saldoFinal = saldoDias - diasSolicitados;
+                double saldoFinal = saldoDias - diasSolicitados;
                 saldoVacaciones.setSaldoDias(saldoFinal);
                 saldoVacaciones.setDiasEfectivos(diasSolicitados);
                 //_datosAusencia.getFechaInicioAsStr(), _datosAusencia.getFechaFinAsStr()

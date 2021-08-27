@@ -115,9 +115,10 @@ public class VacacionesReport extends BaseServlet {
                 + "jasperfile: " + jasperFileName
                 +", datasource a usar: "+m_dbpoolName);
             
-            Map parameters = getParameters(userConnected.getUsername(),
+            Map reportParameters = getParameters(userConnected.getUsername(),
                 request, _rutParam);
-            if (parameters != null){
+            if (reportParameters != null){
+                
                 Connection dbConn=null;
                 try {
                     dbConn = dbLocator.getConnection(m_dbpoolName,"[VacacionesReport.doPost]");
@@ -134,7 +135,7 @@ public class VacacionesReport extends BaseServlet {
                     try{
                         fullPath = 
                             appProperties.getPathExportedFiles()+File.separator+fileName;
-                        JasperRunManager.runReportToPdfFile(jasperFileName, fullPath, parameters, dbConn);
+                        JasperRunManager.runReportToPdfFile(jasperFileName, fullPath, reportParameters, dbConn);
                     }catch(Exception e){
                         System.err.println("[servlet.reportes."
                             + "VacacionesReport.processRequestRut]"
@@ -164,9 +165,7 @@ public class VacacionesReport extends BaseServlet {
         PropertiesVO appProperties  = (PropertiesVO)application.getAttribute("appProperties");
         EmpleadosBp empleadosBp     = new EmpleadosBp(appProperties);
         VacacionesBp vacacionesBp     = new VacacionesBp(appProperties);
-        //VacacionesDAO vacacionesDao = new VacacionesDAO(appProperties);
         EmpresaBp empresaBp         = new EmpresaBp(appProperties);
-        //DetalleAusenciaDAO detalleAusenciaBp = new DetalleAusenciaDAO(appProperties);
         SimpleDateFormat sdfyyyy_MM_dd = new SimpleDateFormat("yyyy-MM-dd");
         System.out.println("[servlet.reportes."
             + "VacacionesReport.getParameters]Inicio...");
@@ -186,34 +185,8 @@ public class VacacionesReport extends BaseServlet {
         if (!infoVacaciones.isEmpty()){
             dataVacaciones = infoVacaciones.get(0);
         }
-        
-////        /**
-////        * Rescatar las vacaciones existentes en el rango de fechas seleccionado
-////        * Solo se deben recalcular los dias efectivos de aquellas vacaciones que no tengan dias efectivos seteados. 
-////        */
-////        System.out.println("[servlet.reportes."
-////            + "VacacionesReport.getParameters]. "
-////            + "Empresa_id: " + empresaParam 
-////            + ", rutEmpleado: " + _rutEmpleado
-////            +". Rescatar todas las vacaciones existentes a "
-////            + "la fecha del reporte (pasadas y futuras)...");
-        int diasTotalesAsignadosPeriodo = 0;
-////        int diasEfectivos = 0;
-////        ArrayList<DetalleAusenciaVO> vacaciones = 
-////            vacacionesDao.getAllVacaciones(empresaParam, _rutEmpleado);//, startDateParam, endDateParam );
-////        if (vacaciones!=null){
-////            Iterator<DetalleAusenciaVO> it = vacaciones.iterator();
-////            while(it.hasNext()){
-////                DetalleAusenciaVO auxVacacion = it.next();
-////                if (auxVacacion.getDiasEfectivosVacaciones() == 0){
-////                    diasEfectivos = 
-////                        vacacionesBp.getDiasEfectivos(auxVacacion.getFechainicio(), 
-////                            auxVacacion.getFechafin(),dataVacaciones.getDiasEspeciales());
-////                    detalleAusenciaBp.updateDiasEfectivosVacaciones(auxVacacion.getCorrelativo(), diasEfectivos);
-////                    diasTotalesAsignadosPeriodo += diasEfectivos;
-////                }
-////            }
-////        }
+
+        double diasTotalesAsignadosPeriodo = 0;
         
         /**
         * Calcular dias de vacaciones, para tener la informacion actualizada.
@@ -273,16 +246,8 @@ public class VacacionesReport extends BaseServlet {
         
         //20201116-001
         DiferenciaEntreFechasVO difFechas = Utilidades.getDiferenciaEntreFechas(fechaInicioContrato, fechaMesVencido);
-        BigDecimal bgMesesAntiguedad = new BigDecimal(difFechas.getMonths());
-//        long diasAntiguedad = Utilidades.getDifferenceInDays(fechaInicioContrato, fechaMesVencido);
-//        
-//        BigDecimal bgDiasAntiguedad, bgTreinta, bgMesesAntiguedad;
-//        bgDiasAntiguedad = new BigDecimal(diasAntiguedad);
-//        bgTreinta = new BigDecimal("30");
-//        // divide bg1 with bg2 with 3 scale
-//        bgMesesAntiguedad = bgDiasAntiguedad.divide(bgTreinta, 2, RoundingMode.HALF_DOWN);
-//        
-        bgMesesAntiguedad = new BigDecimal(bgMesesAntiguedad.intValue());
+        BigDecimal bgMesesAntiguedad = new BigDecimal(difFechas.getMonths()).setScale(2,BigDecimal.ROUND_HALF_DOWN);
+        bgMesesAntiguedad = new BigDecimal(bgMesesAntiguedad.doubleValue());
         System.out.println("[servlet.reportes."
             + "VacacionesReport.getParameters]"
             + "rut_empleado: " + _rutEmpleado
@@ -297,9 +262,9 @@ public class VacacionesReport extends BaseServlet {
         if (m_parametrosSistema.get("factor_vac_especiales") == 0) paramFactorVacacionesEspeciales = 2.5;
         if (m_parametrosSistema.get("factor_vac_zona_extrema") == 0) paramFactorVacacionesZonaExtrema = 1.67;
         
-        int diasEspeciales  = 0;
-        int diasNormales    = 0;
-        int diasZonaExtrema = 0;
+        double dblDiasEspeciales  = 0;
+        double dblDiasNormales    = 0;
+        double dblDiasZonaExtrema = 0;
         BigDecimal bgDiasAFavor;
         
         if (dataVacaciones.getDiasEspeciales().compareTo("S") == 0){
@@ -309,13 +274,13 @@ public class VacacionesReport extends BaseServlet {
                 + ", cenco: " + infoEmpleado.getCentroCosto().getNombre()
                 + ". Meses antiguedad= " + bgMesesAntiguedad    
                 + ". Usar factor dias vacaciones especiales= "+paramFactorVacacionesEspeciales);
-            bgDiasAFavor = bgMesesAntiguedad.multiply(new BigDecimal(paramFactorVacacionesEspeciales));
-            diasEspeciales = bgDiasAFavor.intValue();
+            bgDiasAFavor = bgMesesAntiguedad.multiply(new BigDecimal(paramFactorVacacionesEspeciales)).setScale(2,BigDecimal.ROUND_HALF_DOWN);
+            dblDiasEspeciales = bgDiasAFavor.doubleValue();
             System.out.println("[servlet.reportes."
                 + "VacacionesReport.getParameters]"
                 + "rut_empleado: " + _rutEmpleado
                 + ", cenco: " + infoEmpleado.getCentroCosto().getNombre()
-                +". dias_especiales(antes= " + diasEspeciales);
+                +". dias_especiales(antes= " + dblDiasEspeciales);
         }else if (infoEmpleado.getCentroCosto().getZonaExtrema().compareTo("S") == 0){ 
             //paramFactorVacaciones = paramFactorVacacionesZonaExtrema;
             System.out.println("[servlet.reportes."
@@ -323,32 +288,31 @@ public class VacacionesReport extends BaseServlet {
                 + "rut_empleado: " + _rutEmpleado
                 + ", cenco: " + infoEmpleado.getCentroCosto().getNombre()
                 +", es zona extrema, usar factor dias= "+paramFactorVacacionesZonaExtrema);
-            bgDiasAFavor = bgMesesAntiguedad.multiply(new BigDecimal(paramFactorVacacionesZonaExtrema));
-            diasZonaExtrema = bgDiasAFavor.intValue();
+            bgDiasAFavor = bgMesesAntiguedad.multiply(new BigDecimal(paramFactorVacacionesZonaExtrema)).setScale(2,BigDecimal.ROUND_HALF_DOWN);
+            dblDiasZonaExtrema = bgDiasAFavor.doubleValue();
         }else{
             System.out.println("[servlet.reportes."
                 + "VacacionesReport.getParameters]"
                 + "rut_empleado: " + _rutEmpleado
                 + ", cenco: " + infoEmpleado.getCentroCosto().getNombre()
                 +". Usar factor dias vacaciones normales= "+paramFactorVacacionesNormales);
-            bgDiasAFavor = bgMesesAntiguedad.multiply(new BigDecimal(paramFactorVacacionesNormales));
-            diasNormales = bgDiasAFavor.intValue();
+            bgDiasAFavor = bgMesesAntiguedad.multiply(new BigDecimal(paramFactorVacacionesNormales)).setScale(2,BigDecimal.ROUND_HALF_DOWN);
+            dblDiasNormales = bgDiasAFavor.doubleValue();
         }
-        
-        
+                
         //Final, seteo de valores
-        int diasAcumulados = diasZonaExtrema 
-            + diasEspeciales 
-            + diasNormales 
+        double diasAcumulados = dblDiasZonaExtrema 
+            + dblDiasEspeciales 
+            + dblDiasNormales 
             + dataVacaciones.getDiasAdicionales()
             + dataVacaciones.getDiasProgresivos();
-        int diasDisponibles = (diasAcumulados - diasTotalesAsignadosPeriodo);
+        double diasDisponibles = (diasAcumulados - diasTotalesAsignadosPeriodo);
         System.out.println("[servlet.reportes."
             + "VacacionesReport.getParameters]"
             + "rut_empleado: " + _rutEmpleado
-            + ", diasZonaExtrema(+): " + diasZonaExtrema
-            + ", diasEspeciales(+): " + diasEspeciales
-            + ", diasNormales(+): " + diasNormales
+            + ", diasZonaExtrema(+): " + dblDiasZonaExtrema
+            + ", diasEspeciales(+): " + dblDiasEspeciales
+            + ", diasNormales(+): " + dblDiasNormales
             + ", diasAdicionales(+): " + dataVacaciones.getDiasAdicionales()
             + ", diasProgresivos(+): " + dataVacaciones.getDiasProgresivos()        
             + ", diasAcumulados(total+): " + diasAcumulados
@@ -371,17 +335,17 @@ public class VacacionesReport extends BaseServlet {
         parameters.put("es_zona_extrema", infoEmpleado.getCentroCosto().getZonaExtrema());
         
         //Dias que suman (+)
-        parameters.put("dias_adicionales", dataVacaciones.getDiasAdicionales());
+        parameters.put("dias_adicionales", dataVacaciones.getDiasAdicionales());//double
         parameters.put("dias_progresivos", dataVacaciones.getDiasProgresivos());
         //excluyentes
-        parameters.put("dias_zona_extrema", diasZonaExtrema);
-        parameters.put("dias_especiales", diasEspeciales);
-        parameters.put("dias_normales", diasNormales);
+        parameters.put("dias_zona_extrema", dblDiasZonaExtrema);
+        parameters.put("dias_especiales", dblDiasEspeciales);
+        parameters.put("dias_normales", dblDiasNormales);
         
-        parameters.put("dias_acumulados", diasAcumulados);//ataVacaciones.getDiasAcumulados());
+        parameters.put("dias_acumulados", diasAcumulados);
         
         //Dias que restan (-)
-        parameters.put("dias_asignados", diasTotalesAsignadosPeriodo);//dataVacaciones.getDiasEfectivos());
+        parameters.put("dias_asignados", diasTotalesAsignadosPeriodo);
         
         //=
         parameters.put("dias_disponibles", diasDisponibles);

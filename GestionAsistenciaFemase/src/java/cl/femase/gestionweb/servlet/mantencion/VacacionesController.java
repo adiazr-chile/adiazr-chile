@@ -154,9 +154,6 @@ public class VacacionesController extends BaseServlet {
                 infoVacacion.setSaldoDias(Integer.parseInt(request.getParameter("saldoDias")));
             }
             
-            if(request.getParameter("numActualCotizaciones") != null){
-                infoVacacion.setNumActualCotizaciones(Integer.parseInt(request.getParameter("numActualCotizaciones")));
-            }
             //2020-03-17
             if(request.getParameter("afpCode") != null){
                 infoVacacion.setAfpCode(request.getParameter("afpCode"));
@@ -166,6 +163,16 @@ public class VacacionesController extends BaseServlet {
             }
             if(request.getParameter("diasAdicionales") != null){
                 infoVacacion.setDiasAdicionales(Integer.parseInt(request.getParameter("diasAdicionales")));
+            }
+            
+            /**
+            * 19-08-2021
+            */
+            if(request.getParameter("numCotizaciones") != null && request.getParameter("numCotizaciones").compareTo("") != 0){
+                infoVacacion.setNumCotizaciones(Integer.parseInt(request.getParameter("numCotizaciones")));
+            }
+            if(request.getParameter("otraInstitucionEmisoraCertif") != null){
+                infoVacacion.setOtraInstitucionEmisoraCertif(request.getParameter("otraInstitucionEmisoraCertif"));
             }
             
             resultado.setRutEmpleado(infoVacacion.getRutEmpleado());

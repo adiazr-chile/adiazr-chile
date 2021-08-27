@@ -240,7 +240,7 @@
                     title:'Empresa ID',
                     width: '5%',
                     key: false,
-                    list: true,
+                    list: false,
                     edit:false,
                     sorting: false,
                     input: function (data) {
@@ -257,7 +257,7 @@
                 cencoId: {
                     title:'Cenco ID',
                     width: '5%',
-                    list: true,
+                    list: false,
                     edit: false,
                     sorting: false
                 },
@@ -302,18 +302,6 @@
                     sorting: false,
                     defaultValue: '0'
                 },
-                numActualCotizaciones:{
-                    title: 'Num cotiz.',
-                    width: '6%',
-                    list: true,
-                    <%if (editarCampos){%>
-                        edit: true,
-                    <%}else{%>
-                        edit: false,    
-                    <%}%>        
-                    sorting: false,
-                    defaultValue: '0'
-                },
                 afpCode:{
                     title: 'AFP Certif',
                     width: '6%',
@@ -340,7 +328,35 @@
                         edit: false,    
                     <%}%>
                     sorting: false
-                },    
+                },
+                numCotizaciones:{
+                    title: 'Num cotiz. certif.',
+                    width: '6%',
+                    list: true,
+                    <%if (editarCampos){%>
+                        edit: true,
+                    <%}else{%>
+                        edit: false,    
+                    <%}%>        
+                    sorting: false,
+                    defaultValue: '0'
+                },
+                fechaBaseVp:{
+                    title: 'Fecha base VP',
+                    width: '5%',
+                    list: true,
+                    edit: false,
+                    sorting: false,
+                    defaultValue: '0'
+                },
+                mensajeVp:{
+                    title: 'Manseje VP',
+                    width: '5%',
+                    list: true,
+                    edit: false,
+                    sorting: false,
+                    defaultValue: '0'
+                },        
                 diasProgresivos:{
                     title: 'D. Progres.',
                     width: '5%',

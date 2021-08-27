@@ -70,9 +70,10 @@ public class VacacionesLogDAO extends BaseDAO{
             + ", comentario: " + _data.getComentario()
             + ", dias_adicionales: " + _data.getDiasAdicionales()
             + ", afp_code: " + _data.getAfpCode()   
-            + ", fecha certif afp: " + _data.getFechaCertifVacacionesProgresivas();
+            + ", fecha certif afp: " + _data.getFechaCertifVacacionesProgresivas()
+            + ", num cotizaciones segun certif: " + _data.getNumCotizaciones();
         
-        String msgFinal = " Inserta info de vacaciones:"
+        String msgFinal = " Inserta en info de vacaciones_log:"
             + "EmpresaId [" + _data.getEmpresaId() + "]" 
             + ", rutEmpleado [" + _data.getRutEmpleado() + "]"    
             + ", dias_acumulados [" + _data.getDiasAcumulados() + "]"
@@ -83,49 +84,58 @@ public class VacacionesLogDAO extends BaseDAO{
             + ", current_num_cotizaciones [" + _data.getNumActualCotizaciones() + "]"
             + ", afp_code [" + _data.getAfpCode() + "]"   
             + ", fecha certif afp [" + _data.getFechaCertifVacacionesProgresivas() + "]"      
-            + ", comentario [" + _data.getComentario() + "]";
+            + ", comentario [" + _data.getComentario() + "]"
+            + ", num cotizaciones segun certif [" + _data.getNumCotizaciones() + "]";
        
+        System.out.println("[VacacionesLogDAO.insert]" + msgFinal);
+        
         objresultado.setMsg(msgFinal);
-        PreparedStatement insert    = null;
+        PreparedStatement insert = null;
         
         try{
             String sql = "INSERT INTO vacaciones_log("
-                + "fecha_evento,"
-                + "empresa_id, "
-                + "rut_empleado, "
-                + "dias_acumulados, "
-                + "dias_progresivos,"
-                + "saldo_dias,"
-                + "dias_especiales,"
-                + "current_num_cotizaciones,"
-                + "comentario,"
-                + "dias_zona_extrema,"
-                + "afp_code,"
-                + "fec_certif_vac_progresivas,"
-                + "dias_adicionales,"
-                + "dias_efectivos_tomados,"
-                + "username,"
-                + "fecha_calculo,"
+                    + "fecha_evento,"
+                    + "empresa_id, "
+                    + "rut_empleado, "
+                    + "dias_acumulados, "
+                    + "dias_progresivos,"
+                    + "saldo_dias,"
+                    + "dias_especiales,"
+                    + "current_num_cotizaciones,"
+                    + "comentario,"
+                    + "dias_zona_extrema,"
+                    + "afp_code,"
+                    + "fec_certif_vac_progresivas,"
+                    + "dias_adicionales,"
+                    + "dias_efectivos_tomados,"
+                    + "username,"
+                    + "fecha_calculo,"
                     + "inicio_ult_vacacion,"
-                    + "fin_ult_vacacion) "
+                    + "fin_ult_vacacion,"
+                    + "fecha_base_vp, "
+                    + "num_cotizaciones, "
+                    + "otra_institucion_emisora_certif, "
+                    + "mensaje_vp) "
                 + "VALUES (current_timestamp,"
                     + "?, ?, ?, ?, "
                     + "?, ?, ?, ?, "
                     + "?, ?, ?, ?, "
-                    + "?, ?,current_timestamp, ?, ?)";
+                    + "?, ?,current_timestamp, "
+                    + "?, ?, "
+                    + "?, ?, ?, ?)";
 
             dbConn = dbLocator.getConnection(m_dbpoolName,"[VacacionesLogDAO.insert]");
             insert = dbConn.prepareStatement(sql);
             insert.setString(1,  _data.getEmpresaId());
             insert.setString(2,  _data.getRutEmpleado());
-            insert.setInt(3,  _data.getDiasAcumulados());
-            insert.setInt(4,  _data.getDiasProgresivos());
-            insert.setInt(5,  _data.getSaldoDias());
+            insert.setDouble(3,  _data.getDiasAcumulados());
+            insert.setDouble(4,  _data.getDiasProgresivos());
+            insert.setDouble(5,  _data.getSaldoDias());
             insert.setString(6,  _data.getDiasEspeciales());
             
             insert.setInt(7,  _data.getNumActualCotizaciones());
             insert.setString(8,  _data.getComentario());
-            insert.setInt(9,  _data.getDiasZonaExtrema());
+            insert.setDouble(9,  _data.getDiasZonaExtrema());
             insert.setString(10,  _data.getAfpCode());
             if (_data.getFechaCertifVacacionesProgresivas() != null && 
                 _data.getFechaCertifVacacionesProgresivas().compareTo("") != 0){
@@ -133,8 +143,8 @@ public class VacacionesLogDAO extends BaseDAO{
             }else {
                 insert.setDate(11, null);
             }
-            insert.setInt(12,  _data.getDiasAdicionales());
-            insert.setInt(13,  _data.getDiasEfectivos());
+            insert.setDouble(12,  _data.getDiasAdicionales());
+            insert.setDouble(13,  _data.getDiasEfectivos());
             insert.setString(14,  _data.getUsername());
             
             //Fecha inicio ultimas vacaciones
@@ -151,6 +161,12 @@ public class VacacionesLogDAO extends BaseDAO{
             }else {
                 insert.setDate(16, null);
             }
+            
+            //nuevos            
+            insert.setDate(17, Utilidades.getSqlDate(_data.getFechaBaseVp(), "yyyy-MM-dd"));
+            insert.setInt(18, _data.getNumCotizaciones());
+            insert.setString(19, _data.getOtraInstitucionEmisoraCertif());
+            insert.setString(20, _data.getMensajeVp());
             
             int filasAfectadas = insert.executeUpdate();
             if (filasAfectadas == 1){
@@ -238,7 +254,10 @@ public class VacacionesLogDAO extends BaseDAO{
                 + "coalesce(afp.afp_name,'NINGUNA') afp_name, " 
                 + "vac.fec_certif_vac_progresivas,"
                 + "coalesce(vac.dias_adicionales,0) dias_adicionales,"
-                + "vac.dias_efectivos_tomados "
+                + "vac.dias_efectivos_tomados, "
+                + "to_char(vac.fecha_base_vp, 'yyyy-MM-dd') fecha_base_vp, "
+                + "coalesce(vac.num_cotizaciones, 0) num_cotizaciones, "
+                + "coalesce(vac.otra_institucion_emisora_certif,'') institucion_emisora_certif "    
                 + "from vacaciones_log vac "
                     + "inner join view_empleado empleado "
                     + "on (empleado.empresa_id = vac.empresa_id "
@@ -288,16 +307,16 @@ public class VacacionesLogDAO extends BaseDAO{
                 data.setRutEmpleado(rs.getString("rut_empleado"));
                 data.setNombreEmpleado(rs.getString("nombre_empleado"));
                 data.setFechaCalculo(rs.getString("fecha_calculo"));
-                data.setDiasAcumulados(rs.getInt("dias_acumulados"));
-                data.setDiasProgresivos(rs.getInt("dias_progresivos"));
+                data.setDiasAcumulados(rs.getDouble("dias_acumulados"));
+                data.setDiasProgresivos(rs.getDouble("dias_progresivos"));
                 data.setDiasEspeciales(rs.getString("dias_especiales"));
-                data.setSaldoDias(rs.getInt("saldo_dias"));
+                data.setSaldoDias(rs.getDouble("saldo_dias"));
                 data.setFechaInicioUltimasVacaciones(rs.getString("inicio_ult_vacacion"));
                 data.setFechaFinUltimasVacaciones(rs.getString("fin_ult_vacacion"));
                 
                 data.setNumActualCotizaciones(rs.getInt("current_num_cotizaciones"));
                 
-                data.setDiasZonaExtrema(rs.getInt("dias_zona_extrema"));
+                data.setDiasZonaExtrema(rs.getDouble("dias_zona_extrema"));
                 data.setComentario(rs.getString("comentario"));
                 data.setFechaInicioContrato(rs.getString("fecha_inicio_contrato"));
                 data.setEsZonaExtrema(rs.getString("es_zona_extrema"));
@@ -305,8 +324,8 @@ public class VacacionesLogDAO extends BaseDAO{
                 data.setAfpCode(rs.getString("afp_code"));
                 data.setAfpName(rs.getString("afp_name"));
                 data.setFechaCertifVacacionesProgresivas(rs.getString("fec_certif_vac_progresivas"));
-                data.setDiasAdicionales(rs.getInt("dias_adicionales"));
-                data.setDiasEfectivos(rs.getInt("dias_efectivos_tomados"));
+                data.setDiasAdicionales(rs.getDouble("dias_adicionales"));
+                data.setDiasEfectivos(rs.getDouble("dias_efectivos_tomados"));
                 
                 data.setRowKey(data.getEmpresaId()+"|"+data.getRutEmpleado());
                 lista.add(data);

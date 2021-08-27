@@ -1128,7 +1128,7 @@ public class Utilidades {
             for(org.joda.time.LocalDate currentdate = dateTimeDesde; 
                     currentdate.isBefore(dateTimeHasta) || currentdate.isEqual(dateTimeHasta); 
                     currentdate= currentdate.plusDays(1)){
-                        System.out.println(currentdate);
+                        //System.out.println(currentdate);
                         dates[x] = currentdate.toString();
                         x++;
             }
@@ -1277,7 +1277,14 @@ public class Utilidades {
         return diff;
     }
     
-     public static Date sumaRestarFecha(Date fecha, int sumaresta, String opcion){
+    /**
+    * 
+    * @param fecha
+    * @param sumaresta: si es > 0: suma, en caso contrario: resta
+    * @param opcion: {DAYS, MONTHS, YEARS}
+    * @return 
+    */
+    public static Date sumaRestarFecha(Date fecha, int sumaresta, String opcion){
         java.time.LocalDate date = fecha.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         //Con Java9
         //LocalDate date = LocalDate.ofInstant(input.toInstant(), ZoneId.systemDefault());
