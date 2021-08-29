@@ -408,7 +408,8 @@ public class CalendarioFeriadoDAO extends BaseDAO{
                     + data.getIdTipoFeriado() + "|" 
                     + data.getRegionId() + "|" 
                     + data.getComunaId();
-                
+                System.out.println("[CalendarioFeriadoDAO."
+                    + "getCalendarioFeriados]rowKey: " + strKey);
                 data.setRowKey(strKey);
                 
                 lista.add(data);

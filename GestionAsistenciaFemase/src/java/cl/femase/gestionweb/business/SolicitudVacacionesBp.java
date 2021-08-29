@@ -81,6 +81,7 @@ public class SolicitudVacacionesBp {
     * @param _endDate
     * @param _username
     * @param _estado
+     * @param _propias
     * @param _cencosUsuario
     * @param _jtStartIndex
     * @param _jtPageSize
@@ -93,6 +94,7 @@ public class SolicitudVacacionesBp {
             String _endDate,
             String _username,
             String _estado,
+            boolean _propias,
             List<UsuarioCentroCostoVO> _cencosUsuario,
             int _jtStartIndex, 
             int _jtPageSize, 
@@ -105,6 +107,7 @@ public class SolicitudVacacionesBp {
                 _endDate, 
                 _username, 
                 _estado,
+                _propias,
                 _cencosUsuario,
                 _jtStartIndex, _jtPageSize, _jtSorting);
 
@@ -265,6 +268,7 @@ public class SolicitudVacacionesBp {
     * @param _endDate
     * @param _username
     * @param _estado
+     * @param _propias
     * @param _cencosUsuario
     * @return 
     */
@@ -274,6 +278,7 @@ public class SolicitudVacacionesBp {
             String _endDate,
             String _username, 
             String _estado,
+            boolean _propias,
             List<UsuarioCentroCostoVO> _cencosUsuario){
         return solicitudDao.getSolicitudesAprobarRechazarCount(_empresaId,
             _rutEmpleado, 
@@ -281,6 +286,7 @@ public class SolicitudVacacionesBp {
             _endDate, 
             _username, 
             _estado,
+            _propias,
             _cencosUsuario);
     }
 

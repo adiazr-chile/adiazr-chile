@@ -297,22 +297,24 @@ public class SolicitudVacacionesController extends BaseServlet {
                             estado);
                     }else {
                         listaSolicitudes = solicitudesBp.getSolicitudesAprobarRechazar(paramEmpresa, 
-                            solicitud.getRutEmpleado(),
+                            userConnected.getRunEmpleado(),
                             filtroInicioVacacion,
                             filtroFinVacacion,
                             userConnected.getUsername(),
                             estado,
+                            false,
                             userConnected.getCencos(),
                             startPageIndex, 
                             numRecordsPerPage, 
                             jtSorting);
                         //Get Total Record Count for Pagination
                         objectsCount = solicitudesBp.getSolicitudesAprobarRechazarCount(paramEmpresa, 
-                            solicitud.getRutEmpleado(),
+                            userConnected.getRunEmpleado(),
                             filtroInicioVacacion,
                             filtroFinVacacion,
                             userConnected.getUsername(),
                             estado,
+                            false,
                             userConnected.getCencos());
                     }
                     

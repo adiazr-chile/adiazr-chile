@@ -33,7 +33,7 @@ public class SolicitudVacacionesDAO extends BaseDAO{
     * 
     * @param _empresaId
     * @param _cencoId
-    * @param _rutEmpleado
+    * @param _runEmpleado
     * @param _startDate
     * @param _endDate
     * @param _username
@@ -46,7 +46,7 @@ public class SolicitudVacacionesDAO extends BaseDAO{
     */
     public List<SolicitudVacacionesVO> getSolicitudes(String _empresaId,
             int _cencoId,
-            String _rutEmpleado,
+            String _runEmpleado,
             String _startDate,
             String _endDate,
             String _username,
@@ -90,13 +90,15 @@ public class SolicitudVacacionesDAO extends BaseDAO{
             if (_propias){
                 sql += " and (sv.username_solicita = '" + _username + "') ";
             }else{
-                sql += " and (e.cenco_id = " + _cencoId + ") and (sv.username_solicita != '" + _username + "') ";
+                sql += " and (e.cenco_id = " + _cencoId + ") "
+                    + " and (sv.username_solicita != '" + _username + "') "
+                    + " and (sv.rut_empleado != '" + _runEmpleado + "') ";
             }
             if (_empresaId != null && _empresaId.compareTo("") != 0){        
                 sql += " and (sv.empresa_id = '" + _empresaId + "') ";
             }
-            if (_rutEmpleado != null && _rutEmpleado.compareTo("-1") != 0){        
-                sql += " and (sv.rut_empleado = '" + _rutEmpleado + "') ";
+            if (_propias && _runEmpleado != null && _runEmpleado.compareTo("-1") != 0){        
+                sql += " and (sv.rut_empleado = '" + _runEmpleado + "') ";
             }
             if (_endDate == null || _endDate.compareTo("") == 0){        
                 _endDate = _startDate;
@@ -172,11 +174,12 @@ public class SolicitudVacacionesDAO extends BaseDAO{
     * Retorna lista con solicitudes de vacaciones pendientes para aprobar/rechazar
     * 
     * @param _empresaId
-    * @param _rutEmpleado
+    * @param _runEmpleado
     * @param _startDate
     * @param _endDate
     * @param _username
     * @param _estado
+     * @param _propias
     * @param _cencosUsuario
     * @param _jtStartIndex
     * @param _jtPageSize
@@ -184,11 +187,12 @@ public class SolicitudVacacionesDAO extends BaseDAO{
     * @return 
     */
     public List<SolicitudVacacionesVO> getSolicitudesAprobarRechazar(String _empresaId,
-            String _rutEmpleado,
+            String _runEmpleado,
             String _startDate,
             String _endDate,
             String _username,
             String _estado,
+            boolean _propias,
             List<UsuarioCentroCostoVO> _cencosUsuario,
             int _jtStartIndex, 
             int _jtPageSize, 
@@ -235,13 +239,15 @@ public class SolicitudVacacionesDAO extends BaseDAO{
                 strCencos = strCencos.substring(0, strCencos.length() - 1);
             }
             
-            sql += " and (e.cenco_id in (" + strCencos + ") and (sv.username_solicita != '" + _username + "') ) ";
+            sql += " and (e.cenco_id in (" + strCencos + ") "
+                + " and (sv.username_solicita != '" + _username + "') "
+                + " and (sv.rut_empleado != '" + _runEmpleado + "')) ";
             
             if (_empresaId != null && _empresaId.compareTo("") != 0){        
                 sql += " and (sv.empresa_id = '" + _empresaId + "') ";
             }
-            if (_rutEmpleado != null && _rutEmpleado.compareTo("-1") != 0){        
-                sql += " and (sv.rut_empleado = '" + _rutEmpleado + "') ";
+            if (_propias && _runEmpleado != null && _runEmpleado.compareTo("-1") != 0){        
+                sql += " and (sv.rut_empleado = '" + _runEmpleado + "') ";
             }
             if (_endDate == null || _endDate.compareTo("") == 0){        
                 _endDate = _startDate;
@@ -477,20 +483,22 @@ public class SolicitudVacacionesDAO extends BaseDAO{
     /**
     * 
     * @param _empresaId
-    * @param _rutEmpleado
+    * @param _runEmpleado
     * @param _startDate
     * @param _endDate
     * @param _username
     * @param _estado
+     * @param _propias
     * @param _cencosUsuario
     * @return 
     */
     public int getSolicitudesAprobarRechazarCount(String _empresaId,
-            String _rutEmpleado,
+            String _runEmpleado,
             String _startDate,
             String _endDate,
             String _username,
             String _estado,
+            boolean _propias,
             List<UsuarioCentroCostoVO> _cencosUsuario){
         int count=0;
         ResultSet rs;
@@ -500,7 +508,8 @@ public class SolicitudVacacionesDAO extends BaseDAO{
                 String sql = "SELECT count(sv.solic_id) count "
                     + "FROM solicitud_vacaciones sv "
                     + " inner join empleado e "
-                    + "  on (sv.empresa_id=e.empresa_id and sv.rut_empleado=e.empl_rut) "
+                    + "  on (sv.empresa_id = e.empresa_id "
+                        + " and sv.rut_empleado = e.empl_rut) "
                     + "where 1 = 1 ";
                 String strCencos = "";
                 Iterator<UsuarioCentroCostoVO> it = _cencosUsuario.iterator();
@@ -511,13 +520,15 @@ public class SolicitudVacacionesDAO extends BaseDAO{
                 if (!_cencosUsuario.isEmpty()){
                     strCencos = strCencos.substring(0, strCencos.length() - 1);
                 }
-                sql += " and (e.cenco_id in (" + strCencos + ") and (sv.username_solicita != '" + _username + "') ) ";
+                sql += " and (e.cenco_id in (" + strCencos + ") "
+                    + " and (sv.username_solicita != '" + _username + "') "
+                    + " and (sv.rut_empleado != '" + _runEmpleado + "')) ";
                 
                 if (_empresaId != null && _empresaId.compareTo("") != 0){        
                     sql += " and sv.empresa_id = '" + _empresaId + "'";
                 }
-                if (_rutEmpleado != null && _rutEmpleado.compareTo("") != 0){        
-                    sql += " and sv.rut_empleado = '" + _rutEmpleado + "'";
+                if (_propias && _runEmpleado != null && _runEmpleado.compareTo("") != 0){        
+                    sql += " and sv.rut_empleado = '" + _runEmpleado + "'";
                 }
                 if (_endDate == null || _endDate.compareTo("") == 0){        
                     _endDate = _startDate;

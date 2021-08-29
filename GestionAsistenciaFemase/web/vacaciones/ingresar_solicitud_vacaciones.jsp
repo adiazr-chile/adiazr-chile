@@ -5,41 +5,48 @@
 <%@page import="java.util.List"%>
 <%
     UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
-    VacacionesBp vacacionesBp = new VacacionesBp(null);
-    int intSaldoVacaciones = 0;
+    double doubleSaldoVacaciones = 0;
     boolean haySaldo = true;
-    String msgSaldo="";
-    String runEmpleado = userConnected.getUsername();
+    String msgSaldo="";    
     if (userConnected.getIdPerfil() == Constantes.ID_PERFIL_DIRECTOR 
-        || userConnected.getIdPerfil() == Constantes.ID_PERFIL_DIRECTOR_TR){
-            runEmpleado = userConnected.getRunEmpleado();
-    }    
-    
-    List<VacacionesVO> infoVacaciones = 
-        vacacionesBp.getInfoVacaciones(userConnected.getEmpresaId(), 
-            runEmpleado, -1, -1, -1, "vac.rut_empleado");
-    if (infoVacaciones.isEmpty()){
-        System.out.println("[ingresar_solicitud_vacaciones]"
-            + "EmpresaId: " + userConnected.getEmpresaId()
-            + ", rutEmpleado: " + userConnected.getUsername()
-            + ", No tiene informacion de vacaciones (saldo)");
-        haySaldo = false;
-        msgSaldo = "Ud. no registra informacion de vacaciones<strong>. Comun&iacute;quese con su Jefe Directo.";
+            || userConnected.getIdPerfil() == Constantes.ID_PERFIL_DIRECTOR_TR){
+                haySaldo = false;
+                msgSaldo = "Para solicitar vacaciones, Ud. debe ingresar al Sistema con un usuario con perfil Empleado.";
     }else{
-        VacacionesVO saldoVacaciones = infoVacaciones.get(0);
-        intSaldoVacaciones = saldoVacaciones.getSaldoDias();
-        msgSaldo = "Saldo dias disponibles: " + intSaldoVacaciones;
-        System.out.println("[ingresar_solicitud_vacaciones]"
-            + "EmpresaId: " + userConnected.getEmpresaId()
-            + ", rutEmpleado: " + userConnected.getUsername()
-            + ", saldoVacaciones= " + intSaldoVacaciones);
+        VacacionesBp vacacionesBp = new VacacionesBp(null);
+        String runEmpleado = userConnected.getUsername();
+        if (userConnected.getIdPerfil() == Constantes.ID_PERFIL_DIRECTOR 
+            || userConnected.getIdPerfil() == Constantes.ID_PERFIL_DIRECTOR_TR){
+                runEmpleado = userConnected.getRunEmpleado();
+        }    
+
+        List<VacacionesVO> infoVacaciones = 
+            vacacionesBp.getInfoVacaciones(userConnected.getEmpresaId(), 
+                runEmpleado, -1, -1, -1, "vac.rut_empleado");
+        if (infoVacaciones.isEmpty()){
+            System.out.println("[ingresar_solicitud_vacaciones]"
+                + "EmpresaId: " + userConnected.getEmpresaId()
+                + ", rutEmpleado: " + userConnected.getUsername()
+                + ", No tiene informacion de vacaciones (saldo)");
+            haySaldo = false;
+            msgSaldo = "Ud. no registra informacion de vacaciones<strong>. Comun&iacute;quese con su Jefe Directo.";
+        }else{
+            VacacionesVO saldoVacaciones = infoVacaciones.get(0);
+            doubleSaldoVacaciones = saldoVacaciones.getSaldoDias();
+            msgSaldo = "Saldo dias disponibles: " + doubleSaldoVacaciones;
+            System.out.println("[ingresar_solicitud_vacaciones]"
+                + "EmpresaId: " + userConnected.getEmpresaId()
+                + ", rutEmpleado: " + userConnected.getUsername()
+                + ", saldoVacaciones= " + doubleSaldoVacaciones);
+
+        }
+        if (doubleSaldoVacaciones <= 0){
+            haySaldo=false;
+            msgSaldo = "Ud. no tiene saldo de vacaciones disponible. Comun&iacute;quese con su Jefe Directo.";
+        }
+    }
         
-    }
-    if (intSaldoVacaciones <= 0){
-        haySaldo=false;
-        msgSaldo = "Ud. no tiene saldo de vacaciones disponible. Comun&iacute;quese con su Jefe Directo.";
-    }
-    
+
 %>
 <html>
     <head>
@@ -52,15 +59,16 @@
         
         <script type="text/javascript">
 			
-			<%if (!haySaldo){%>
-				//No hay saldo
-				$('#sinsaldo').removeClass('valid').addClass('invalid');
-				$('.change_password').attr('disabled', 'disabled');
-			<%}%>
-			
-			var strDesde = '';
-			var strHasta = '';
-        	function validate(){
+                <%if (!haySaldo){%>
+                    //No hay saldo
+                    $('#sinsaldo').removeClass('valid').addClass('invalid');
+                    $('.change_password').attr('disabled', 'disabled');
+                <%}%>
+
+                var strDesde = '';
+                var strHasta = '';
+        	
+            function validate(){
 				  //alert('validar rango');	
 				  //if (strDesde !== '' && strHasta !== ''){				 
 					 // alert('strdesde: ' + strDesde + ', strhasta: ' + strHasta); 
@@ -110,13 +118,13 @@
             <h1>Nueva Solicitud de vacaciones</h1>
             <form id="form1" name="form1" method="post" action="<%=request.getContextPath()%>/servlet/SolicitudVacacionesController" target="_self">
                 <input name="action" type="hidden" id="action" value="precreate" />
-				<label><%=msgSaldo%></label>
+                <label><%=msgSaldo%></label>
                 <%if (haySaldo){%>
-                	<input type="text" id="fechaDesde" name="fechaDesde" value="" placeholder="Ingrese fecha de inicio" readonly/>
-                	<input type="text" id="fechaHasta" name="fechaHasta" value="" placeholder="Ingrese fecha de termino" readonly/>
+                    <input type="text" id="fechaDesde" name="fechaDesde" value="" placeholder="Ingrese fecha de inicio" readonly/>
+                    <input type="text" id="fechaHasta" name="fechaHasta" value="" placeholder="Ingrese fecha de termino" readonly/>
                     <input type="submit" class="change_password" value="Vista previa" disabled >
-				<%}%>
-			</form>
+                <%}%>
+            </form>
 
 <div id="password_details">
                 <h1>La contrase&ntilde;a debe cumplir los siguientes requisitos:</h1>

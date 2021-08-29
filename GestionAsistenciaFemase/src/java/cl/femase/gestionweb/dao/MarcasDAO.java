@@ -2494,7 +2494,7 @@ public class MarcasDAO extends BaseDAO{
                         + "detalle_ausencia.hora_fin "
                     + "from generate_series( '" + _startDate + "', '" + _endDate + "', '1 day'::interval) as fecha_it "
                         + "left outer join marca on (fecha_it::date = marca.fecha_hora::date and marca.empresa_cod = '" + _empresaId + "' and marca.rut_empleado='" + _rutEmpleado + "') "
-                        + "left outer join empleado on (empleado.empl_rut = marca.rut_empleado and empleado.empresa_id = marca.empresa_cod) "
+                        + "left outer join view_empleado empleado on (empleado.rut = marca.rut_empleado and empleado.empresa_id = marca.empresa_cod) "
                         + "left outer join turno_rotativo_asignacion "
                             + "on (turno_rotativo_asignacion.empresa_id='" + _empresaId + "' "
                             + "and turno_rotativo_asignacion.rut_empleado='" + _rutEmpleado + "' "
@@ -2507,11 +2507,12 @@ public class MarcasDAO extends BaseDAO{
                             + "	(fecha_it::date = calendario_feriados.fecha) "
                             + "	and (calendario_feriados.cal_region_id = " + _regionId + " or calendario_feriados.cal_comuna_id = " + _comunaId + " or cal_id_tipo_feriado is not null) "
                             + ") "
+                        + " and ( empleado.comuna_id = calendario_feriados.cal_comuna_id or empleado.region_id = calendario_feriados.cal_region_id) "
                         + "left outer join tipo_marca_manual on (marca.cod_tpo_marca_manual = tipo_marca_manual.code) "
                         + "left outer join detalle_ausencia on (detalle_ausencia.rut_empleado='" + _rutEmpleado + "' " +
                         " and fecha_it::date between fecha_inicio and fecha_fin and ausencia_autorizada='S') " +
                         " left outer join ausencia on (detalle_ausencia.ausencia_id = ausencia.ausencia_id) "
-                    + " where (fecha_it::date >= empleado.empl_fec_ini_contrato) "
+                    + " where (fecha_it::date >= empleado.fecha_inicio_contrato) "
                     + "order by fecha_it::date,marca.cod_tipo_marca,fecha_hora"; 
             
             System.out.println("[MarcasDAO.getHashMarcasTurnoRotativo]sql: " + sql);
@@ -2672,7 +2673,7 @@ public class MarcasDAO extends BaseDAO{
                 + "from generate_series( '" + _startDate + "', '" + _endDate + "', '1 day'::interval) as fecha_it "
                     + "	left outer join marca on (fecha_it::date = marca.fecha_hora::date "
                             + "and marca.empresa_cod = '" + _empresaId + "' and marca.rut_empleado='" + _rutEmpleado + "') "
-                    + "	left outer join empleado on (empleado.empl_rut = '" + _rutEmpleado + "' "
+                    + "	left outer join view_empleado empleado on (empleado.rut = '" + _rutEmpleado + "' "
                             + "and empleado.empresa_id = '" + _empresaId + "') "
                     + "left outer join detalle_turno "
                             + "on (detalle_turno.id_turno = empleado.empl_id_turno "
@@ -2682,11 +2683,12 @@ public class MarcasDAO extends BaseDAO{
                         + "	(fecha_it::date = calendario_feriados.fecha) "
                         + "	and (calendario_feriados.cal_region_id = " + _regionId + " or calendario_feriados.cal_comuna_id = " + _comunaId + " or cal_id_tipo_feriado is not null) "
                         + ") "
+                        + " and ( empleado.comuna_id = calendario_feriados.cal_comuna_id or empleado.region_id = calendario_feriados.cal_region_id) "
                     + "left outer join tipo_marca_manual on (marca.cod_tpo_marca_manual = tipo_marca_manual.code) "
                     + "left outer join detalle_ausencia on (detalle_ausencia.rut_empleado='" + _rutEmpleado + "' " +
                         " and fecha_it::date between fecha_inicio and fecha_fin and ausencia_autorizada='S') " +
                     " left outer join ausencia on (detalle_ausencia.ausencia_id = ausencia.ausencia_id) "
-                    + " where (fecha_it::date >= empleado.empl_fec_ini_contrato) "
+                    + " where (fecha_it::date >= empleado.fecha_inicio_contrato) "
                     + " order by fecha_it::date,marca.cod_tipo_marca,fecha_hora";
             
             System.out.println("[MarcasDAO."

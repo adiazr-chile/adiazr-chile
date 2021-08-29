@@ -143,7 +143,6 @@
                 fecha: {
                     title: 'Fecha',
                     width: '6%',
-                    key: true,
                     list: true,
                     create: true,
                     type: 'date',
@@ -153,7 +152,8 @@
                 rowKey:{
                     title: 'RowKey',
                     list: false,
-                    edit:true,
+                    key: true,
+                    edit:false,
                     create: false,
                     type: 'hidden'
                 },

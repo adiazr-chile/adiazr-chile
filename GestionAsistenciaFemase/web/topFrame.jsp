@@ -15,35 +15,46 @@
     String labelAnios = startYear + "-" + currentYear;
     
     UsuarioVO userInSession = (UsuarioVO)session.getAttribute("usuarioObj");
-    System.out.println("[topFrame.jsp]Usuario perfil Director/TR o Jefe Nacional");
-    System.out.println("[topFrame.jsp]Rescatar solicitudes "
-        + "de vacaciones pendientes de algunos de los empleados "
-        + "en alguno de los cencos del usuario");
-    SolicitudVacacionesBp solicitudesBp = new SolicitudVacacionesBp(null);
-
-    /**
-        - Si es perfil usuario director:
-        - Rescatar todas las solicitudes de vacaciones que est�n pendientes. En alguno de los cencos donde el usuario es director
-    */
-    List<UsuarioCentroCostoVO> listaCencos = userInSession.getCencos();
     int numSolicitudesPendientes = 0;
-    for (int i = 0; i < listaCencos.size(); i++) {
-        UsuarioCentroCostoVO itcenco = listaCencos.get(i);
-        List<SolicitudVacacionesVO> listaSolicitudes = 
-            solicitudesBp.getSolicitudes(userInSession.getEmpresaId(), 
-            itcenco.getCcostoId(),
-            null,
-            null,
-            null,
-            userInSession.getUsername(),
-            false,
-            Constantes.ESTADO_SOLICITUD_PENDIENTE,
-            0, 
-            0, 
-            "solic_fec_ingreso");
-        numSolicitudesPendientes += listaSolicitudes.size();
-    }
+        
+    if (userInSession.getIdPerfil() == Constantes.ID_PERFIL_DIRECTOR 
+        || userInSession.getIdPerfil() == Constantes.ID_PERFIL_DIRECTOR_TR
+        || userInSession.getIdPerfil() == Constantes.ID_PERFIL_JEFE_TECNICO_NACIONAL){
     
+        System.out.println("[topFrame.jsp]Usuario perfil Director/TR o Jefe Tecnico Nacional");
+        System.out.println("[topFrame.jsp]Rescatar solicitudes "
+            + "de vacaciones pendientes de algunos de los empleados "
+            + "en alguno de los cencos del usuario");
+        SolicitudVacacionesBp solicitudesBp = new SolicitudVacacionesBp(null);
+
+        /**
+            - Si es perfil usuario director:
+            - Rescatar todas las solicitudes de vacaciones que est�n pendientes. En alguno de los cencos donde el usuario es director
+        */
+        List<UsuarioCentroCostoVO> listaCencos = userInSession.getCencos();
+        
+        for (int i = 0; i < listaCencos.size(); i++) {
+            UsuarioCentroCostoVO itcenco = listaCencos.get(i);
+            List<SolicitudVacacionesVO> listaSolicitudes = 
+                solicitudesBp.getSolicitudes(userInSession.getEmpresaId(), 
+                itcenco.getCcostoId(),
+                userInSession.getRunEmpleado(),
+                null,
+                null,
+                userInSession.getUsername(),
+                false,
+                Constantes.ESTADO_SOLICITUD_PENDIENTE,
+                0, 
+                0, 
+                "solic_fec_ingreso");
+            System.out.println("[topFrame.jsp]"
+                + "cencoId= " + itcenco.getCcostoId()
+                + ", numSolicitudesPendientes= " + numSolicitudesPendientes);
+            numSolicitudesPendientes += listaSolicitudes.size();
+        }
+        System.out.println("[topFrame.jsp]"
+            + "total solicitudesPendientes= " + numSolicitudesPendientes);
+    }
 %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -183,8 +194,9 @@
             	<div class="divTableCell">Bienvenido&nbsp;<%=theUser.getNombreCompleto()%>,&nbsp;<%=theUser.getNomPerfil()%>
                 	<%if (userInSession.getIdPerfil() == Constantes.ID_PERFIL_DIRECTOR 
                                 || userInSession.getIdPerfil() == Constantes.ID_PERFIL_DIRECTOR_TR
-                                || userInSession.getIdPerfil() == Constantes.ID_PERFIL_JEFE_TECNICO_NACIONAL){%>
-                            <%if (numSolicitudesPendientes > 0){%>
+                                || userInSession.getIdPerfil() == Constantes.ID_PERFIL_JEFE_TECNICO_NACIONAL){
+                            if (numSolicitudesPendientes > 0){
+                                System.out.println("[topFrame.jsp]Mostrar notificaciones de solicitudes");%>
                                 <a href="<%=request.getContextPath()%>/vacaciones/sol_vacaciones_aprobar_rechazar.jsp" 
                                    class="notification" target="mainFrame">
                                   <span>Solicitudes Vacaciones Pendientes</span>
