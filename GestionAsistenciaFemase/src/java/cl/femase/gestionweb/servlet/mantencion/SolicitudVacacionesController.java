@@ -221,7 +221,7 @@ public class SolicitudVacacionesController extends BaseServlet {
                             solicitud.getRutEmpleado(),
                             filtroInicioVacacion,
                             filtroFinVacacion,
-                            userConnected.getUsername(),
+                            userConnected,
                             true,
                             estado,
                             startPageIndex, 
@@ -233,7 +233,7 @@ public class SolicitudVacacionesController extends BaseServlet {
                             solicitud.getRutEmpleado(),
                             filtroInicioVacacion,
                             filtroFinVacacion,
-                            userConnected.getUsername(),
+                            userConnected,
                             true,
                             estado);
                         session.setAttribute("solcitudesVacaciones|"+userConnected.getUsername(), listaSolicitudes);
@@ -281,7 +281,7 @@ public class SolicitudVacacionesController extends BaseServlet {
                             solicitud.getRutEmpleado(),
                             filtroInicioVacacion,
                             filtroFinVacacion,
-                            userConnected.getUsername(),
+                            userConnected,
                             false,
                             estado,
                             startPageIndex, 
@@ -292,7 +292,7 @@ public class SolicitudVacacionesController extends BaseServlet {
                             solicitud.getRutEmpleado(),
                             filtroInicioVacacion,
                             filtroFinVacacion,
-                            userConnected.getUsername(),
+                            userConnected,
                             false,
                             estado);
                     }else {
@@ -300,7 +300,7 @@ public class SolicitudVacacionesController extends BaseServlet {
                             userConnected.getRunEmpleado(),
                             filtroInicioVacacion,
                             filtroFinVacacion,
-                            userConnected.getUsername(),
+                            userConnected,
                             estado,
                             false,
                             userConnected.getCencos(),
@@ -312,7 +312,7 @@ public class SolicitudVacacionesController extends BaseServlet {
                             userConnected.getRunEmpleado(),
                             filtroInicioVacacion,
                             filtroFinVacacion,
-                            userConnected.getUsername(),
+                            userConnected,
                             estado,
                             false,
                             userConnected.getCencos());

@@ -41,7 +41,7 @@
                 userInSession.getRunEmpleado(),
                 null,
                 null,
-                userInSession.getUsername(),
+                userInSession,
                 false,
                 Constantes.ESTADO_SOLICITUD_PENDIENTE,
                 0, 

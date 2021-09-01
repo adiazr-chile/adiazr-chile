@@ -10,6 +10,7 @@ import cl.femase.gestionweb.vo.MaintenanceEventVO;
 import cl.femase.gestionweb.vo.MaintenanceVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import cl.femase.gestionweb.vo.UsuarioCentroCostoVO;
+import cl.femase.gestionweb.vo.UsuarioVO;
 import java.util.List;
 
 /**
@@ -39,7 +40,7 @@ public class SolicitudVacacionesBp {
     * @param _rutEmpleado
     * @param _startDate
     * @param _endDate
-    * @param _username
+     * @param _usuario
     * @param _propias
     * @param _estado
     * @param _jtStartIndex
@@ -52,7 +53,7 @@ public class SolicitudVacacionesBp {
             String _rutEmpleado,
             String _startDate,
             String _endDate,
-            String _username,
+            UsuarioVO _usuario,
             boolean _propias,
             String _estado,
             int _jtStartIndex, 
@@ -65,7 +66,7 @@ public class SolicitudVacacionesBp {
                 _rutEmpleado, 
                 _startDate, 
                 _endDate, 
-                _username, 
+                _usuario, 
                 _propias, 
                 _estado,
                 _jtStartIndex, _jtPageSize, _jtSorting);
@@ -79,9 +80,9 @@ public class SolicitudVacacionesBp {
     * @param _rutEmpleado
     * @param _startDate
     * @param _endDate
-    * @param _username
+    * @param _usuario
     * @param _estado
-     * @param _propias
+    * @param _propias
     * @param _cencosUsuario
     * @param _jtStartIndex
     * @param _jtPageSize
@@ -92,7 +93,7 @@ public class SolicitudVacacionesBp {
             String _rutEmpleado,
             String _startDate,
             String _endDate,
-            String _username,
+            UsuarioVO _usuario,
             String _estado,
             boolean _propias,
             List<UsuarioCentroCostoVO> _cencosUsuario,
@@ -105,7 +106,7 @@ public class SolicitudVacacionesBp {
                 _rutEmpleado, 
                 _startDate, 
                 _endDate, 
-                _username, 
+                _usuario, 
                 _estado,
                 _propias,
                 _cencosUsuario,
@@ -239,7 +240,7 @@ public class SolicitudVacacionesBp {
     * @param _rutEmpleado
     * @param _startDate
     * @param _endDate
-    * @param _username
+    * @param _usuario
     * @param _propias
     * @param _estado
     * @return 
@@ -248,14 +249,14 @@ public class SolicitudVacacionesBp {
             String _rutEmpleado,
             String _startDate,
             String _endDate,
-            String _username, 
+            UsuarioVO _usuario, 
             boolean _propias,
             String _estado){
         return solicitudDao.getSolicitudesCount(_empresaId,
             _rutEmpleado, 
             _startDate, 
             _endDate, 
-            _username, 
+            _usuario, 
             _propias, 
             _estado);
     }
@@ -266,9 +267,9 @@ public class SolicitudVacacionesBp {
     * @param _rutEmpleado
     * @param _startDate
     * @param _endDate
-    * @param _username
+    * @param _usuario
     * @param _estado
-     * @param _propias
+    * @param _propias
     * @param _cencosUsuario
     * @return 
     */
@@ -276,7 +277,7 @@ public class SolicitudVacacionesBp {
             String _rutEmpleado,
             String _startDate,
             String _endDate,
-            String _username, 
+            UsuarioVO _usuario, 
             String _estado,
             boolean _propias,
             List<UsuarioCentroCostoVO> _cencosUsuario){
@@ -284,7 +285,7 @@ public class SolicitudVacacionesBp {
             _rutEmpleado, 
             _startDate, 
             _endDate, 
-            _username, 
+            _usuario, 
             _estado,
             _propias,
             _cencosUsuario);

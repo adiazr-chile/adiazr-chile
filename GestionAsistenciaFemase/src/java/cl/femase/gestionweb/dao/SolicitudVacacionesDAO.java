@@ -11,6 +11,7 @@ import cl.femase.gestionweb.common.DatabaseException;
 import cl.femase.gestionweb.vo.SolicitudVacacionesVO;
 import cl.femase.gestionweb.vo.MaintenanceVO;
 import cl.femase.gestionweb.vo.UsuarioCentroCostoVO;
+import cl.femase.gestionweb.vo.UsuarioVO;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -36,7 +37,7 @@ public class SolicitudVacacionesDAO extends BaseDAO{
     * @param _runEmpleado
     * @param _startDate
     * @param _endDate
-    * @param _username
+     * @param _usuario
     * @param _propias
     * @param _estado
     * @param _jtStartIndex
@@ -49,7 +50,7 @@ public class SolicitudVacacionesDAO extends BaseDAO{
             String _runEmpleado,
             String _startDate,
             String _endDate,
-            String _username,
+            UsuarioVO _usuario,
             boolean _propias,
             String _estado,
             int _jtStartIndex, 
@@ -88,10 +89,10 @@ public class SolicitudVacacionesDAO extends BaseDAO{
                 + " where 1 = 1 ";
 
             if (_propias){
-                sql += " and (sv.username_solicita = '" + _username + "') ";
+                sql += " and (sv.username_solicita = '" + _usuario.getUsername() + "') ";
             }else{
                 sql += " and (e.cenco_id = " + _cencoId + ") "
-                    + " and (sv.username_solicita != '" + _username + "') "
+                    + " and (sv.username_solicita != '" + _usuario.getUsername() + "') "
                     + " and (sv.rut_empleado != '" + _runEmpleado + "') ";
             }
             if (_empresaId != null && _empresaId.compareTo("") != 0){        
@@ -108,6 +109,10 @@ public class SolicitudVacacionesDAO extends BaseDAO{
             }
             if (_estado != null && _estado.compareTo("TODAS") != 0){
                 sql += " and (sv.status_id = '" + _estado + "') ";
+            }
+            
+            if (_usuario.getIdPerfil() == Constantes.ID_PERFIL_JEFE_TECNICO_NACIONAL){
+                sql += " and (e.empl_id_cargo = " + Constantes.ID_CARGO_DIRECTOR + ") ";
             }
             
             sql += " order by " + _jtSorting; 
@@ -177,9 +182,9 @@ public class SolicitudVacacionesDAO extends BaseDAO{
     * @param _runEmpleado
     * @param _startDate
     * @param _endDate
-    * @param _username
+    * @param _usuario
     * @param _estado
-     * @param _propias
+    * @param _propias
     * @param _cencosUsuario
     * @param _jtStartIndex
     * @param _jtPageSize
@@ -190,7 +195,7 @@ public class SolicitudVacacionesDAO extends BaseDAO{
             String _runEmpleado,
             String _startDate,
             String _endDate,
-            String _username,
+            UsuarioVO _usuario,
             String _estado,
             boolean _propias,
             List<UsuarioCentroCostoVO> _cencosUsuario,
@@ -240,23 +245,31 @@ public class SolicitudVacacionesDAO extends BaseDAO{
             }
             
             sql += " and (e.cenco_id in (" + strCencos + ") "
-                + " and (sv.username_solicita != '" + _username + "') "
+                + " and (sv.username_solicita != '" + _usuario.getUsername() + "') "
                 + " and (sv.rut_empleado != '" + _runEmpleado + "')) ";
             
             if (_empresaId != null && _empresaId.compareTo("") != 0){        
                 sql += " and (sv.empresa_id = '" + _empresaId + "') ";
             }
+            
             if (_propias && _runEmpleado != null && _runEmpleado.compareTo("-1") != 0){        
                 sql += " and (sv.rut_empleado = '" + _runEmpleado + "') ";
             }
+            
             if (_endDate == null || _endDate.compareTo("") == 0){        
                 _endDate = _startDate;
             }
+            
             if (_startDate != null && _startDate.compareTo("") != 0){        
                 sql += " and (sv.solic_inicio between '" + _startDate + "' and '" + _endDate + "') ";
             }
+            
             if (_estado != null && _estado.compareTo("TODAS") != 0){
                 sql += " and (sv.status_id = '" + _estado + "') ";
+            }
+            
+            if (_usuario.getIdPerfil() == Constantes.ID_PERFIL_JEFE_TECNICO_NACIONAL){
+                sql += " and (e.empl_id_cargo = " + Constantes.ID_CARGO_DIRECTOR + ") ";
             }
             
             sql += " order by " + _jtSorting; 
@@ -420,7 +433,7 @@ public class SolicitudVacacionesDAO extends BaseDAO{
     * @param _rutEmpleado
     * @param _startDate
     * @param _endDate
-    * @param _username
+    * @param _usuario
     * @param _propias
     * @param _estado
     * @return 
@@ -429,7 +442,7 @@ public class SolicitudVacacionesDAO extends BaseDAO{
             String _rutEmpleado,
             String _startDate,
             String _endDate,
-            String _username,
+            UsuarioVO _usuario,
             boolean _propias,
             String _estado){
         int count=0;
@@ -442,24 +455,35 @@ public class SolicitudVacacionesDAO extends BaseDAO{
                     + " inner join empleado e "
                     + "  on (sv.empresa_id=e.empresa_id and sv.rut_empleado=e.empl_rut) "
                     + "where 1 = 1 ";
+                
                 if (_propias){
-                    sql += " and sv.username_solicita = '" + _username + "' ";
+                    sql += " and sv.username_solicita = '" + _usuario.getUsername() + "' ";
                 }
+                
                 if (_empresaId != null && _empresaId.compareTo("") != 0){        
                     sql += " and sv.empresa_id = '" + _empresaId + "'";
                 }
+                
                 if (_rutEmpleado != null && _rutEmpleado.compareTo("") != 0){        
                     sql += " and sv.rut_empleado = '" + _rutEmpleado + "'";
                 }
+                
                 if (_endDate == null || _endDate.compareTo("") == 0){        
                     _endDate = _startDate;
                 }
+                
                 if (_startDate != null && _startDate.compareTo("") != 0){        
                     sql += " and sv.solic_inicio between '" + _startDate + "' and '" + _endDate + "' ";
                 }
+                
                 if (_estado != null && _estado.compareTo("TODAS") != 0){
                     sql += " and (sv.status_id = '" + _estado + "') ";
                 }
+                
+                if (_usuario.getIdPerfil() == Constantes.ID_PERFIL_JEFE_TECNICO_NACIONAL){
+                    sql += " and (e.empl_id_cargo = " + Constantes.ID_CARGO_DIRECTOR + ") ";
+                }
+                
                 rs = statement.executeQuery(sql);
                 if (rs.next()) {
                     count=rs.getInt("count");
@@ -486,9 +510,9 @@ public class SolicitudVacacionesDAO extends BaseDAO{
     * @param _runEmpleado
     * @param _startDate
     * @param _endDate
-    * @param _username
+    * @param _usuario
     * @param _estado
-     * @param _propias
+    * @param _propias
     * @param _cencosUsuario
     * @return 
     */
@@ -496,7 +520,7 @@ public class SolicitudVacacionesDAO extends BaseDAO{
             String _runEmpleado,
             String _startDate,
             String _endDate,
-            String _username,
+            UsuarioVO _usuario,
             String _estado,
             boolean _propias,
             List<UsuarioCentroCostoVO> _cencosUsuario){
@@ -521,24 +545,33 @@ public class SolicitudVacacionesDAO extends BaseDAO{
                     strCencos = strCencos.substring(0, strCencos.length() - 1);
                 }
                 sql += " and (e.cenco_id in (" + strCencos + ") "
-                    + " and (sv.username_solicita != '" + _username + "') "
+                    + " and (sv.username_solicita != '" + _usuario.getUsername() + "') "
                     + " and (sv.rut_empleado != '" + _runEmpleado + "')) ";
                 
                 if (_empresaId != null && _empresaId.compareTo("") != 0){        
                     sql += " and sv.empresa_id = '" + _empresaId + "'";
                 }
+                
                 if (_propias && _runEmpleado != null && _runEmpleado.compareTo("") != 0){        
                     sql += " and sv.rut_empleado = '" + _runEmpleado + "'";
                 }
+                
                 if (_endDate == null || _endDate.compareTo("") == 0){        
                     _endDate = _startDate;
                 }
+                
                 if (_startDate != null && _startDate.compareTo("") != 0){        
                     sql += " and sv.solic_inicio between '" + _startDate + "' and '" + _endDate + "' ";
                 }
+                
                 if (_estado != null && _estado.compareTo("TODAS") != 0){
                     sql += " and (sv.status_id = '" + _estado + "') ";
                 }
+                
+                if (_usuario.getIdPerfil() == Constantes.ID_PERFIL_JEFE_TECNICO_NACIONAL){
+                    sql += " and (e.empl_id_cargo = " + Constantes.ID_CARGO_DIRECTOR + ") ";
+                }
+                
                 rs = statement.executeQuery(sql);
                 if (rs.next()) {
                     count=rs.getInt("count");

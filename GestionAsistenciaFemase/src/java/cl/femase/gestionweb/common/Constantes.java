@@ -90,7 +90,14 @@ public class Constantes {
     public static final String ESTADO_SOLICITUD_RECHAZADA = "R";
     public static final String ESTADO_SOLICITUD_RECHAZADA_LABEL = "Rechazada";
     
+    /**
+    * 22
+    */
     public static int ID_CARGO_DIRECTOR = 22;
+    
+    /**
+    * 69
+    */
     public static int ID_CARGO_JEFE_TECNICO_NACIONAL = 69;
     
     /**
