@@ -727,8 +727,8 @@ public class DetalleAusenciaDAO extends BaseDAO{
                 data.setEsZonaExtrema(rs.getString("es_zona_extrema"));
                 
                 //nuevas columnas
-                data.setSaldoDiasVacacionesAsignadas(rs.getInt("saldo_dias_vacaciones_asignadas"));
-                data.setDiasAcumuladosVacacionesAsignadas(rs.getInt("dias_acumulados_vacaciones_asignadas"));        
+                data.setSaldoDiasVacacionesAsignadas(rs.getDouble("saldo_dias_vacaciones_asignadas"));
+                data.setDiasAcumuladosVacacionesAsignadas(rs.getDouble("dias_acumulados_vacaciones_asignadas"));        
     
                 lista.add(data);
             }
@@ -1416,8 +1416,9 @@ public class DetalleAusenciaDAO extends BaseDAO{
                 data.setIdAusencia(rs.getInt("ausencia_id"));
                 data.setEmpresaId(rs.getString("empresa_id"));
                 data.setDiasEfectivosVacaciones(rs.getInt("dias_efectivos_vacaciones"));
-                data.setSaldoDiasVacacionesAsignadas(rs.getInt("saldo_dias_vacaciones_asignadas"));
-                data.setDiasAcumuladosVacacionesAsignadas(rs.getInt("dias_acumulados_vacaciones_asignadas"));
+                //nuevas by Ramon
+                data.setSaldoDiasVacacionesAsignadas(rs.getDouble("saldo_dias_vacaciones_asignadas"));
+                data.setDiasAcumuladosVacacionesAsignadas(rs.getDouble("dias_acumulados_vacaciones_asignadas"));
             }
 
             ps.close();

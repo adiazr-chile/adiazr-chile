@@ -60,26 +60,26 @@ public class DetalleAusenciaVO implements Serializable{
     private String esZonaExtrema  = "N";
     private String mensajeError;
     
-    private int saldoDiasVacacionesAsignadas;
-    private int diasAcumuladosVacacionesAsignadas;        
+    private double saldoDiasVacacionesAsignadas;
+    private double diasAcumuladosVacacionesAsignadas;        
     
     public DetalleAusenciaVO() {
         
     }
 
-    public int getSaldoDiasVacacionesAsignadas() {
+    public double getSaldoDiasVacacionesAsignadas() {
         return saldoDiasVacacionesAsignadas;
     }
 
-    public void setSaldoDiasVacacionesAsignadas(int saldoDiasVacacionesAsignadas) {
+    public void setSaldoDiasVacacionesAsignadas(double saldoDiasVacacionesAsignadas) {
         this.saldoDiasVacacionesAsignadas = saldoDiasVacacionesAsignadas;
     }
 
-    public int getDiasAcumuladosVacacionesAsignadas() {
+    public double getDiasAcumuladosVacacionesAsignadas() {
         return diasAcumuladosVacacionesAsignadas;
     }
 
-    public void setDiasAcumuladosVacacionesAsignadas(int diasAcumuladosVacacionesAsignadas) {
+    public void setDiasAcumuladosVacacionesAsignadas(double diasAcumuladosVacacionesAsignadas) {
         this.diasAcumuladosVacacionesAsignadas = diasAcumuladosVacacionesAsignadas;
     }
 
