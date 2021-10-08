@@ -7,7 +7,8 @@
     UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
     double doubleSaldoVacaciones = 0;
     boolean haySaldo = true;
-    String msgSaldo="";    
+    String msgSaldo=""; 
+    double progresivos = 0;
     if (userConnected.getIdPerfil() == Constantes.ID_PERFIL_DIRECTOR 
             || userConnected.getIdPerfil() == Constantes.ID_PERFIL_DIRECTOR_TR){
                 haySaldo = false;
@@ -24,7 +25,7 @@
             vacacionesBp.getInfoVacaciones(userConnected.getEmpresaId(), 
                 runEmpleado, -1, -1, -1, "vac.rut_empleado");
         if (infoVacaciones.isEmpty()){
-            System.out.println("[ingresar_solicitud_vacaciones]"
+            System.out.println("[ingresar_solicitud_vacaciones.jsp]"
                 + "EmpresaId: " + userConnected.getEmpresaId()
                 + ", rutEmpleado: " + userConnected.getUsername()
                 + ", No tiene informacion de vacaciones (saldo)");
@@ -34,10 +35,12 @@
             VacacionesVO saldoVacaciones = infoVacaciones.get(0);
             doubleSaldoVacaciones = saldoVacaciones.getSaldoDias();
             msgSaldo = "Saldo dias disponibles: " + doubleSaldoVacaciones;
-            System.out.println("[ingresar_solicitud_vacaciones]"
+            progresivos = saldoVacaciones.getDiasProgresivos();
+            System.out.println("[ingresar_solicitud_vacaciones.jsp]"
                 + "EmpresaId: " + userConnected.getEmpresaId()
                 + ", rutEmpleado: " + userConnected.getUsername()
-                + ", saldoVacaciones= " + doubleSaldoVacaciones);
+                + ", saldoVacaciones= " + doubleSaldoVacaciones
+                + ", dias_progresivos= " + progresivos);
 
         }
         if (doubleSaldoVacaciones <= 0){
@@ -118,7 +121,19 @@
             <h1>Nueva Solicitud de vacaciones</h1>
             <form id="form1" name="form1" method="post" action="<%=request.getContextPath()%>/servlet/SolicitudVacacionesController" target="_self">
                 <input name="action" type="hidden" id="action" value="precreate" />
-                <label><%=msgSaldo%></label>
+                <table width="100%" border="0" cellspacing="1" cellpadding="1">
+      <tr>
+        <td colspan="2"><%=msgSaldo%></td>
+      </tr>
+      <tr>
+        <td>&nbsp;</td>
+        <td align="right">&nbsp;</td>
+      </tr>
+      <tr>
+        <td align="right">Progresivos:</td>
+        <td align="right"><%=progresivos%></td>
+      </tr>
+    </table>
                 <%if (haySaldo){%>
                     <input type="text" id="fechaDesde" name="fechaDesde" value="" placeholder="Ingrese fecha de inicio" readonly/>
                     <input type="text" id="fechaHasta" name="fechaHasta" value="" placeholder="Ingrese fecha de termino" readonly/>

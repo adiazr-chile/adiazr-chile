@@ -3,8 +3,8 @@
     <head>
         <title>Google Chart (Ausencias del mes)</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-        <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+        <script type="text/javascript" src="jquery.min_1_10_2.js"></script>
+        <script type="text/javascript" src="loader.js"></script>
         <script type="text/javascript">
             var queryObject="";
             var queryObjectLen="";

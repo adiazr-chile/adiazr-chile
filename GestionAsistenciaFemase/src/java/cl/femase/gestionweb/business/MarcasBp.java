@@ -5,6 +5,7 @@
 
 package cl.femase.gestionweb.business;
 
+import cl.femase.gestionweb.vo.CentroCostoVO;
 import cl.femase.gestionweb.vo.InfoMarcaVO;
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
 import cl.femase.gestionweb.vo.MaintenanceVO;
@@ -230,8 +231,8 @@ public class MarcasBp {
     * @param _startDate
     * @param _endDate
     * @param _turnoRotativo
-    * @param _regionId
-    * @param _comunaId
+     * @param _regionIdEmpleado
+     * @param _comunaIdEmpleado
     * @param _jtStartIndex
     * @param _jtPageSize
     * @param _jtSorting
@@ -245,12 +246,26 @@ public class MarcasBp {
             String _startDate, 
             String _endDate,
             boolean _turnoRotativo,
-            int _regionId, 
-            int _comunaId,
+            int _regionIdEmpleado, 
+            int _comunaIdEmpleado,
             int _jtStartIndex, 
             int _jtPageSize, 
             String _jtSorting){
     
+        System.out.println("[MarcasBp.getHashMarcas]"
+            + "empresaId: " + _empresaId
+            + ", deptoId: " + _deptoId
+            + ", cencoId: " + _cencoId
+            + ", rutEmpleado: " + _rutEmpleado
+            + ", regionIdEmpleado: " + _regionIdEmpleado
+            + ", comunaIdEmpleado: " + _comunaIdEmpleado);
+        
+        CentroCostoBp cencoBp = new CentroCostoBp(new PropertiesVO());
+        CentroCostoVO infoCenco = cencoBp.getCentroCostoByKey(_deptoId, _cencoId);
+        System.out.println("[MarcasBp.getHashMarcas]"
+            + "regionIdCenco: " + infoCenco.getRegionId()
+            + ", comunaIdCenco: " + infoCenco.getComunaId());
+        
         LinkedHashMap<String, MarcaVO> hashMarcasFinal = 
             new LinkedHashMap<>();
         
@@ -270,10 +285,10 @@ public class MarcasBp {
         LinkedHashMap<String, InfoMarcaVO> fechasMarcas;
         if (_turnoRotativo){
             fechasMarcas = 
-                visorMarcasBp.setMarcasTurnoRotativo(_empresaId, _rutEmpleado , _startDate, _endDate, _regionId, _comunaId);
+                visorMarcasBp.setMarcasTurnoRotativo(_empresaId, _rutEmpleado , _startDate, _endDate, _regionIdEmpleado, _comunaIdEmpleado, infoCenco);
         }else{
             fechasMarcas = 
-                visorMarcasBp.setMarcasTurnoNormal(_empresaId, _rutEmpleado , _startDate, _endDate, _regionId, _comunaId);
+                visorMarcasBp.setMarcasTurnoNormal(_empresaId, _rutEmpleado , _startDate, _endDate, _regionIdEmpleado, _comunaIdEmpleado, infoCenco);
         }
         
         fechasMarcas.forEach((key,value) -> {

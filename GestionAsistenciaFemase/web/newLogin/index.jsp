@@ -10,107 +10,211 @@
 	//if (mensaje==null) mensaje="&nbsp;";
     session.removeAttribute("mensaje");
 %>
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<title>Sistema de Gestion Asistencia-FEMASE</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Sistema de Gestion Asistencia-FEMASE</title>
 	<meta charset="UTF-8">
-        <link rel="icon" href="../images/femase_fav_icon_16x16.gif" type="image/gif" sizes="16x16">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-<!--===============================================================================================-->	
-	<!--<link rel="icon" type="image/png" href="images/icons/favicon.ico"/>-->
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="vendor/bootstrap/css/bootstrap.min.css">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="fonts/Linearicons-Free-v1.0.0/icon-font.min.css">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="fonts/iconic/css/material-design-iconic-font.min.css">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="vendor/animate/animate.css">
-<!--===============================================================================================-->	
-	<link rel="stylesheet" type="text/css" href="vendor/css-hamburgers/hamburgers.min.css">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="vendor/animsition/css/animsition.min.css">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="vendor/select2/select2.min.css">
-<!--===============================================================================================-->	
-	<link rel="stylesheet" type="text/css" href="vendor/daterangepicker/daterangepicker.css">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="css/util.css">
-	<link rel="stylesheet" type="text/css" href="css/main.css">
-<!--===============================================================================================-->
+	<link rel="icon" href="../images/femase_fav_icon_16x16.gif" type="image/gif" sizes="16x16">
+	
+	<script src="vendor/jquery/jquery-3.2.1.min.js"></script>
+
+
 <style>
-    .alertError {
-          background-color: #f44336;
-          color: white;
-        }
-    
+
+	@import url(https://fonts.googleapis.com/css?family=Open+Sans);
+	.btn {
+	display: inline-block;
+	*display: inline;
+	*zoom: 1;
+	padding: 4px 10px 4px;
+	margin-bottom: 0;
+	font-size: 13px;
+	line-height: 18px;
+	color: #333333;
+	text-align: center;
+	text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);
+	vertical-align: middle;
+	background-color: #f5f5f5;
+	background-image: -moz-linear-gradient(top, #ffffff, #e6e6e6);
+	background-image: -ms-linear-gradient(top, #ffffff, #e6e6e6);
+	background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), to(#e6e6e6));
+	background-image: -webkit-linear-gradient(top, #ffffff, #e6e6e6);
+	background-image: -o-linear-gradient(top, #ffffff, #e6e6e6);
+	background-image: linear-gradient(top, #ffffff, #e6e6e6);
+	background-repeat: repeat-x;
+	filter: progid:dximagetransform.microsoft.gradient(startColorstr=#ffffff, endColorstr=#e6e6e6, GradientType=0);
+	border-color: #e6e6e6 #e6e6e6 #e6e6e6;
+	border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+	border: 1px solid #e6e6e6;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+	-webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+	-moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+	cursor: pointer;
+	*margin-left: .3em;
+}
+
+.btn:hover,
+.btn:active,
+.btn.active,
+.btn.disabled,
+.btn[disabled] {
+	background-color: #e6e6e6;
+}
+
+.btn-large {
+	padding: 9px 14px;
+	font-size: 15px;
+	line-height: normal;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
+
+.btn:hover {
+	color: #333333;
+	text-decoration: none;
+	background-color: #e6e6e6;
+	background-position: 0 -15px;
+	-webkit-transition: background-position 0.1s linear;
+	-moz-transition: background-position 0.1s linear;
+	-ms-transition: background-position 0.1s linear;
+	-o-transition: background-position 0.1s linear;
+	transition: background-position 0.1s linear;
+}
+
+.btn-primary,
+.btn-primary:hover {
+	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+	color: #ffffff;
+}
+
+.btn-primary.active {
+	color: rgba(255, 255, 255, 0.75);
+}
+
+.btn-primary {
+	background-color: #4a77d4;
+	background-image: -moz-linear-gradient(top, #6eb6de, #4a77d4);
+	background-image: -ms-linear-gradient(top, #6eb6de, #4a77d4);
+	background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#6eb6de), to(#4a77d4));
+	background-image: -webkit-linear-gradient(top, #6eb6de, #4a77d4);
+	background-image: -o-linear-gradient(top, #6eb6de, #4a77d4);
+	background-image: linear-gradient(top, #6eb6de, #4a77d4);
+	background-repeat: repeat-x;
+	filter: progid:dximagetransform.microsoft.gradient(startColorstr=#6eb6de, endColorstr=#4a77d4, GradientType=0);
+	border: 1px solid #3762bc;
+	text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.4);
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.btn-primary:hover,
+.btn-primary:active,
+.btn-primary.active,
+.btn-primary.disabled,
+.btn-primary[disabled] {
+	filter: none;
+	background-color: #4a77d4;
+}
+
+.btn-block {
+	width: 100%;
+	display: block;
+}
+
+* {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-ms-box-sizing: border-box;
+	-o-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+html {
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
+
+body {
+	width: 100%;
+	height: 100%;
+	font-family: 'Open Sans', sans-serif;
+	background: #092756;
+	background: -moz-radial-gradient(0% 100%, ellipse cover, rgba(104, 128, 138, .4) 10%, rgba(138, 114, 76, 0) 40%), -moz-linear-gradient(top, rgba(57, 173, 219, .25) 0%, rgba(42, 60, 87, .4) 100%), -moz-linear-gradient(-45deg, #ffffff 0%, #99CCCC 100%);
+	background: -webkit-radial-gradient(0% 100%, ellipse cover, rgba(104, 128, 138, .4) 10%, rgba(138, 114, 76, 0) 40%), -webkit-linear-gradient(top, rgba(57, 173, 219, .25) 0%, rgba(42, 60, 87, .4) 100%), -webkit-linear-gradient(-45deg, #ffffff 0%, #99CCCC 100%);
+	background: -o-radial-gradient(0% 100%, ellipse cover, rgba(104, 128, 138, .4) 10%, rgba(138, 114, 76, 0) 40%), -o-linear-gradient(top, rgba(57, 173, 219, .25) 0%, rgba(42, 60, 87, .4) 100%), -o-linear-gradient(-45deg, #ffffff 0%, #99CCCC 100%);
+	background: -ms-radial-gradient(0% 100%, ellipse cover, rgba(104, 128, 138, .4) 10%, rgba(138, 114, 76, 0) 40%), -ms-linear-gradient(top, rgba(57, 173, 219, .25) 0%, rgba(42, 60, 87, .4) 100%), -ms-linear-gradient(-45deg, #ffffff 0%, #99CCCC 100%);
+	background: -webkit-radial-gradient(0% 100%, ellipse cover, rgba(104, 128, 138, .4) 10%, rgba(138, 114, 76, 0) 40%), linear-gradient(to bottom, rgba(57, 173, 219, .25) 0%, rgba(42, 60, 87, .4) 100%), linear-gradient(135deg, #ffffff 0%, #99CCCC 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3E1D6D', endColorstr='#092756', GradientType=1);
+}
+
+.login {
+	position: absolute;
+	top: 30%;
+	left: 50%;
+	margin: -150px 0 0 -150px;
+	width: 300px;
+	height: 300px;
+}
+
+.login h1 {
+	color: #fff;
+	text-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+	letter-spacing: 1px;
+	text-align: center;
+}
+
+input {
+	width: 100%;
+	margin-bottom: 10px;
+	/*background: rgba(0, 0, 0, 0.3);*/
+	border: none;
+	outline: none;
+	padding: 10px;
+	font-size: 13px;
+	color: #333333;
+	text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
+	border: 1px solid rgba(0, 0, 0, 0.3);
+	border-radius: 4px;
+	box-shadow: inset 0 -5px 45px rgba(100, 100, 100, 0.2), 0 1px 1px rgba(255, 255, 255, 0.2);
+	-webkit-transition: box-shadow .5s ease;
+	-moz-transition: box-shadow .5s ease;
+	-o-transition: box-shadow .5s ease;
+	-ms-transition: box-shadow .5s ease;
+	transition: box-shadow .5s ease;
+}
+
+input:focus {
+	box-shadow: inset 0 -5px 45px rgba(100, 100, 100, 0.4), 0 1px 1px rgba(255, 255, 255, 0.2);
+}
+.alertError {
+	  background-color: #f44336;
+	  color: white;
+	}
 </style>
 
 </head>
-<body style="background-color: #999999;">
-	
-	<div class="limiter">
-		<div class="container-login100">
-			<div class="login100-more" style="background-image: url('images/bg-03.jpg');"></div>
 
-			<div class="wrap-login100 p-l-50 p-r-50 p-t-72 p-b-50">
-				<form method="post" action="<%=request.getContextPath()%>/UserAuth">
-					<span class="login100-form-title p-b-59"><img src="images/logo_femase_01.png" width="335" height="121"></span>
-                                        <div class="wrap-input100 validate-input" data-validate="Se requiere nombre de usuario">
-						<span class="label-input100">Nombre de usuario</span>
-						<input class="input100" type="text" id="username" name="username" placeholder="Nombre de usuario..." tabindex="0" required>
-						<span class="focus-input100"></span>
-					</div>
-
-					<div class="wrap-input100 validate-input" data-validate = "Se requiere clave">
-						<span class="label-input100">Clave</span>
-						<input class="input100" type="password" id="password" name="password" placeholder="*************" tabindex="1" required>
-						<span class="focus-input100"></span>
-					</div>
-
-					<div class="container-login100-form-btn">
-						<div class="wrap-login100-form-btn">
-							<div class="login100-form-bgbtn"></div>
-							<button class="login100-form-btn">
-								Ingresar
-							</button>
-						</div>
-
-					</div>
-                    <div id="errorDiv" class="alertError">
-            	<span onclick="this.parentElement.style.display='none';">&times;</span> 
-            	<%=mensaje%>.
-        	</div>
-				</form>
-                <div>
-          <h6>Versi&oacute;n <%=version%> Designed by <a href="http://www.femase.cl">FEMASE</a>&copy; <%=labelAnios%>
-          </h6>
-        </div>
-			</div>
+<body>
+<div class="login">
+  <h1>Login<img src="images/logo_femase_01.png" width="335" height="121" /></h1>
+    <form method="post" action="<%=request.getContextPath()%>/UserAuth">
+      	<input type="text" id="username" name="username" placeholder="Username" required="required" />
+        <input type="password" id="password" name="password" placeholder="Password" required="required" />
+        <button type="submit" class="btn btn-primary btn-block btn-large">Iniciar sesi&oacute;n</button>
+        <div id="errorDiv" class="alertError">
+			<span onclick="this.parentElement.style.display='none';">&times;</span> 
+			<%=mensaje%>.
 		</div>
-	</div>
-	
-<!--===============================================================================================-->
-	<script src="vendor/jquery/jquery-3.2.1.min.js"></script>
-<!--===============================================================================================-->
-	<script src="vendor/animsition/js/animsition.min.js"></script>
-<!--===============================================================================================-->
-	<script src="vendor/bootstrap/js/popper.js"></script>
-	<script src="vendor/bootstrap/js/bootstrap.min.js"></script>
-<!--===============================================================================================-->
-	<script src="vendor/select2/select2.min.js"></script>
-<!--===============================================================================================-->
-	<script src="vendor/daterangepicker/moment.min.js"></script>
-	<script src="vendor/daterangepicker/daterangepicker.js"></script>
-<!--===============================================================================================-->
-	<script src="vendor/countdowntime/countdowntime.js"></script>
-<!--===============================================================================================-->
-	<script src="js/main.js"></script>
-
-        <script>
+	</form>
+                        <h6>Versi&oacute;n <%=version%> Designed by <a href="http://www.femase.cl" target="_blank">FEMASE</a>&copy; <%=labelAnios%></h6>
+</div>
+<script>
 		
             $(document).ready(function(){
                 var x = document.getElementById("errorDiv");
@@ -118,6 +222,7 @@
                 <%if (mensaje != null) {%>
                     x.style.display = "block";
                 <%}%>
+				document.getElementById("username").focus();
             });
 
 	</script>

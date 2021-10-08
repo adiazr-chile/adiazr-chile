@@ -415,13 +415,16 @@ public class CentroCostoDAO extends BaseDAO{
         ResultSet rs = null;
         
         try{
-            String sql = "select "
-                + "ccosto_nombre,"
-                + "estado_id,email,"
-                + "es_zona_extrema "
-                + " from centro_costo "
-                + " where depto_id = '" + _deptoId + "' "
-                    + "and ccosto_id = " + _cencoId;
+            String sql = "select ccosto_nombre,"
+                    + "estado_id,"
+                    + "email,"
+                    + "es_zona_extrema,"
+                    + "comuna.region_id,"
+                    + "centro_costo.id_comuna "
+                + "from centro_costo "
+                    + "inner join comuna on (centro_costo.id_comuna = comuna.comuna_id ) "
+                + "where depto_id = '" + _deptoId + "' and ccosto_id = " + _cencoId;
+            
             System.out.println("[CentroCostoDAO.getCentroCostoByKey]"
                 + "Sql: " + sql);
              
@@ -437,6 +440,8 @@ public class CentroCostoDAO extends BaseDAO{
                 cenco.setEmail(rs.getString("email"));
                 cenco.setDeptoId(_deptoId);
                 cenco.setZonaExtrema(rs.getString("es_zona_extrema"));
+                cenco.setRegionId(rs.getInt("region_id"));
+                cenco.setComunaId(rs.getInt("id_comuna"));
             }
 
             ps.close();

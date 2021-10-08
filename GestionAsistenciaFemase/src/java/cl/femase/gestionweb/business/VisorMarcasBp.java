@@ -5,6 +5,7 @@
 
 package cl.femase.gestionweb.business;
 
+import cl.femase.gestionweb.vo.CentroCostoVO;
 import cl.femase.gestionweb.vo.InfoMarcaVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import java.text.SimpleDateFormat;
@@ -76,8 +77,9 @@ public class VisorMarcasBp {
      * @param _rutEmpleado
      * @param _startDate
      * @param _endDate
-     * @param _regionId
-     * @param _comunaId
+     * @param _regionIdEmpleado
+     * @param _comunaIdEmpleado
+     * @param _infoCenco
      * @return 
     */
     public LinkedHashMap<String, InfoMarcaVO> 
@@ -85,8 +87,9 @@ public class VisorMarcasBp {
             String _rutEmpleado,
             String _startDate,
             String _endDate,
-            int _regionId, 
-            int _comunaId){
+            int _regionIdEmpleado, 
+            int _comunaIdEmpleado, 
+            CentroCostoVO _infoCenco){
         
         LinkedHashMap<String,InfoMarcaVO> hashMarcasFinal
             = new LinkedHashMap<>();
@@ -95,7 +98,10 @@ public class VisorMarcasBp {
             = getHashMarcasTurnoNormal(_empresaId,
                 _rutEmpleado, 
                 _startDate, 
-                _endDate, _regionId, _comunaId);
+                _endDate, 
+                _regionIdEmpleado, 
+                _comunaIdEmpleado, 
+                _infoCenco);
         System.out.println("[VisorMarcasBp.setMarcasTurnoNormal]"
             + "*********************************************");
         System.out.println("[VisorMarcasBp.setMarcasTurnoNormal]"
@@ -286,8 +292,9 @@ public class VisorMarcasBp {
      * @param _rutEmpleado
      * @param _startDate
      * @param _endDate
-     * @param _regionId
-     * @param _comunaId
+     * @param _regionIdEmpleado
+     * @param _comunaIdEmpleado
+     * @param _infoCenco
      * @return 
     */
     public LinkedHashMap<String, InfoMarcaVO> 
@@ -295,8 +302,9 @@ public class VisorMarcasBp {
             String _rutEmpleado,
             String _startDate,
             String _endDate,
-            int _regionId, 
-            int _comunaId){
+            int _regionIdEmpleado, 
+            int _comunaIdEmpleado, 
+            CentroCostoVO _infoCenco){
         
         LinkedHashMap<String,InfoMarcaVO> hashMarcasFinal
             = new LinkedHashMap<>();
@@ -305,7 +313,10 @@ public class VisorMarcasBp {
             = getHashMarcasTurnoRotativo(_empresaId,
                 _rutEmpleado, 
                 _startDate, 
-                _endDate, _regionId, _comunaId);
+                _endDate, 
+                _regionIdEmpleado, 
+                _comunaIdEmpleado, 
+                _infoCenco);
         System.out.println("[VisorMarcasBp.setMarcasTurnoRotativo]"
             + "*********************************************");
         System.out.println("[VisorMarcasBp.setMarcasTurnoRotativo]"
@@ -500,20 +511,22 @@ public class VisorMarcasBp {
     * @param _rutEmpleado
     * @param _startDate
     * @param _endDate
-     * @param _regionId
-     * @param _comunaId
+     * @param _regionIdEmpleado
+     * @param _comunaIdEmpleado
+     * @param _infoCenco
     * @return 
     */
     public LinkedHashMap<String, InfoMarcaVO> getHashMarcasTurnoRotativo(String _empresaId,
             String _rutEmpleado, 
             String _startDate, 
             String _endDate,
-            int _regionId, 
-            int _comunaId){
+            int _regionIdEmpleado, 
+            int _comunaIdEmpleado,
+            CentroCostoVO _infoCenco){
         
         LinkedHashMap<String, InfoMarcaVO> hashMarcas =
             marcasDao.getHashMarcasTurnoRotativo(_empresaId, _rutEmpleado,
-                _startDate, _endDate, _regionId, _comunaId);
+                _startDate, _endDate, _regionIdEmpleado, _comunaIdEmpleado, _infoCenco);
         
         return hashMarcas;
     }
@@ -524,20 +537,24 @@ public class VisorMarcasBp {
     * @param _rutEmpleado
     * @param _startDate
     * @param _endDate
-     * @param _regionId
-     * @param _comunaId
+     * @param _regionIdEmpleado
+     * @param _comunaIdEmpleado
+     * @param _infoCenco
     * @return 
     */
     public LinkedHashMap<String, InfoMarcaVO> getHashMarcasTurnoNormal(String _empresaId,
             String _rutEmpleado, 
             String _startDate, 
             String _endDate,
-            int _regionId, 
-            int _comunaId){
+            int _regionIdEmpleado, 
+            int _comunaIdEmpleado, 
+            CentroCostoVO _infoCenco){
         
         LinkedHashMap<String, InfoMarcaVO> hashMarcas =
             marcasDao.getHashMarcasTurnoNormal(_empresaId, _rutEmpleado, 
-                _startDate, _endDate, _regionId, _comunaId);
+                _startDate, _endDate, 
+                _regionIdEmpleado, _comunaIdEmpleado,
+                _infoCenco);
 
         return hashMarcas;
     }

@@ -7,6 +7,7 @@ package cl.femase.gestionweb.dao;
 
 import cl.femase.gestionweb.common.Constantes;
 import cl.femase.gestionweb.common.DatabaseException;
+import cl.femase.gestionweb.vo.CentroCostoVO;
 import cl.femase.gestionweb.vo.InfoMarcaVO;
 import cl.femase.gestionweb.vo.MaintenanceVO;
 import cl.femase.gestionweb.vo.MarcaVO;
@@ -2432,8 +2433,9 @@ public class MarcasDAO extends BaseDAO{
     * @param _rutEmpleado
     * @param _startDate
     * @param _endDate
-     * @param _regionId
-     * @param _comunaId
+    * @param _regionIdEmpleado
+    * @param _comunaIdEmpleado
+    * @param _infoCenco
     * 
     * @return 
     */
@@ -2441,8 +2443,9 @@ public class MarcasDAO extends BaseDAO{
             String _rutEmpleado,
             String _startDate, 
             String _endDate,
-            int _regionId, 
-            int _comunaId){
+            int _regionIdEmpleado, 
+            int _comunaIdEmpleado,
+            CentroCostoVO _infoCenco){
         
         LinkedHashMap<String, InfoMarcaVO> hashMarcas = new LinkedHashMap<>();
                         
@@ -2491,10 +2494,14 @@ public class MarcasDAO extends BaseDAO{
                         "detalle_ausencia.allow_hour ausencia_por_hora," +
                         "ausencia.ausencia_nombre,"
                         + "detalle_ausencia.hora_inicio,"
-                        + "detalle_ausencia.hora_fin "
-                    + "from generate_series( '" + _startDate + "', '" + _endDate + "', '1 day'::interval) as fecha_it "
-                        + "left outer join marca on (fecha_it::date = marca.fecha_hora::date and marca.empresa_cod = '" + _empresaId + "' and marca.rut_empleado='" + _rutEmpleado + "') "
-                        + "left outer join view_empleado empleado on (empleado.rut = marca.rut_empleado and empleado.empresa_id = marca.empresa_cod) "
+                        + "detalle_ausencia.hora_fin, "
+                        + "calendario_feriados.cal_region_id feriado_region_id, calendario_feriados.cal_comuna_id feriado_comuna_id,"
+                        + "empleado.region_id empleado_region_id, empleado.comuna_id empleado_comuna_id "
+                    + " from generate_series( '" + _startDate + "'::timestamp, '" + _endDate + "'::timestamp, '1 day'::interval) as fecha_it "
+                        + " left outer join marca on (fecha_it::date = marca.fecha_hora::date "
+                            + "and marca.empresa_cod = '" + _empresaId + "' and marca.rut_empleado='" + _rutEmpleado + "') "
+                    + "	left outer join view_empleado empleado on (empleado.rut = '" + _rutEmpleado + "' "
+                            + "and empleado.empresa_id = '" + _empresaId + "') " 
                         + "left outer join turno_rotativo_asignacion "
                             + "on (turno_rotativo_asignacion.empresa_id='" + _empresaId + "' "
                             + "and turno_rotativo_asignacion.rut_empleado='" + _rutEmpleado + "' "
@@ -2503,11 +2510,9 @@ public class MarcasDAO extends BaseDAO{
                             + "on (turno_rotativo.empresa_id='" + _empresaId + "' "
                             + "and turno_rotativo.id_turno=turno_rotativo_asignacion.id_turno) "
                         + " left outer join calendario_feriados "
-                            + "	on ("
-                            + "	(fecha_it::date = calendario_feriados.fecha) "
-                            + "	and (calendario_feriados.cal_region_id = " + _regionId + " or calendario_feriados.cal_comuna_id = " + _comunaId + " or cal_id_tipo_feriado is not null) "
-                            + ") "
-                        + " and ( empleado.comuna_id = calendario_feriados.cal_comuna_id or empleado.region_id = calendario_feriados.cal_region_id) "
+                            + "	on ( fecha_it::date = calendario_feriados.fecha ) "
+                            + "	and ( calendario_feriados.cal_region_id = " + _infoCenco.getRegionId() + " or calendario_feriados.cal_comuna_id = " + _infoCenco.getComunaId() + " or cal_id_tipo_feriado is not null) "
+                            //+ " and ( empleado.comuna_id = calendario_feriados.cal_comuna_id or empleado.region_id = calendario_feriados.cal_region_id) "
                         + "left outer join tipo_marca_manual on (marca.cod_tpo_marca_manual = tipo_marca_manual.code) "
                         + "left outer join detalle_ausencia on (detalle_ausencia.rut_empleado='" + _rutEmpleado + "' " +
                         " and fecha_it::date between fecha_inicio and fecha_fin and ausencia_autorizada='S') " +
@@ -2525,7 +2530,29 @@ public class MarcasDAO extends BaseDAO{
             while (rs.next()){
                 data = new InfoMarcaVO();
             
-                data.setFecha(rs.getString("fecha_it"));
+                String fecha = rs.getString("fecha_it");
+                int regionIdFeriado = rs.getInt("feriado_region_id");
+                int comunaIdFeriado = rs.getInt("feriado_comuna_id");
+                int regionIdEmpleado = rs.getInt("empleado_region_id");
+                int comunaIdEmpleado = rs.getInt("empleado_comuna_id");
+                String labelCalendario = rs.getString("label_calendario");
+                System.out.println("[MarcasDAO.getHashMarcasTurnoNormal]"
+                    + "fecha= " + fecha
+                    + ", regionIdFeriado= " + regionIdFeriado
+                    + ", comunaIdFeriado= " + comunaIdFeriado
+                    + ", cenco.region= " + _infoCenco.getRegionId()
+                    + ", cenco.comuna= " + _infoCenco.getComunaId()
+                    + ", regionIdEmpleado= " + regionIdEmpleado
+                    + ", comunaIdEmpleado= " + comunaIdEmpleado
+                    + ", labelCalendario= " + labelCalendario);
+                //if (regionIdFeriado == 0 && comunaIdFeriado == 0) feriadoNacional = true;
+                if (regionIdFeriado > 0 && regionIdFeriado != _infoCenco.getRegionId()){
+                    labelCalendario = null;
+                }
+                if (comunaIdFeriado > 0 && comunaIdFeriado != _infoCenco.getComunaId()){
+                    labelCalendario = null;
+                }
+                data.setFecha(fecha);
                 data.setId(rs.getString("id"));
                 data.setHashcode(rs.getString("hashcode"));
                 data.setFechaLabel(rs.getString("fecha_label"));
@@ -2542,7 +2569,7 @@ public class MarcasDAO extends BaseDAO{
                 data.setHoraEntradaTurno(rs.getString("hora_entrada_teorica"));
                 data.setHoraSalidaTurno(rs.getString("hora_salida_teorica"));  
                 data.setTurnoNocturno(rs.getString("turno_nocturno"));
-                data.setLabelCalendario(rs.getString("label_calendario"));
+                data.setLabelCalendario(labelCalendario);
                 
                 data.setAusenciaNombre(rs.getString("ausencia_nombre"));
                 data.setAusenciaPorHora(rs.getString("ausencia_por_hora"));
@@ -2611,16 +2638,18 @@ public class MarcasDAO extends BaseDAO{
     * @param _rutEmpleado
     * @param _startDate
     * @param _endDate
-     * @param _regionId
-     * @param _comunaId
+     * @param _regionIdEmpleado
+     * @param _comunaIdEmpleado
+     * @param _infoCenco
     * @return 
     */
     public LinkedHashMap<String, InfoMarcaVO> getHashMarcasTurnoNormal(String _empresaId,
             String _rutEmpleado,
             String _startDate, 
             String _endDate,
-            int _regionId, 
-            int _comunaId){
+            int _regionIdEmpleado, 
+            int _comunaIdEmpleado,
+            CentroCostoVO _infoCenco){
         
         LinkedHashMap<String, InfoMarcaVO> hashMarcas = new LinkedHashMap<>();
                         
@@ -2669,8 +2698,10 @@ public class MarcasDAO extends BaseDAO{
                     "detalle_ausencia.allow_hour ausencia_por_hora," +
                     "ausencia.ausencia_nombre, "
                     + "detalle_ausencia.hora_inicio,"
-                    + "detalle_ausencia.hora_fin "
-                + "from generate_series( '" + _startDate + "', '" + _endDate + "', '1 day'::interval) as fecha_it "
+                    + "detalle_ausencia.hora_fin, "
+                    + "calendario_feriados.cal_region_id feriado_region_id, calendario_feriados.cal_comuna_id feriado_comuna_id,"
+                    + "empleado.region_id empleado_region_id, empleado.comuna_id empleado_comuna_id "
+                + "from generate_series( '" + _startDate + "'::timestamp, '" + _endDate + "'::timestamp, '1 day'::interval) as fecha_it "
                     + "	left outer join marca on (fecha_it::date = marca.fecha_hora::date "
                             + "and marca.empresa_cod = '" + _empresaId + "' and marca.rut_empleado='" + _rutEmpleado + "') "
                     + "	left outer join view_empleado empleado on (empleado.rut = '" + _rutEmpleado + "' "
@@ -2679,11 +2710,9 @@ public class MarcasDAO extends BaseDAO{
                             + "on (detalle_turno.id_turno = empleado.empl_id_turno "
                             + "and detalle_turno.cod_dia = extract(isodow  from fecha_it::date)) "
                     + " left outer join calendario_feriados "
-                        + "	on ("
-                        + "	(fecha_it::date = calendario_feriados.fecha) "
-                        + "	and (calendario_feriados.cal_region_id = " + _regionId + " or calendario_feriados.cal_comuna_id = " + _comunaId + " or cal_id_tipo_feriado is not null) "
-                        + ") "
-                        + " and ( empleado.comuna_id = calendario_feriados.cal_comuna_id or empleado.region_id = calendario_feriados.cal_region_id) "
+                        + "	on (fecha_it::date = calendario_feriados.fecha) "
+                        + "	and (calendario_feriados.cal_region_id = " + _infoCenco.getRegionId() + " or calendario_feriados.cal_comuna_id = " + _infoCenco.getComunaId() + " or cal_id_tipo_feriado is not null) "
+                        //+ " and ( empleado.comuna_id = calendario_feriados.cal_comuna_id or empleado.region_id = calendario_feriados.cal_region_id) "
                     + "left outer join tipo_marca_manual on (marca.cod_tpo_marca_manual = tipo_marca_manual.code) "
                     + "left outer join detalle_ausencia on (detalle_ausencia.rut_empleado='" + _rutEmpleado + "' " +
                         " and fecha_it::date between fecha_inicio and fecha_fin and ausencia_autorizada='S') " +
@@ -2700,50 +2729,89 @@ public class MarcasDAO extends BaseDAO{
             int correlativo = 1;
             while (rs.next()){
                 data = new InfoMarcaVO();
-            
-                data.setFecha(rs.getString("fecha_it"));
-                data.setFechaLabel(rs.getString("fecha_label"));
-                data.setId(rs.getString("id"));
-                data.setHashcode(rs.getString("hashcode"));
-                data.setCodDia(rs.getInt("cod_dia"));
-                data.setEmpresaId(rs.getString("empresa_cod"));
-                data.setRutEmpleado(rs.getString("rut_empleado"));
-                data.setFechaHoraMarca(rs.getString("fecha_hora_marca"));
-                data.setFechaHoraMarcaLabel(rs.getString("fecha_hora_marca_label"));
-                data.setHoraMarca(rs.getString("solo_hora_marca"));
-                data.setTipoMarca(rs.getInt("tipo_marca"));
-                data.setCodDispositivo(rs.getString("cod_dispositivo"));
-                data.setIdTurnoEmpleado(rs.getInt("empl_id_turno"));
-                data.setIdTurnoAsignado(rs.getInt("id_turno_asignado"));
-                data.setHoraEntradaTurno(rs.getString("hora_entrada_teorica"));
-                data.setHoraSalidaTurno(rs.getString("hora_salida_teorica"));  
-                data.setLabelCalendario(rs.getString("label_calendario"));
+                String fecha = rs.getString("fecha_it");
+                int regionIdFeriado = rs.getInt("feriado_region_id");
+                int comunaIdFeriado = rs.getInt("feriado_comuna_id");
+                int regionIdEmpleado = rs.getInt("empleado_region_id");
+                int comunaIdEmpleado = rs.getInt("empleado_comuna_id");
+                String labelCalendario = rs.getString("label_calendario");
+                System.out.println("[MarcasDAO.getHashMarcasTurnoNormal]"
+                    + "fecha= " + fecha
+                    + ", regionIdFeriado= " + regionIdFeriado
+                    + ", comunaIdFeriado= " + comunaIdFeriado
+                    + ", cenco.region= " + _infoCenco.getRegionId()
+                    + ", cenco.comuna= " + _infoCenco.getComunaId()    
+                    + ", regionIdEmpleado= " + regionIdEmpleado
+                    + ", comunaIdEmpleado= " + comunaIdEmpleado
+                    + ", labelCalendario= " + labelCalendario);
+                //if (regionIdFeriado == 0 && comunaIdFeriado == 0) feriadoNacional = true;
                 
-                data.setAusenciaNombre(rs.getString("ausencia_nombre"));
-                data.setAusenciaPorHora(rs.getString("ausencia_por_hora"));
-                data.setFechaInicioAusencia(rs.getString("inicio_ausencia"));
-                data.setFechaFinAusencia(rs.getString("fin_ausencia"));
-                data.setHoraInicioAusencia(rs.getString("hora_inicio"));
-                data.setHoraFinAusencia(rs.getString("hora_fin"));
+                /**
+                 * fecha= 2021-08-20, 
+                 * regionIdFeriado= -1, 
+                 * regionIdEmpleado= 1,
+                 * 
+                 * comunaIdFeriado= 180, 
+                 * comunaIdEmpleado= 1, 
+                 * labelCalendario= Nacimiento del Procer de la Independencia
+                */
+
+                if (regionIdFeriado > 0 && regionIdFeriado != _infoCenco.getRegionId()){
+                    System.out.println("[MarcasDAO.getHashMarcasTurnoNormal]"
+                        + "set label calendario NULL (1)");
+                    labelCalendario = null;
+                }
+                if (comunaIdFeriado > 0 && comunaIdFeriado != _infoCenco.getComunaId()){
+                    System.out.println("[MarcasDAO.getHashMarcasTurnoNormal]"
+                        + "set label calendario NULL (2)");
+                    labelCalendario = null;
+                }
                 
-                data.setHora(rs.getString("solohora"));
-                data.setMinutos(rs.getString("solomins"));
-                data.setSegundos(rs.getString("solosecs"));
-                data.setFechaHoraActualizacion(rs.getString("fecha_actualizacion"));
-                data.setCodTipoMarcaManual(rs.getInt("cod_tpo_marca_manual"));//
-                data.setNombreTipoMarcaManual(rs.getString("display_name"));
-                data.setComentario(rs.getString("comentario"));
-                data.setCorrelativo(rs.getInt("correlativo"));//
-                
-                data.setRowKey(_empresaId
-                    + "|" + _rutEmpleado
-                    + "|" + data.getFecha()
-                    + "|" + data.getCodDia()
-                    + "|" + data.getTipoMarca()
-                    + "|" + correlativo);
-                
-                hashMarcas.put(data.getRowKey(),data);
-                correlativo++;
+                //if (feriadoNacional || feriadoRegional || feriadoComunal){
+                    data.setFecha(fecha);
+                    data.setFechaLabel(rs.getString("fecha_label"));
+                    data.setId(rs.getString("id"));
+                    data.setHashcode(rs.getString("hashcode"));
+                    data.setCodDia(rs.getInt("cod_dia"));
+                    data.setEmpresaId(rs.getString("empresa_cod"));
+                    data.setRutEmpleado(rs.getString("rut_empleado"));
+                    data.setFechaHoraMarca(rs.getString("fecha_hora_marca"));
+                    data.setFechaHoraMarcaLabel(rs.getString("fecha_hora_marca_label"));
+                    data.setHoraMarca(rs.getString("solo_hora_marca"));
+                    data.setTipoMarca(rs.getInt("tipo_marca"));
+                    data.setCodDispositivo(rs.getString("cod_dispositivo"));
+                    data.setIdTurnoEmpleado(rs.getInt("empl_id_turno"));
+                    data.setIdTurnoAsignado(rs.getInt("id_turno_asignado"));
+                    data.setHoraEntradaTurno(rs.getString("hora_entrada_teorica"));
+                    data.setHoraSalidaTurno(rs.getString("hora_salida_teorica"));  
+                    data.setLabelCalendario(labelCalendario);
+
+                    data.setAusenciaNombre(rs.getString("ausencia_nombre"));
+                    data.setAusenciaPorHora(rs.getString("ausencia_por_hora"));
+                    data.setFechaInicioAusencia(rs.getString("inicio_ausencia"));
+                    data.setFechaFinAusencia(rs.getString("fin_ausencia"));
+                    data.setHoraInicioAusencia(rs.getString("hora_inicio"));
+                    data.setHoraFinAusencia(rs.getString("hora_fin"));
+
+                    data.setHora(rs.getString("solohora"));
+                    data.setMinutos(rs.getString("solomins"));
+                    data.setSegundos(rs.getString("solosecs"));
+                    data.setFechaHoraActualizacion(rs.getString("fecha_actualizacion"));
+                    data.setCodTipoMarcaManual(rs.getInt("cod_tpo_marca_manual"));//
+                    data.setNombreTipoMarcaManual(rs.getString("display_name"));
+                    data.setComentario(rs.getString("comentario"));
+                    data.setCorrelativo(rs.getInt("correlativo"));//
+
+                    data.setRowKey(_empresaId
+                        + "|" + _rutEmpleado
+                        + "|" + data.getFecha()
+                        + "|" + data.getCodDia()
+                        + "|" + data.getTipoMarca()
+                        + "|" + correlativo);
+
+                    hashMarcas.put(data.getRowKey(),data);
+                    correlativo++;
+                //}
             }
             
             ps.close();
