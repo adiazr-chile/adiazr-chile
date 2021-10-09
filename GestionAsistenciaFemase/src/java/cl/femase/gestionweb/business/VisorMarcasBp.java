@@ -355,6 +355,8 @@ public class VisorMarcasBp {
             }
             if (fechaAnterior.compareTo(registro.getFecha()) != 0){//nueva fecha
                     //if (numMarcas == 1 || tipoMarcaDuplicadoAnterior){
+                    System.out.println("[VisorMarcasBp.setMarcasTurnoRotativo]"
+                        + "PASO 1");
                     if (numMarcas == 1){
                         String faltaMarca = "Salida.";
                         int tipoEvento = FALTA_MARCA_SALIDA;
@@ -396,6 +398,8 @@ public class VisorMarcasBp {
                     } 
                     numMarcas = 0;
             }else{
+                System.out.println("[VisorMarcasBp.setMarcasTurnoRotativo]"
+                    + "PASO 2");
                 if (registro.getTipoMarca() == tipoMarcaAnterior){
                     registro.setTipoMarcaDuplicado(true);
                     tipoMarcaDuplicadoAnterior = true;
@@ -404,6 +408,8 @@ public class VisorMarcasBp {
             
             if (registro.getTipoMarca() == -1 
                     && registro.getIdTurnoAsignado() != -1){
+                System.out.println("[VisorMarcasBp.setMarcasTurnoRotativo]"
+                    + "PASO 3");
                 String aux = TIPO_EVENTO.get(FALTAN_AMBAS_MARCAS);
                 int tipoEvento = FALTAN_AMBAS_MARCAS;
                 if (registro.getAusenciaNombre()!=null){
@@ -431,6 +437,8 @@ public class VisorMarcasBp {
                     + ", salidaTeorica = " + registro.getHoraSalidaTurno());
             }else if (registro.getIdTurnoAsignado() == -1){
                     String aux = "";
+                    System.out.println("[VisorMarcasBp.setMarcasTurnoRotativo]"
+                        + "PASO 4");
                     if (registro.getFechaHoraMarca()!=null){
                         aux = ". " + registro.getLabelTipoMarca()
                             + ", fechaHora:" + registro.getFechaHoraMarca();
@@ -444,7 +452,11 @@ public class VisorMarcasBp {
                             registro.setMasInfo(registro.getAusenciaNombre());
                         }
                     }else {
+                        System.out.println("[VisorMarcasBp.setMarcasTurnoRotativo]"
+                            + "PASO 5");
                         if (registro.getLabelCalendario()==null){
+                            System.out.println("[VisorMarcasBp.setMarcasTurnoRotativo]"
+                                + "PASO 6");
                             System.out.println("[VisorMarcasBp.setMarcasTurnoRotativo]"
                                 + "Fecha = " + DIAS_SEMANA.get(registro.getCodDia()) + " " + registro.getFechaLabel() 
                                 + " ---> Libre");
@@ -453,17 +465,23 @@ public class VisorMarcasBp {
                             registro.setTipoEvento(LIBRE);
                             registro.setTipoMarca(LIBRE);
                         }else{
+                            System.out.println("[VisorMarcasBp.setMarcasTurnoRotativo]"
+                                + "PASO 7");
                             System.out.println("[VisorMarcasBp.setMarcasTurnoRotativo]Fecha = " + DIAS_SEMANA.get(registro.getCodDia()) + " " + registro.getFechaLabel() 
                                 + " ---> Feriado(" + registro.getLabelCalendario() + ")");
                             registro.setTipoEvento(FERIADO);
                             registro.setFieldEvento("Feriado (" + registro.getLabelCalendario() + ")"+aux);
                             registro.setMasInfo(registro.getFieldEvento());
                             registro.setTipoMarca(FERIADO);
+                            
+                            
                         }
                     }
                     hashMarcasFinal.put(registro.getFieldFecha() + "|" 
                         + registro.getFieldEvento(), registro);
             } else{//hay registro de marca
+                    System.out.println("[VisorMarcasBp.setMarcasTurnoRotativo]"
+                        + "PASO 8");
                     registro.setFieldFecha(DIAS_SEMANA.get(registro.getCodDia()) + " " + registro.getFechaLabel());
                     registro.setTipoEvento(HAY_MARCA);
                     registro.setFieldEvento("Hay marca de " + registro.getLabelTipoMarca()
