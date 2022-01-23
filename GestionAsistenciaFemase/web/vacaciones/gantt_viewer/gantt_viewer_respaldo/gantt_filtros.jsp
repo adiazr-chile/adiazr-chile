@@ -1,3 +1,4 @@
+<%@page import="cl.femase.gestionweb.common.Constantes"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.LinkedHashMap"%>
 <%@page import="java.util.Iterator"%>
@@ -35,7 +36,7 @@
     List<UsuarioCentroCostoVO> cencos   = (List<UsuarioCentroCostoVO>)session.getAttribute("cencos_empleado");
     boolean readOnly = false;
     //perfil empleado y fiscalizador solo pueden ver
-    if (theUser.getIdPerfil() == 4 || theUser.getIdPerfil() == 7){
+    if (theUser.getIdPerfil() == Constantes.ID_PERFIL_FISCALIZADOR || theUser.getIdPerfil() == Constantes.ID_PERFIL_EMPLEADO){
         readOnly = true;
     }
 %>

@@ -1,3 +1,6 @@
+<%@page import="cl.femase.gestionweb.vo.PropertiesVO"%>
+<%@page import="cl.femase.gestionweb.business.DetalleAusenciaBp"%>
+<%@page import="java.util.HashMap"%>
 <%@page import="cl.femase.gestionweb.common.Constantes"%>
 <%@page import="cl.femase.gestionweb.vo.UsuarioVO"%>
 <%@page import="cl.femase.gestionweb.business.VacacionesBp"%>
@@ -5,6 +8,7 @@
 <%@page import="java.util.List"%>
 <%
     UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
+    PropertiesVO appProperties=(PropertiesVO)application.getAttribute("appProperties"); 
     double doubleSaldoVacaciones = 0;
     boolean haySaldo = true;
     String msgSaldo=""; 
@@ -20,7 +24,27 @@
             || userConnected.getIdPerfil() == Constantes.ID_PERFIL_DIRECTOR_TR){
                 runEmpleado = userConnected.getRunEmpleado();
         }    
-
+        
+        // -------------- ----------------- ---------------------------------------------------
+        System.out.println("[ingresar_solicitud_vacaciones.jsp]"
+            + "Actualizar saldos en tabla vacaciones. "
+            + "EmpresaId: " + userConnected.getEmpresaId()
+            + ", Run empleado: "+ runEmpleado);
+        HashMap<String, Double> parametrosSistema = 
+            (HashMap<String, Double>)session.getAttribute("parametros_sistema"); 
+        vacacionesBp.calculaDiasVacaciones(userConnected.getUsername(),
+            userConnected.getEmpresaId(), 
+            runEmpleado, 
+            parametrosSistema);
+        System.out.println("[ingresar_solicitud_vacaciones.jsp]"
+            + "Actualizar saldos de vacaciones "
+            + "en tabla detalle_ausencia "
+            + "(usar nueva funcion setsaldodiasvacacionesasignadas). "
+            + "Run empleado: "+ runEmpleado);
+        DetalleAusenciaBp detAusenciaBp = new DetalleAusenciaBp(appProperties);
+        detAusenciaBp.actualizaSaldosVacaciones(runEmpleado);
+        // -------------- ----------------- ---------------------------------------------------
+        
         List<VacacionesVO> infoVacaciones = 
             vacacionesBp.getInfoVacaciones(userConnected.getEmpresaId(), 
                 runEmpleado, -1, -1, -1, "vac.rut_empleado");

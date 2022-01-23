@@ -260,7 +260,7 @@ public class EmpleadosController extends BaseServlet {
                                 auxdataRequest.getApePaterno(), 
                                 auxdataRequest.getApeMaterno(),
                                 auxdataRequest.getEstado());
-                        System.out.println("Mantenedor - Empleados - num empleados: "+empleadosCount);
+                        System.out.println("[EmpleadosController.processRequest] num empleados: "+empleadosCount);
                         
                         //agregar evento al log.
                         
@@ -290,7 +290,7 @@ public class EmpleadosController extends BaseServlet {
                     
                     session.setAttribute("empleados|"+userConnected.getUsername(), listaObjetos);
                     
-                    System.out.println("FIN LISTAR EMPLEADOS - Mantenedor - Empleados\n\n");
+                    System.out.println("[EmpleadosController.processRequest]FIN LISTAR EMPLEADOS - Mantenedor - Empleados\n\n");
                     response.getWriter().print(listData);
                     
                     //request.getRequestDispatcher("/mantenedores/mantenedoresFrmSet.jsp").forward(request, response);
@@ -332,7 +332,7 @@ public class EmpleadosController extends BaseServlet {
                         }
                         listaObjetos.add(auxdata);
                     }else{
-                        System.out.println("Mantenedor - Empleados - "
+                        System.out.println("[EmpleadosController.processRequest]"
                             + "Insertar empleado, "
                             + "Rut no valido. NO INSERTAR");
                         strMsg = "Rut No valido...";
@@ -349,7 +349,7 @@ public class EmpleadosController extends BaseServlet {
                     session.setAttribute("empleados", 
                         empleadosBp.getEmpleados(null,null,-1,-1,null,null,null,null,0,0,"empl_rut"));
                     
-                    System.out.println("FIN CREAR EMPLEADO - Mensaje a mostrar: " + strMsg);
+                    System.out.println("[EmpleadosController.processRequest]FIN CREAR EMPLEADO - Mensaje a mostrar: " + strMsg);
                     
                     if (strMsg.indexOf("duplicate key") > 0 || strMsg.indexOf("llave duplicada") > 0){
                         /**
@@ -372,7 +372,6 @@ public class EmpleadosController extends BaseServlet {
                         request.getRequestDispatcher("/DestineServlet?mensaje="+strMsg);
                     view.forward(request, response);
             }else if (action.compareTo("update") == 0) {
-                
                     EmpleadoVO currentEmpleado = 
                         empleadoBp.getEmpleado(auxdata.getEmpresa().getId(), auxdata.getCodInterno());
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -444,7 +443,7 @@ public class EmpleadosController extends BaseServlet {
                         session.setAttribute("empresaSelected", auxdata.getEmpresa().getId());
                         session.setAttribute("deptoSelected", auxdata.getDepartamento().getId());
                         session.setAttribute("cencoSelected", ""+auxdata.getCentroCosto().getId());
-                        System.out.println("FIN Modificar EMPLEADO - Mensaje a mostrar: " + strMsg);
+                        System.out.println("[EmpleadosController.processRequest]FIN Modificar EMPLEADO - Mensaje a mostrar: " + strMsg);
                     
                         RequestDispatcher view = 
                             request.getRequestDispatcher("/DestineServlet?mensaje="+strMsg);
@@ -457,7 +456,8 @@ public class EmpleadosController extends BaseServlet {
                         response.getWriter().print(error);
                     }
             }else if (action.compareTo("edit") == 0) {  
-                    System.out.println("Mantenedor - Empleados - Editar Data Empleado rut: "+auxdataRequest.getRut());
+                    System.out.println("[EmpleadosController.processRequest]"
+                        + "Editar Data Empleado rut: "+auxdataRequest.getRut());
                     listaObjetos = 
                         empleadoBp.getEmpleados("-1", 
                             "-1", 
@@ -470,8 +470,8 @@ public class EmpleadosController extends BaseServlet {
                             0, 
                             10, 
                             "empl_rut ASC");
-                    System.out.println("Mantenedor - Empleados - "
-                            + "Editar Data Empleado. Path images: "+appProperties.getImagesPath());
+                    System.out.println("[EmpleadosController.processRequest]"
+                        + "Editar Data Empleado. Path images: "+appProperties.getImagesPath());
                     EmpleadoVO toedit = listaObjetos.get(0);
                     request.removeAttribute("empleado");
                     session.setAttribute("empleado", toedit);
@@ -568,7 +568,7 @@ public class EmpleadosController extends BaseServlet {
     private EmpleadoVO getFormValues(HttpServletRequest _request){
         EmpleadoVO auxdata=new EmpleadoVO();
         
-        System.out.println("Mantenedor - Empleados - "
+        System.out.println("[EmpleadosController.getFormValues]"
             + "Obteniendo datos desde formulario "
             + "(getFormValues)...");
         /*-------------*/
@@ -579,8 +579,7 @@ public class EmpleadosController extends BaseServlet {
 //            String paramValue="";
 //            byte[] str;
             SimpleDateFormat fechaFormat = new SimpleDateFormat("dd-MM-yyyy");
-            System.out.println("Mantenedor - Empleados - "
-                + "getFormValues.isMultipart?" + isMultipart);
+            System.out.println("[EmpleadosController.getFormValues]isMultipart?" + isMultipart);
             System.out.println("Mantenedor - Empleados - "
                 + "getFormValues. "
                 + "Param action= "+_request.getParameter("action"));
@@ -688,6 +687,10 @@ public class EmpleadosController extends BaseServlet {
             if (_request.getParameter("fechaTerminoContratoAsStr") != null && _request.getParameter("fechaTerminoContratoAsStr").compareTo("") != 0){
                 auxdata.setFechaTerminoContratoAsStr(_request.getParameter("fechaTerminoContratoAsStr"));
             }
+            
+            if (_request.getParameter("fechaDesvinculacionAsStr") != null && _request.getParameter("fechaDesvinculacionAsStr").compareTo("") != 0){
+                auxdata.setFechaDesvinculacionAsStr(_request.getParameter("fechaDesvinculacionAsStr"));
+            }
 
             if (_request.getParameter("articulo22") != null ){
                 boolean articulo22=false;
@@ -720,7 +723,7 @@ public class EmpleadosController extends BaseServlet {
                 auxdata.setContratoIndefinido(contratoIndefinido);
             }
                 
-            System.out.println("[EmpleadosController.processRequest]getFormValues."
+            System.out.println("[EmpleadosController.getFormValues]"
                 + "contratoIndefinido?: " + auxdata.isContratoIndefinido()
                 + ",fechaFinContrato?: " + auxdata.getFechaTerminoContratoAsStr()    
             );
@@ -733,9 +736,7 @@ public class EmpleadosController extends BaseServlet {
                 auxdata.setModificarEmpresaDeptoCenco(modificarEmpresaDeptoCenco);
             }
                 
-            System.out.println(""
-                + "EmpleadosController."
-                + "getFormValues()."
+            System.out.println("[EmpleadosController.getFormValues]"
                 + "parameter jtStartIndex= " + _request.getParameter("jtStartIndex")
                 + ",parameter jtPageSize= " + _request.getParameter("jtPageSize")
                 + ",parameter jtSorting= " + _request.getParameter("jtSorting"));
@@ -818,7 +819,7 @@ public class EmpleadosController extends BaseServlet {
                                     try{
                                         auxDate = fechaFormat.parse(fieldValue);
                                     }catch(ParseException pex){
-                                        System.err.println("[EmpleadosController.processRequest]"
+                                        System.err.println("[EmpleadosController.guardarFotoEmpleado]"
                                                 + "error al parsear fecha nacimiento: "+pex.toString());
                                     }   auxdata.setFechaNacimiento(auxDate);
                                     break;
@@ -941,12 +942,23 @@ public class EmpleadosController extends BaseServlet {
                                 if (fieldValue.compareTo("Si")==0)
                                     modificarEDC = true;
                                 auxdata.setModificarEmpresaDeptoCenco(modificarEDC);
-                                break;    
+                                break;
+                            case "fechaDesvinculacionAsStr":
+                                {
+                                    Date auxDate = null;
+                                    try{
+                                        auxDate = fechaFormat.parse(fieldValue);
+                                        auxdata.setFechaDesvinculacion(auxDate);
+                                    }catch(ParseException pex){
+                                        System.err.println("[EmpleadosController.guardarFotoEmpleado]"
+                                                + "error al parsear fecha desvinculacion: " + pex.toString());
+                                    }   
+                                    break;
+                                }    
                         }        
                         //fin procesar campos normales    
                     }else{
-                        System.out.println("[EmpleadosController.processRequest]"
-                            + "guardaFotoEmpleado(). procesar campo file."
+                        System.out.println("[EmpleadosController.guardarFotoEmpleado]procesar campo file."
                             + "Guardar foto como archivo (upload)");
                         //String normalFieldName = item.getFieldName();
                         String fileName = item.getName();
@@ -962,11 +974,11 @@ public class EmpleadosController extends BaseServlet {
                     }
                 }
             }catch(FileUploadException fuex){
-                System.err.println("Error al leer parametros multipart: " + fuex.toString());
+                System.err.println("[EmpleadosController.guardarFotoEmpleado]Error al leer parametros multipart: " + fuex.toString());
             }catch(UnsupportedEncodingException uex){
-                System.err.println("Error en encode: " + uex.toString());
+                System.err.println("[EmpleadosController.guardarFotoEmpleado]Error en encode: " + uex.toString());
             }catch(Exception ex){
-                System.err.println("Error al guardar upload archivo: " + ex.toString());
+                System.err.println("[EmpleadosController.guardarFotoEmpleado]Error al guardar upload archivo: " + ex.toString());
             }    
             
         }

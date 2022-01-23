@@ -1,3 +1,4 @@
+<%@page import="cl.femase.gestionweb.common.Constantes"%>
 <%@ include file="/include/check_session.jsp" %>
 <%@page import="cl.femase.gestionweb.vo.UsuarioCentroCostoVO"%>
 <%@page import="cl.femase.gestionweb.vo.UsuarioVO"%>
@@ -251,7 +252,7 @@
 <script type="text/javascript">
     <% 
         String readonly="readonly";
-        if (theUser.getIdPerfil() == 1){
+        if (theUser.getIdPerfil() == Constantes.ID_PERFIL_ADMIN){
             readonly="";
         }
     %>
@@ -445,7 +446,7 @@
                     data.form.find('input[name="codDispositivo"]').addClass('validate[required]');
                 <%//}%>
 
-                <%if (theUser.getIdPerfil() == 1){%>
+                <%if (theUser.getIdPerfil() == Constantes.ID_PERFIL_ADMIN){%>
                     data.form.find('input[name="fechaHora"]').datepicker({dateFormat: 'yy-mm-dd'});
                 <%}else{%>
                     if (data.formType=='create'){
@@ -523,7 +524,7 @@
         };
         $.datepicker.setDefaults($.datepicker.regional['es']);
         
-        <% if (theUser.getIdPerfil() != 1){%>
+        <% if (theUser.getIdPerfil() != Constantes.ID_PERFIL_ADMIN){%>
             $('.datepicker').datepicker('disable');
         <%}%>
         $(function() {

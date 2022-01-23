@@ -101,6 +101,27 @@ public class EmpleadoVO implements Serializable{
     private String shortFullNameCapitalize;
     private String rutAutorizaVacacion;
 
+    private Date fechaDesvinculacion;
+    private String fechaDesvinculacionAsStr;
+
+    public Date getFechaDesvinculacion() {
+        return fechaDesvinculacion;
+    }
+
+    public void setFechaDesvinculacion(Date fechaDesvinculacion) {
+        this.fechaDesvinculacion = fechaDesvinculacion;
+        SimpleDateFormat sdf_dd_mm_yyyy = new SimpleDateFormat("dd-MM-yyyy");
+        if (fechaDesvinculacion != null) this.fechaDesvinculacionAsStr = sdf_dd_mm_yyyy.format(fechaDesvinculacion);
+    }
+
+    public String getFechaDesvinculacionAsStr() {
+        return fechaDesvinculacionAsStr;
+    }
+
+    public void setFechaDesvinculacionAsStr(String fechaDesvinculacionAsStr) {
+        this.fechaDesvinculacionAsStr = fechaDesvinculacionAsStr;
+    }
+    
     public int getRegionId() {
         return regionId;
     }
@@ -383,8 +404,8 @@ public class EmpleadoVO implements Serializable{
      */
     public void setFechaTerminoContrato(Date fechaTerminoContrato) {
         this.fechaTerminoContrato = fechaTerminoContrato;
-        SimpleDateFormat sdf=new SimpleDateFormat("dd-MM-yyyy");
-        this.fechaTerminoContratoAsStr = sdf.format(fechaTerminoContrato);
+        SimpleDateFormat sdf_dd_mm_yyyy = new SimpleDateFormat("dd-MM-yyyy");
+        this.fechaTerminoContratoAsStr = sdf_dd_mm_yyyy.format(fechaTerminoContrato);
     }
 
     public String getFechaTerminoContratoAsStr() {

@@ -1,4 +1,5 @@
 
+<%@page import="cl.femase.gestionweb.common.Constantes"%>
 <%@page import="com.businessobjects.report.web.json.JSONObject"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="cl.bolchile.portalinf.vo.TipoOperacionVO"%>
@@ -151,7 +152,7 @@ h4 { border-bottom: 1px solid #eeeeee; margin-top: 2rem; margin-left: -1%; paddi
         <label>Estado
         <select name="estado" id="estado">
             <option value="-1">----------------</option>
-                <%if (theUser.getIdPerfil() == 1 || theUser.getIdPerfil() == 2){%>
+                <%if (theUser.getIdPerfil() == Constantes.ID_PERFIL_ADMIN || theUser.getIdPerfil() == Constantes.ID_PERFIL_RRHH){%>
                     <option value="0" selected>Eliminadas</option>
                 <%}%>
             <option value="1" selected>Vigentes</option>
@@ -173,7 +174,7 @@ h4 { border-bottom: 1px solid #eeeeee; margin-top: 2rem; margin-left: -1%; paddi
         <select name="broker" id="broker">
             <option value="-1">Todos</option>
             <%  selected="";
-                if (theUser.getIdPerfil() == 3 || theUser.getIdPerfil() == 4){
+                if (theUser.getIdPerfil() == Constantes.ID_PERFIL_OPERACIONES || theUser.getIdPerfil() == Constantes.ID_PERFIL_FISCALIZADOR){
                     selected="selected";
                 }
                 Iterator it = brokers.entrySet().iterator();

@@ -1,4 +1,5 @@
 
+<%@page import="cl.femase.gestionweb.common.Constantes"%>
 <%@page import="cl.femase.gestionweb.vo.UsuarioVO"%>
 <%@page import="cl.femase.gestionweb.vo.CargoVO"%>
 <%@page import="cl.femase.gestionweb.vo.CentroCostoVO"%>
@@ -139,7 +140,7 @@
                 <select name="tipo" id="tipo" >
                 <option value="1" selected>Reporte Asistencia</option>
                 <option value="2">Detalle marcas</option>
-                <% if (theUser.getIdPerfil() == 1){%>
+                <% if (theUser.getIdPerfil() == Constantes.ID_PERFIL_ADMIN){%>
                     <option value="3">Asistencia Resumido (CSV)</option>
                 <%}%>
                 </select>

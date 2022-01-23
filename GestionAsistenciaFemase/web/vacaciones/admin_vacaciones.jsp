@@ -1,3 +1,4 @@
+<%@page import="cl.femase.gestionweb.common.Constantes"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="java.util.Locale"%>
 <%@page import="java.util.Calendar"%>
@@ -28,7 +29,7 @@
         (List<AusenciaVO>)session.getAttribute("ausencias");
     boolean readOnly = false;
     //perfil empleado y fiscalizador solo pueden ver
-    if (theUser.getIdPerfil() == 4 || theUser.getIdPerfil() == 7){
+    if (theUser.getIdPerfil() == Constantes.ID_PERFIL_FISCALIZADOR || theUser.getIdPerfil() == Constantes.ID_PERFIL_EMPLEADO){
         readOnly = true;
     }
 %>
@@ -491,17 +492,6 @@
                     create:true,
                     sorting:false
                 },
-                /*ausenciaAutorizada: {
-                    title: 'Autorizada(Si/No)',
-                    width: '10%',
-                    type: 'radiobutton',
-                    options: { 'S': 'Si', 'N': 'No' },
-                    inputClass: 'validate[required]',
-                    defaultValue: 'S',
-                    create:false,
-                    edit:false,
-                    sorting:false
-                },*/    
                 empresaId:{
                     title: 'Id Empresa',
                     edit:true,
@@ -546,6 +536,60 @@
                     create:false,
                     sorting:false,
                     list: false
+                },
+                diasEfectivosVBA:{
+                        title: 'Dias efectivos VBA',
+                        width: '9%',
+                        edit:false,
+                        create:false,
+                        key:false,
+                        list: true,
+                        sorting: false
+                },
+                diasEfectivosVP:{
+                        title: 'Dias efectivos VP',
+                        width: '9%',
+                        edit:false,
+                        create:false,
+                        key:false,
+                        list: true,
+                        sorting: false
+                },    
+                saldoVBAPreVacaciones:{
+                        title: 'Saldo VBA Pre Vacaciones',
+                        width: '9%',
+                        edit:false,
+                        create:false,
+                        key:false,
+                        list: true,
+                        sorting: false
+                },
+                saldoVPPreVacaciones:{
+                        title: 'Saldo VP Pre Vacaciones',
+                        width: '9%',
+                        edit:false,
+                        create:false,
+                        key:false,
+                        list: true,
+                        sorting: false
+                },
+                saldoVBAPostVacaciones:{
+                        title: 'Saldo VBA Post Vacaciones',
+                        width: '9%',
+                        edit:false,
+                        create:false,
+                        key:false,
+                        list: true,
+                        sorting: false
+                },
+                saldoVPPostVacaciones:{
+                        title: 'Saldo VP Post Vacaciones',
+                        width: '9%',
+                        edit:false,
+                        create:false,
+                        key:false,
+                        list: true,
+                        sorting: false
                 }    
             },
             //Initialize validation logic when a form is created

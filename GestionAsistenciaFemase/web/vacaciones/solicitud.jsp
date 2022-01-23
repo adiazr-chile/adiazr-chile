@@ -1,3 +1,4 @@
+<%@page import="cl.femase.gestionweb.common.Constantes"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="java.util.Locale"%>
 <%@page import="java.util.Calendar"%>
@@ -28,7 +29,7 @@
         (List<AusenciaVO>)session.getAttribute("ausencias");
     boolean readOnly = false;
     //perfil empleado y fiscalizador solo pueden ver
-    if (theUser.getIdPerfil() == 4 || theUser.getIdPerfil() == 7){
+    if (theUser.getIdPerfil() == Constantes.ID_PERFIL_FISCALIZADOR || theUser.getIdPerfil() == Constantes.ID_PERFIL_EMPLEADO){
         readOnly = true;
     }
 %>
@@ -279,7 +280,9 @@
             actions: {
                 listAction: '<%=request.getContextPath()%>/servlet/SolicitudVacacionesController?action=listPropias&source=solicitante',
                 //createAction:'<%=request.getContextPath()%>/servlet/SolicitudVacacionesController?action=create',
-                updateAction:'<%=request.getContextPath()%>/servlet/SolicitudVacacionesController?action=updatePropias'
+                <% if (!readOnly){%>
+                    updateAction:'<%=request.getContextPath()%>/servlet/SolicitudVacacionesController?action=updatePropias'
+                <%}%>
             },
             fields: {
 		id:{

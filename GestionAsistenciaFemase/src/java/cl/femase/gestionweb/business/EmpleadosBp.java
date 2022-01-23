@@ -487,18 +487,18 @@ public class EmpleadosBp {
         
     /**
     * 
-     * @param _empresaId
-     * @param _deptoId
-     * @param _cencoId
-     * @param _cargo
-     * @param _rutEmpleado
-     * @param _nombres
-     * @param _apePaterno
-     * @param _apeMaterno
-     * @param _jtStartIndex
-     * @param _jtPageSize
-     * @param _jtSorting
-     * @return 
+    * @param _empresaId
+    * @param _deptoId
+    * @param _cencoId
+    * @param _cargo
+    * @param _rutEmpleado
+    * @param _nombres
+    * @param _apePaterno
+    * @param _apeMaterno
+    * @param _jtStartIndex
+    * @param _jtPageSize
+    * @param _jtSorting
+    * @return 
     */
     public List<EmpleadoVO> getEmpleados(String _empresaId, 
             String _deptoId, 

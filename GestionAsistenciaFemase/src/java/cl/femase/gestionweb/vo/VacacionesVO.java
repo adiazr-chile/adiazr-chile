@@ -61,7 +61,26 @@ public class VacacionesVO implements Serializable{
     private String mensajeVp;
     private int numCotizaciones;
     private String otraInstitucionEmisoraCertif;
+    
+    private double saldoDiasVBA;
+    private double saldoDiasVP;
 
+    public double getSaldoDiasVBA() {
+        return saldoDiasVBA;
+    }
+
+    public void setSaldoDiasVBA(double saldoDiasVBA) {
+        this.saldoDiasVBA = saldoDiasVBA;
+    }
+
+    public double getSaldoDiasVP() {
+        return saldoDiasVP;
+    }
+
+    public void setSaldoDiasVP(double saldoDiasVP) {
+        this.saldoDiasVP = saldoDiasVP;
+    }
+    
     public String getMensajeVp() {
         return mensajeVp;
     }

@@ -195,10 +195,44 @@ public class DetalleAusenciaBp {
         return deleteValues;
     }
     
+    /**
+    * 
+    * @param _objToInsert
+    * @param _eventdata
+    * @return 
+    */
     public MaintenanceVO insert(DetalleAusenciaVO _objToInsert, 
             MaintenanceEventVO _eventdata){
         
         MaintenanceVO insValues = detAusenciaDao.insert(_objToInsert);
+        
+        EmpleadoVO empleado = empleadosDao.getEmpleado(null, _objToInsert.getRutEmpleado());
+        _eventdata.setEmpresaId(empleado.getEmpresa().getId());
+        _eventdata.setDeptoId(empleado.getDepartamento().getId());
+        _eventdata.setCencoId(empleado.getCentroCosto().getId());
+        _eventdata.setRutEmpleado(empleado.getRut());
+        
+        //if (!updValues.isThereError()){
+            String msgFinal = insValues.getMsg();
+            insValues.setMsg(msgFinal);
+            _eventdata.setDescription(msgFinal);
+            //insertar evento 
+            eventsDao.addEvent(_eventdata); 
+        //}
+        
+        return insValues;
+    }
+    
+    /**
+    * 
+    * @param _objToInsert
+    * @param _eventdata
+    * @return 
+    */
+    public MaintenanceVO insertaVacacion(DetalleAusenciaVO _objToInsert, 
+            MaintenanceEventVO _eventdata){
+        
+        MaintenanceVO insValues = detAusenciaDao.insertaVacacion(_objToInsert);
         
         EmpleadoVO empleado = empleadosDao.getEmpleado(null, _objToInsert.getRutEmpleado());
         _eventdata.setEmpresaId(empleado.getEmpresa().getId());

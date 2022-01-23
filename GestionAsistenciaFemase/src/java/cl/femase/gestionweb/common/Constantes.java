@@ -35,6 +35,16 @@ public class Constantes {
     public static int ID_PERFIL_ADMIN               = 1;
     
     /** 
+    * perfil id = 2
+    */
+    public static int ID_PERFIL_RRHH               = 2;
+    
+    /** 
+    * perfil id = 3
+    */
+    public static int ID_PERFIL_OPERACIONES         = 3;
+    
+    /** 
     * perfil id = 4
     */
     public static int ID_PERFIL_FISCALIZADOR        = 4;

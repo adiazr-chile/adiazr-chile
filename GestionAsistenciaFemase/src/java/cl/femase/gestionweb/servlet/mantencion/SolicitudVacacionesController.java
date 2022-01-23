@@ -12,6 +12,7 @@ import cl.femase.gestionweb.common.Constantes;
 import cl.femase.gestionweb.common.Utilidades;
 import cl.femase.gestionweb.vo.DestinatarioSolicitudVO;
 import cl.femase.gestionweb.vo.DetalleAusenciaVO;
+import cl.femase.gestionweb.vo.DiasEfectivosVacacionesVO;
 import cl.femase.gestionweb.vo.EmpleadoVO;
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
 import cl.femase.gestionweb.vo.MaintenanceVO;
@@ -492,8 +493,24 @@ public class SolicitudVacacionesController extends BaseServlet {
                     mensajes.add(new MensajeUsuarioVO("Fecha/Hora solicitud", sdf.format(fechaActual)));
                     mensajes.add(new MensajeUsuarioVO("Inicio vacaciones", solicitud.getInicioVacaciones()));
                     mensajes.add(new MensajeUsuarioVO("Termino vacaciones", solicitud.getFinVacaciones()));
-                    mensajes.add(new MensajeUsuarioVO("Dias solicitados", "" + diasEfectivosSolicitados));
-                    mensajes.add(new MensajeUsuarioVO("Saldo post vacaciones", "" + saldoPostVacaciones));
+                    //mensajes.add(new MensajeUsuarioVO("Dias solicitados", "" + diasEfectivosSolicitados));
+                    
+                    DetalleAusenciaVO newAusencia = new DetalleAusenciaVO();
+                    newAusencia.setEmpresaId(solicitud.getEmpresaId());
+                    newAusencia.setRutEmpleado(solicitud.getRutEmpleado());
+                    newAusencia.setDiasEfectivosVacaciones(Double.parseDouble(diasEfectivosSolicitados));
+                    
+                    VacacionesBp vacaciones = new VacacionesBp(appProperties);
+                    DiasEfectivosVacacionesVO objDE = vacaciones.getDesgloseDiasVacaciones(newAusencia);
+                    mensajes.add(new MensajeUsuarioVO("Dias efectivos VBA", "" + objDE.getDiasEfectivosVBA()));
+                    mensajes.add(new MensajeUsuarioVO("Dias efectivos VP", "" + objDE.getDiasEfectivosVP()));
+                    mensajes.add(new MensajeUsuarioVO("Saldo VBA Pre Vacaciones", "" + objDE.getSaldoVBAPreVacaciones()));
+                    mensajes.add(new MensajeUsuarioVO("Saldo VP Pre Vacaciones", "" + objDE.getSaldoVPPreVacaciones()));
+                    mensajes.add(new MensajeUsuarioVO("Saldo VBA Post Vacaciones", "" + objDE.getSaldoVBAPostVacaciones()));
+                    mensajes.add(new MensajeUsuarioVO("Saldo VP Post Vacaciones", "" + objDE.getSaldoVPPostVacaciones()));
+                    
+                    //mensajes.add(new MensajeUsuarioVO("Saldo post vacaciones", "" + saldoPostVacaciones));
+                    
                     mensajes.add(new MensajeUsuarioVO("Destinatario(s)", strDestinatarios));
                     request.setAttribute("mensajes", mensajes);
                     request.getRequestDispatcher("/vacaciones/solicitud_confirmada.jsp").forward(request, response);
@@ -568,18 +585,22 @@ public class SolicitudVacacionesController extends BaseServlet {
                     MaintenanceVO doCreate = new MaintenanceVO();
                     String usernameApruebaRechaza = userConnected.getUsername();
                     if (strAccion.compareTo(Constantes.ESTADO_SOLICITUD_APROBADA) == 0){
-                            /**
-                             * Antes de aprobar una solicitud de vacaciones, 
-                             * se debe verificar que no haya conflicto con otra ausencia existente.
-                             */
+                        /**
+                        * Antes de aprobar una solicitud de vacaciones, 
+                        * se debe verificar que no haya conflicto con otra ausencia existente.
+                        */
                         //validar ausencias conflicto
-                         ArrayList<DetalleAusenciaVO> ausenciasConflicto = detAusenciaBp.getAusenciasConflicto(solicitudFromBd.getRutEmpleado(),
-                                false,
-                                solicitudFromBd.getInicioVacaciones(),
-                                solicitudFromBd.getFinVacaciones(), 
-                                null, 
-                                null);
+                        ArrayList<DetalleAusenciaVO> ausenciasConflicto = detAusenciaBp.getAusenciasConflicto(solicitudFromBd.getRutEmpleado(),
+                            false,
+                            solicitudFromBd.getInicioVacaciones(),
+                            solicitudFromBd.getFinVacaciones(), 
+                            null, 
+                            null);
                         if (ausenciasConflicto.isEmpty()){
+                            System.out.println("[SolicitudVacacionesController]"
+                                + "No hay conflicto. "
+                                + "Aprobar solicitud de vacaciones "
+                                + "e Insertar vacacion...");
                             //No hay conflicto con ausencias existentes
                             solicitud.setFechaHoraApruebaRechaza(strFechaHoraActual);
                             doCreate = 
@@ -619,6 +640,7 @@ public class SolicitudVacacionesController extends BaseServlet {
                             newAusencia.setDiasEfectivosVacaciones(solicitud.getDiasEfectivosVacacionesSolicitadas());
                             MaintenanceVO insertResult = new MaintenanceVO();
                             insertResult = insertarVacacion(request, appProperties, parametrosSistema, userConnected, newAusencia);
+                            
                         }else{
                             /**
                             * Hay conflicto con ausencias existentes: Rechazar Solicitud de vacaciones. 
@@ -689,7 +711,17 @@ public class SolicitudVacacionesController extends BaseServlet {
             DetalleAusenciaVO _ausencia){
        
         System.out.println("[SolicitudVacacionesController.insertarVacacion]"
-            + "Insertar detalle ausencia (vacacion)");
+            + "Insertar detalle ausencia (VACACION)");
+        VacacionesBp vacaciones = new VacacionesBp(_appProperties);
+        
+        DiasEfectivosVacacionesVO objDE = vacaciones.getDesgloseDiasVacaciones(_ausencia);
+        _ausencia.setDiasEfectivosVBA(objDE.getDiasEfectivosVBA());
+        _ausencia.setDiasEfectivosVP(objDE.getDiasEfectivosVP());
+        _ausencia.setSaldoVBAPreVacaciones(objDE.getSaldoVBAPreVacaciones());
+        _ausencia.setSaldoVPPreVacaciones(objDE.getSaldoVPPreVacaciones());
+        _ausencia.setSaldoVBAPostVacaciones(objDE.getSaldoVBAPostVacaciones());
+        _ausencia.setSaldoVPPostVacaciones(objDE.getSaldoVPPostVacaciones());
+                
         String mensajeFinal = null;
         DetalleAusenciaBp ausenciasBp   = new DetalleAusenciaBp(_appProperties);
 //        VacacionesBp vacacionesBp       = new VacacionesBp(_appProperties);
@@ -703,7 +735,9 @@ public class SolicitudVacacionesController extends BaseServlet {
         resultado.setEmpresaIdSource(_userConnected.getEmpresaId());
                                         
         resultado.setRutEmpleado(_ausencia.getRutEmpleado());
-        MaintenanceVO doCreate = ausenciasBp.insert(_ausencia, resultado);
+        System.out.println("[SolicitudVacacionesController.insertarVacacion]"
+            + "Insertar detalle ausencia (VACACION)");
+        MaintenanceVO doCreate = ausenciasBp.insertaVacacion(_ausencia, resultado);
         
         if (doCreate.isThereError()){
             mensajeFinal= "Error al insertar vacacion " + doCreate.getMsgError();
@@ -715,6 +749,19 @@ public class SolicitudVacacionesController extends BaseServlet {
                 + "en tabla detalle_ausencia (usar nueva funcion setsaldodiasvacacionesasignadas). "
                 + "Run: "+ _ausencia.getRutEmpleado());
             ausenciasBp.actualizaSaldosVacaciones(_ausencia.getRutEmpleado());
+            
+            
+            //Actualizar saldos en tabla vacaciones: columnas saldo_dias_vba y saldo_dias_vp
+            System.out.println("[SolicitudVacacionesController."
+                + "insertarVacacion]"
+                + "Actualizar saldos en tabla vacaciones: columnas saldo_dias_vba y saldo_dias_vp");
+            VacacionesVO objVacaciones = new VacacionesVO();
+            objVacaciones.setEmpresaId(_ausencia.getEmpresaId());
+            objVacaciones.setRutEmpleado(_ausencia.getRutEmpleado());
+            objVacaciones.setSaldoDiasVBA(objDE.getSaldoVBAPostVacaciones());
+            objVacaciones.setSaldoDiasVP(objDE.getSaldoVPPostVacaciones());
+            vacaciones.updateSaldosVacacionesVBAyVP(objVacaciones);
+            
         }
         System.out.println("[SolicitudVacacionesController.insertarVacacion]"
             + "Saliendo del metodo OK.");
@@ -756,6 +803,10 @@ public class SolicitudVacacionesController extends BaseServlet {
         String fromMail         = m_properties.getKeyValue("mailFrom");
         String asuntoMail       = "Sistema de Gestion-" + _evento;
         String mailTo           = empleado.getEmail();
+        System.out.println("[SolicitudVacacionesController."
+            + "notificaEventoSolicitud]"
+            + "Email por defecto: " + mailTo);
+        String notaObservacion = _request.getParameter("notaObservacion");
         String cadenaNombres    = "";
         boolean hayJefeNacional = true;
         boolean hayJefeDirecto  = true;
@@ -805,6 +856,9 @@ public class SolicitudVacacionesController extends BaseServlet {
                 }
             }else{
                 //Usuario con cargo Director, debe enviar solicitud a Gerencia en Admin Central (Cargo Jefe Técnico Nacional, ID 69 )
+                System.out.println("[SolicitudVacacionesController."
+                    + "notificaEventoSolicitud]Empleado con cargo Director, "
+                    + "debe enviar solicitud a Gerencia en Admin Central (Cargo Jefe Técnico Nacional, ID 69 )");
                 EmpleadoVO filtroEmpleado = new EmpleadoVO();
                 filtroEmpleado.setEmpresaId(empleado.getEmpresaId());
                 filtroEmpleado.setEstado(1);
@@ -815,12 +869,21 @@ public class SolicitudVacacionesController extends BaseServlet {
                 List<EmpleadoVO> listaJefesTecnicosNacional = 
                     empleadobp.getEmpleadosByFiltro(filtroEmpleado);
                 if (!listaJefesTecnicosNacional.isEmpty()){
+                    System.out.println("[SolicitudVacacionesController."
+                        + "notificaEventoSolicitud]Rescatar emails del Jefe Tecnico Nacional");
                     for(EmpleadoVO itJefazos : listaJefesTecnicosNacional){
                         cadenaEmails += itJefazos.getEmail() + ",";
                         cadenaNombres += itJefazos.getNombres()+ ",";
                         if (itJefazos.getApePaterno() != null) cadenaNombres += " " + itJefazos.getApePaterno();
                         if (itJefazos.getApeMaterno() != null) cadenaNombres += " " + itJefazos.getApeMaterno();
                     }
+                    System.out.println("[SolicitudVacacionesController."
+                        + "notificaEventoSolicitud]Emails Jefe Tecnico Nacional: " + cadenaEmails);
+                    System.out.println("[SolicitudVacacionesController."
+                        + "notificaEventoSolicitud]Nombres Jefe Tecnico Nacional: " + cadenaNombres);
+                    
+                    cadenaEmails = cadenaEmails.substring(0, cadenaEmails.length() - 1);
+                    mailTo      = cadenaEmails;
                 }else{
                     System.out.println("[SolicitudVacacionesController."
                         + "notificaEventoSolicitud]No se encontraron "
@@ -863,7 +926,8 @@ public class SolicitudVacacionesController extends BaseServlet {
             + "<br>Fecha/Hora solicitud: " + sdf.format(fechaActual)
             + "<br>Inicio vacaciones: " + _solicitud.getInicioVacaciones()
             + "<br>Termino vacaciones: " + _solicitud.getFinVacaciones()
-            + "<br>Dias solicitados: " + diasSolicitados;
+            + "<br>Dias solicitados: " + diasSolicitados
+            + "<br>Nota/Observacion: " + notaObservacion;
         
         evento.setTipoEvento(_tipoEvento);
         evento.setMensajeFinal(mensaje);
@@ -983,6 +1047,10 @@ public class SolicitudVacacionesController extends BaseServlet {
             }
         }else{
             //Usuario con cargo Director, debe enviar solicitud a Gerencia en Admin Central (Cargo Jefe Técnico Nacional, ID 69 )
+            System.out.println("[SolicitudVacacionesController."
+                + "getDestinatarioSolicitud]Usuario con cargo Director, "
+                + "debe enviar solicitud a Gerencia en Admin Central "
+                + "(Cargo Jefe Técnico Nacional, ID 69 )");
             EmpleadoVO filtroEmpleado = new EmpleadoVO();
             filtroEmpleado.setEmpresaId(empleado.getEmpresaId());
             filtroEmpleado.setEstado(1);

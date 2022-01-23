@@ -115,14 +115,16 @@ public class VacacionesLogDAO extends BaseDAO{
                     + "fecha_base_vp, "
                     + "num_cotizaciones, "
                     + "otra_institucion_emisora_certif, "
-                    + "mensaje_vp) "
+                    + "mensaje_vp, "
+                    + "saldo_dias_vba, saldo_dias_vp) "
                 + "VALUES (current_timestamp,"
                     + "?, ?, ?, ?, "
                     + "?, ?, ?, ?, "
                     + "?, ?, ?, ?, "
                     + "?, ?,current_timestamp, "
                     + "?, ?, "
-                    + "?, ?, ?, ?)";
+                    + "?, ?, ?, ?, "
+                    + "?, ?)";
 
             dbConn = dbLocator.getConnection(m_dbpoolName,"[VacacionesLogDAO.insert]");
             insert = dbConn.prepareStatement(sql);
@@ -167,6 +169,9 @@ public class VacacionesLogDAO extends BaseDAO{
             insert.setInt(18, _data.getNumCotizaciones());
             insert.setString(19, _data.getOtraInstitucionEmisoraCertif());
             insert.setString(20, _data.getMensajeVp());
+            
+            insert.setDouble(21, _data.getSaldoDiasVBA());
+            insert.setDouble(22, _data.getSaldoDiasVP());
             
             int filasAfectadas = insert.executeUpdate();
             if (filasAfectadas == 1){

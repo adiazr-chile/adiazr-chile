@@ -522,7 +522,124 @@ public class DetalleAusenciaDAO extends BaseDAO{
 
         return objresultado;
     }
+     
+    /**
+    * Agrega una vacacion en la tabla 'detalle ausencia'
+    * @param _data
+    * @return 
+    */ 
+    public MaintenanceVO insertaVacacion(DetalleAusenciaVO _data){
+        MaintenanceVO objresultado = new MaintenanceVO();
+        int result=0;
+        int newId = getNewIdDetalleAusencia();
+        
+        String msgError = "Error al insertar "
+            + "Vacacion en detalle_ausencia, "
+            + "rutEmpleado: " + _data.getRutEmpleado()    
+            + ", newCorrelativo: " + newId
+            + ", tipoAusenciaId: " + _data.getIdAusencia()
+            + ", ausenciaNombre: " + _data.getNombreAusencia()    
+            + ", fechaInicio: " + _data.getFechaInicioAsStr()
+            + ", horaInicio: " + _data.getHoraInicioFullAsStr()    
+            + ", fechaFin: " + _data.getFechaFinAsStr()
+            + ", horaFin: " + _data.getHoraFinFullAsStr()   
+            + ", rutAutorizador: " + _data.getRutAutorizador()
+            + ", ausenciaAutorizada: " + _data.getAusenciaAutorizada();
+        
+        String msgFinal = " Inserta Vacacion en detalle_ausencia:"
+            + "rutEmpleado [" + _data.getRutEmpleado() + "]" 
+            + ", newCorrelativo [" + newId + "]"    
+            + ", tipoAusenciaId [" + _data.getIdAusencia() + "]"
+            + ", ausenciaNombre [" + _data.getNombreAusencia() + "]"    
+            + ", fechaInicio [" + _data.getFechaInicioAsStr() + "]"
+            + ", horaInicio [" + _data.getHoraInicioFullAsStr() + "]"    
+            + ", fechaFin [" + _data.getFechaFinAsStr() + "]"
+            + ", horaFin [" + _data.getHoraFinFullAsStr() + "]"    
+            + ", rutAutorizador [" + _data.getRutAutorizador() + "]"
+            + ", ausenciaAutorizada [" + _data.getAusenciaAutorizada() + "]";
             
+        objresultado.setMsg(msgFinal);
+        PreparedStatement insert    = null;
+        
+        try{
+            String sql = "INSERT INTO detalle_ausencia("
+                + "correlativo, "
+                + "rut_empleado, "
+                + "fecha_ingreso, "
+                + "ausencia_id, "
+                + "fecha_inicio, "
+                + "fecha_fin,"
+                + "rut_autoriza_ausencia, "
+                + "ausencia_autorizada, "
+                + "fecha_actualizacion,"
+                + "allow_hour,"
+                + "dias_efectivos_vacaciones, "
+                + "dias_efectivos_vba,"
+                + "dias_efectivos_vp,"
+                + "saldo_vba_pre_vacaciones,"
+                + "saldo_vp_pre_vacaciones,"
+                + "saldo_vba_post_vacaciones,"
+                + "saldo_vp_post_vacaciones";
+            sql += ")"
+                + " VALUES ("+newId+", ?, current_date, ?,"
+                + " '"+_data.getFechaInicioAsStr()+"', "
+                + "'"+_data.getFechaFinAsStr()+"', ?, ?, "
+                + "current_timestamp, ? ";
+            sql += ","+_data.getDiasEfectivosVacaciones();
+            sql += ", ?, ?, ?, ?, ?, ?)";
+
+            System.out.println("[DetalleAusenciaDAO.insertaVacacion]sql: "+sql);
+            
+            dbConn = dbLocator.getConnection(m_dbpoolName,"[DetalleAusenciaDAO.insertaVacacion]");
+            insert = dbConn.prepareStatement(sql);
+            insert.setString(1,  _data.getRutEmpleado());
+            insert.setInt(2,  _data.getIdAusencia());
+            insert.setString(3,  _data.getRutAutorizador());
+            insert.setString(4,  _data.getAusenciaAutorizada());
+            insert.setString(5,  _data.getPermiteHora());
+            //desglose dias de vacaciones basicas anuales y progresivas
+            insert.setInt(6,  _data.getDiasEfectivosVBA());
+            insert.setInt(7,  _data.getDiasEfectivosVP());
+            insert.setDouble(8,  _data.getSaldoVBAPreVacaciones());
+            insert.setDouble(9,  _data.getSaldoVPPreVacaciones());
+            insert.setDouble(10,  _data.getSaldoVBAPostVacaciones());
+            insert.setDouble(11,  _data.getSaldoVPPostVacaciones());
+            
+            int filasAfectadas = insert.executeUpdate();
+            if (filasAfectadas == 1){
+                System.out.println("[insertaVacacion]detalle_ausencia"
+                    + ", rutEmpleado:" +_data.getRutEmpleado()
+                    + ", fechaIngreso:" +_data.getFechaIngresoAsStr()
+                    + ", ausenciaId:" +_data.getIdAusencia()    
+                    + ", diasEfectivosTotales: " + _data.getDiasEfectivosVacaciones()
+                    + ", diasEfectivosVBA: " + _data.getDiasEfectivosVBA()    
+                    + ", diasEfectivosVP: " + _data.getDiasEfectivosVP()        
+                    + ", saldoVBAPreVacacion: " + _data.getSaldoVBAPreVacaciones()        
+                    + ", saldoVPPreVacacion: " + _data.getSaldoVPPreVacaciones()            
+                    + ", saldoVBAPostVacacion: " + _data.getSaldoVBAPostVacaciones()        
+                    + ", saldoVPPostVacacion: " + _data.getSaldoVPPostVacaciones()            
+                    +". Vacacion insertada OK!");
+            }
+            
+            insert.close();
+            dbLocator.freeConnection(dbConn);
+        }catch(SQLException|DatabaseException sqle){
+            System.err.println("insertaVacacion en detalle_ausencia Error1: "+sqle.toString());
+            objresultado.setThereError(true);
+            objresultado.setCodError(result);
+            objresultado.setMsgError(msgError+" :"+sqle.toString());
+        }finally{
+            try {
+                if (insert != null) insert.close();
+                dbLocator.freeConnection(dbConn);
+            } catch (SQLException ex) {
+                System.err.println("Error: "+ex.toString());
+            }
+        }
+
+        return objresultado;
+    }
+    
     /**
     * Retorna lista con detalle ausencias
     * 
@@ -587,7 +704,13 @@ public class DetalleAusenciaDAO extends BaseDAO{
                 + "detalle_ausencia.dias_efectivos_vacaciones,"
                 + "coalesce(cenco.es_zona_extrema,'N') es_zona_extrema,"
                 + "coalesce(detalle_ausencia.saldo_dias_vacaciones_asignadas,0) saldo_dias_vacaciones_asignadas,"
-                + "coalesce(detalle_ausencia.dias_acumulados_vacaciones_asignadas,0) dias_acumulados_vacaciones_asignadas " 
+                + "coalesce(detalle_ausencia.dias_acumulados_vacaciones_asignadas,0) dias_acumulados_vacaciones_asignadas, "
+                    + "coalesce(dias_efectivos_vba,0) dias_efectivos_vba,"
+                    + "coalesce(dias_efectivos_vp,0) dias_efectivos_vp,"
+                    + "coalesce(saldo_vba_pre_vacaciones,0) saldo_vba_pre_vacaciones, "
+                    + "coalesce(saldo_vp_pre_vacaciones,0) saldo_vp_pre_vacaciones, "
+                    + "coalesce(saldo_vba_post_vacaciones,0) saldo_vba_post_vacaciones,"
+                    + "coalesce(saldo_vp_post_vacaciones,0) saldo_vp_post_vacaciones " 
                 + "FROM detalle_ausencia "
                     + "inner join empleado on detalle_ausencia.rut_empleado = empleado.empl_rut "
                     + "inner join ausencia on detalle_ausencia.ausencia_id = ausencia.ausencia_id "
@@ -730,6 +853,22 @@ public class DetalleAusenciaDAO extends BaseDAO{
                 data.setSaldoDiasVacacionesAsignadas(rs.getDouble("saldo_dias_vacaciones_asignadas"));
                 data.setDiasAcumuladosVacacionesAsignadas(rs.getDouble("dias_acumulados_vacaciones_asignadas"));        
     
+                //nuevas columnas por desglose de dias de vacaciones: VBA y VP
+                /*
+                    dias_efectivos_vba,
+                    dias_efectivos_vp,
+                    saldo_vba_pre_vacaciones, 
+                    saldo_vp_pre_vacaciones, 
+                    saldo_vba_post_vacaciones,
+                    saldo_vp_post_vacaciones 
+                */
+                data.setDiasEfectivosVBA(rs.getInt("dias_efectivos_vba"));
+                data.setDiasEfectivosVP(rs.getInt("dias_efectivos_vp"));
+                data.setSaldoVBAPreVacaciones(rs.getDouble("saldo_vba_pre_vacaciones"));
+                data.setSaldoVPPreVacaciones(rs.getDouble("saldo_vp_pre_vacaciones"));
+                data.setSaldoVBAPostVacaciones(rs.getDouble("saldo_vba_post_vacaciones"));
+                data.setSaldoVPPostVacaciones(rs.getDouble("saldo_vp_post_vacaciones"));
+                
                 lista.add(data);
             }
 

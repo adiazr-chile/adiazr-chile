@@ -138,23 +138,30 @@ public class CalendarioFeriadoBp {
         int cencoId = auxEmpleado.getCencoId();
         String jsonOutput = feriadosDao.getValidaFechasJson(_empresaId, cencoId, _runEmpleado, _startDate, _endDate);
         InfoFeriadoJsonObjectVO datos[] = gson.fromJson(jsonOutput, InfoFeriadoJsonObjectVO[].class);
-        for (int x = 0; x < datos.length ; x++){
-            InfoFeriadoJsonObjectVO dataFeriadoFromJson = datos[x];
-            if (dataFeriadoFromJson != null){
-                System.out.println("[CalendarioFeriadoBp.getFechas]"
-                    + "Objeto from json: " + dataFeriadoFromJson.toString());
-                InfoFeriadoVO infoFeriado = new InfoFeriadoVO();
-                infoFeriado.setFecha(dataFeriadoFromJson.getFecha());
-                infoFeriado.setFeriado(dataFeriadoFromJson.isFeriado());
-                infoFeriado.setTipoFeriado(dataFeriadoFromJson.getTipoferiado());
-                infoFeriado.setDescripcion(dataFeriadoFromJson.getDescripcion());
-                infoFeriado.setRespaldoLegal(dataFeriadoFromJson.getRespaldo_legal());
-                hashFechas.put(_empresaId + "|" + _runEmpleado + "|" + infoFeriado.getFecha(), infoFeriado);
-            }
-            
-            
-        }
         
+        if (datos != null){
+            for (int x = 0; x < datos.length ; x++){
+                InfoFeriadoJsonObjectVO dataFeriadoFromJson = datos[x];
+                if (dataFeriadoFromJson != null){
+                    System.out.println("[CalendarioFeriadoBp.getFechas]"
+                        + "Objeto from json: " + dataFeriadoFromJson.toString());
+                    InfoFeriadoVO infoFeriado = new InfoFeriadoVO();
+                    infoFeriado.setFecha(dataFeriadoFromJson.getFecha());
+                    infoFeriado.setFeriado(dataFeriadoFromJson.isFeriado());
+                    infoFeriado.setTipoFeriado(dataFeriadoFromJson.getTipoferiado());
+                    infoFeriado.setDescripcion(dataFeriadoFromJson.getDescripcion());
+                    infoFeriado.setRespaldoLegal(dataFeriadoFromJson.getRespaldo_legal());
+                    hashFechas.put(_empresaId + "|" + _runEmpleado + "|" + infoFeriado.getFecha(), infoFeriado);
+                }
+            }
+        }else{
+            System.out.println("[CalendarioFeriadoBp.getFechas]"
+                + "empresaId: " + _empresaId
+                + ", runEmpleado: " + _runEmpleado
+                + ", startDate: " + _startDate
+                + ", endDate: " + _endDate
+                + ". No hay fechas en tabla calendario_feriados");
+        }
         return hashFechas;
     }
     

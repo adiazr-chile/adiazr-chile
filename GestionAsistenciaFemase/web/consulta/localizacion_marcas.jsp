@@ -1,3 +1,4 @@
+<%@page import="cl.femase.gestionweb.common.Constantes"%>
 <%@ include file="/include/check_session.jsp" %>
 
 <%@page import="cl.femase.gestionweb.vo.UsuarioCentroCostoVO"%>
@@ -194,7 +195,7 @@
 <script type="text/javascript">
     <% 
         String readonly="readonly";
-        if (theUser.getIdPerfil() == 1){
+        if (theUser.getIdPerfil() == Constantes.ID_PERFIL_ADMIN){
             readonly="";
         }
     %>
@@ -328,7 +329,7 @@
         };
         $.datepicker.setDefaults($.datepicker.regional['es']);
         
-        <% if (theUser.getIdPerfil() != 1){%>
+        <% if (theUser.getIdPerfil() != Constantes.ID_PERFIL_ADMIN){%>
             $('.datepicker').datepicker('disable');
         <%}%>
         $(function() {

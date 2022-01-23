@@ -1,3 +1,4 @@
+<%@page import="cl.femase.gestionweb.common.Constantes"%>
 <%@page import="cl.femase.gestionweb.vo.UsuarioVO"%>
 <%@ include file="/include/check_session.jsp" %>
 <%@page import="cl.femase.gestionweb.vo.UsuarioCentroCostoVO"%>
@@ -21,7 +22,7 @@
         (List<AusenciaVO>)session.getAttribute("ausencias");
     boolean readOnly = false;
     //perfil empleado y fiscalizador solo pueden ver
-    if (theUser.getIdPerfil() == 4 || theUser.getIdPerfil() == 7){
+    if (theUser.getIdPerfil() == Constantes.ID_PERFIL_FISCALIZADOR || theUser.getIdPerfil() == Constantes.ID_PERFIL_EMPLEADO){
         readOnly = true;
     }
 %>

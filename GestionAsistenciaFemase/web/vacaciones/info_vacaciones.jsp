@@ -1,3 +1,4 @@
+<%@page import="cl.femase.gestionweb.common.Constantes"%>
 <%@page import="cl.femase.gestionweb.vo.UsuarioVO"%>
 <%@page import="cl.femase.gestionweb.vo.UsuarioCentroCostoVO"%>
 <%@ include file="/include/check_session.jsp" %>
@@ -11,7 +12,9 @@
     List<UsuarioCentroCostoVO> cencos   = (List<UsuarioCentroCostoVO>)session.getAttribute("cencos_empleado");
     UsuarioVO theUser	= (UsuarioVO)session.getAttribute("usuarioObj");
     boolean editarCampos = false;
-    if (theUser.getIdPerfil() == 1 || theUser.getIdPerfil() == 10){//admin o super admin
+    if (theUser.getIdPerfil() == Constantes.ID_PERFIL_ADMIN 
+            || theUser.getIdPerfil() == Constantes.ID_PERFIL_JEFE_TECNICO_NACIONAL
+            || theUser.getIdPerfil() == Constantes.ID_PERFIL_SUPER_ADMIN){//admin o super admin
         editarCampos = true;
     }
 %>
@@ -423,7 +426,21 @@
                     list: true,
                     edit:false,
                     sorting: false
-                }     
+                },
+                saldoDiasVBA:{
+                    title: 'Saldo VBA',
+                    width: '5%',
+                    list: true,
+                    edit:false,
+                    sorting: false
+                },
+                saldoDiasVP:{
+                    title: 'Saldo VP',
+                    width: '5%',
+                    list: true,
+                    edit:false,
+                    sorting: false
+                }        
             },
             toolbar: {
                     sorting: false,

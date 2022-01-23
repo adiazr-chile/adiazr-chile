@@ -234,6 +234,75 @@ public class VacacionesDAO extends BaseDAO{
     }
 
     /**
+    * Actualiza saldo vacaciones basicas anuales y
+    * saldo vacaciones progresivas
+    * 
+    * @param _data
+    * @return 
+    */
+    public MaintenanceVO updateSaldosVacacionesVBAyVP(VacacionesVO _data){
+        MaintenanceVO objresultado = new MaintenanceVO();
+        PreparedStatement psupdate = null;
+        int result=0;
+        String msgError = "Error al actualizar "
+            + "saldos vacaciones (VBA y VP), "
+            + "EmpresaId: " + _data.getEmpresaId()
+            + ", rutEmpleado: " + _data.getRutEmpleado()    
+            + ", saldo_dias_vba: " + _data.getSaldoDiasVBA()
+            + ", saldo_dias_vp: " + _data.getSaldoDiasVP();
+        
+        try{
+            String msgFinal = " Actualiza saldos vacaciones VBA y VP:"
+                + "EmpresaId [" + _data.getEmpresaId() + "]" 
+                + ", rutEmpleado [" + _data.getRutEmpleado() + "]"    
+                + ", saldo_dias_vba [" + _data.getSaldoDiasVBA() + "]"
+                + ", saldo_dias_vp [" + _data.getSaldoDiasVP() + "]";
+            
+            System.out.println(msgFinal);
+            objresultado.setMsg(msgFinal);
+            
+            String sql = "UPDATE vacaciones "
+                + "SET "
+                    + "saldo_dias_vba = " + _data.getSaldoDiasVBA()+","
+                    + "saldo_dias_vp= " + _data.getSaldoDiasVP()+" "
+                + " WHERE empresa_id = ? "
+                    + " and rut_empleado = ?";
+            
+            dbConn = dbLocator.getConnection(m_dbpoolName,"[VacacionesDAO.updateSaldosVacacionesVBAyVP]");
+            psupdate = dbConn.prepareStatement(sql);
+            psupdate.setString(1,  _data.getEmpresaId());
+            psupdate.setString(2,  _data.getRutEmpleado());
+            
+            int rowAffected = psupdate.executeUpdate();
+            if (rowAffected == 1){
+                System.out.println("[VacacionesDAO.updateSaldosVacacionesVBAyVP]"
+                   + ", empresaId:" + _data.getEmpresaId()
+                    + ", rutEmpleado:" + _data.getRutEmpleado()    
+                    +" saldos VBA y VP actualizados OK!");
+            }
+
+            psupdate.close();
+            dbLocator.freeConnection(dbConn);
+        }catch(SQLException|DatabaseException sqle){
+            System.err.println("[VacacionesDAO.updateSaldosVacacionesVBAyVP]"
+                + "Error: "+sqle.toString());
+            objresultado.setThereError(true);
+            objresultado.setCodError(result);
+            objresultado.setMsgError(msgError+" :"+sqle.toString());
+        }finally{
+            try {
+                if (psupdate!=null) psupdate.close();
+                dbLocator.freeConnection(dbConn);
+            } catch (SQLException ex) {
+                System.err.println("[VacacionesDAO."
+                    + "updateSaldosVacacionesVBAyVP]Error: "+ex.toString());
+            }
+        }
+
+        return objresultado;
+    }
+    
+    /**
     * Actualiza ultimas vacaciones tomadas por el empleado
     * 
     * @param _data
@@ -350,8 +419,10 @@ public class VacacionesDAO extends BaseDAO{
             
             String sql = "UPDATE vacaciones "
                 + "SET "
-                    + "saldo_dias = ?,"
-                    + "dias_progresivos = " + _data.getDiasProgresivos() + ","
+                    + "saldo_dias = ?, "
+                    + "saldo_dias_vba = ?,"
+                    + "dias_progresivos = " + _data.getDiasProgresivos() + "," 
+                    + "saldo_dias_vp = ?, "
                     + "dias_zona_extrema= " + _data.getDiasZonaExtrema() + ","
                     + "fecha_calculo = current_timestamp, "
                     + "current_num_cotizaciones = ?, "
@@ -359,24 +430,29 @@ public class VacacionesDAO extends BaseDAO{
                     + "dias_efectivos_tomados = ?, "
                     + "comentario = ?, "
                     + "fecha_base_vp = ?, "
-                    + "mensaje_vp = ? " 
+                    + "mensaje_vp = ? "
                 + " WHERE empresa_id = ? "
                     + " and rut_empleado = ?";
 
             dbConn = dbLocator.getConnection(m_dbpoolName,"[VacacionesDAO.updateFromCalculo]");
             psupdate = dbConn.prepareStatement(sql);
             psupdate.setDouble(1, _data.getSaldoDias());
-            psupdate.setInt(2, _data.getNumActualCotizaciones());
-            psupdate.setDouble(3, _data.getDiasAcumulados());
-            psupdate.setDouble(4, _data.getDiasEfectivos());
-            psupdate.setString(5,  _data.getComentario());
+            psupdate.setDouble(2, _data.getSaldoDiasVBA());
+            psupdate.setDouble(3, _data.getSaldoDiasVP());
+            psupdate.setInt(4, _data.getNumActualCotizaciones());
+            psupdate.setDouble(5, _data.getDiasAcumulados());
+            psupdate.setDouble(6, _data.getDiasEfectivos());
+            psupdate.setString(7,  _data.getComentario());
             
-            psupdate.setDate(6,  Utilidades.getJavaSqlDate(_data.getFechaBaseVp(), "yyyy-MM-dd"));
-            psupdate.setString(7,  _data.getMensajeVp());
+            psupdate.setDate(8,  Utilidades.getJavaSqlDate(_data.getFechaBaseVp(), "yyyy-MM-dd"));
+            psupdate.setString(9,  _data.getMensajeVp());
+            
+            //psupdate.setDouble(10, _data.getSaldoDiasVBA());
+            //psupdate.setDouble(11, _data.getSaldoDiasVP());
             
             //filtro del update
-            psupdate.setString(8,  _data.getEmpresaId());
-            psupdate.setString(9,  _data.getRutEmpleado());
+            psupdate.setString(10,  _data.getEmpresaId());
+            psupdate.setString(11,  _data.getRutEmpleado());
             
             int rowAffected = psupdate.executeUpdate();
             if (rowAffected == 1){
@@ -470,11 +546,12 @@ public class VacacionesDAO extends BaseDAO{
                 + "afp_code,"
                 + "fec_certif_vac_progresivas,"
                 + "dias_adicionales,"
-                + "dias_efectivos_tomados, fecha_base_vp, mensaje_vp) "
+                + "dias_efectivos_tomados, fecha_base_vp, mensaje_vp, "
+                + "saldo_dias_vba, saldo_dias_vp) "
                 + "VALUES (?, ?, ?, ?, "
                         + "?, ?, ?, ?, "
                         + "?, ?, ?, ?, "
-                        + "?, ?, ?)";
+                        + "?, ?, ?, ?, ?)";
 
             dbConn = dbLocator.getConnection(m_dbpoolName,"[VacacionesDAO.insert]");
             insert = dbConn.prepareStatement(sql);
@@ -501,6 +578,9 @@ public class VacacionesDAO extends BaseDAO{
             insert.setDate(14,  Utilidades.getJavaSqlDate(_data.getFechaBaseVp(), "yyyy-MM-dd"));
             insert.setString(15,  _data.getMensajeVp());
             
+            insert.setDouble(16, _data.getSaldoDiasVBA());
+            insert.setDouble(17, _data.getSaldoDiasVP());
+                        
             int filasAfectadas = insert.executeUpdate();
             if (filasAfectadas == 1){
                 System.out.println("[VacacionesDAO.insert]vacaciones"
@@ -712,7 +792,9 @@ public class VacacionesDAO extends BaseDAO{
                     + "to_char(vac.fecha_base_vp, 'yyyy-MM-dd') fecha_base_vp, "
                     + "coalesce(vac.num_cotizaciones, 0) num_cotizaciones, "
                     + "coalesce(vac.otra_institucion_emisora_certif,'') institucion_emisora_certif,"
-                    + "coalesce(vac.mensaje_vp, '') mensaje_vp "
+                    + "coalesce(vac.mensaje_vp, '') mensaje_vp,"
+                    + "saldo_dias_vba,"
+                    + "saldo_dias_vp "
                 + "from vacaciones vac "
                     + "inner join view_empleado empleado "
                     + "on (empleado.empresa_id = vac.empresa_id "
@@ -779,6 +861,9 @@ public class VacacionesDAO extends BaseDAO{
                 data.setNumCotizaciones(rs.getInt("num_cotizaciones"));
                 data.setOtraInstitucionEmisoraCertif(rs.getString("institucion_emisora_certif"));
                 data.setMensajeVp(rs.getString("mensaje_vp"));
+                
+                data.setSaldoDiasVBA(rs.getDouble("saldo_dias_vba"));
+                data.setSaldoDiasVP(rs.getDouble("saldo_dias_vp"));
                 
                 data.setRowKey(data.getEmpresaId()+"|"+data.getRutEmpleado());
                 lista.add(data);

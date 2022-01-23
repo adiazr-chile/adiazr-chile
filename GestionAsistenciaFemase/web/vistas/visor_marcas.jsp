@@ -1,4 +1,5 @@
 
+<%@page import="cl.femase.gestionweb.common.Constantes"%>
 <%@page import="cl.femase.gestionweb.vo.UsuarioCentroCostoVO"%>
 <%@page import="cl.femase.gestionweb.vo.UsuarioVO"%>
 <%@page import="cl.femase.gestionweb.vo.CargoVO"%>
@@ -136,7 +137,7 @@
 <script type="text/javascript">
     <% 
         String readonly="readonly";
-        if (theUser.getIdPerfil() == 1){
+        if (theUser.getIdPerfil() == Constantes.ID_PERFIL_ADMIN){
             readonly="";
         }
     %>
@@ -150,11 +151,13 @@
             defaultSorting: 'rut_empleado ASC', //Set default sorting
             actions: {
                 listAction: '<%=request.getContextPath()%>/MarcasController?action=list',
-                <% if (theUser.getIdPerfil() != 2 && theUser.getIdPerfil() != 4 && theUser.getIdPerfil() != 7){%>
+                <% if (theUser.getIdPerfil() != Constantes.ID_PERFIL_RRHH 
+                        && theUser.getIdPerfil() != Constantes.ID_PERFIL_FISCALIZADOR 
+                        && theUser.getIdPerfil() != Constantes.ID_PERFIL_EMPLEADO){%>
                     updateAction: '<%=request.getContextPath()%>/MarcasController?action=update',
                     createAction: '<%=request.getContextPath()%>/MarcasController?action=create'
                 <%}%>
-                <% if (theUser.getIdPerfil() == 1){%>
+                <% if (theUser.getIdPerfil() == Constantes.ID_PERFIL_ADMIN){%>
                     ,deleteAction: '<%=request.getContextPath()%>/MarcasController?action=delete'
                 <%}%>
             },
@@ -330,7 +333,7 @@
                     data.form.find('input[name="codDispositivo"]').addClass('validate[required]');
                 <%//}%>
 
-                <%if (theUser.getIdPerfil() == 1){%>
+                <%if (theUser.getIdPerfil() == Constantes.ID_PERFIL_ADMIN){%>
                     data.form.find('input[name="fechaHora"]').datepicker({dateFormat: 'yy-mm-dd'});
                 <%}else{%>
                     if (data.formType=='create'){
@@ -398,7 +401,7 @@
         };
         $.datepicker.setDefaults($.datepicker.regional['es']);
         
-        <% if (theUser.getIdPerfil() != 1){%>
+        <% if (theUser.getIdPerfil() != Constantes.ID_PERFIL_ADMIN){%>
             $('.datepicker').datepicker('disable');
         <%}%>
         $(function() {

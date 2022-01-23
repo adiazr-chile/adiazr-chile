@@ -63,10 +63,70 @@ public class DetalleAusenciaVO implements Serializable{
     private double saldoDiasVacacionesAsignadas;
     private double diasAcumuladosVacacionesAsignadas;        
     
+    /**
+    * Nuevos: segun requerimiento de Desgose de vacaciones: Vacaciones basicas anuales y vacaciones progresivas
+    */
+    private int diasEfectivosVBA;
+    private int diasEfectivosVP;
+    private double saldoVBAPreVacaciones;
+    private double saldoVPPreVacaciones;
+    private double saldoVBAPostVacaciones;
+    private double saldoVPPostVacaciones;
+    
     public DetalleAusenciaVO() {
         
     }
 
+    public int getDiasEfectivosVBA() {
+        return diasEfectivosVBA;
+    }
+
+    public void setDiasEfectivosVBA(int diasEfectivosVBA) {
+        this.diasEfectivosVBA = diasEfectivosVBA;
+    }
+
+    public int getDiasEfectivosVP() {
+        return diasEfectivosVP;
+    }
+
+    public void setDiasEfectivosVP(int diasEfectivosVP) {
+        this.diasEfectivosVP = diasEfectivosVP;
+    }
+
+    public double getSaldoVBAPreVacaciones() {
+        return saldoVBAPreVacaciones;
+    }
+
+    public void setSaldoVBAPreVacaciones(double saldoVBAPreVacaciones) {
+        this.saldoVBAPreVacaciones = saldoVBAPreVacaciones;
+    }
+
+    public double getSaldoVPPreVacaciones() {
+        return saldoVPPreVacaciones;
+    }
+
+    public void setSaldoVPPreVacaciones(double saldoVPPreVacaciones) {
+        this.saldoVPPreVacaciones = saldoVPPreVacaciones;
+    }
+
+    public double getSaldoVBAPostVacaciones() {
+        return saldoVBAPostVacaciones;
+    }
+
+    public void setSaldoVBAPostVacaciones(double saldoVBAPostVacaciones) {
+        this.saldoVBAPostVacaciones = saldoVBAPostVacaciones;
+    }
+
+    public double getSaldoVPPostVacaciones() {
+        return saldoVPPostVacaciones;
+    }
+
+    public void setSaldoVPPostVacaciones(double saldoVPPostVacaciones) {
+        this.saldoVPPostVacaciones = saldoVPPostVacaciones;
+    }
+
+    
+    
     public double getSaldoDiasVacacionesAsignadas() {
         return saldoDiasVacacionesAsignadas;
     }

@@ -5,6 +5,7 @@
 
 package cl.femase.gestionweb.dao;
 
+import cl.femase.gestionweb.common.Constantes;
 import cl.femase.gestionweb.common.DatabaseException;
 import cl.femase.gestionweb.common.Utilidades;
 import cl.femase.gestionweb.vo.CentroCostoVO;
@@ -124,6 +125,7 @@ public class EmpleadosDAO extends BaseDAO{
                 + ", deptoId [" + _data.getDepartamento().getId() + "]"
                 + ", cencoId [" + _data.getCentroCosto().getId() + "]"
                 + ", estado [" + _data.getEstado() + "]"
+                + ", fechaDesvinculacion [" + _data.getFechaDesvinculacion() + "]"    
                 + ", fechaInicioContrato [" + sdf.format(_data.getFechaInicioContrato()) + "]"
                 + ", fechaFinContrato [" + ffin + "]"
                 + ", idComuna [" + _data.getComunaId() + "]"
@@ -164,6 +166,10 @@ public class EmpleadosDAO extends BaseDAO{
                 + "art_22 = ?,"
                 + "cod_interno = ?,"
                 + "clave_marcacion = ? ";
+            
+            //if (_data.getEstado() == Constantes.ESTADO_NO_VIGENTE){
+                sql += ", fecha_desvinculacion = ? ";
+            //}
             //if (_data.isModificarEmpresaDeptoCenco()){
                 sql += ",empresa_id = ?, "
                      + "depto_id = ?, "
@@ -206,10 +212,15 @@ public class EmpleadosDAO extends BaseDAO{
                 psupdate.setString(20,  _data.getRut());//con puntos y guion
                 psupdate.setString(21,  _data.getClaveMarcacion());
                 
-                psupdate.setString(22,  _data.getEmpresa().getId());
-                psupdate.setString(23,  _data.getDepartamento().getId());
-                psupdate.setInt(24,  _data.getCentroCosto().getId());
-                psupdate.setString(25,  _data.getCodInterno());
+                if (_data.getEstado() == Constantes.ESTADO_NO_VIGENTE){
+                    psupdate.setDate(22,  new java.sql.Date(_data.getFechaDesvinculacion().getTime()));
+                }else{
+                    psupdate.setDate(22,  null);
+                }
+                psupdate.setString(23,  _data.getEmpresa().getId());
+                psupdate.setString(24,  _data.getDepartamento().getId());
+                psupdate.setInt(25,  _data.getCentroCosto().getId());
+                psupdate.setString(26,  _data.getCodInterno());
                 
             }else{
                 System.out.println("[update empleado]no actualiza foto...");
@@ -239,10 +250,14 @@ public class EmpleadosDAO extends BaseDAO{
                 psupdate.setString(20,  _data.getClaveMarcacion());
                 
                 //if (_data.isModificarEmpresaDeptoCenco()){
-                    psupdate.setString(21,  _data.getEmpresa().getId());
-                    psupdate.setString(22,  _data.getDepartamento().getId());
-                    psupdate.setInt(23,  _data.getCentroCosto().getId());
-                    psupdate.setString(24,  _data.getCodInterno());
+                if (_data.getEstado() == Constantes.ESTADO_NO_VIGENTE){
+                    psupdate.setDate(21,  new java.sql.Date(_data.getFechaDesvinculacion().getTime()));
+                }else psupdate.setDate(21,  null);
+                psupdate.setString(22,  _data.getEmpresa().getId());
+                psupdate.setString(23,  _data.getDepartamento().getId());
+                psupdate.setInt(24,  _data.getCentroCosto().getId());
+                psupdate.setString(25,  _data.getCodInterno());
+                    
                 //}else{
                 //    psupdate.setString(21,  _data.getCodInterno());
                 //}
@@ -514,21 +529,21 @@ public class EmpleadosDAO extends BaseDAO{
     }
    
     /**
-     * Retorna lista con los empleados  existentes
-     * 
-     * @param _empresaId
-     * @param _deptoId
-     * @param _cencoId
-     * @param _cargo
-     * @param _rutEmpleado
-     * @param _nombres
-     * @param _apePaterno
-     * @param _apeMaterno
-     * @param _jtStartIndex
-     * @param _jtPageSize
-     * @param _jtSorting
-     * @return 
-     */
+    * Retorna lista con los empleados  existentes
+    * 
+    * @param _empresaId
+    * @param _deptoId
+    * @param _cencoId
+    * @param _cargo
+    * @param _rutEmpleado
+    * @param _nombres
+    * @param _apePaterno
+    * @param _apeMaterno
+    * @param _jtStartIndex
+    * @param _jtPageSize
+    * @param _jtSorting
+    * @return 
+    */
     public List<EmpleadoVO> getEmpleados(String _empresaId, 
             String _deptoId, 
             int _cencoId,
@@ -559,6 +574,7 @@ public class EmpleadosDAO extends BaseDAO{
                 + "empl.empl_direccion direccion,"
                 + "empl.empl_email email,"
                 + "empl.empl_fec_ini_contrato,"
+                + "empl.fecha_desvinculacion,"
                 + "coalesce(empl.empl_fec_fin_contrato,'3000-12-31') empl_fec_fin_contrato,"
                 + "empl.empl_estado,"
                 + "empl.empl_path_foto,"
@@ -693,6 +709,12 @@ public class EmpleadosDAO extends BaseDAO{
                 
                 data.setCodInterno(rs.getString("cod_interno"));
                 data.setClaveMarcacion(rs.getString("clave_marcacion"));
+                
+                data.setFechaDesvinculacion(rs.getDate("fecha_desvinculacion"));
+                if (data.getFechaDesvinculacion() != null){
+                    data.setFechaDesvinculacionAsStr(sdf.format(data.getFechaDesvinculacion()));
+                }else data.setFechaDesvinculacionAsStr("");
+                
                 lista.add(data);
             }
 
@@ -1138,6 +1160,7 @@ public class EmpleadosDAO extends BaseDAO{
                 + "empl.empl_fec_ini_contrato,"
                 + "coalesce(empl.empl_fec_fin_contrato,'3000-12-31') empl_fec_fin_contrato,"
                 + "empl.empl_estado,"
+                + "empl.fecha_desvinculacion,"
                 + "empl.empl_path_foto,"
                 + "empl.empl_sexo,"
                 + "coalesce(empl.empl_fono_fijo,'') empl_fono_fijo,"
@@ -1275,6 +1298,12 @@ public class EmpleadosDAO extends BaseDAO{
                 data.setNombreCargo(rs.getString("cargo_nombre"));
                 data.setCodInterno(rs.getString("cod_interno"));
                 data.setClaveMarcacion(rs.getString("clave_marcacion"));
+                
+                data.setFechaDesvinculacion(rs.getDate("fecha_desvinculacion"));
+                if (data.getFechaDesvinculacion() != null){
+                    data.setFechaDesvinculacionAsStr(sdf.format(data.getFechaDesvinculacion()));
+                }else data.setFechaDesvinculacionAsStr("");
+                
                 lista.add(data);
             }
 

@@ -188,25 +188,25 @@ public class VacacionesReport extends BaseServlet {
 
         double diasTotalesAsignadosPeriodo = 0;
         
-        /**
-        * Calcular dias de vacaciones, para tener la informacion actualizada.
-        */
-        System.out.println("[servlet.reportes."
-            + "VacacionesReport.getParameters]"
-            + "ReCalcular saldo dias de vacaciones "
-            + "para empleado. empresa_id: " + empresaParam
-            +", rutEmpleado: " + _rutEmpleado);
-        vacacionesBp.calculaDiasVacaciones(_username, 
-            empresaParam, _rutEmpleado, 
-            m_parametrosSistema);
-        System.out.println("[servlet.reportes."
-            + "VacacionesReport.getParameters]"
-            + "Actualizar saldos de vacaciones "
-            + "en tabla detalle_ausencia "
-            + "(usar nueva funcion setsaldodiasvacacionesasignadas). "
-            + "Run: "+ _rutEmpleado);
-        DetalleAusenciaBp detAusenciaBp = new DetalleAusenciaBp(appProperties);
-        detAusenciaBp.actualizaSaldosVacaciones(_rutEmpleado);
+////        /**
+////        * Calcular dias de vacaciones, para tener la informacion actualizada.
+////        */
+////        System.out.println("[servlet.reportes."
+////            + "VacacionesReport.getParameters]"
+////            + "ReCalcular saldo dias de vacaciones "
+////            + "para empleado. empresa_id: " + empresaParam
+////            +", rutEmpleado: " + _rutEmpleado);
+////        vacacionesBp.calculaDiasVacaciones(_username, 
+////            empresaParam, _rutEmpleado, 
+////            m_parametrosSistema);
+////        System.out.println("[servlet.reportes."
+////            + "VacacionesReport.getParameters]"
+////            + "Actualizar saldos de vacaciones "
+////            + "en tabla detalle_ausencia "
+////            + "(usar nueva funcion setsaldodiasvacacionesasignadas). "
+////            + "Run: "+ _rutEmpleado);
+////        DetalleAusenciaBp detAusenciaBp = new DetalleAusenciaBp(appProperties);
+////        detAusenciaBp.actualizaSaldosVacaciones(_rutEmpleado);
         
         dataVacaciones = new VacacionesVO();
         System.out.println("[servlet.reportes."
