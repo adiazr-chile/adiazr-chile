@@ -24,7 +24,7 @@
 <head>
     <meta charset="utf-8" />
 
-    <title>Calculo de Vacaciones</title>
+    <title>Calculo de Vacaciones - Desvinculados</title>
 
     <link href="../Jquery-JTable/Content/normalize.css" rel="stylesheet" type="text/css" />
     <link href='<%=request.getContextPath()%>/css-varios/googleapis.css' rel='stylesheet' type='text/css'>
@@ -66,7 +66,7 @@
                  var empresaSelected = null;//$("select#empresaId").val();
                  var deptoSelected = null;//$("select#deptoId").val();
                  var cencoSelected = $("select#cencoId").val();
-                 var sourceSelected = 'vacaciones';
+                 var sourceSelected = 'vacaciones_desvincula2';
                  $.get('<%=request.getContextPath()%>/JsonListServlet', {
                  	empresaID : empresaSelected,deptoID : deptoSelected,cencoID : cencoSelected,source: sourceSelected
                  }, function(response) {
@@ -137,7 +137,7 @@
             if (cencoSelected !== '-1'){
                 //alert('calcular. cencoId:' + cencoSelected + ', rutSelected: '+rutSelected);
                 document.location.href=
-                '<%=request.getContextPath()%>/servlet/VacacionesController?action=calcula_saldo&empresa_id='+empresaId
+                '<%=request.getContextPath()%>/servlet/VacacionesController?action=calcula_vacaciones_desvincula2&empresa_id='+empresaId
                 +'&depto_id=' + deptoId + '&cenco_id=' + cencoId + '&rutEmpleado=' + rutSelected;
             }else{
                 alert('La seleccion de centro de costo es obligatoria');
@@ -156,7 +156,7 @@
 <body>
     <div class="site-container">
         <div class="main-header" style="position: relative">
-            <h1>Informaci&oacute;n y cálculo de Vacaciones<span class="light"></span></h1>
+            <h1>Informaci&oacute;n y cálculo de Vacaciones Desvinculados</h1>
             <h2>Filtros de b&uacute;squeda</h2>
       </div>
 <div class="content-container">
@@ -215,13 +215,13 @@
     $(document).ready(function () {
         //showHideButtonNewRow();
         $('#VacacionesTableContainer').jtable({       
-            title: 'Informacion y cálculo de Vacaciones',
+            title: 'Informacion y cálculo de Vacaciones (desvinculados)',
             paging: true, //Enable paging
             pageSize: 10, //Set page size (default: 10)
             sorting: true, //Enable sorting
             defaultSorting: 'rut_empleado ASC', //Set default sorting
             actions: {
-                listAction: '<%=request.getContextPath()%>/servlet/VacacionesController?action=list',
+                listAction: '<%=request.getContextPath()%>/servlet/VacacionesController?action=list&tipo=desvinculados',
                 //createAction:'<%=request.getContextPath()%>/servlet/VacacionesController?action=create',
                 updateAction: '<%=request.getContextPath()%>/servlet/VacacionesController?action=update',
                 deleteAction: '<%=request.getContextPath()%>/servlet/VacacionesController?action=delete'

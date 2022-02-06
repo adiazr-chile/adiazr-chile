@@ -11,6 +11,7 @@ import cl.femase.gestionweb.business.ProcesosBp;
 import cl.femase.gestionweb.business.TurnoRotativoBp;
 import cl.femase.gestionweb.business.TurnosBp;
 import cl.femase.gestionweb.business.VacacionesBp;
+import cl.femase.gestionweb.common.Constantes;
 import cl.femase.gestionweb.vo.CentroCostoVO;
 import cl.femase.gestionweb.vo.DepartamentoVO;
 import cl.femase.gestionweb.vo.DispositivoVO;
@@ -245,16 +246,28 @@ public class JsonListServlet extends BaseServlet {
                             empleadosBp.getEmpleadosByFiltro(filtroEmpleado);
                     }else{
                         System.out.println("[JsonListServlet."
-                            + "processRequest]cargarEmpleados 2. excluirArt22=" + excluirArt22);
-                        listaEmpleados = empleadosBp.getEmpleados(empresaID,
-                            deptoID,
-                            Integer.parseInt(cencoID),
-                            -1,
-                            null,
-                            null,
-                            null,
-                            null,
-                            1);
+                            + "processRequest]"
+                            + "CargarEmpleados 2. "
+                            + "excluirArt22 = " + excluirArt22
+                            + ", source = " + source);
+                        if (source !=null && source.compareTo("vacaciones_desvincula2") != 0){
+                            listaEmpleados = empleadosBp.getEmpleados(empresaID,
+                                deptoID,
+                                Integer.parseInt(cencoID),
+                                -1,
+                                null,
+                                null,
+                                null,
+                                null,
+                                Constantes.ESTADO_VIGENTE);
+                        }else{
+                            System.out.println("[JsonListServlet."
+                                + "processRequest]"
+                                + "Mostrar Empleados desvinculados.");
+                            listaEmpleados = empleadosBp.getEmpleadosDesvinculados(empresaID,
+                                deptoID,
+                                Integer.parseInt(cencoID));
+                        }
                     }
                 }else{
                     //Mostrar empleado filtrando por rut

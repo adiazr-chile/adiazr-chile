@@ -5,6 +5,7 @@
 
 package cl.femase.gestionweb.dao;
 
+import cl.femase.gestionweb.common.Constantes;
 import cl.femase.gestionweb.common.DatabaseException;
 import cl.femase.gestionweb.common.Utilidades;
 import cl.femase.gestionweb.vo.DetalleAusenciaVO;
@@ -820,7 +821,7 @@ public class VacacionesDAO extends BaseDAO{
             }
             
             System.out.println("[VacacionesDAO."
-                + "getInfoVacaciones]sql: "+sql);
+                + "getInfoVacaciones]sql: " + sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,"[VacacionesDAO.getInfoVacaciones]");
             ps = dbConn.prepareStatement(sql);
@@ -881,6 +882,155 @@ public class VacacionesDAO extends BaseDAO{
                 dbLocator.freeConnection(dbConn);
             } catch (SQLException ex) {
                 System.err.println("Error: "+ex.toString());
+            }
+        }
+        return lista;
+    }
+    
+    /**
+    * Retorna lista con saldo de vacaciones para un empleado o todos los
+    * empleados desvinculados de un centro de costo.
+    * 
+    * @param _empresaId
+    * @param _rutEmpleado
+    * @param _cencoId
+    * @param _jtStartIndex
+    * @param _jtPageSize
+    * @param _jtSorting
+    * 
+    * @return 
+    */
+    public List<VacacionesVO> getInfoVacacionesDesvincula2(String _empresaId, 
+            String _rutEmpleado,
+            int _cencoId,
+            int _jtStartIndex, 
+            int _jtPageSize, 
+            String _jtSorting){
+        
+        List<VacacionesVO> lista = new ArrayList<>();
+        
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        VacacionesVO data;
+        
+        try{
+            String sql = "select "
+                + "vac.empresa_id, "
+                + "empleado.depto_id,empleado.depto_nombre,"
+                + "empleado.cenco_id,empleado.ccosto_nombre,"
+                + "vac.rut_empleado,"
+                + "empleado.nombre || ' ' || empleado.materno nombre_empleado,"
+                + "to_char(vac.fecha_calculo, 'yyyy-MM-dd HH24:MI:SS') fecha_calculo,"
+                + "vac.dias_acumulados,"
+                + "vac.dias_progresivos,"
+                + "vac.saldo_dias,"
+                + "vac.inicio_ult_vacacion,"
+                + "vac.fin_ult_vacacion,"
+                + "coalesce(vac.dias_especiales, 'N') dias_especiales,"
+                + "vac.current_num_cotizaciones,"
+                + "vac.dias_zona_extrema,"
+                + "vac.comentario,empleado.fecha_inicio_contrato,"
+                + "coalesce(empleado.es_zona_extrema,'N') es_zona_extrema,"
+                + "coalesce(vac.afp_code,'NINGUNA') afp_code," 
+                + "coalesce(afp.afp_name,'NINGUNA') afp_name, " 
+                + "vac.fec_certif_vac_progresivas,"
+                + "vac.dias_adicionales,"
+                + "vac.dias_efectivos_tomados,"
+                + "to_char(vac.fecha_base_vp, 'yyyy-MM-dd') fecha_base_vp, "
+                + "coalesce(vac.num_cotizaciones, 0) num_cotizaciones, "
+                + "coalesce(vac.otra_institucion_emisora_certif,'') institucion_emisora_certif,"
+                + "coalesce(vac.mensaje_vp, '') mensaje_vp,"
+                + "saldo_dias_vba,"
+                + "saldo_dias_vp "
+                + "from vacaciones vac "
+                    + "inner join view_empleado empleado "
+                    + "on (empleado.empresa_id = vac.empresa_id "
+                    + "and empleado.rut=vac.rut_empleado) "
+                    + "left outer join afp on (vac.afp_code = afp.afp_code) "
+                    + "where (empl_estado = " + Constantes.ESTADO_NO_VIGENTE + " and fecha_desvinculacion is not null) ";
+           
+            if (_empresaId != null && _empresaId.compareTo("-1") != 0){        
+                sql += " and vac.empresa_id = '" + _empresaId + "' ";
+            }
+            
+            if (_rutEmpleado != null && _rutEmpleado.compareTo("-1") != 0){
+                sql += " and vac.rut_empleado = '" + _rutEmpleado + "' ";
+            }
+            
+            if (_cencoId != -1){
+                sql += " and empleado.cenco_id = " + _cencoId;
+            }
+           
+            sql += " order by " + _jtSorting; 
+            if (_jtPageSize > 0){
+                sql += " limit "+_jtPageSize + " offset "+_jtStartIndex;
+            }
+            
+            System.out.println("[VacacionesDAO."
+                + "getInfoVacacionesDesvincula2]sql: " + sql);
+            
+            dbConn = dbLocator.getConnection(m_dbpoolName,
+                "[VacacionesDAO.getInfoVacacionesDesvincula2]");
+            ps = dbConn.prepareStatement(sql);
+            rs = ps.executeQuery();
+
+            while (rs.next()){
+                data = new VacacionesVO();
+                
+                data.setEmpresaId(rs.getString("empresa_id"));
+                data.setDeptoId(rs.getString("depto_id"));
+                data.setDeptoNombre(rs.getString("depto_nombre"));
+                data.setCencoId(rs.getInt("cenco_id"));
+                data.setCencoNombre(rs.getString("ccosto_nombre"));
+                data.setRutEmpleado(rs.getString("rut_empleado"));
+                data.setNombreEmpleado(rs.getString("nombre_empleado"));
+                data.setFechaCalculo(rs.getString("fecha_calculo"));
+                data.setDiasAcumulados(rs.getDouble("dias_acumulados"));
+                data.setDiasProgresivos(rs.getDouble("dias_progresivos"));
+                data.setDiasEspeciales(rs.getString("dias_especiales"));
+                data.setSaldoDias(rs.getDouble("saldo_dias"));
+                data.setFechaInicioUltimasVacaciones(rs.getString("inicio_ult_vacacion"));
+                data.setFechaFinUltimasVacaciones(rs.getString("fin_ult_vacacion"));
+                
+                data.setNumActualCotizaciones(rs.getInt("current_num_cotizaciones"));
+                
+                data.setDiasZonaExtrema(rs.getDouble("dias_zona_extrema"));
+                data.setComentario(rs.getString("comentario"));
+                data.setFechaInicioContrato(rs.getString("fecha_inicio_contrato"));
+                data.setEsZonaExtrema(rs.getString("es_zona_extrema"));
+                
+                data.setAfpCode(rs.getString("afp_code"));
+                data.setAfpName(rs.getString("afp_name"));
+                data.setFechaCertifVacacionesProgresivas(rs.getString("fec_certif_vac_progresivas"));
+                data.setDiasAdicionales(rs.getInt("dias_adicionales"));
+                data.setDiasEfectivos(rs.getDouble("dias_efectivos_tomados"));
+                
+                data.setFechaBaseVp(rs.getString("fecha_base_vp"));
+                data.setNumCotizaciones(rs.getInt("num_cotizaciones"));
+                data.setOtraInstitucionEmisoraCertif(rs.getString("institucion_emisora_certif"));
+                data.setMensajeVp(rs.getString("mensaje_vp"));
+                
+                data.setSaldoDiasVBA(rs.getDouble("saldo_dias_vba"));
+                data.setSaldoDiasVP(rs.getDouble("saldo_dias_vp"));
+                
+                data.setRowKey(data.getEmpresaId()+"|"+data.getRutEmpleado());
+                lista.add(data);
+            }
+
+            ps.close();
+            rs.close();
+            dbLocator.freeConnection(dbConn);
+        }catch(SQLException|DatabaseException sqle){
+            m_logger.error("[VacacionesDAO.getInfoVacacionesDesvincula2]"
+                + "Error: " + sqle.toString());
+        }finally{
+            try {
+                if (ps != null) ps.close();
+                if (rs != null) rs.close();
+                dbLocator.freeConnection(dbConn);
+            } catch (SQLException ex) {
+                System.err.println("[VacacionesDAO.getInfoVacacionesDesvincula2]"
+                    + "Error: "+ex.toString());
             }
         }
         return lista;
@@ -1093,6 +1243,65 @@ public class VacacionesDAO extends BaseDAO{
                 dbLocator.freeConnection(dbConn);
             } catch (SQLException ex) {
                 System.err.println("Error: "+ex.toString());
+            }
+        }
+        return count;
+    }
+    
+    /**
+    * 
+    * @param _empresaId
+    * @param _rutEmpleado
+    * @param _cencoId
+    * 
+    * @return 
+    */
+    public int getInfoVacacionesDesvincula2Count(String _empresaId, 
+            String _rutEmpleado,
+            int _cencoId){
+        int count=0;
+        Statement statement = null;
+        ResultSet rs = null;
+        try {
+            dbConn = dbLocator.getConnection(m_dbpoolName,
+                "[VacacionesDAO.getInfoVacacionesDesvincula2Count]");
+            statement = dbConn.createStatement();
+            String strSql ="SELECT count(rut_empleado) numrows "
+                + "from vacaciones vac " +
+                    "inner join view_empleado empleado "
+                    + "on (empleado.empresa_id = vac.empresa_id and empleado.rut=vac.rut_empleado) "
+                    + "where (empl_estado = " + Constantes.ESTADO_NO_VIGENTE + " and fecha_desvinculacion is not null) ";
+             
+            if (_empresaId != null && _empresaId.compareTo("-1") != 0){        
+                strSql += " and vac.empresa_id = '" + _empresaId + "' ";
+            }
+            
+            if (_rutEmpleado != null && _rutEmpleado.compareTo("") != 0){
+                strSql += " and vac.rut_empleado = '" + _rutEmpleado + "' ";
+            }
+            
+            if (_cencoId != -1){
+                strSql += " and empleado.cenco_id = " + _cencoId;
+            }
+            
+            rs = statement.executeQuery(strSql);		
+            if (rs.next()) {
+                count=rs.getInt("numrows");
+            }
+            
+            statement.close();
+            rs.close();
+            dbLocator.freeConnection(dbConn);
+        } catch (SQLException|DatabaseException e) {
+                e.printStackTrace();
+        }finally{
+            try {
+                if (statement != null) statement.close();
+                if (rs != null) rs.close();
+                dbLocator.freeConnection(dbConn);
+            } catch (SQLException ex) {
+                System.err.println("[VacacionesDAO.getInfoVacacionesDesvincula2Count]"
+                    + "Error: " + ex.toString());
             }
         }
         return count;

@@ -10,6 +10,10 @@
     Calendar mycal=Calendar.getInstance();
     int anioActual = mycal.get(Calendar.YEAR);
     LinkedHashMap<Integer,String> listaAnios = new LinkedHashMap<Integer,String>();
+    listaAnios.put(anioActual-5, String.valueOf(anioActual-5));
+    listaAnios.put(anioActual-4, String.valueOf(anioActual-4));
+    listaAnios.put(anioActual-3, String.valueOf(anioActual-3));
+    listaAnios.put(anioActual-2, String.valueOf(anioActual-2));
     listaAnios.put(anioActual-1, String.valueOf(anioActual-1));
     listaAnios.put(anioActual, String.valueOf(anioActual));
     listaAnios.put(anioActual+1, String.valueOf(anioActual+1));

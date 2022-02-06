@@ -176,7 +176,8 @@ public class VacacionesReport extends BaseServlet {
             + "VacacionesReport.getParameters]. "
             + "Param rut= " + _rutEmpleado);
         EmpleadoVO infoEmpleado = empleadosBp.getEmpleado(empresaParam, _rutEmpleado);
-        Date fechaInicioContrato = infoEmpleado.getFechaInicioContrato();        
+        Date fechaInicioContrato = infoEmpleado.getFechaInicioContrato();
+        Date fechaDesvinculacion = infoEmpleado.getFechaDesvinculacion();
         
         VacacionesVO dataVacaciones = new VacacionesVO();
         List<VacacionesVO> infoVacaciones = 
@@ -238,7 +239,7 @@ public class VacacionesReport extends BaseServlet {
             + "fecha1erDiaMesActual: " + fecha1erDiaMes);
         
         // 1.- Calcular d�as normales (1.25 por mes, a partir de la fecha de ingreso del empleado) 
-        Date fechaMesVencido = vacacionesBp.getFechaMesVencido(fechaInicioContrato);
+        Date fechaMesVencido = vacacionesBp.getFechaMesVencido(fechaInicioContrato, fechaDesvinculacion);
         System.out.println("[VacacionesBp."
             + "getFechaMesVencido]Calcular antiguedad entre:"
             + "Fecha inicio contrato: " + fechaInicioContrato

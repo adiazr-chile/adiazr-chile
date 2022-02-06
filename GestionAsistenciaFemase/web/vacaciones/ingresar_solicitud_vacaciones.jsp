@@ -27,6 +27,11 @@
         
         // -------------- ----------------- ---------------------------------------------------
         System.out.println("[ingresar_solicitud_vacaciones.jsp]"
+            + "Consultar saldos en tabla vacaciones. "
+            + "EmpresaId: " + userConnected.getEmpresaId()
+            + ", Run empleado: "+ runEmpleado);
+        /* *********************
+        System.out.println("[ingresar_solicitud_vacaciones.jsp]"
             + "Actualizar saldos en tabla vacaciones. "
             + "EmpresaId: " + userConnected.getEmpresaId()
             + ", Run empleado: "+ runEmpleado);
@@ -43,6 +48,7 @@
             + "Run empleado: "+ runEmpleado);
         DetalleAusenciaBp detAusenciaBp = new DetalleAusenciaBp(appProperties);
         detAusenciaBp.actualizaSaldosVacaciones(runEmpleado);
+        * *********************/
         // -------------- ----------------- ---------------------------------------------------
         
         List<VacacionesVO> infoVacaciones = 
@@ -57,9 +63,15 @@
             msgSaldo = "Ud. no registra informacion de vacaciones<strong>. Comun&iacute;quese con su Jefe Directo.";
         }else{
             VacacionesVO saldoVacaciones = infoVacaciones.get(0);
-            doubleSaldoVacaciones = saldoVacaciones.getSaldoDias();
+            
+            //doubleSaldoVacaciones = saldoVacaciones.getSaldoDias();
+            //progresivos = saldoVacaciones.getDiasProgresivos();
+            
+            doubleSaldoVacaciones = saldoVacaciones.getSaldoDiasVBA();
+            progresivos = saldoVacaciones.getSaldoDiasVP();
+            
             msgSaldo = "Saldo dias disponibles: " + doubleSaldoVacaciones;
-            progresivos = saldoVacaciones.getDiasProgresivos();
+            
             System.out.println("[ingresar_solicitud_vacaciones.jsp]"
                 + "EmpresaId: " + userConnected.getEmpresaId()
                 + ", rutEmpleado: " + userConnected.getUsername()

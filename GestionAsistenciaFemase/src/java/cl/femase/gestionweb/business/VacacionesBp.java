@@ -53,6 +53,9 @@ public class VacacionesBp {
         vacacionesdao = new cl.femase.gestionweb.dao.VacacionesDAO(this.props);
     }
 
+    /**
+    * 
+    */
     public List<VacacionesVO> getInfoVacaciones(String _empresaId, 
             String _rutEmpleado,
             int _cencoId,
@@ -62,6 +65,33 @@ public class VacacionesBp {
         
         List<VacacionesVO> lista = 
             vacacionesdao.getInfoVacaciones(_empresaId, 
+                _rutEmpleado, 
+                _cencoId, 
+                _jtStartIndex, 
+                _jtPageSize, _jtSorting);
+
+        return lista;
+    }
+    
+    /**
+    * 
+    * @param _empresaId
+    * @param _rutEmpleado
+    * @param _cencoId
+    * @param _jtStartIndex
+    * @param _jtPageSize
+    * @param _jtSorting
+    * @return 
+    */
+     public List<VacacionesVO> getInfoVacacionesDesvincula2(String _empresaId, 
+            String _rutEmpleado,
+            int _cencoId,
+            int _jtStartIndex, 
+            int _jtPageSize, 
+            String _jtSorting){
+        
+        List<VacacionesVO> lista = 
+            vacacionesdao.getInfoVacacionesDesvincula2(_empresaId, 
                 _rutEmpleado, 
                 _cencoId, 
                 _jtStartIndex, 
@@ -106,7 +136,7 @@ public class VacacionesBp {
             System.out.println("[VacacionesBp."
                 + "getDesgloseDiasVacaciones]"
                 + "saldoDiasVBA pre vacaciones= " + infoVacaciones.getSaldoDias()
-                + "saldoDiasVP pre vacaciones= " + infoVacaciones.getDiasProgresivos());
+                + ", saldoDiasVP pre vacaciones= " + infoVacaciones.getDiasProgresivos());
             
              //saldos antes del ingreso de la nueva vacacion
             objDiasEfectivos.setSaldoVBAPreVacaciones(infoVacaciones.getSaldoDias());
@@ -123,6 +153,12 @@ public class VacacionesBp {
             }else{
                 diasEfectivosVBA = diasEfectivos;
             }
+            
+            System.out.println("[VacacionesBp."
+                + "getDesgloseDiasVacaciones]"
+                + "diasEfectivosVBA= " + diasEfectivosVBA
+                + ", diasEfectivosVP= " + diasEfectivosVP);
+            
             int intValue = (int) diasEfectivosVBA;
             objDiasEfectivos.setDiasEfectivosVBA(intValue);
             intValue = (int) diasEfectivosVP;
@@ -132,10 +168,11 @@ public class VacacionesBp {
             objDiasEfectivos.setSaldoVPPostVacaciones(objDiasEfectivos.getSaldoVPPreVacaciones() - diasEfectivosVP);
             objDiasEfectivos.setSaldoVBAPostVacaciones(objDiasEfectivos.getSaldoVBAPreVacaciones() - diasEfectivosVBA);
             
-            objDiasEfectivos.setSaldoVPPostVacaciones(objDiasEfectivos.getSaldoVPPostVacaciones() - diasEfectivosVP);
+            //objDiasEfectivos.setSaldoVPPostVacaciones(objDiasEfectivos.getSaldoVPPreVacaciones() - diasEfectivosVP);
             
             System.out.println("[VacacionesBp."
-                + "getDesgloseDiasVacaciones]objDiasEfectivos: " + objDiasEfectivos.toString());
+                + "getDesgloseDiasVacaciones]Objeto a retornar. "
+                + "objDiasEfectivos: " + objDiasEfectivos.toString());
         }
         
         return objDiasEfectivos;
@@ -265,19 +302,22 @@ public class VacacionesBp {
     * @param _deptoId
     * @param _cencoId
     * @param _parametrosSistema
+     * @param _desvinculados
     */
     public void calculaDiasVacaciones(String _username, 
             String _empresaId, 
             String _deptoId,
             int _cencoId, 
-            HashMap<String, Double> _parametrosSistema){
+            HashMap<String, Double> _parametrosSistema, 
+            boolean _desvinculados){
         
         System.out.println("[VacacionesBp."
             + "calculaDiasVacaciones]Calcular dias vacaciones "
-            + "para todos los empleados de un cenco."
+            + "para todos los empleados del cenco."
             + "empresa_id: " + _empresaId
             + ", depto_id: " + _deptoId    
-            +", cencoId: " + _cencoId);
+            + ", cencoId: " + _cencoId
+            + ", desvinculados?: " + _desvinculados);
         
         EmpleadosBp empleadosBp = new EmpleadosBp();
         List<EmpleadoVO> listaEmpleados = new ArrayList<>();
@@ -285,19 +325,38 @@ public class VacacionesBp {
             && _deptoId.compareTo("-1") != 0
             && _cencoId != -1){
                 //todos los empleados del cenco
-                //usar funcion en BD
-                listaEmpleados = empleadosBp.getEmpleadosShort(_empresaId, 
-                    _deptoId, 
-                    _cencoId, 
-                    -1,  
-                    null, 
-                    null, 
-                    null, 
-                    null, 
-                    0, 
-                    0, 
-                    "empleado.empl_rut");
-                    
+                if (!_desvinculados){
+                    listaEmpleados = empleadosBp.getEmpleadosShort(_empresaId, 
+                        _deptoId, 
+                        _cencoId, 
+                        -1,  
+                        null, 
+                        null, 
+                        null, 
+                        null, 
+                        0, 
+                        0, 
+                        "empleado.empl_rut");
+                }else{
+                    System.out.println("[VacacionesBp."
+                        + "calculaDiasVacaciones]Calcular dias vacaciones "
+                        + "para todos los empleados DESVINCULADOS del cenco."
+                        + "empresa_id: " + _empresaId
+                        + ", depto_id: " + _deptoId    
+                        + ", cencoId: " + _cencoId);
+                    listaEmpleados = empleadosBp.getEmpleadosDesvinculados(_empresaId, 
+                        _deptoId, 
+                        _cencoId);
+                }
+                
+                if (listaEmpleados.isEmpty()){
+                    System.out.println("[VacacionesBp."
+                        + "calculaDiasVacaciones]No hay empleados DESVINCULADOS del cenco."
+                        + "empresa_id: " + _empresaId
+                        + ", depto_id: " + _deptoId    
+                        + ", cencoId: " + _cencoId);
+                }
+                
                 Iterator<EmpleadoVO> it = listaEmpleados.iterator();
                 while(it.hasNext()){
                     EmpleadoVO empleado = it.next();
@@ -375,8 +434,8 @@ public class VacacionesBp {
         EmpleadoVO infoEmpleado = 
             empleadoBp.getEmpleado(_empresaId, 
                 _runEmpleado);
-        Calendar calHoy = Calendar.getInstance(new Locale("es","CL"));
-        Date fechaActual = calHoy.getTime();
+        //Calendar calHoy = Calendar.getInstance(new Locale("es","CL"));
+        //Date fechaActual = calHoy.getTime();
         
         boolean insertar=false;
         /**
@@ -405,8 +464,9 @@ public class VacacionesBp {
         }        
         
         Date fechaInicioContrato = infoEmpleado.getFechaInicioContrato();
+        Date fechaDesvinculacion = infoEmpleado.getFechaDesvinculacion();
         // 1.- Calcular d�as normales (1.25 por mes, a partir de la fecha de ingreso del empleado) 
-        Date fechaMesVencido = getFechaMesVencido(fechaInicioContrato);
+        Date fechaMesVencido = getFechaMesVencido(fechaInicioContrato, fechaDesvinculacion);
         
         System.out.println("[VacacionesBp."
             + "getFechaMesVencido]Calcular antiguedad entre:"
@@ -916,15 +976,29 @@ public class VacacionesBp {
     
     /**
     * 
-     * @param _empresaId
-     * @param _rutEmpleado
-     * @param _cencoId
-     * @return 
+    * @param _empresaId
+    * @param _rutEmpleado
+    * @param _cencoId
+    * @return 
     */
     public int getInfoVacacionesCount(String _empresaId, 
             String _rutEmpleado,
             int _cencoId){
         return vacacionesdao.getInfoVacacionesCount(_empresaId, 
+            _rutEmpleado, _cencoId);
+    }
+    
+    /**
+    * 
+    * @param _empresaId
+    * @param _rutEmpleado
+    * @param _cencoId
+    * @return 
+    */
+    public int getInfoVacacionesDesvincula2Count(String _empresaId, 
+            String _rutEmpleado,
+            int _cencoId){
+        return vacacionesdao.getInfoVacacionesDesvincula2Count(_empresaId, 
             _rutEmpleado, _cencoId);
     }
     
@@ -951,9 +1025,11 @@ public class VacacionesBp {
     /**
     * 
     * @param _fechaInicioContrato
+     * @param _fechaDesvinculacion
     * @return 
     */
-    public Date getFechaMesVencido(Date _fechaInicioContrato){
+    public Date getFechaMesVencido(Date _fechaInicioContrato, 
+            Date _fechaDesvinculacion){
     
         Date FMV = null;
         SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd");
@@ -962,39 +1038,46 @@ public class VacacionesBp {
         System.out.println("[VacacionesBp."
             + "getFechaMesVencido]"
             + "Fecha actual: " + dateFormat2.format(dateActual)
-            + ", fecha inicio contrato: " + _fechaInicioContrato);
-        Date dateInicioContrato = null;
-        try{
-            dateInicioContrato = _fechaInicioContrato;
-            int diaFIC = Utilidades.getDatePart(dateInicioContrato, "dd");
-            int mesFIC = Utilidades.getDatePart(dateInicioContrato, "MM");
-            int anioActual = Utilidades.getDatePart(dateActual, "yyyy");
-            int mesActual = Utilidades.getDatePart(dateActual, "MM");
-            int diaActual = Utilidades.getDatePart(dateActual, "dd");
-            //crear fecha inicio contrato al anio actual
-            calHoy.set(Calendar.DATE, diaFIC);
-            calHoy.set(Calendar.MONTH, mesFIC - 1);
-            calHoy.set(Calendar.YEAR, anioActual);
-            FMV = calHoy.getTime();//fecha mes vencido
-            if (diaFIC >= diaActual){
+            + ", fecha inicio contrato: " + _fechaInicioContrato
+            + ", fecha desvinculacion: " + _fechaDesvinculacion);
+        if (_fechaDesvinculacion == null){
+            Date dateInicioContrato = null;
+            try{
+                dateInicioContrato = _fechaInicioContrato;
+                int diaFIC = Utilidades.getDatePart(dateInicioContrato, "dd");
+                int mesFIC = Utilidades.getDatePart(dateInicioContrato, "MM");
+                int anioActual = Utilidades.getDatePart(dateActual, "yyyy");
+                int mesActual = Utilidades.getDatePart(dateActual, "MM");
+                int diaActual = Utilidades.getDatePart(dateActual, "dd");
+                //crear fecha inicio contrato al anio actual
                 calHoy.set(Calendar.DATE, diaFIC);
-                calHoy.set(Calendar.MONTH, (mesActual - 2));
+                calHoy.set(Calendar.MONTH, mesFIC - 1);
                 calHoy.set(Calendar.YEAR, anioActual);
                 FMV = calHoy.getTime();//fecha mes vencido
-            }else { //if (dateActual.before(FMV)){
-                calHoy.set(Calendar.DATE, diaFIC);
-                calHoy.set(Calendar.MONTH, mesActual-1);
-                FMV = calHoy.getTime();//fecha mes vencido a usar
-            } 
+                if (diaFIC >= diaActual){
+                    calHoy.set(Calendar.DATE, diaFIC);
+                    calHoy.set(Calendar.MONTH, (mesActual - 2));
+                    calHoy.set(Calendar.YEAR, anioActual);
+                    FMV = calHoy.getTime();//fecha mes vencido
+                }else { //if (dateActual.before(FMV)){
+                    calHoy.set(Calendar.DATE, diaFIC);
+                    calHoy.set(Calendar.MONTH, mesActual-1);
+                    FMV = calHoy.getTime();//fecha mes vencido a usar
+                } 
+                System.out.println("[VacacionesBp."
+                    + "getFechaMesVencido]"
+                    + "FMV final a la fecha actual: " + dateFormat2.format(FMV));
+            }catch(Exception ex){
+                System.err.println("[VacacionesBp."
+                    + "getFechaMesVencido]"
+                    + "Error al obtener fecha: " + ex.toString());
+            }
+        }else{
+            FMV = _fechaDesvinculacion;
             System.out.println("[VacacionesBp."
                 + "getFechaMesVencido]"
-                + "FMV final a la fecha actual: " + dateFormat2.format(FMV));
-        }catch(Exception ex){
-            System.err.println("[VacacionesBp."
-                + "getFechaMesVencido]"
-                + "Error al obtener fecha: " + ex.toString());
+                + "FMV final = fecha desvinculacion: " + dateFormat2.format(FMV));
         }
-        
         return FMV;
     }
 

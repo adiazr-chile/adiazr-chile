@@ -527,6 +527,19 @@ public class EmpleadosBp {
     }
     
     
+    /**
+    * 
+    * @param _empresaId
+    * @param _deptoId
+    * @param _cencoId
+    * @param _cargo
+    * @param _rutEmpleado
+    * @param _nombres
+    * @param _apePaterno
+    * @param _apeMaterno
+    * @param _estado
+    * @return 
+    */
     public List<EmpleadoVO> getEmpleados(String _empresaId, 
             String _deptoId, 
             int _cencoId,
@@ -547,6 +560,25 @@ public class EmpleadosBp {
             _apePaterno,
             _apeMaterno, 
             _estado);
+
+        return lista;
+    }
+    
+    /**
+    * 
+    * @param _empresaId
+    * @param _deptoId
+    * @param _cencoId
+    * @return 
+    */
+    public List<EmpleadoVO> getEmpleadosDesvinculados(String _empresaId, 
+            String _deptoId, 
+            int _cencoId){
+        
+        List<EmpleadoVO> lista = 
+            empleadosDao.getEmpleadosDesvinculados(_empresaId, 
+            _deptoId, 
+            _cencoId);
 
         return lista;
     }

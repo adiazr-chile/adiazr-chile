@@ -1114,6 +1114,190 @@ public class EmpleadosDAO extends BaseDAO{
     * @param _empresaId
     * @param _deptoId
     * @param _cencoId
+    * @return 
+    */
+    public List<EmpleadoVO> getEmpleadosDesvinculados(String _empresaId, 
+            String _deptoId, 
+            int _cencoId){
+        
+        List<EmpleadoVO> lista = 
+                new ArrayList<>();
+        
+        SimpleDateFormat sdf=new SimpleDateFormat("dd-MM-yyyy");
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        EmpleadoVO data;
+        
+        try{
+            String sql = "SELECT "
+                + "empl.empl_rut,"
+                + "empl.empl_nombres,"
+                + "empl.empl_ape_paterno,"
+                + "empl.empl_ape_materno,"
+                + "empl.empl_fecha_nacimiento,"
+                + "empl.empl_direccion direccion,"
+                + "empl.empl_email email,"
+                + "empl.empl_fec_ini_contrato,"
+                + "coalesce(empl.empl_fec_fin_contrato,'3000-12-31') empl_fec_fin_contrato,"
+                + "empl.empl_estado,"
+                + "empl.fecha_desvinculacion,"
+                + "empl.empl_path_foto,"
+                + "empl.empl_sexo,"
+                + "coalesce(empl.empl_fono_fijo,'') empl_fono_fijo,"
+                + "coalesce(empl.empl_fono_movil,'') empl_fono_movil,"
+                + "empl.id_comuna,"
+                + "comuna.comuna_nombre,"
+                + "comuna.region_id,"
+                + "region.region_nombre,"
+                + "empl.empresa_id,"
+                + "empresa.empresa_nombre,"
+                + "empresa.empresa_rut,"
+                + "empl.depto_id,"
+                + "depto.depto_nombre,"
+                + "empl.cenco_id,"
+                + "cenco.ccosto_nombre,"
+                + "empl_id_turno,"
+                + "autoriza_ausencia,"
+                + "coalesce(empl_id_cargo,-1) empl_id_cargo,"
+                + "cargo.cargo_nombre,"
+                + "contrato_indefinido,"
+                + "art_22,"
+                + "cod_interno,"
+                + "clave_marcacion,"
+                + "turno.nombre_turno "    
+                + "FROM empleado empl "
+                    + " inner join comuna on (empl.id_comuna = comuna.comuna_id) "
+                    + " inner join region on (comuna.region_id = region.region_id) "
+                    + " inner join empresa on (empl.empresa_id = empresa.empresa_id) "
+                    + " inner join departamento depto on (empl.depto_id = depto.depto_id) "
+                    + " inner join centro_costo cenco on (empl.cenco_id = cenco.ccosto_id) "
+                    + " inner join cargo on (empl.empl_id_cargo = cargo.cargo_id) "
+                    + " inner join turno on (empl.empl_id_turno = turno.id_turno) "
+                    + " where "
+                    + " (empl.empl_estado = " + Constantes.ESTADO_NO_VIGENTE + " and fecha_desvinculacion is not null) ";
+            
+            if (_empresaId!=null && _empresaId.compareTo("-1")!=0){        
+                sql += " and empl.empresa_id= '"+_empresaId+"'";
+            }
+            if (_deptoId!=null && _deptoId.compareTo("-1")!=0){        
+                sql += " and empl.depto_id = '"+_deptoId+"' ";
+            }
+            if (_cencoId != -1){        
+                sql += " and empl.cenco_id = '"+_cencoId+"' ";
+            }
+                        
+            sql += " order by empl_nombres"; 
+                        
+            System.out.println("[EmpleadosDAO."
+                + "getEmpleadosDesvinculados]SQL: " + sql);
+            
+            dbConn = dbLocator.getConnection(m_dbpoolName,"[EmpleadosDAO.getEmpleadosDesvinculados]");
+            ps = dbConn.prepareStatement(sql);
+            rs = ps.executeQuery();
+
+            while (rs.next()){
+                data = new EmpleadoVO();
+               
+                data.setRut(rs.getString("empl_rut"));
+                data.setNombres(rs.getString("empl_nombres"));
+                data.setApePaterno(rs.getString("empl_ape_paterno"));
+                data.setApeMaterno(rs.getString("empl_ape_materno"));
+                
+                data.setFechaNacimiento(rs.getDate("empl_fecha_nacimiento"));
+                if (data.getFechaNacimiento() != null){
+                    data.setFechaNacimientoAsStr(sdf.format(data.getFechaNacimiento()));
+                }
+                
+                data.setDireccion(rs.getString("direccion"));
+                data.setEmail(rs.getString("email"));
+                
+                data.setFechaInicioContrato(rs.getDate("empl_fec_ini_contrato"));
+                if (data.getFechaInicioContrato() != null){
+                    data.setFechaInicioContratoAsStr(sdf.format(data.getFechaInicioContrato()));
+                }
+                data.setFechaTerminoContrato(rs.getDate("empl_fec_fin_contrato"));
+                if (data.getFechaTerminoContrato() != null){
+                    data.setFechaTerminoContratoAsStr(sdf.format(data.getFechaTerminoContrato()));
+                }
+                
+                data.setEstado(rs.getInt("empl_estado"));
+                data.setPathFoto(rs.getString("empl_path_foto"));
+                data.setSexo(rs.getString("empl_sexo"));
+                data.setFonoFijo(rs.getString("empl_fono_fijo"));
+                data.setFonoMovil(rs.getString("empl_fono_movil"));
+                data.setComunaId(rs.getInt("id_comuna"));
+                data.setComunaNombre(rs.getString("comuna_nombre"));
+                
+                EmpresaVO empresa=new EmpresaVO();
+                empresa.setId(rs.getString("empresa_id"));
+                empresa.setNombre(rs.getString("empresa_nombre"));
+                empresa.setRut(rs.getString("empresa_rut"));
+                
+                DepartamentoVO departamento=new DepartamentoVO();
+                departamento.setId(rs.getString("depto_id"));
+                departamento.setNombre(rs.getString("depto_nombre"));
+                
+                CentroCostoVO cenco=new CentroCostoVO();
+                cenco.setId(rs.getInt("cenco_id"));
+                cenco.setNombre(rs.getString("ccosto_nombre"));
+                
+                data.setEmpresa(empresa);
+                
+                data.setEmpresaId(empresa.getId());
+                
+                data.setDepartamento(departamento);
+                data.setCentroCosto(cenco);
+                data.setEmpresaNombre(empresa.getNombre());
+                data.setDeptoNombre(departamento.getNombre());
+                data.setCencoNombre(cenco.getNombre());
+                //data.setFechaIngresoPersonal(rs.getDate("fec_ingreso_depto_cenco"));
+                //data.setEstadoPersonal(rs.getInt("estado_depto_cenco"));
+                data.setIdTurno(rs.getInt("empl_id_turno"));
+                data.setAutorizaAusencia(rs.getBoolean("autoriza_ausencia"));
+                data.setIdCargo(rs.getInt("empl_id_cargo"));
+                
+                data.setArticulo22(rs.getBoolean("art_22"));
+                data.setContratoIndefinido(rs.getBoolean("contrato_indefinido"));
+                data.setNombreCargo(rs.getString("cargo_nombre"));
+                data.setCodInterno(rs.getString("cod_interno"));
+                data.setClaveMarcacion(rs.getString("clave_marcacion"));
+                
+                data.setFechaDesvinculacion(rs.getDate("fecha_desvinculacion"));
+                if (data.getFechaDesvinculacion() != null){
+                    data.setFechaDesvinculacionAsStr(sdf.format(data.getFechaDesvinculacion()));
+                }else data.setFechaDesvinculacionAsStr("");
+                
+                data.setNombreTurno(rs.getString("nombre_turno"));
+                
+                lista.add(data);
+            }
+
+            ps.close();
+            rs.close();
+            dbLocator.freeConnection(dbConn);
+        }catch(SQLException|DatabaseException sqle){
+            m_logger.error("[EmpleadosDAO.getEmpleadosDesvinculados]"
+                + "Error: " + sqle.toString());
+        }finally{
+            try {
+                if (ps != null) ps.close();
+                if (rs != null) rs.close();
+                dbLocator.freeConnection(dbConn);
+            } catch (SQLException ex) {
+                System.err.println("[EmpleadosDAO.getEmpleadosDesvinculados]"
+                    + "Error: " + ex.toString());
+            }
+        }
+        
+        return lista;
+    }
+    
+    /**
+    * Retorna lista con los empleados  existentes
+    * 
+    * @param _empresaId
+    * @param _deptoId
+    * @param _cencoId
     * @param _cargo
     * @param _idTurno
     * @param _rutEmpleado
@@ -1581,6 +1765,7 @@ public class EmpleadosDAO extends BaseDAO{
                 + "turno.nombre_turno,"
                 + "empleado.cod_interno,"
                 + "empleado.empl_fec_ini_contrato fecha_inicio_contrato,"
+                + "empleado.fecha_desvinculacion,"    
                 + "to_char(empl_fec_ini_contrato,'dd/MM/yyyy') fechainicontrato,"
                 + "clave_marcacion "
                 + "FROM "
@@ -1638,7 +1823,8 @@ public class EmpleadosDAO extends BaseDAO{
                 data.setNombreTurno(rs.getString("nombre_turno"));
                 data.setFechaInicioContrato(rs.getDate("fecha_inicio_contrato"));
                 data.setFechaInicioContratoAsStr(rs.getString("fechainicontrato"));
-                
+                data.setFechaDesvinculacion(rs.getDate("fecha_desvinculacion"));
+                                
                 EmpresaVO auxEmpresa = new EmpresaVO();
                 auxEmpresa.setId(rs.getString("empresa_id"));
                 auxEmpresa.setNombre(data.getEmpresaNombre());
@@ -2216,20 +2402,20 @@ public class EmpleadosDAO extends BaseDAO{
     }
     
     /**
-     * Obtiene lista de empleados con datos basicos
-     * @param _empresaId
-     * @param _deptoId
-     * @param _cencoId
-     * @param _cargo
-     * @param _rutEmpleado
-     * @param _nombres
-     * @param _apePaterno
-     * @param _apeMaterno
-     * @param _jtStartIndex
-     * @param _jtPageSize
-     * @param _jtSorting
-     * @return 
-     */
+    * Obtiene lista de empleados con datos basicos
+    * @param _empresaId
+    * @param _deptoId
+    * @param _cencoId
+    * @param _cargo
+    * @param _rutEmpleado
+    * @param _nombres
+    * @param _apePaterno
+    * @param _apeMaterno
+    * @param _jtStartIndex
+    * @param _jtPageSize
+    * @param _jtSorting
+    * @return 
+    */
     public List<EmpleadoVO> getEmpleadosShort(String _empresaId, 
             String _deptoId, 
             int _cencoId,

@@ -414,7 +414,22 @@ public class SolicitudVacacionesController extends BaseServlet {
                     mensajes.add(new MensajeUsuarioVO("Inicio vacaciones", solicitud.getInicioVacaciones()));
                     mensajes.add(new MensajeUsuarioVO("Termino vacaciones", solicitud.getFinVacaciones()));
                     mensajes.add(new MensajeUsuarioVO("Dias solicitados", "" + diasEfectivosSolicitados));
-                    mensajes.add(new MensajeUsuarioVO("Saldo post vacaciones", "" + saldoPostVacaciones));
+                    
+                    DetalleAusenciaVO newAusencia = new DetalleAusenciaVO();
+                    newAusencia.setEmpresaId(solicitud.getEmpresaId());
+                    newAusencia.setRutEmpleado(solicitud.getRutEmpleado());
+                    newAusencia.setDiasEfectivosVacaciones(Double.parseDouble(String.valueOf(diasEfectivosSolicitados)));
+                    
+                    VacacionesBp vacaciones = new VacacionesBp(appProperties);
+                    DiasEfectivosVacacionesVO objDE = vacaciones.getDesgloseDiasVacaciones(newAusencia);
+                    mensajes.add(new MensajeUsuarioVO("Dias efectivos VBA", "" + objDE.getDiasEfectivosVBA()));
+                    mensajes.add(new MensajeUsuarioVO("Dias efectivos VP", "" + objDE.getDiasEfectivosVP()));
+                    mensajes.add(new MensajeUsuarioVO("Saldo VBA Pre Vacaciones", "" + objDE.getSaldoVBAPreVacaciones()));
+                    mensajes.add(new MensajeUsuarioVO("Saldo VP Pre Vacaciones", "" + objDE.getSaldoVPPreVacaciones()));
+                    mensajes.add(new MensajeUsuarioVO("Saldo VBA Post Vacaciones", "" + objDE.getSaldoVBAPostVacaciones()));
+                    mensajes.add(new MensajeUsuarioVO("Saldo VP Post Vacaciones", "" + objDE.getSaldoVPPostVacaciones()));
+                    
+                    //mensajes.add(new MensajeUsuarioVO("Saldo post vacaciones", "" + saldoPostVacaciones));
                     mensajes.add(new MensajeUsuarioVO("Destinatario(s)", strDestinatarios));
                     request.setAttribute("fechaDesde", reqDesde);
                     request.setAttribute("fechaHasta", reqHasta);
