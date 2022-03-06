@@ -55,6 +55,13 @@ public class VacacionesBp {
 
     /**
     * 
+     * @param _empresaId
+     * @param _rutEmpleado
+     * @param _cencoId
+     * @param _jtStartIndex
+     * @param _jtPageSize
+     * @param _jtSorting
+     * @return 
     */
     public List<VacacionesVO> getInfoVacaciones(String _empresaId, 
             String _rutEmpleado,
@@ -139,8 +146,8 @@ public class VacacionesBp {
                 + ", saldoDiasVP pre vacaciones= " + infoVacaciones.getDiasProgresivos());
             
              //saldos antes del ingreso de la nueva vacacion
-            objDiasEfectivos.setSaldoVBAPreVacaciones(infoVacaciones.getSaldoDias());
-            objDiasEfectivos.setSaldoVPPreVacaciones(infoVacaciones.getDiasProgresivos());
+            objDiasEfectivos.setSaldoVBAPreVacaciones(infoVacaciones.getSaldoDiasVBA());
+            objDiasEfectivos.setSaldoVPPreVacaciones(infoVacaciones.getSaldoDiasVP());
         
             if (saldoVP > 0) {
                 if (diasEfectivos > saldoVP){
@@ -605,8 +612,8 @@ public class VacacionesBp {
             + "rut_empleado: " + _runEmpleado
             + ", dias normales con decimales: " + diasNormalesBigDecimal.doubleValue());
         
-        double diasAFavor = diasNormalesBigDecimal.doubleValue() 
-            + diasProgresivos;
+//        double diasAFavor = diasNormalesBigDecimal.doubleValue() + diasProgresivos;
+        double diasAFavor = diasNormalesBigDecimal.doubleValue();
         double nuevoSaldoDias = diasAFavor - diasVacacionesTomadas;
         
         /**
@@ -1040,44 +1047,50 @@ public class VacacionesBp {
             + "Fecha actual: " + dateFormat2.format(dateActual)
             + ", fecha inicio contrato: " + _fechaInicioContrato
             + ", fecha desvinculacion: " + _fechaDesvinculacion);
-        if (_fechaDesvinculacion == null){
-            Date dateInicioContrato = null;
-            try{
-                dateInicioContrato = _fechaInicioContrato;
-                int diaFIC = Utilidades.getDatePart(dateInicioContrato, "dd");
-                int mesFIC = Utilidades.getDatePart(dateInicioContrato, "MM");
-                int anioActual = Utilidades.getDatePart(dateActual, "yyyy");
-                int mesActual = Utilidades.getDatePart(dateActual, "MM");
-                int diaActual = Utilidades.getDatePart(dateActual, "dd");
-                //crear fecha inicio contrato al anio actual
-                calHoy.set(Calendar.DATE, diaFIC);
-                calHoy.set(Calendar.MONTH, mesFIC - 1);
-                calHoy.set(Calendar.YEAR, anioActual);
-                FMV = calHoy.getTime();//fecha mes vencido
-                if (diaFIC >= diaActual){
-                    calHoy.set(Calendar.DATE, diaFIC);
-                    calHoy.set(Calendar.MONTH, (mesActual - 2));
-                    calHoy.set(Calendar.YEAR, anioActual);
-                    FMV = calHoy.getTime();//fecha mes vencido
-                }else { //if (dateActual.before(FMV)){
-                    calHoy.set(Calendar.DATE, diaFIC);
-                    calHoy.set(Calendar.MONTH, mesActual-1);
-                    FMV = calHoy.getTime();//fecha mes vencido a usar
-                } 
-                System.out.println("[VacacionesBp."
-                    + "getFechaMesVencido]"
-                    + "FMV final a la fecha actual: " + dateFormat2.format(FMV));
-            }catch(Exception ex){
-                System.err.println("[VacacionesBp."
-                    + "getFechaMesVencido]"
-                    + "Error al obtener fecha: " + ex.toString());
-            }
-        }else{
-            FMV = _fechaDesvinculacion;
+//        if (_fechaDesvinculacion == null){
+        if (_fechaDesvinculacion != null){
+            dateActual = _fechaDesvinculacion;
             System.out.println("[VacacionesBp."
                 + "getFechaMesVencido]"
-                + "FMV final = fecha desvinculacion: " + dateFormat2.format(FMV));
+                + "Fecha actual = fecha desvinculacion: " + dateFormat2.format(_fechaDesvinculacion));
         }
+        Date dateInicioContrato = null;
+        try{
+            dateInicioContrato = _fechaInicioContrato;
+            int diaFIC = Utilidades.getDatePart(dateInicioContrato, "dd");
+            int mesFIC = Utilidades.getDatePart(dateInicioContrato, "MM");
+            int anioActual = Utilidades.getDatePart(dateActual, "yyyy");
+            int mesActual = Utilidades.getDatePart(dateActual, "MM");
+            int diaActual = Utilidades.getDatePart(dateActual, "dd");
+            //crear fecha inicio contrato al anio actual
+            calHoy.set(Calendar.DATE, diaFIC);
+            calHoy.set(Calendar.MONTH, mesFIC - 1);
+            calHoy.set(Calendar.YEAR, anioActual);
+            FMV = calHoy.getTime();//fecha mes vencido
+            if (diaFIC >= diaActual){
+                calHoy.set(Calendar.DATE, diaFIC);
+                calHoy.set(Calendar.MONTH, (mesActual - 2));
+                calHoy.set(Calendar.YEAR, anioActual);
+                FMV = calHoy.getTime();//fecha mes vencido
+            }else { //if (dateActual.before(FMV)){
+                calHoy.set(Calendar.DATE, diaFIC);
+                calHoy.set(Calendar.MONTH, mesActual-1);
+                FMV = calHoy.getTime();//fecha mes vencido a usar
+            } 
+            System.out.println("[VacacionesBp."
+                + "getFechaMesVencido]"
+                + "FMV final a la fecha actual: " + dateFormat2.format(FMV));
+        }catch(Exception ex){
+            System.err.println("[VacacionesBp."
+                + "getFechaMesVencido]"
+                + "Error al obtener fecha: " + ex.toString());
+        }
+//        }else{
+//            FMV = _fechaDesvinculacion;
+//            System.out.println("[VacacionesBp."
+//                + "getFechaMesVencido]"
+//                + "FMV final = fecha desvinculacion: " + dateFormat2.format(FMV));
+//        }
         return FMV;
     }
 

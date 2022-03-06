@@ -69,10 +69,11 @@ public class MarcasRechazosDAO extends BaseDAO{
                 + "id,"
                 + "hashcode,"
                 + "motivo_rechazo " 
-            + "FROM marca_rechazo inner join empleado "
-                + "on (marca_rechazo.empresa_cod = empleado.empresa_id and marca_rechazo.rut_empleado = empleado.empl_rut) "
-            + "where 1=1 "
-                + "and (marca_rechazo.fecha_hora::date >= empleado.empl_fec_ini_contrato) ";
+            + "FROM marca_rechazo "
+                    //+ "inner join empleado "
+                    //+ "on (marca_rechazo.empresa_cod = empleado.empresa_id and marca_rechazo.rut_empleado = empleado.empl_rut) "
+            + "where 1 = 1 ";
+                //+ "and (marca_rechazo.fecha_hora::date >= empleado.empl_fec_ini_contrato) ";
             
             if (_empresaId != null && _empresaId.compareTo("-1") != 0){        
                 sql += " and empresa_cod = '" + _empresaId + "'";
@@ -249,11 +250,11 @@ public class MarcasRechazosDAO extends BaseDAO{
             dbConn = dbLocator.getConnection(m_dbpoolName,"[MarcasRechazosDAO.getMarcasRechazadasCount]");
             statement = dbConn.createStatement();
             String sql = "SELECT count(fecha_hora) "
-                + "FROM marca_rechazo,empleado "
-                + "WHERE (empleado.empl_rut = marca_rechazo.rut_empleado) ";
+                + "FROM marca_rechazo "
+                + "WHERE (1 = 1) ";
 
             if (_empresaId != null && _empresaId.compareTo("-1") != 0){        
-                sql += " and empleado.empresa_id = '" + _empresaId + "'";
+                sql += " and empresa_cod = '" + _empresaId + "'";
             }
             
             if (_dispositivoId != null && _dispositivoId.compareTo("-1") != 0){
