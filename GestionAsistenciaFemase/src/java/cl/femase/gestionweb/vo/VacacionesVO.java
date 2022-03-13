@@ -49,6 +49,7 @@ public class VacacionesVO implements Serializable{
     
     private String comentario;
     private String fechaInicioContrato;
+    private String fechaDesvinculacion;
     private String esZonaExtrema;
     private String afpCode;
     private String afpName;
@@ -64,6 +65,14 @@ public class VacacionesVO implements Serializable{
     
     private double saldoDiasVBA;
     private double saldoDiasVP;
+
+    public String getFechaDesvinculacion() {
+        return fechaDesvinculacion;
+    }
+
+    public void setFechaDesvinculacion(String fechaDesvinculacion) {
+        this.fechaDesvinculacion = fechaDesvinculacion;
+    }
 
     public double getSaldoDiasVBA() {
         return saldoDiasVBA;
@@ -89,8 +98,6 @@ public class VacacionesVO implements Serializable{
         this.mensajeVp = mensajeVp;
     }
 
-    
-    
     public String getFechaBaseVp() {
         return fechaBaseVp;
     }

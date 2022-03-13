@@ -32,7 +32,7 @@ public class SolicitudVacacionesVO implements Serializable{
     private String labelEmpleado;
     
     private int diasEfectivosVacacionesSolicitadas;
-    private int saldoVacaciones;
+    private double saldoVacaciones;
     private String diasEspeciales;
 
     public String getLabelEmpleado() {
@@ -51,11 +51,11 @@ public class SolicitudVacacionesVO implements Serializable{
         this.diasEfectivosVacacionesSolicitadas = diasEfectivosVacacionesSolicitadas;
     }
 
-    public int getSaldoVacaciones() {
+    public double getSaldoVacaciones() {
         return saldoVacaciones;
     }
 
-    public void setSaldoVacaciones(int saldoVacaciones) {
+    public void setSaldoVacaciones(double saldoVacaciones) {
         this.saldoVacaciones = saldoVacaciones;
     }
 

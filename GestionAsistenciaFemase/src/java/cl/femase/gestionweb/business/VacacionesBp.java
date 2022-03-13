@@ -137,13 +137,16 @@ public class VacacionesBp {
             VacacionesVO infoVacaciones = infovacaciones.get(0);
             double diasEfectivosVBA = 0;
             double diasEfectivosVP  = 0;
-            double saldoVP = infoVacaciones.getDiasProgresivos();
+            double saldoVP = infoVacaciones.getSaldoDiasVP();//infoVacaciones.getDiasProgresivos(); 
             double diasEfectivos = _newAusencia.getDiasEfectivosVacaciones();
             
-            System.out.println("[VacacionesBp."
+             System.out.println("[VacacionesBp."
                 + "getDesgloseDiasVacaciones]"
-                + "saldoDiasVBA pre vacaciones= " + infoVacaciones.getSaldoDias()
-                + ", saldoDiasVP pre vacaciones= " + infoVacaciones.getDiasProgresivos());
+                + "Dias efectivos solicitados= " + diasEfectivos     
+                + ", vacaciones.saldoDias= " + infoVacaciones.getSaldoDias()
+                + ", vacaciones.dias_progresivos= " + infoVacaciones.getDiasProgresivos()
+                + ", vacaciones.saldo_dias_VBA (pre_vacaciones)= " + infoVacaciones.getSaldoDiasVBA()
+                + ", vacaciones.saldo_dias_VP (pre_vacaciones)= " + infoVacaciones.getSaldoDiasVP());
             
              //saldos antes del ingreso de la nueva vacacion
             objDiasEfectivos.setSaldoVBAPreVacaciones(infoVacaciones.getSaldoDiasVBA());
@@ -579,7 +582,10 @@ public class VacacionesBp {
                 System.out.println("[VacacionesBp." +
                     "calculaDiasVacaciones]"
                     + "Correlativo vacacion = " + auxVacacion.getCorrelativo() 
-                    + ", dias_efectivos= " + auxVacacion.getDiasEfectivosVacaciones());
+                    + ", dias_efectivos= " + auxVacacion.getDiasEfectivosVacaciones()
+                    + ", dias_efectivos_vba= " + auxVacacion.getDiasEfectivosVBA()
+                    + ", dias_efectivos_vp= " + auxVacacion.getDiasEfectivosVP()        
+                );
                 //la suma de todos los dias efectivos es la que se usar� para descontar dias del saldo acumulado
                 if (iteracion == 0){
                     inicioVacacionReciente          = auxVacacion.getFechainicio();
@@ -588,12 +594,14 @@ public class VacacionesBp {
                     diasEfectivosVPVacacionReciente = auxVacacion.getDiasEfectivosVP();
                 }
                 //if (auxVacacion.getDiasEfectivosVacaciones() == 0){
-                    diasVacacionesTomadas += 
-                        getDiasEfectivos(auxVacacion.getFechainicio(), 
-                            auxVacacion.getFechafin(),
-                            dataVacaciones.getDiasEspeciales(), 
-                            _empresaId, 
-                            _runEmpleado);
+                diasVacacionesTomadas += auxVacacion.getDiasEfectivosVBA();
+                
+////////                    diasVacacionesTomadas += 
+////////                        getDiasEfectivos(auxVacacion.getFechainicio(), 
+////////                            auxVacacion.getFechafin(),
+////////                            dataVacaciones.getDiasEspeciales(), 
+////////                            _empresaId, 
+////////                            _runEmpleado);
                 //}
                 iteracion++;
             }
@@ -615,13 +623,21 @@ public class VacacionesBp {
 //        double diasAFavor = diasNormalesBigDecimal.doubleValue() + diasProgresivos;
         double diasAFavor = diasNormalesBigDecimal.doubleValue();
         double nuevoSaldoDias = diasAFavor - diasVacacionesTomadas;
+        System.out.println("[VacacionesBp."
+            + "calculaDiasVacaciones]"
+            + "diasAFavor (A): " + diasAFavor
+            + ", diasVacacionesTomadas (B): " + diasVacacionesTomadas
+            + ", nuevoSaldoDias (A)-(B): " + nuevoSaldoDias);
         
         /**
         *   saldo_dias_VBA = saldo_dias_vba - dias_efectivos_vba (de la ultima vacacion tomada)
         *   saldo_dias_VP = saldo_dias_vp - dias_efectivos_vp (de la ultima vacacion tomada)
         */
-        dataVacaciones.setSaldoDiasVBA(nuevoSaldoDias - diasEfectivosVBAVacacionReciente);
+////        dataVacaciones.setSaldoDiasVBA(nuevoSaldoDias - diasEfectivosVBAVacacionReciente);
         dataVacaciones.setSaldoDiasVP(diasProgresivos - diasEfectivosVPVacacionReciente);
+        
+        dataVacaciones.setSaldoDiasVBA(nuevoSaldoDias);
+////        dataVacaciones.setSaldoDiasVP(diasProgresivos);
         
         if (dataVacaciones.getSaldoDiasVBA() < 0) dataVacaciones.setSaldoDiasVBA(nuevoSaldoDias);
         if (dataVacaciones.getSaldoDiasVP() < 0) dataVacaciones.setSaldoDiasVP(diasProgresivos);

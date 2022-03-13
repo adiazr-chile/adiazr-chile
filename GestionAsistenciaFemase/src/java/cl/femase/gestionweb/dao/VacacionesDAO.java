@@ -929,7 +929,8 @@ public class VacacionesDAO extends BaseDAO{
                 + "coalesce(vac.dias_especiales, 'N') dias_especiales,"
                 + "vac.current_num_cotizaciones,"
                 + "vac.dias_zona_extrema,"
-                + "vac.comentario,empleado.fecha_inicio_contrato,"
+                + "vac.comentario,"
+                + "empleado.fecha_inicio_contrato,fecha_desvinculacion, "
                 + "coalesce(empleado.es_zona_extrema,'N') es_zona_extrema,"
                 + "coalesce(vac.afp_code,'NINGUNA') afp_code," 
                 + "coalesce(afp.afp_name,'NINGUNA') afp_name, " 
@@ -997,6 +998,7 @@ public class VacacionesDAO extends BaseDAO{
                 data.setDiasZonaExtrema(rs.getDouble("dias_zona_extrema"));
                 data.setComentario(rs.getString("comentario"));
                 data.setFechaInicioContrato(rs.getString("fecha_inicio_contrato"));
+                data.setFechaDesvinculacion(rs.getString("fecha_desvinculacion"));
                 data.setEsZonaExtrema(rs.getString("es_zona_extrema"));
                 
                 data.setAfpCode(rs.getString("afp_code"));

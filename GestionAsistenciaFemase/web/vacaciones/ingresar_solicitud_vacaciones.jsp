@@ -64,8 +64,8 @@
         }else{
             VacacionesVO saldoVacaciones = infoVacaciones.get(0);
             
-            //doubleSaldoVacaciones = saldoVacaciones.getSaldoDias();
-            //progresivos = saldoVacaciones.getDiasProgresivos();
+            ////doubleSaldoVacaciones = saldoVacaciones.getSaldoDias();//vacaciones.saldo_dias
+            ////progresivos = saldoVacaciones.getDiasProgresivos();//vacaciones.dias_progresivos
             
             doubleSaldoVacaciones = saldoVacaciones.getSaldoDiasVBA();
             progresivos = saldoVacaciones.getSaldoDiasVP();

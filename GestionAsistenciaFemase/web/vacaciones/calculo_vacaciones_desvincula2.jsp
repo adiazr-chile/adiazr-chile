@@ -305,6 +305,14 @@
                     sorting: false,
                     defaultValue: '0'
                 },
+                fechaDesvinculacion:{
+                    title: 'F.Desvinculacion',
+                    width: '7%',
+                    list: true,
+                    edit:false,
+                    sorting: false,
+                    defaultValue: '0'
+                },        
                 afpCode:{
                     title: 'AFP Certif',
                     width: '6%',

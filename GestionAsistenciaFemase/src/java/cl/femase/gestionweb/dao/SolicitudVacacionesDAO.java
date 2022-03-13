@@ -143,7 +143,7 @@ public class SolicitudVacacionesDAO extends BaseDAO{
                 data.setFechaHoraApruebaRechaza(rs.getString("fechahora_aprueba_rechaza"));
                 data.setFechaHoraCancela(rs.getString("fechahora_cancela"));
                 data.setNotaObservacion(rs.getString("nota_observacion"));
-                data.setSaldoVacaciones(rs.getInt("saldo_vacaciones"));
+                data.setSaldoVacaciones(rs.getDouble("saldo_vacaciones"));
                 data.setDiasEspeciales(rs.getString("dias_especiales"));
                 
 //                int diasSolicitados = 
@@ -300,7 +300,7 @@ public class SolicitudVacacionesDAO extends BaseDAO{
                 data.setFechaHoraApruebaRechaza(rs.getString("fechahora_aprueba_rechaza"));
                 data.setFechaHoraCancela(rs.getString("fechahora_cancela"));
                 data.setNotaObservacion(rs.getString("nota_observacion"));
-                data.setSaldoVacaciones(rs.getInt("saldo_vacaciones"));
+                data.setSaldoVacaciones(rs.getDouble("saldo_vacaciones"));
                 data.setDiasEspeciales(rs.getString("dias_especiales"));
                 
                 data.setLabelEmpleado(data.getNombreEmpleado() + "(" + rs.getString("cargo_nombre") + ")");
@@ -396,7 +396,7 @@ public class SolicitudVacacionesDAO extends BaseDAO{
                 data.setFechaHoraApruebaRechaza(rs.getString("fechahora_aprueba_rechaza"));
                 data.setFechaHoraCancela(rs.getString("fechahora_cancela"));
                 data.setNotaObservacion(rs.getString("nota_observacion"));
-                data.setSaldoVacaciones(rs.getInt("saldo_vacaciones"));
+                data.setSaldoVacaciones(rs.getDouble("saldo_vacaciones"));
                 data.setDiasEspeciales(rs.getString("dias_especiales"));
                 
 //                int diasSolicitados = 
