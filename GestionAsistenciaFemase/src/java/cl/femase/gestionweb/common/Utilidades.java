@@ -151,6 +151,7 @@ public class Utilidades {
       
         // count between dates
         long years = ChronoUnit.YEARS.between(oldDate, newDate);
+        long years2 = ChronoUnit.YEARS.between(newDate, oldDate);
         long months = ChronoUnit.MONTHS.between(oldDate, newDate);
         long weeks = ChronoUnit.WEEKS.between(oldDate, newDate);
         long days = ChronoUnit.DAYS.between(oldDate, newDate);
@@ -160,7 +161,7 @@ public class Utilidades {
         long milis = ChronoUnit.MILLIS.between(oldDate, newDate);
         long nano = ChronoUnit.NANOS.between(oldDate, newDate);
 
-        resultado.setYears(years);
+        resultado.setYears(years2);
         resultado.setMonths(months);
         resultado.setWeeks(weeks);
         resultado.setDays(days);
