@@ -548,11 +548,11 @@ public class VacacionesDAO extends BaseDAO{
                 + "fec_certif_vac_progresivas,"
                 + "dias_adicionales,"
                 + "dias_efectivos_tomados, fecha_base_vp, mensaje_vp, "
-                + "saldo_dias_vba, saldo_dias_vp) "
+                + "saldo_dias_vba, saldo_dias_vp, fecha_calculo) "
                 + "VALUES (?, ?, ?, ?, "
                         + "?, ?, ?, ?, "
                         + "?, ?, ?, ?, "
-                        + "?, ?, ?, ?, ?)";
+                        + "?, ?, ?, ?, ?, current_timestamp)";
 
             dbConn = dbLocator.getConnection(m_dbpoolName,"[VacacionesDAO.insert]");
             insert = dbConn.prepareStatement(sql);

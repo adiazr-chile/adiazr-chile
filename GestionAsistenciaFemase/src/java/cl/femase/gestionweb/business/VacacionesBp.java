@@ -650,8 +650,10 @@ public class VacacionesBp {
         
         dataVacaciones.setSaldoDiasVBA(nuevoSaldoDias);
         ////dataVacaciones.setSaldoDiasVP(diasProgresivos);
-        
-        double saldoDiasVP = getDiasVP(inicioVacacionReciente, finVacacionReciente, diasProgresivos, saldoVPPostVacaciones);
+        double saldoDiasVP = 0;
+        if (inicioVacacionReciente != null && finVacacionReciente != null){
+            saldoDiasVP = getDiasVP(inicioVacacionReciente, finVacacionReciente, diasProgresivos, saldoVPPostVacaciones);
+        }
         System.out.println("[VacacionesBp.calculaDiasVacaciones]saldoVP: " + saldoDiasVP);
         dataVacaciones.setSaldoDiasVP(saldoDiasVP);
 
