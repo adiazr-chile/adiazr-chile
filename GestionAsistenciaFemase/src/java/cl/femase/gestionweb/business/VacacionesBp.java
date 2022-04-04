@@ -386,7 +386,10 @@ public class VacacionesBp {
                         + "(usar nueva funcion setsaldodiasvacacionesasignadas). "
                         + "Run: "+ empleado.getRut());
                     DetalleAusenciaBp detAusenciaBp = new DetalleAusenciaBp(null);
+                    
                     detAusenciaBp.actualizaSaldosVacaciones(empleado.getRut());
+                    
+                    
                 }
         }
     }

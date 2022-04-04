@@ -397,13 +397,16 @@ public class VacacionesController extends BaseServlet {
                             paramEmpresa, 
                             rutEmpleado, 
                             parametrosSistema);
+                        
+                        DetalleAusenciaBp detAusenciaBp = new DetalleAusenciaBp(appProperties);
+                        
                         System.out.println("[VacacionesController]"
                             + "Actualizar saldos de vacaciones "
                             + "en tabla detalle_ausencia "
                             + "(usar nueva funcion setsaldodiasvacacionesasignadas). "
                             + "Run: "+ rutEmpleado);
-                        DetalleAusenciaBp detAusenciaBp = new DetalleAusenciaBp(appProperties);
                         detAusenciaBp.actualizaSaldosVacaciones(rutEmpleado);
+                        
                     }else{
                         System.out.println("[VacacionesController]"
                             + "Calcular saldo dias de vacaciones "
@@ -448,13 +451,15 @@ public class VacacionesController extends BaseServlet {
                             paramEmpresa, 
                             rutEmpleado, 
                             parametrosSistema);
+                        DetalleAusenciaBp detAusenciaBp = new DetalleAusenciaBp(appProperties);
+                        
                         System.out.println("[VacacionesController]"
                             + "Actualizar saldos de vacaciones "
                             + "en tabla detalle_ausencia "
                             + "(usar nueva funcion setsaldodiasvacacionesasignadas). "
                             + "Run: "+ rutEmpleado);
-                        DetalleAusenciaBp detAusenciaBp = new DetalleAusenciaBp(appProperties);
                         detAusenciaBp.actualizaSaldosVacaciones(rutEmpleado);
+                        
                     }else{
                         System.out.println("[VacacionesController]"
                             + "Calcular saldo dias de vacaciones "

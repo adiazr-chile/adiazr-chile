@@ -765,7 +765,6 @@ public class SolicitudVacacionesController extends BaseServlet {
                 + "Run: "+ _ausencia.getRutEmpleado());
             ausenciasBp.actualizaSaldosVacaciones(_ausencia.getRutEmpleado());
             
-            
             //Actualizar saldos en tabla vacaciones: columnas saldo_dias_vba y saldo_dias_vp
             System.out.println("[SolicitudVacacionesController."
                 + "insertarVacacion]"

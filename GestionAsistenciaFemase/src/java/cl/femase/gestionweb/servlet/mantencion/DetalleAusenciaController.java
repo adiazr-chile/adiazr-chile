@@ -15,6 +15,7 @@ import cl.femase.gestionweb.vo.AusenciaVO;
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
 import cl.femase.gestionweb.vo.MaintenanceVO;
 import cl.femase.gestionweb.vo.DetalleAusenciaVO;
+import cl.femase.gestionweb.vo.DiasEfectivosVacacionesVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import cl.femase.gestionweb.vo.UsuarioVO;
 import cl.femase.gestionweb.vo.VacacionesVO;
@@ -407,8 +408,7 @@ public class DetalleAusenciaController extends BaseServlet {
                             =new ArrayList<>();
                         if (auxdata.getPermiteHora()!=null && 
                             auxdata.getPermiteHora().compareTo("N") == 0){
-                            System.out.println("Mantenedor - "
-                                + "Detalle Ausencias (insert) - "
+                            System.out.println("[DetalleAusenciaController](insert) - "
                                 + "Ausencia x dias."
                                 + " Validar ausencias conflicto.");
                             //validar ausencias conflicto
@@ -420,8 +420,7 @@ public class DetalleAusenciaController extends BaseServlet {
                                     null, 
                                     null);
                         }else if (auxdata.getPermiteHora().compareTo("S")==0){
-                                    System.out.println("Mantenedor - "
-                                        + "Detalle Ausencias (insert) - "
+                                    System.out.println("[DetalleAusenciaController] (insert) - "
                                         + "Ausencia x horas."
                                         + " Validar ausencias conflicto.");
                                     ausenciasConflicto = 
@@ -442,54 +441,79 @@ public class DetalleAusenciaController extends BaseServlet {
                                         appProperties,
                                         userConnected,
                                         request);
-                                System.out.println("post create. dias efectivos tomados: "
+                                System.out.println("[DetalleAusenciaController]post create. dias efectivos tomados: "
                                     + saldoVacaciones.getDiasEfectivos());
                                 auxdata.setDiasEfectivosVacaciones(saldoVacaciones.getDiasEfectivos());
                             }
                             if (saldoVacaciones.getMensajeValidacion() == null){
-                                System.out.println("Mantenedor - "
-                                    + "Detalle Ausencias - "
-                                    + "Insertar detalle ausencia...");
                                 resultado.setRutEmpleado(auxdata.getRutEmpleado());
                                 auxdata.setAusenciaAutorizada("S");
-                                MaintenanceVO doCreate = detAusenciaBp.insert(auxdata, resultado);					
                                 mensajeFinal = "Datos ingresados exitosamente.";
-                                if (auxdata.getIdAusencia() == Constantes.ID_AUSENCIA_VACACIONES){//VACACIONES
-                                    if (!doCreate.isThereError() 
-                                        && auxdata.getIdAusencia() == Constantes.ID_AUSENCIA_VACACIONES){//VACACIONES
-                                        System.out.println("[servlet."
-                                            + "DetalleAusenciasController."
-                                            + "processRequest]Insertar vacaciones."
-                                            + "Recalcular saldo dias de vacaciones "
-                                            + "para empleado. "
-                                            + "empresa_id: " + auxdata.getEmpresaId()
-                                            +", rutEmpleado: " + auxdata.getRutEmpleado());
-                                        vacacionesBp.calculaDiasVacaciones(userConnected.getUsername(), 
-                                            auxdata.getEmpresaId(), auxdata.getRutEmpleado(), 
-                                            parametrosSistema);
-                                        
-                                        System.out.println("[servlet."
-                                            + "DetalleAusenciasController."
-                                            + "processRequest]"
-                                            + "Actualizar saldos de vacaciones "
-                                            + "en tabla detalle_ausencia "
-                                            + "(usar nueva funcion setsaldodiasvacacionesasignadas). "
-                                            + "Run: "+ auxdata.getRutEmpleado());
-                                        detAusenciaBp.actualizaSaldosVacaciones(auxdata.getRutEmpleado());
-                                        
-                                        List<VacacionesVO> infoVacaciones = 
-                                            vacacionesBp.getInfoVacaciones(auxdata.getEmpresaId(), 
-                                                auxdata.getRutEmpleado(), -1, -1, -1, "vac.rut_empleado");
-                                        saldoVacaciones = infoVacaciones.get(0);
+                                if (auxdata.getIdAusencia() != Constantes.ID_AUSENCIA_VACACIONES){
+                                    System.out.println("[DetalleAusenciaController] - "
+                                        + "Insertar detalle ausencia (NO Vacacion)...");
+                                    MaintenanceVO doCreate = detAusenciaBp.insert(auxdata, resultado);	
+                                    if (doCreate.isThereError()){
+                                        mensajeFinal= "Error al crear registro "
+                                            + doCreate.getMsgError();
                                     }
+                                }else {//VACACIONES
+                                    System.out.println("[DetalleAusenciaController]"
+                                        + "Insertar detalle ausencia (Vacacion)...");
+                                    //Insertar vacacion
+                                    DetalleAusenciaVO newAusencia;
+                                    newAusencia = new DetalleAusenciaVO();
+                                    newAusencia.setEmpresaId(auxdata.getEmpresaId());
+                                    newAusencia.setRutEmpleado(auxdata.getRutEmpleado());
+                                    newAusencia.setFechaInicioAsStr(auxdata.getFechaInicioAsStr());
+                                    newAusencia.setFechaFinAsStr(auxdata.getFechaFinAsStr());
+                                    newAusencia.setRutAutorizador(auxdata.getRutAutorizador());
+                                    System.out.println("[DetalleAusenciaController]"
+                                        + "Rut autorizador: " + newAusencia.getRutAutorizador());
+                                    //fijos
+                                    newAusencia.setIdAusencia(Constantes.ID_AUSENCIA_VACACIONES);
+                                    newAusencia.setAusenciaAutorizada("S");
+                                    newAusencia.setPermiteHora("N");
+                                    newAusencia.setDiasEfectivosVacaciones(saldoVacaciones.getDiasEfectivos());
+                                    MaintenanceVO insertResult = new MaintenanceVO();
+                                    insertResult = insertarVacacion(request, appProperties, parametrosSistema, userConnected, newAusencia);
+
+                                    List<VacacionesVO> infoVacaciones = 
+                                        vacacionesBp.getInfoVacaciones(auxdata.getEmpresaId(), 
+                                            auxdata.getRutEmpleado(), -1, -1, -1, "vac.rut_empleado");
+                                    saldoVacaciones = infoVacaciones.get(0);
+                                        
+//                                        System.out.println("[servlet."
+//                                            + "DetalleAusenciasController."
+//                                            + "processRequest]Insertar vacaciones."
+//                                            + "Recalcular saldo dias de vacaciones "
+//                                            + "para empleado. "
+//                                            + "empresa_id: " + auxdata.getEmpresaId()
+//                                            +", rutEmpleado: " + auxdata.getRutEmpleado());
+//                                        vacacionesBp.calculaDiasVacaciones(userConnected.getUsername(), 
+//                                            auxdata.getEmpresaId(), auxdata.getRutEmpleado(), 
+//                                            parametrosSistema);
+//                                        
+//                                        System.out.println("[servlet."
+//                                            + "DetalleAusenciasController."
+//                                            + "processRequest]"
+//                                            + "Actualizar saldos de vacaciones "
+//                                            + "en tabla detalle_ausencia "
+//                                            + "(usar nueva funcion setsaldodiasvacacionesasignadas). "
+//                                            + "Run: "+ auxdata.getRutEmpleado());
+//                                        detAusenciaBp.actualizaSaldosVacaciones(auxdata.getRutEmpleado());
+//                                        
+//                                        List<VacacionesVO> infoVacaciones = 
+//                                            vacacionesBp.getInfoVacaciones(auxdata.getEmpresaId(), 
+//                                                auxdata.getRutEmpleado(), -1, -1, -1, "vac.rut_empleado");
+//                                        saldoVacaciones = infoVacaciones.get(0);
+                                    
+                                    //fin insertar ausencia VACACIONES
                                     mensajeFinal = "Vacaciones ingresadas correctamente. "
                                         + "Saldo dias vacaciones: " + saldoVacaciones.getSaldoDias()
                                         + ", dias efectivos: " + auxdata.getDiasEfectivosVacaciones();
                                 }
-                                if (doCreate.isThereError()){
-                                    mensajeFinal= "Error al crear registro "
-                                        + doCreate.getMsgError();
-                                }
+                                
                             }else{
                                 mensajeFinal= saldoVacaciones.getMensajeValidacion();
                             }
@@ -635,6 +659,8 @@ public class DetalleAusenciaController extends BaseServlet {
                                                     + "(usar nueva funcion setsaldodiasvacacionesasignadas). "
                                                     + "Run: "+ auxdata.getRutEmpleado());
                                                 detAusenciaBp.actualizaSaldosVacaciones(auxdata.getRutEmpleado());
+                                                
+                                                
                                             }
                                             
                                             DetalleAusenciaVO ausenciaPostUpdate = 
@@ -727,6 +753,8 @@ public class DetalleAusenciaController extends BaseServlet {
                                     + "Run: "+ detalle.getRutEmpleado());
                                 //DetalleAusenciaBp detAusenciaBp = new DetalleAusenciaBp(appProperties);
                                 detAusenciaBp.actualizaSaldosVacaciones(detalle.getRutEmpleado());
+                                
+                               
                             }
                             //Convert Java Object to Json
                             String json=gson.toJson(auxdata);					
@@ -935,6 +963,79 @@ public class DetalleAusenciaController extends BaseServlet {
         }
        
         return saldoVacaciones;
+    }
+    
+    /**
+    * Insertar ausencia=Vacacion
+    */
+    private MaintenanceVO insertarVacacion(HttpServletRequest _request,
+            PropertiesVO _appProperties,
+            HashMap<String, Double> _parametrosSistema,
+            UsuarioVO _userConnected, 
+            DetalleAusenciaVO _ausencia){
+       
+        System.out.println("[DetalleAusenciaController.insertarVacacion]"
+            + "Insertar detalle ausencia (VACACION)");
+        VacacionesBp vacaciones = new VacacionesBp(_appProperties);
+        
+        DiasEfectivosVacacionesVO objDE = vacaciones.getDesgloseDiasVacaciones(_ausencia);
+        _ausencia.setDiasEfectivosVBA(objDE.getDiasEfectivosVBA());
+        _ausencia.setDiasEfectivosVP(objDE.getDiasEfectivosVP());
+        _ausencia.setSaldoVBAPreVacaciones(objDE.getSaldoVBAPreVacaciones());
+        _ausencia.setSaldoVPPreVacaciones(objDE.getSaldoVPPreVacaciones());
+        _ausencia.setSaldoVBAPostVacaciones(objDE.getSaldoVBAPostVacaciones());
+        _ausencia.setSaldoVPPostVacaciones(objDE.getSaldoVPPostVacaciones());
+                
+        String mensajeFinal = null;
+        DetalleAusenciaBp ausenciasBp   = new DetalleAusenciaBp(_appProperties);
+//        VacacionesBp vacacionesBp       = new VacacionesBp(_appProperties);
+//        VacacionesVO saldoVacaciones = new VacacionesVO();
+                
+        MaintenanceEventVO resultado=new MaintenanceEventVO();
+        resultado.setUsername(_userConnected.getUsername());
+        resultado.setDatetime(new Date());
+        resultado.setUserIP(_request.getRemoteAddr());
+        resultado.setType("DAU");
+        resultado.setEmpresaIdSource(_userConnected.getEmpresaId());
+                                        
+        resultado.setRutEmpleado(_ausencia.getRutEmpleado());
+        System.out.println("[DetalleAusenciaController.insertarVacacion]"
+            + "Insertar detalle ausencia (VACACION)");
+        MaintenanceVO doCreate = ausenciasBp.insertaVacacion(_ausencia, resultado);
+        
+        if (doCreate.isThereError()){
+            mensajeFinal= "Error al insertar vacacion " + doCreate.getMsgError();
+            doCreate.setMsg(mensajeFinal);
+        }else{
+            System.out.println("[DetalleAusenciaController."
+                + "insertarVacacion]"
+                + "Actualizar saldos de vacaciones "
+                + "en tabla detalle_ausencia (usar nueva funcion setsaldodiasvacacionesasignadas). "
+                + "Run: "+ _ausencia.getRutEmpleado());
+            ausenciasBp.actualizaSaldosVacaciones(_ausencia.getRutEmpleado());
+            
+            System.out.println("[DetalleAusenciaController."
+                + "insertarVacacion]"
+                + "Actualizar saldos de vacaciones "
+                + "en tabla detalle_ausencia (usar nueva funcion setsaldodiasvacacionesasignadas_vba). "
+                + "Run: "+ _ausencia.getRutEmpleado());
+            ausenciasBp.actualizaSaldosVacacionesVBA(_ausencia.getRutEmpleado());
+                        
+            //Actualizar saldos en tabla vacaciones: columnas saldo_dias_vba y saldo_dias_vp
+            System.out.println("[DetalleAusenciaController."
+                + "insertarVacacion]"
+                + "Actualizar saldos en tabla vacaciones: columnas saldo_dias_vba y saldo_dias_vp");
+            VacacionesVO objVacaciones = new VacacionesVO();
+            objVacaciones.setEmpresaId(_ausencia.getEmpresaId());
+            objVacaciones.setRutEmpleado(_ausencia.getRutEmpleado());
+            objVacaciones.setSaldoDiasVBA(objDE.getSaldoVBAPostVacaciones());
+            objVacaciones.setSaldoDiasVP(objDE.getSaldoVPPostVacaciones());
+            vacaciones.updateSaldosVacacionesVBAyVP(objVacaciones);
+            
+        }
+        System.out.println("[DetalleAusenciaController.insertarVacacion]"
+            + "Saliendo del metodo OK.");
+        return doCreate;
     }
     
 }

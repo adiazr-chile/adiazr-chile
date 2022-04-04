@@ -1,0 +1,603 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.4.0.final using JasperReports Library version 6.4.1  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Blank_A4_Landscape_1" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="812" leftMargin="20" rightMargin="10" topMargin="10" bottomMargin="10" uuid="c41ff0b5-689a-4000-bfeb-4b8f357f8e90">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="GestionFemaseDb.xml"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="313"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="676"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<parameter name="rut" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
+	<parameter name="startDate" class="java.lang.String"/>
+	<parameter name="endDate" class="java.lang.String"/>
+	<parameter name="cargo" class="java.lang.String"/>
+	<parameter name="cod_interno" class="java.lang.String"/>
+	<parameter name="fecha_ingreso" class="java.lang.String"/>
+	<parameter name="cenco_id" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
+	<parameter name="cenco_nombre" class="java.lang.String"/>
+	<parameter name="rut_full" class="java.lang.String"/>
+	<parameter name="empresa_id" class="java.lang.String"/>
+	<parameter name="empresa_nombre" class="java.lang.String"/>
+	<parameter name="nombre" class="java.lang.String"/>
+	<parameter name="totalHrsPresenciales" class="java.lang.String"/>
+	<parameter name="totalHrsTrabajadas" class="java.lang.String"/>
+	<parameter name="totalHrsAusencia" class="java.lang.String"/>
+	<parameter name="diasTrabajados" class="java.lang.Integer"/>
+	<parameter name="diasAusente" class="java.lang.Integer">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
+	<parameter name="totalHrsAtraso" class="java.lang.String"/>
+	<parameter name="totalHrsExtras" class="java.lang.String"/>
+	<parameter name="totalHrsJustificadas" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
+	<parameter name="empresa_direccion" class="java.lang.String"/>
+	<parameter name="empresa_region" class="java.lang.String"/>
+	<parameter name="empresa_comuna" class="java.lang.String"/>
+	<parameter name="empresa_rut" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[select  detalle_asistencia.rut_empleado, 
+detalle_asistencia.fecha_marca_entrada,
+to_char(fecha_marca_entrada, 'TMDy dd/MM/yyyy') fecha_marca_entrada_str,
+ detalle_asistencia.hora_entrada,
+ to_char(hora_entrada, 'HH24:mi:ss') hora_entrada_str,
+ to_char(hora_salida, 'HH24:mi:ss') hora_salida_str,
+   detalle_asistencia.hora_salida ,
+   detalle_asistencia.horas_trabajadas ,
+    detalle_asistencia.minutos_trabajados ,
+     detalle_asistencia.minutos_atraso,
+     coalesce(detalle_asistencia.hrs_presenciales,'-') hrs_presenciales,
+     coalesce(detalle_asistencia.hrs_trabajadas,'-') hrs_trabajadas,
+     coalesce(detalle_asistencia.observacion,'-') observacion,
+      coalesce(detalle_asistencia.hrs_ausencia,'-') hrs_ausencia ,
+      coalesce(detalle_asistencia.autoriza_atraso,'N') autoriza_atraso,
+      coalesce(detalle_asistencia.autoriza_hrsextras,'N') autoriza_hrsextras,
+      coalesce(detalle_asistencia.hhmm_extras,'-') hhmm_extras,
+      coalesce(detalle_asistencia.hhmm_atraso,'-') hhmm_atraso,
+      to_char(hora_entrada_teorica, 'HH24:mi:ss') entrada_teorica,
+      to_char(hora_salida_teorica, 'HH24:mi:ss') salida_teorica,
+      coalesce(hhmm_justificadas,'-') hhmm_justificadas,
+      coalesce(hhmm_extras_autorizadas,'-') hhmm_extras_autorizadas,
+      CASE WHEN marca_entrada_comentario is not null THEN '*' ELSE '' END entrada_comentario,
+      CASE WHEN marca_salida_comentario is not null THEN '*'
+            WHEN fecha_marca_salida > fecha_marca_entrada THEN '+1'
+            ELSE ''
+        END salida_comentario,
+        detalle_asistencia.hrs_trabajadas 
+      -- CASE WHEN fecha_marca_salida > fecha_marca_entrada is true THEN '+1' ELSE '*' END salida_comentario
+     from detalle_asistencia 
+     where detalle_asistencia.rut_empleado = $P{rut} 
+     and to_char(fecha_marca_entrada, 'YYYY-MM-DD') between $P{startDate} and $P{endDate}]]>
+	</queryString>
+	<field name="rut_empleado" class="java.lang.String"/>
+	<field name="fecha_marca_entrada" class="java.sql.Date"/>
+	<field name="fecha_marca_entrada_str" class="java.lang.String"/>
+	<field name="hora_entrada" class="java.sql.Time"/>
+	<field name="hora_entrada_str" class="java.lang.String"/>
+	<field name="hora_salida_str" class="java.lang.String"/>
+	<field name="hora_salida" class="java.sql.Time"/>
+	<field name="horas_trabajadas" class="java.lang.Integer"/>
+	<field name="minutos_trabajados" class="java.lang.Integer"/>
+	<field name="minutos_atraso" class="java.lang.Integer"/>
+	<field name="hrs_presenciales" class="java.lang.String"/>
+	<field name="hrs_trabajadas" class="java.lang.String"/>
+	<field name="observacion" class="java.lang.String"/>
+	<field name="hrs_ausencia" class="java.lang.String"/>
+	<field name="autoriza_atraso" class="java.lang.String"/>
+	<field name="autoriza_hrsextras" class="java.lang.String"/>
+	<field name="hhmm_extras" class="java.lang.String"/>
+	<field name="hhmm_atraso" class="java.lang.String"/>
+	<field name="entrada_teorica" class="java.lang.String"/>
+	<field name="salida_teorica" class="java.lang.String"/>
+	<field name="hhmm_justificadas" class="java.lang.String"/>
+	<field name="hhmm_extras_autorizadas" class="java.lang.String"/>
+	<field name="entrada_comentario" class="java.lang.String"/>
+	<field name="salida_comentario" class="java.lang.String"/>
+	<field name="COLUMN_25" class="java.lang.String"/>
+	<sortField name="fecha_marca_entrada"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="107" splitType="Stretch">
+			<staticText>
+				<reportElement x="280" y="5" width="280" height="20" uuid="1cef8ee2-688f-45cc-9728-040f7f884f5b"/>
+				<textElement textAlignment="Center">
+					<font size="15"/>
+				</textElement>
+				<text><![CDATA[Asistencia por Persona]]></text>
+			</staticText>
+			<textField pattern="d/M/yyyy">
+				<reportElement x="691" y="5" width="100" height="15" uuid="1236af98-a7ef-49c4-a172-2b1a171efc4c"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="219" y="35" width="40" height="15" uuid="0aed59b0-afe7-4d4e-a370-91a3d1ee7cfa"/>
+				<textElement>
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[Desde]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="261" y="34" width="81" height="16" uuid="14e261bd-5479-4066-ad9c-a9017938f4dd"/>
+				<textFieldExpression><![CDATA[$P{startDate}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="356" y="35" width="40" height="15" uuid="da4173fa-8ee1-48e7-9b63-810b80951e67"/>
+				<textElement>
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[Hasta]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="399" y="35" width="80" height="15" uuid="58bdf9ed-05ec-4489-a2e5-424b1d2d3ca2"/>
+				<textFieldExpression><![CDATA[$P{endDate}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="381" y="55" width="418" height="15" uuid="55e092db-0b25-4775-9b40-e67ced191c33"/>
+				<textElement>
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[+1 = Marca Día Siguiente (hace referencia a una entrada o salida al día siguiente).]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="381" y="70" width="208" height="15" uuid="42f2a2d7-8897-4182-853e-4ceb3aff8f75"/>
+				<textElement>
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[* = Marca Manual o Modificada.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="580" y="5" width="110" height="15" uuid="0e35197f-bc3e-4e39-861c-45637dcf8b2f"/>
+				<textElement>
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[Fecha Impresión: ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="-9" y="0" width="210" height="16" uuid="8e4d9cdb-8ad7-423b-813c-69523c0a034e"/>
+				<textFieldExpression><![CDATA[$P{empresa_nombre}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="-9" y="18" width="211" height="15" uuid="8ae35630-3f67-4c12-a564-397ea1ea0734"/>
+				<textFieldExpression><![CDATA[$P{empresa_direccion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="33" y="34" width="159" height="16" uuid="d3b16f2a-b4e9-4202-ac0d-e2ab372cf769"/>
+				<textFieldExpression><![CDATA[$P{empresa_region}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="-9" y="52" width="210" height="14" uuid="c04b480d-67da-46fb-95c9-6e23030dade0"/>
+				<textFieldExpression><![CDATA[$P{empresa_comuna}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="-9" y="68" width="208" height="13" uuid="a0c4af41-5690-4fa5-a54a-fdc00d54dd60"/>
+				<textFieldExpression><![CDATA[$P{empresa_rut}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="-9" y="35" width="42" height="15" uuid="d7f97a76-0a98-45a9-8b54-479b898c077f"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Región : ]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement x="-11" y="1" width="98" height="15" uuid="8161b9cc-5359-4683-8ed0-b9b35848b538"/>
+				<textElement>
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[Area de Negocio : ]]></text>
+			</staticText>
+			<line>
+				<reportElement x="-11" y="50" width="811" height="1" uuid="0837af6d-a3f0-4b0c-b198-b2f0a69902bb"/>
+			</line>
+			<staticText>
+				<reportElement x="328" y="2" width="98" height="15" uuid="6c3a9228-2952-4af4-b42c-8a3867dcb634"/>
+				<textElement>
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[Centro de Costo : ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-12" y="16" width="98" height="15" uuid="89e812a8-cc98-45f6-b0fc-4c843d059b59"/>
+				<textElement>
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[Nombre : ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-13" y="32" width="98" height="15" uuid="ddac7972-dd32-4d8c-a961-9fb1b0cdeb50"/>
+				<textElement>
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[Cargo : ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="376" y="15" width="45" height="15" uuid="5521f5c1-3a7f-4a4e-bd0d-6047e86c552e"/>
+				<textElement>
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[Ficha : ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="558" y="16" width="45" height="15" uuid="97f8af63-681e-4c50-85fc-6895602267c3"/>
+				<textElement>
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[R.U.T : ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="375" y="30" width="86" height="15" uuid="b4f9a3ed-a527-4826-ad51-587cb8934012"/>
+				<textElement>
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[Fecha Ingreso : ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="176" y="0" width="144" height="16" uuid="43e58d27-fba6-4f84-a64f-9511f5d2cd28"/>
+				<textFieldExpression><![CDATA[$P{empresa_nombre}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="87" y="0" width="83" height="16" uuid="f3c1bcfc-02ac-446c-842d-9fe59c3a167b"/>
+				<textFieldExpression><![CDATA[$P{empresa_id}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="425" y="1" width="70" height="14" uuid="d47dcf36-66f3-41c6-9990-caaf9e3ab56e"/>
+				<textFieldExpression><![CDATA[$P{cenco_id}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="497" y="2" width="285" height="14" uuid="829f3a38-32ef-4b41-92c3-d20fb30adbe4"/>
+				<textFieldExpression><![CDATA[$P{cenco_nombre}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="87" y="13" width="280" height="17" uuid="322fe952-7609-4c9c-8392-ec77dc1d157a"/>
+				<textFieldExpression><![CDATA[$P{nombre}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="87" y="30" width="273" height="16" uuid="4f1981fc-9a97-407a-8dcb-28a7c9ba65e5"/>
+				<textFieldExpression><![CDATA[$P{cargo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="425" y="16" width="125" height="16" uuid="622630fb-13f0-4f0d-94cd-fcba7e5efabb"/>
+				<textFieldExpression><![CDATA[$P{cod_interno}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="464" y="29" width="111" height="15" uuid="8e047c07-4cf4-41b5-9164-2de43ef21dfb"/>
+				<textFieldExpression><![CDATA[$P{fecha_ingreso}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="604" y="15" width="98" height="16" uuid="e7202a83-2f2c-46a6-b52a-d6185be71a44"/>
+				<textFieldExpression><![CDATA[$P{rut_full}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="688" y="32" width="22" height="17" uuid="8851d2a1-b322-4e04-9430-7a74cd681acb"/>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="638" y="32" width="50" height="17" uuid="b8691ff3-79ea-4cf3-8f90-7649c9405e4c"/>
+				<text><![CDATA[Página]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="714" y="32" width="20" height="17" uuid="7eef052b-1e9d-45f1-bb12-b710e9a4e9f3"/>
+				<text><![CDATA[de]]></text>
+			</staticText>
+			<textField evaluationTime="Report">
+				<reportElement x="737" y="33" width="31" height="16" uuid="876260d6-85b6-4062-a383-da98668f71a1"/>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="220" y="52" width="50" height="19" uuid="5378865f-3498-4370-820f-2495cc50623f"/>
+				<textElement>
+					<font size="7" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Horas Pres.]]></text>
+			</staticText>
+			<line>
+				<reportElement x="-11" y="72" width="811" height="5" uuid="f1dd8d07-100f-41f3-8253-8e9b099676eb"/>
+			</line>
+			<staticText>
+				<reportElement x="394" y="53" width="42" height="18" uuid="eea467e1-8285-4d1b-8d6e-2cba0dc3e841"/>
+				<textElement>
+					<font size="7" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Horas no Trabajadas]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="497" y="55" width="291" height="13" uuid="a4b66411-5275-4976-aad0-c8009f8bbcdc"/>
+				<textElement>
+					<font size="7" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Observación]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="143" y="51" width="36" height="20" uuid="8eddf2c6-9a1b-4896-932d-7418292dc922"/>
+				<textElement>
+					<font size="7" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Entrada Teórica]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="179" y="52" width="39" height="19" uuid="aabfee01-bf9a-4274-8667-839856009dd0"/>
+				<textElement>
+					<font size="7" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Salida Teórica]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="271" y="53" width="30" height="13" uuid="fca4bd0d-d5d6-41cf-8c9a-581ff500d776"/>
+				<textElement>
+					<font size="7" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Atraso]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="347" y="53" width="42" height="18" uuid="dccf2468-ea9d-4d34-aa06-b521fe87b118"/>
+				<textElement>
+					<font size="7" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Hrs extras Auto.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="303" y="53" width="42" height="18" uuid="f3aaddc9-a5a8-4782-97c1-c32aab9fbe14"/>
+				<textElement>
+					<font size="7" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Horas Justif.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="443" y="53" width="42" height="18" uuid="7fc07913-4f78-4a8c-9642-6b8af2db50ae"/>
+				<textElement>
+					<font size="7" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Total del día]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch">
+			<staticText>
+				<reportElement x="-8" y="-26" width="56" height="13" uuid="c7d97a26-04a9-45e8-acfe-444d761ea5e6"/>
+				<textElement>
+					<font size="7" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Fecha]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="96" y="-26" width="33" height="13" uuid="d0daed0e-e95c-4107-9d15-a63cacfdf589"/>
+				<textElement>
+					<font size="7" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Salida]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="52" y="-26" width="33" height="13" uuid="dd55c7bd-f57d-4a75-9e05-fb7de6a888c5"/>
+				<textElement>
+					<font size="7" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Entrada]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="14" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<textField>
+				<reportElement x="-8" y="1" width="58" height="9" uuid="1cf63d85-8fc3-47b4-a29e-d30b95a22d37"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fecha_marca_entrada_str}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="52" y="1" width="28" height="9" uuid="ac223b78-39cb-4231-9b6e-11f75c6dcf1b"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{hora_entrada_str}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="95" y="1" width="38" height="9" uuid="0d55ef6e-112d-4df6-8d06-5204f73c1df9"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{hora_salida_str}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="226" y="1" width="31" height="9" uuid="b58d5dc1-584d-4332-8a7d-f7be32da6bf0"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{hrs_presenciales}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="497" y="1" width="299" height="9" uuid="b3b24e3f-a687-414a-903f-e25f27b37cd5"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{observacion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="393" y="1" width="43" height="9" uuid="8011d877-0871-4a38-b99d-10cfcb1c1567"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{hrs_ausencia}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="147" y="1" width="30" height="9" uuid="b596af0a-03c4-410f-ab97-864780571bf5">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{entrada_teorica}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="181" y="1" width="39" height="9" uuid="fd8f3c86-adb4-43ae-a540-918361111320"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{salida_teorica}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="269" y="1" width="32" height="9" uuid="df5351b8-b33b-42e9-8574-eaf1e2efe513"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{hhmm_atraso}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="304" y="1" width="32" height="9" uuid="a7cc5232-9cbc-4722-bd09-452649f170dc"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{hhmm_justificadas}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="345" y="-1" width="44" height="12" uuid="8fbedbf0-db48-4cf1-80a5-b7f23cdea085"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{hhmm_extras_autorizadas}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="81" y="1" width="7" height="9" uuid="406f0fac-d2ca-4cd3-8166-d48a10cef823"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{entrada_comentario}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="127" y="1" width="12" height="9" uuid="22cb81bd-5e13-4eba-8104-a155ffc291c1"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{salida_comentario}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="443" y="1" width="51" height="9" uuid="885b539a-c4ea-4f01-b1dd-07f6c2be07d4">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{hrs_trabajadas}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="6" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="6" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="100" splitType="Stretch">
+			<line>
+				<reportElement x="-11" y="4" width="811" height="1" uuid="2b01a0f4-5c51-432c-b63d-11a35fdd9401"/>
+			</line>
+			<staticText>
+				<reportElement x="7" y="6" width="98" height="14" uuid="4ee1b68c-3ffe-4526-9ee4-e9204390d57b"/>
+				<textElement>
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[Totales]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="215" y="8" width="46" height="14" uuid="1e0adc86-60f0-4c7c-be8d-2cef2d9aec7b"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{totalHrsPresenciales}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="391" y="8" width="46" height="12" uuid="a7ae269f-740b-4c65-a682-c9ea5aeeca02"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{totalHrsAusencia}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="7" y="30" width="123" height="15" uuid="ef6ddc5b-59c5-4b8b-b627-206c1411e731"/>
+				<textElement>
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[Total días trabajados :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="7" y="49" width="123" height="15" uuid="3ac58d2a-7a4f-40db-b750-833626077bc3"/>
+				<textElement>
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[Total días ausentes :]]></text>
+			</staticText>
+			<textField pattern="#,##0.###;(#,##0.###-)">
+				<reportElement x="134" y="31" width="100" height="16" uuid="2f64475e-b460-4313-9736-a491783eeebf"/>
+				<textFieldExpression><![CDATA[$P{diasTrabajados}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.###;(#,##0.###-)">
+				<reportElement x="134" y="48" width="100" height="16" uuid="8926353c-e4df-4f2f-9533-f256dbb80d01"/>
+				<textFieldExpression><![CDATA[$P{diasAusente}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="349" y="82" width="171" height="1" uuid="9f7d9a19-302e-4d3b-abef-53cd571c1d52"/>
+			</line>
+			<staticText>
+				<reportElement x="385" y="84" width="98" height="15" uuid="d03c4ee9-310e-4e37-874b-3307bd9d6266"/>
+				<textElement>
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[V° B° Jefe Directo]]></text>
+			</staticText>
+			<line>
+				<reportElement x="574" y="83" width="171" height="1" uuid="eaf476c5-96f9-4792-9835-2eb1dd054e77"/>
+			</line>
+			<staticText>
+				<reportElement x="610" y="85" width="98" height="15" uuid="b34a6ddb-7f9d-44cf-8c7b-1ff2500cd1f8"/>
+				<textElement>
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[V° B° Trabajador]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="262" y="8" width="38" height="13" uuid="fc24b84a-e6a8-4e9f-a9a9-680f90a171bf"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{totalHrsAtraso}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="345" y="8" width="32" height="12" uuid="2620aad4-6a35-43b1-8740-6f61e19674da"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{totalHrsExtras}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="304" y="8" width="31" height="12" uuid="1ead03ae-b41e-42c2-a2f1-1b771c764810"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{totalHrsJustificadas}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="441" y="8" width="46" height="12" uuid="54faf32e-b1c5-4f67-baa2-f75d09938d4b">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{totalHrsTrabajadas}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

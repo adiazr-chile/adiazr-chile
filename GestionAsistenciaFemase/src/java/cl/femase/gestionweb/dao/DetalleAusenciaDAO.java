@@ -343,9 +343,10 @@ public class DetalleAusenciaDAO extends BaseDAO{
     }
     
     /**
-    * Hace update de las columnas:
-    *   detalle_ausencia.saldo_dias_vacaciones_asignadas y
-    *   detalle_ausencia.dias_acumulados_vacaciones_asignadas
+    * Completa los campos:
+    *  detalle_ausencia.saldo_dias_vacaciones_asignadas y 
+    *  detalle_ausencia.dias_acumulados_vacaciones_asignadas 
+    * a partir del valor existente en el campo dias_efectivos_vacaciones.
     * 
     * @param _runEmpleado
     * @return 
@@ -406,6 +407,79 @@ public class DetalleAusenciaDAO extends BaseDAO{
             } catch (SQLException ex) {
                 System.err.println("[DetalleAusenciaDAO."
                     + "actualizaSaldosVacaciones]"
+                    + "Error: " + ex.toString());
+            }
+        }
+        
+        return objresultado;
+    }
+    
+    /*
+    **
+    * Completa los campos:
+    *    detalle_ausencia.saldo_vba_pre_vacaciones y 
+    *    detalle_ausencia.saldo_vba_post_vacaciones 
+    *  a partir del valor existente en el campo dias_efectivos_vba.
+    * 
+    * @param _runEmpleado
+    * @return 
+    */
+    public MaintenanceVO actualizaSaldosVacacionesVBA(String _runEmpleado){
+        MaintenanceVO objresultado = new MaintenanceVO();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        int result=0;
+        
+        String msgError = "Error al actualizar saldos de "
+            + "vacaciones en tabla detalle_ausencia"
+            + ", run: " + _runEmpleado;
+              
+        String msgFinal = "Actualiza saldos de "
+            + "vacaciones en tabla detalle_ausencia."
+            + ", runEmpleado [" + _runEmpleado + "]";
+       
+        try{
+            
+            objresultado.setMsg(msgFinal);
+            /**
+             * Ejemplo:
+             * SELECT setsaldodiasvacacionesasignadas_vba('11111111-1');
+             */
+            String sql = "SELECT setsaldodiasvacacionesasignadas_vba"
+                    + "('" + _runEmpleado + "') strjson";
+
+            System.out.println("[DetalleAusenciaDAO."
+                + "actualizaSaldosVacacionesVBA]Sql: "+sql);
+            
+            dbConn = dbLocator.getConnection(m_dbpoolName,"[DetalleAusenciaDAO."
+                    + "actualizaSaldosVacacionesVBA]");
+            ps = dbConn.prepareStatement(sql);
+            rs = ps.executeQuery();
+
+            String salidaSp = "";
+            if (rs.next()) {
+                salidaSp = rs.getString("strjson");
+            }
+            objresultado.setMsgFromSp(salidaSp);
+            
+            ps.close();
+            rs.close();
+            dbLocator.freeConnection(dbConn);
+        }catch(SQLException|DatabaseException sqle){
+            System.err.println("[DetalleAusenciaDAO."
+                + "actualizaSaldosVacacionesVBA]"
+                + "Error al actualizar saldos de vacaciones vba:" + sqle.toString());
+            objresultado.setThereError(true);
+            objresultado.setCodError(result);
+            objresultado.setMsgError(msgError+" :"+sqle.toString());
+        }finally{
+            try {
+                if (ps != null) ps.close();
+                if (rs != null) rs.close();
+                dbLocator.freeConnection(dbConn);
+            } catch (SQLException ex) {
+                System.err.println("[DetalleAusenciaDAO."
+                    + "actualizaSaldosVacacionesVBA]"
                     + "Error: " + ex.toString());
             }
         }

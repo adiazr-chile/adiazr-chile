@@ -251,11 +251,31 @@ public class DetalleAusenciaBp {
         return insValues;
     }
     
+    /**
+    * Invoca funcion setsaldodiasvacacionesasignadas
+    * @param _runEmpleado
+    * @return 
+    */
     public MaintenanceVO actualizaSaldosVacaciones(String _runEmpleado){
         MaintenanceVO updValues = detAusenciaDao.actualizaSaldosVacaciones(_runEmpleado);
         return updValues;
     }
     
+    /**
+    * Invoca funcion setsaldodiasvacacionesasignadas_vba
+    * @param _runEmpleado
+    * @return 
+    */
+    public MaintenanceVO actualizaSaldosVacacionesVBA(String _runEmpleado){
+        MaintenanceVO updValues = detAusenciaDao.actualizaSaldosVacacionesVBA(_runEmpleado);
+        return updValues;
+    }
+    
+    /**
+    * 
+    * @param _correlativo
+    * @return 
+    */
     public DetalleAusenciaVO getDetalleAusenciaByCorrelativo(
             int _correlativo){
         return detAusenciaDao.getDetalleAusenciaByCorrelativo(_correlativo);
