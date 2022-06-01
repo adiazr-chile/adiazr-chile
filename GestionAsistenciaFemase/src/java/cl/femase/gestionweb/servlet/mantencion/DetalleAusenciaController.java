@@ -140,7 +140,7 @@ public class DetalleAusenciaController extends BaseServlet {
             //Fetch Data from User Table
             int startPageIndex      = 0;
             int numRecordsPerPage   = 10;
-            String jtSorting        = "detalle_ausencia.fecha_inicio asc";
+            String jtSorting        = "detalle_ausencia.fecha_inicio desc";
             /** filtros de busqueda */
             String rutEmpleado=null;
             String rutAutorizador=null; 
@@ -331,10 +331,12 @@ public class DetalleAusenciaController extends BaseServlet {
                     + " mostrando detalles ausencias...");
                 int intCenco = -1;
                 
-                System.out.println("[DetalleAusenciaController]"
+                System.out.println("[DetalleAusenciaController]Mostrar ausencias."
                     + "empresa: " + paramEmpresa
-                    +", depto: " + paramDepto
-                    +", cenco: " + cencoId);
+                    + ", depto: " + paramDepto
+                    + ", cenco: " + cencoId
+                    + ", runEmpleado: " + rutEmpleado
+                    + ", ausenciaId: " + ausenciaId);
                 
                 if (cencoId != null){
                     intCenco = Integer.parseInt(cencoId);
@@ -347,26 +349,44 @@ public class DetalleAusenciaController extends BaseServlet {
                         && (paramDepto != null && paramDepto.compareTo("-1") != 0
                             && (request.getParameter("paramRutEmpleado") != null && request.getParameter("paramRutEmpleado").compareTo("-1") != 0))
                         && (intCenco != -1) ){
-                            listaObjetos = detAusenciaBp.getDetallesAusencias(source,
+                        
+                            if (source != null && source.compareTo("adm_pa") == 0){
+                                listaObjetos = detAusenciaBp.getPermisosAdministrativos(source,
                                     rutEmpleado,
-                                rutAutorizador, 
-                                fechaIngresoInicio, 
-                                fechaIngresoFin,
-                                ausenciaId,
-                                startPageIndex, 
-                                numRecordsPerPage, 
-                                jtSorting);
-
+                                    rutAutorizador, 
+                                    fechaIngresoInicio, 
+                                    fechaIngresoFin,
+                                    startPageIndex, 
+                                    numRecordsPerPage, 
+                                    jtSorting);
+                            }else{
+                                listaObjetos = detAusenciaBp.getDetallesAusencias(source,
+                                    rutEmpleado,
+                                    rutAutorizador, 
+                                    fechaIngresoInicio, 
+                                    fechaIngresoFin,
+                                    ausenciaId,
+                                    startPageIndex, 
+                                    numRecordsPerPage, 
+                                    jtSorting);
+                            }
                             session.setAttribute("detalleAusencias|"+userConnected.getUsername(), listaObjetos);
 
                             //Get Total Record Count for Pagination
-                            rowsCount = detAusenciaBp.getDetallesAusenciasCount(source, 
-                                rutEmpleado,
-                                rutAutorizador, 
-                                fechaIngresoInicio, 
-                                fechaIngresoFin,
-                                ausenciaId);
-                            
+                            if (source != null && source.compareTo("adm_pa") == 0){
+                                rowsCount = detAusenciaBp.getPermisosAdministrativosCount(source, 
+                                    rutEmpleado,
+                                    rutAutorizador, 
+                                    fechaIngresoInicio, 
+                                    fechaIngresoFin);
+                            }else{    
+                                rowsCount = detAusenciaBp.getDetallesAusenciasCount(source, 
+                                    rutEmpleado,
+                                    rutAutorizador, 
+                                    fechaIngresoInicio, 
+                                    fechaIngresoFin,
+                                    ausenciaId);
+                            }
                             //agregar evento al log.
                             resultado.setEmpresaId(paramEmpresa);
                             resultado.setDeptoId(paramDepto);

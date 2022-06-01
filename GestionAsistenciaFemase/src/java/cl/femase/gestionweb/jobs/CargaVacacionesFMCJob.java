@@ -5,7 +5,6 @@
  */
 package cl.femase.gestionweb.jobs;
         
-import cl.femase.gestionweb.common.GetPropertyValues;
 import cl.femase.gestionweb.dao.ProcesosDAO;
 import cl.femase.gestionweb.dao.VacacionesDAO;
 import cl.femase.gestionweb.vo.MaintenanceVO;

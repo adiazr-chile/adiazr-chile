@@ -81,7 +81,7 @@ public class UserAuth extends BaseServlet {
         LogErrorVO log      = new LogErrorVO();
         
         try {
-            System.out.println("\n[UserAuth]Intentando login para "
+            System.out.println("\n[PortalInf.UserAuth]Intentando login para "
                 + "username: "+ request.getParameter("username"));
                 
             SimpleDateFormat fechaFmt = new SimpleDateFormat("yyyy-MM-dd");
@@ -109,14 +109,14 @@ public class UserAuth extends BaseServlet {
             userBp.openDbConnection();
             UsuarioVO userOk = userBp.getLogin(user);
             
-            System.out.println("[UserAuth]Intentando Autenticar "
+            System.out.println("[PortalInf.UserAuth]Intentando Autenticar "
                 + "usuario: " + user.getUsername());
             
             if (userOk != null){
                 log.setUserName(userOk.getUsername());
                 log.setIp(request.getRemoteAddr());
                 
-                System.out.println("[UserAuth]Autenticando "
+                System.out.println("[PortalInf.UserAuth]Autenticando "
                     + "usuario: " + user.getUsername()
                     + ", perfil_usuario: " + user.getNomPerfil());
                 
@@ -125,7 +125,7 @@ public class UserAuth extends BaseServlet {
                 //Setea maximo tiempo de inactividad (en segundos)
                 session.setMaxInactiveInterval(30 * 60);//30 minutos
                 Date expiry = new Date(session.getLastAccessedTime() + session.getMaxInactiveInterval()*1000);
-                System.out.println("[UserAuth]La sesion expira el: " + expiry);
+                System.out.println("[PortalInf.UserAuth]La sesion expira el: " + expiry);
                 
                 AusenciaBp ausenciasBp = new AusenciaBp(appProperties);    
                 CargoBp cargosBp = new CargoBp(appProperties);
@@ -172,7 +172,7 @@ public class UserAuth extends BaseServlet {
                 session.setAttribute("modulosSistema", userBp.getModulosSistemaByPerfilUsuario(userOk.getIdPerfil()));
                 session.setAttribute("usuarioObj", userOk);
                 session.setAttribute("user"+request.getParameter("username"), userOk.getUsername());
-                System.out.println("[UserAuth]Usuario conectado, "
+                System.out.println("[PortalInf.UserAuth]Usuario conectado, "
                     + "username: " + userOk.getUsername()
                     + ", hora conexion: " + userOk.getHoraConexion()
                     + ", marcacion_virtual? " + userOk.getMarcacionVirtual());
@@ -185,11 +185,11 @@ public class UserAuth extends BaseServlet {
                 session.setAttribute("path_images", appProperties.getImagesPath());
                 
                 if (userOk.getCencos().isEmpty()){
-                    System.out.println("[UserAuth]Setear lista de cencos del usuario "
+                    System.out.println("[PortalInf.UserAuth]Setear lista de cencos del usuario "
                         + "en sesion...");
                     userOk.setCencos(userBp.getCencosUsuario(userOk));
                 }
-                System.out.println("[UserAuth]Obtener lista "
+                System.out.println("[PortalInf.UserAuth]Obtener lista "
                     + "de empresas en sesion...");
                 List<EmpresaVO> listaEmpresas = empresasBp.getEmpresas(userOk, null, 0, 0, "empresa_nombre");
                 LinkedHashMap<String,List<DepartamentoVO>> allDeptos = new LinkedHashMap<>();
@@ -200,15 +200,15 @@ public class UserAuth extends BaseServlet {
                 AfpDAO afpdao = new AfpDAO(appProperties);
                 session.setAttribute("afps", afpdao.getAfps());
 
-                System.out.println("[UserAuth]Obtener una lista "
+                System.out.println("[PortalInf.UserAuth]Obtener una lista "
                     + "con los departamentos para cada empresa existente");
                 //iterar empresas y obtener un Linkedhash con los departamentos para cada empresa existente
                 for (EmpresaVO itEmpresa : listaEmpresas) {
-                    System.out.println("[UserAuth]Carga departamentos para empresaID: "+itEmpresa.getId());
+                    System.out.println("[PortalInf.UserAuth]Carga departamentos para empresaID: "+itEmpresa.getId());
                     allDeptos.put(itEmpresa.getId(), deptosBp.getDepartamentosEmpresa(userOk, itEmpresa.getId()));
                 }
                     
-                System.out.println("[UserAuth]Obtener una lista "
+                System.out.println("[PortalInf.UserAuth]Obtener una lista "
                     + "con los centros de costo para cada departatamento existente");
                 cencosBp.openDbConnection();
                 //iterar departamentos y obtener una lista con los centro de costo existente para cada departamento
@@ -247,7 +247,7 @@ public class UserAuth extends BaseServlet {
                     turnoRotativoBp.getTurnos(userOk.getEmpresaId(), null,0, 0, "nombre_turno"));
                                 
                 /** cargar lista de tipos de marcas manuales */
-                System.out.println("[UserAuth]Cargar en sesion "
+                System.out.println("[PortalInf.UserAuth]Cargar en sesion "
                     + "lista de tipos de marcas manuales...");
 
                 session.setAttribute("tiposMarcasManuales", 
@@ -272,6 +272,8 @@ public class UserAuth extends BaseServlet {
                     tiposAusencias.getTipos(null, 0, 0, "tp_ausencia_nombre"));
                     
                 /** a ser usados en jsp detalle_ausencias*/
+                System.out.println("[PortalInf.UserAuth]Cargar en sesion "
+                    + "lista de autorizadores de ausencias...");
                 session.setAttribute("autorizadores", 
                     autorizaAusenciaBp.getAutorizadoresDisponibles(userOk));
 
@@ -295,7 +297,7 @@ public class UserAuth extends BaseServlet {
                 /** cargar lista de perfiles de usuario en sesion */
                 session.setAttribute("perfiles", 
                     perfilusuarioBp.getPerfilesByUsuario(userOk));
-                System.out.println("[UserAuth]Carga lista de usuarios en sesion");
+                System.out.println("[PortalInf.UserAuth]Carga lista de usuarios en sesion");
                 /** cargar lista de de usuario en sesion */
                 session.setAttribute("usuarios", 
                     userBp.getUsuarios(null,null,null,
@@ -305,14 +307,14 @@ public class UserAuth extends BaseServlet {
                 //Cargar cencos a los cuales tiene acceso el usuario
                 List<UsuarioCentroCostoVO> cencosEmpleado = new ArrayList<>();
                 if (userOk.getIdPerfil() != Constantes.ID_PERFIL_SUPER_ADMIN){//solo el perfil usuario empleado
-                    System.out.println("[UserAuth]Usuario Normal. "
+                    System.out.println("[PortalInf.UserAuth]Usuario Normal. "
                         + "Cargar todos los centros de costo de "
                         + "la empresa del usuario conectado: "
                         + "[usuario, empresa] = [" + userOk.getUsername() 
                         + "," + userOk.getEmpresaId() + "]");
                     cencosEmpleado = userBp.getCencosUsuario(userOk);
                 }else{
-                    System.out.println("[UserAuth]Usuario Super Admin. "
+                    System.out.println("[PortalInf.UserAuth]Usuario Super Admin. "
                         + "Cargar todos los centros de costo del Sistema");
                     cencosEmpleado = cencosBp.getAllCentrosCosto(userOk.getUsername());
                 }
@@ -323,25 +325,34 @@ public class UserAuth extends BaseServlet {
                 session.setAttribute("errores_rechazos", 
                     codErrorRechazoBp.getCodigos(null, 0, 0, "cod_error_rechazo"));
                 
+                //****************************************************************
+                //****************************************************************
+                System.out.println("[PortalInf.UserAuth]Seteo de parametros "
+                    + "de Sistema para la empresa: " + userOk.getEmpresaId());
+                
                 ParametroBp parametroBp  = new ParametroBp(null);
-                HashMap<String, Double> parametrosSistema = new HashMap<>();
+                HashMap<String, Double> parametrosSistema = parametroBp.getParametrosEmpresa(userOk.getEmpresaId());
                 
-                ParametroVO parametro = parametroBp.getParametroByKey(userOk.getEmpresaId(), "factor_vacaciones");
-                if (parametro != null) parametrosSistema.put("factor_vacaciones", parametro.getValor());
-
-                parametro = parametroBp.getParametroByKey(userOk.getEmpresaId(), "min_meses_cotizando");
-                if (parametro != null) parametrosSistema.put("min_meses_cotizando", parametro.getValor());
-                
-                parametro = parametroBp.getParametroByKey(userOk.getEmpresaId(), "n_meses_add_vac_prog");
-                if (parametro != null) parametrosSistema.put("n_meses_add_vac_prog", parametro.getValor());
-
-                parametro = parametroBp.getParametroByKey(userOk.getEmpresaId(), "factor_vac_zona_extrema");
-                if (parametro != null) parametrosSistema.put("factor_vac_zona_extrema", parametro.getValor());
-                
-                parametro = parametroBp.getParametroByKey(userOk.getEmpresaId(), "factor_vac_especiales");
-                if (parametro != null) parametrosSistema.put("factor_vac_especiales", parametro.getValor());
+//                HashMap<String, Double> parametrosSistema = new HashMap<>();
+//                
+//                ParametroVO parametro = parametroBp.getParametroByKey(userOk.getEmpresaId(), "factor_vacaciones");
+//                if (parametro != null) parametrosSistema.put("factor_vacaciones", parametro.getValor());
+//
+//                parametro = parametroBp.getParametroByKey(userOk.getEmpresaId(), "min_meses_cotizando");
+//                if (parametro != null) parametrosSistema.put("min_meses_cotizando", parametro.getValor());
+//                
+//                parametro = parametroBp.getParametroByKey(userOk.getEmpresaId(), "n_meses_add_vac_prog");
+//                if (parametro != null) parametrosSistema.put("n_meses_add_vac_prog", parametro.getValor());
+//
+//                parametro = parametroBp.getParametroByKey(userOk.getEmpresaId(), "factor_vac_zona_extrema");
+//                if (parametro != null) parametrosSistema.put("factor_vac_zona_extrema", parametro.getValor());
+//                
+//                parametro = parametroBp.getParametroByKey(userOk.getEmpresaId(), "factor_vac_especiales");
+//                if (parametro != null) parametrosSistema.put("factor_vac_especiales", parametro.getValor());
                                 
                 session.setAttribute("parametros_sistema", parametrosSistema);
+                appProperties.setParametrosSistema(parametrosSistema);
+                application.setAttribute("appProperties", appProperties);
                 
                 List<ProveedorCorreoVO> proveedoresCorreo = proveedorMailDao.getProveedores(null, 0, 0, "provider_domain");
                 session.setAttribute("proveedores_correo", proveedoresCorreo);
@@ -356,7 +367,7 @@ public class UserAuth extends BaseServlet {
                                 userOk.getUsername());
                         String deptoId  = infoEmpleado.getDeptoId();
                         int cencoId     = infoEmpleado.getCencoId();
-                        System.out.println("[UserAuth]Usuario empleado autenticado. "
+                        System.out.println("[PortalInf.UserAuth]Usuario empleado autenticado. "
                             + "deptoId: " + deptoId 
                             + ", cencoId: " + cencoId);
                         CentroCostoVO cenco = cencosBp.getCentroCostoByKey(deptoId, cencoId);

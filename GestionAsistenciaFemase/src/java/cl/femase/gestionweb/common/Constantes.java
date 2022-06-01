@@ -74,6 +74,7 @@ public class Constantes {
     public static int ID_PERFIL_JEFE_TECNICO_NACIONAL = 12;
     
     public static int ID_AUSENCIA_VACACIONES        = 1;
+    public static int ID_AUSENCIA_PERMISO_ADMINISTRATIVO = 4;
     public static String FECHA_FIN_CONTRATO_INDEFINIDO = "3000-12-31";
     
     /**
@@ -99,6 +100,12 @@ public class Constantes {
     public static final String ESTADO_SOLICITUD_APROBADA_LABEL = "Aprobada";
     public static final String ESTADO_SOLICITUD_RECHAZADA = "R";
     public static final String ESTADO_SOLICITUD_RECHAZADA_LABEL = "Rechazada";
+    
+    //Permisos administrativos
+    public static final String JORNADA_PERMISO_ADMINISTRATIVO_TODO_EL_DIA= "TODO EL DIA";
+    public static final String JORNADA_PERMISO_ADMINISTRATIVO_AM= "AM-MAÑANA";
+    public static final String JORNADA_PERMISO_ADMINISTRATIVO_PM= "PM-TARDE";
+        
     
     /**
     * 22
@@ -154,4 +161,9 @@ public class Constantes {
     *  "No hay informacion de turnos" 
     */
     public static final String NO_HAY_INFO_TURNOS = "No hay informacion de turnos";
+    
+    /**
+    * Id parametro indica el numero maximo de dias de permiso administrativo anuales
+    */
+    public static final String ID_PARAMETRO_MAXIMO_ANUAL_DIAS_PA = "maximo_anual_dias_pa";
 }

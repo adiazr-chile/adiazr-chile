@@ -25,6 +25,7 @@ import cl.femase.gestionweb.vo.MarcaRechazoVO;
 import cl.femase.gestionweb.vo.MarcaVO;
 import cl.femase.gestionweb.vo.MarcacionVirtualVO;
 import cl.femase.gestionweb.vo.OrganizacionEmpresaVO;
+import cl.femase.gestionweb.vo.PermisoAdministrativoVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import cl.femase.gestionweb.vo.TipoMarcaManualVO;
 import cl.femase.gestionweb.vo.UsuarioCentroCostoVO;
@@ -137,6 +138,9 @@ public class DataExportServlet extends BaseServlet {
                 break;
             case "logErrorToCSV":
                 filePathOut = exportLogErrorToCSV(request, response);
+                break;
+            case "resumenPACSV":
+                filePathOut = exportResumenPermisosAdministrativosToCSV(request, response);
                 break;    
         }
             
@@ -1839,6 +1843,98 @@ public class DataExportServlet extends BaseServlet {
         return filePath;
     }
 
+    /**
+    * Escribe lineas en archivo, en formato CSV con el resumen de Permisos Administrativos de los empleados
+    * 
+    * @param request
+    * @param response
+    * @return 
+    * @throws javax.servlet.ServletException 
+    * @throws java.io.IOException 
+    */
+    protected String exportResumenPermisosAdministrativosToCSV(HttpServletRequest request, 
+            HttpServletResponse response)
+    throws ServletException, IOException {
+        System.out.println("[DataExportServlet."
+            + "exportResumenPermisosAdministrativosToCSV]entrando...");
+        String filePath="";
+        PrintWriter outfile=null;
+        try {
+            ServletContext application = this.getServletContext();
+            PropertiesVO appProperties=(PropertiesVO)application.getAttribute("appProperties");
+            HttpSession session = request.getSession(true);
+            UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
+                        
+            String separatorFields = ";";
+            ArrayList<PermisoAdministrativoVO> resumenPAList = 
+                (ArrayList<PermisoAdministrativoVO>)session.getAttribute("resumenPA|"+userConnected.getUsername());
+            
+            if (resumenPAList != null && resumenPAList.size() > 0){
+                filePath = appProperties.getPathExportedFiles()+
+                    File.separator+
+                    userConnected.getUsername()+"_resumen_permisos_administrativos.csv";
+                System.out.println("[DataExportServlet."
+                    + "exportResumenPermisosAdministrativosToCSV]filePath:" + filePath);
+                FileWriter filewriter = new FileWriter(filePath);
+                outfile     = new PrintWriter(filewriter);
+                Iterator<PermisoAdministrativoVO> iterador = resumenPAList.listIterator();
+                //NumberFormat nf = NumberFormat.getNumberInstance(new Locale("es", "ES"));
+                //Utilidades utils=new Utilidades();
+                int filas=0;
+
+                //cabecera
+                outfile.println("Empresa;"
+                    + "Departamento;"
+                    + "Centro de costo;"
+                    + "Run empleado;"
+                    + "Nombre empleado;"
+                    + "Dias disponibles;"
+                    + "Dias utilizados;"
+                    + "Ultima actualizacion");
+
+                while( iterador.hasNext() ) {
+                    filas++;
+                    PermisoAdministrativoVO detailObj = iterador.next();
+
+                    //escribir lineas en el archivo
+                    outfile.print(detailObj.getEmpresaId());
+                    outfile.print(separatorFields);
+                    outfile.print(detailObj.getDeptoNombre());
+                    outfile.print(separatorFields);
+                    outfile.print(detailObj.getCencoNombre());
+                    outfile.print(separatorFields);
+                    
+                    outfile.print(detailObj.getRunEmpleado());
+                    outfile.print(separatorFields);
+                    outfile.print(detailObj.getNombreEmpleado());
+                    outfile.print(separatorFields);
+                    outfile.print(detailObj.getDiasDisponibles());
+                    outfile.print(separatorFields);
+                    outfile.print(detailObj.getDiasUtilizados());
+                    outfile.print(separatorFields);
+                    
+                    if (filas < resumenPAList.size()){
+                        outfile.println(detailObj.getLastUpdate());
+                    }else{
+                        outfile.print(detailObj.getLastUpdate());
+                    }
+                }
+
+                //Flush the output to the file
+                outfile.flush();
+
+                //Close the Print Writer
+                outfile.close();
+
+               //Close the File Writer
+               filewriter.close();
+            }
+        } finally {
+            if (outfile!=null) outfile.close();
+        }
+
+        return filePath;
+    }
     
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

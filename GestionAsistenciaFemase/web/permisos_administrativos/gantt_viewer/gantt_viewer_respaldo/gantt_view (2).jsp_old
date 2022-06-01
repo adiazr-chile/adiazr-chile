@@ -1,0 +1,100 @@
+<%
+	String jsonData     = (String)request.getAttribute("jsonData");
+	String empresaName  = (String)request.getAttribute("empresaName");
+        String deptoName    = (String)request.getAttribute("deptoName");
+        String cencoName    = (String)request.getAttribute("cencoName");
+        String anioMes	= (String)request.getAttribute("anioMes");
+        String labelAnioMes	= (String)request.getAttribute("labelAnioMes");
+	
+        String labelFiltro = "&nbsp;";
+        if (empresaName != null){
+            labelFiltro = empresaName + "/" + deptoName + "/" + cencoName + "  ("+labelAnioMes+")";
+        }
+%>
+
+<html>
+ <head>
+	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/vacaciones/gantt_viewer/lib/jquery-ui-1.8.4.css" />
+	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/vacaciones/gantt_viewer/css/reset.css" />
+	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/vacaciones/gantt_viewer/css/jquery.ganttView.css" />
+    
+    <!-- estilos tablas -->
+    <link href="<%=request.getContextPath()%>/Jquery-JTable/Content/normalize.css" rel="stylesheet" type="text/css" />
+    <link href="<%=request.getContextPath()%>/Jquery-JTable/Content/Site.metro.css" rel="stylesheet" type="text/css" />
+    <link href="<%=request.getContextPath()%>/Jquery-JTable/Content/highlight.css" rel="stylesheet" type="text/css" />
+    <link 
+    href="<%=request.getContextPath()%>/Jquery-JTable/Content/themes/metroblue/jquery-ui.css" rel="stylesheet" type="text/css" />
+    <link href="<%=request.getContextPath()%>/Jquery-JTable/Scripts/jtable/themes/metro/blue/jtable.css" rel="stylesheet" type="text/css" />
+    <link href="<%=request.getContextPath()%>/Jquery-JTable/Scripts/syntaxhighligher/styles/shCore.css" rel="stylesheet" type="text/css" />
+    <link href="<%=request.getContextPath()%>/Jquery-JTable/Scripts/syntaxhighligher/styles/shThemeDefault.css" rel="stylesheet" type="text/css" />
+    
+	<!-- -->
+	<style type="text/css">
+		body {
+			font-family: tahoma, verdana, helvetica;
+			font-size: 0.8em;
+			padding: 10px;
+		}
+	</style>
+	<title>jQuery Gantt</title>
+	
+</head>
+<body>
+	
+    <div class="site-container">
+		<div class="main-header" style="position: relative">
+      	    <h2><%=labelFiltro%></h2>
+		</div><!-- fin <div class="main-header"> -->
+    </div><!-- fin <div class="site-container"> -->	
+    
+	<div id="ganttChart"></div>
+	<br/><br/>
+	<div id="eventMessage"></div>
+
+	<script type="text/javascript" src="<%=request.getContextPath()%>/vacaciones/gantt_viewer/lib/jquery-1.4.2.js"></script>
+    <script type="text/javascript" src="<%=request.getContextPath()%>/vacaciones/gantt_viewer/lib/date.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/vacaciones/gantt_viewer/lib/jquery-ui-1.8.4.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/vacaciones/gantt_viewer/js/jquery.ganttView.js"></script>
+	<!-- <script type="text/javascript" src="data.js"></script> -->
+    
+	<script type="text/javascript">
+		var ganttData = <%=jsonData%>;
+	
+		$(function () {
+			$("#ganttChart").ganttView({ 
+				//dataUrl: '<%=request.getContextPath()%>/servlet/GanttVacaciones?action=load',
+				data: ganttData,
+				slideWidth: 900,
+				behavior: {
+					onClick: function (data) { 
+                                            var msg = "You clicked on an event: " 
+                                                + "correlativo: " + data.correlativo
+                                                + ", rut: " + data.rutEmpleado
+                                                + "{ start: " + data.start.toString("M/d/yyyy") 
+                                                + ", end: " + data.end.toString("M/d/yyyy") + " }";
+                                            $("#eventMessage").text(msg);
+					},
+					onResize: function (data) { 
+						var msg = "You resized an event: { start: " + data.start.toString("M/d/yyyy") 
+						+ ", end: " + data.end.toString("M/d/yyyy") + " }";
+						$("#eventMessage").text(msg);
+					},
+					onDrag: function (data) { 
+						var msg = "You dragged an event: { start: " + data.start.toString("M/d/yyyy") 
+							+ ", end: " + data.end.toString("M/d/yyyy") + " }";
+						$("#eventMessage").text(msg);
+					}
+				}
+			});
+			
+			// $("#ganttChart").ganttView("setSlideWidth", 600);
+		});
+		
+		
+	</script>
+	
+</body>
+</html>
+</pre>
+  </body>
+</html>

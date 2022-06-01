@@ -16,10 +16,19 @@ public class MensajeUsuarioVO implements Serializable{
    
     String label;
     String value;
+    String type="NORMAL";
 
     public MensajeUsuarioVO(String label, String value) {
         this.label = label;
         this.value = value;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getLabel() {

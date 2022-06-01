@@ -14,6 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import org.apache.log4j.Logger;
 
@@ -90,6 +91,47 @@ public class ParametroDAO extends BaseDAO{
         }
         
         return lista;
+    }
+    
+    /**
+    * Retorna lista con los parametros existentes para la empresa especificada
+    * 
+    * @param _empresaId
+    * @return 
+    */
+    public HashMap<String, Double> getParametrosEmpresa(String _empresaId){
+        
+        HashMap<String, Double> parametros = new HashMap<>();
+        
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+                
+        try{
+            String sql = "SELECT "
+                + "param_code, param_value "
+                + "FROM parametro "
+                + "where empresa_id = '" + _empresaId + "' "
+                + "order by param_code"; 
+            
+            dbConn = dbLocator.getConnection(m_dbpoolName,"[ParametroDAO.getParametrosEmpresa]");
+            ps = dbConn.prepareStatement(sql);
+            rs = ps.executeQuery();
+
+            while (rs.next()){
+                String paramCode = rs.getString("param_code");
+                double paramValue = rs.getDouble("param_value");
+                
+                parametros.put(paramCode, paramValue);
+            }
+
+            ps.close();
+            rs.close();
+            dbLocator.freeConnection(dbConn);
+        }catch(SQLException|DatabaseException sqle){
+            m_logger.error("Error: "+sqle.toString());
+        }
+        
+        return parametros;
     }
     
     /**

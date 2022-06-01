@@ -33,6 +33,19 @@ public class DetalleAusenciaBp {
         empleadosDao = new cl.femase.gestionweb.dao.EmpleadosDAO(this.props);
     }
 
+    /**
+    * 
+    * @param _source
+    * @param _rutEmpleado
+    * @param _rutAutorizador
+    * @param _fechaIngresoInicio
+    * @param _fechaIngresoFin
+    * @param _ausenciaId
+    * @param _jtStartIndex
+    * @param _jtPageSize
+    * @param _jtSorting
+    * @return 
+    */
     public List<DetalleAusenciaVO> getDetallesAusencias(
             String _source,
             String _rutEmpleado,
@@ -53,6 +66,38 @@ public class DetalleAusenciaBp {
 
         return lista;
     }
+    
+    /**
+    * 
+    * @param _source
+    * @param _rutEmpleado
+    * @param _rutAutorizador
+    * @param _fechaIngresoInicio
+    * @param _fechaIngresoFin
+    * @param _jtStartIndex
+    * @param _jtPageSize
+    * @param _jtSorting
+    * @return 
+    */
+    public List<DetalleAusenciaVO> getPermisosAdministrativos(
+            String _source,
+            String _rutEmpleado,
+            String _rutAutorizador, 
+            String _fechaIngresoInicio, 
+            String _fechaIngresoFin,
+            int _jtStartIndex, 
+            int _jtPageSize, 
+            String _jtSorting){
+        
+        List<DetalleAusenciaVO> lista = 
+            detAusenciaDao.getPermisosAdministrativos(_source, 
+                _rutEmpleado, 
+                _rutAutorizador, _fechaIngresoInicio,
+                _fechaIngresoFin, _jtStartIndex, 
+                _jtPageSize, _jtSorting);
+
+        return lista;
+    }
   
     /**
     * 
@@ -65,6 +110,21 @@ public class DetalleAusenciaBp {
     
         List<DetalleAusenciaVO> lista = 
             detAusenciaDao.getVacacionesByAnioMesInicio(_rutEmpleado, _anioMesInicio);
+
+        return lista;
+    }
+    
+    /**
+    * 
+    * @param _rutEmpleado
+    * @param _anioMesInicio
+     * @return 
+    */
+    public List<DetalleAusenciaVO> getPermisosAdministrativosByAnioMesInicio(String _rutEmpleado,
+            String _anioMesInicio){
+    
+        List<DetalleAusenciaVO> lista = 
+            detAusenciaDao.getPermisosAdministrativosByAnioMesInicio(_rutEmpleado, _anioMesInicio);
 
         return lista;
     }
@@ -225,16 +285,44 @@ public class DetalleAusenciaBp {
     
     /**
     * 
-    * @param _objToInsert
+    * @param _newAusencia
     * @param _eventdata
     * @return 
     */
-    public MaintenanceVO insertaVacacion(DetalleAusenciaVO _objToInsert, 
+    public MaintenanceVO insertaVacacion(DetalleAusenciaVO _newAusencia, 
             MaintenanceEventVO _eventdata){
         
-        MaintenanceVO insValues = detAusenciaDao.insertaVacacion(_objToInsert);
+        MaintenanceVO insValues = detAusenciaDao.insertaVacacion(_newAusencia);
         
-        EmpleadoVO empleado = empleadosDao.getEmpleado(null, _objToInsert.getRutEmpleado());
+        EmpleadoVO empleado = empleadosDao.getEmpleado(null, _newAusencia.getRutEmpleado());
+        _eventdata.setEmpresaId(empleado.getEmpresa().getId());
+        _eventdata.setDeptoId(empleado.getDepartamento().getId());
+        _eventdata.setCencoId(empleado.getCentroCosto().getId());
+        _eventdata.setRutEmpleado(empleado.getRut());
+        
+        //if (!updValues.isThereError()){
+            String msgFinal = insValues.getMsg();
+            insValues.setMsg(msgFinal);
+            _eventdata.setDescription(msgFinal);
+            //insertar evento 
+            eventsDao.addEvent(_eventdata); 
+        //}
+        
+        return insValues;
+    }
+    
+    /**
+    * 
+    * @param _newAusencia
+    * @param _eventdata
+    * @return 
+    */
+    public MaintenanceVO insertaPermisoAdministrativo(DetalleAusenciaVO _newAusencia, 
+            MaintenanceEventVO _eventdata){
+        
+        MaintenanceVO insValues = detAusenciaDao.insertaPermisoAdministrativo(_newAusencia);
+        
+        EmpleadoVO empleado = empleadosDao.getEmpleado(null, _newAusencia.getRutEmpleado());
         _eventdata.setEmpresaId(empleado.getEmpresa().getId());
         _eventdata.setDeptoId(empleado.getDepartamento().getId());
         _eventdata.setCencoId(empleado.getCentroCosto().getId());
@@ -318,6 +406,26 @@ public class DetalleAusenciaBp {
             _rutEmpleado, 
             _rutAutorizador, _fechaIngresoInicio, 
             _fechaIngresoFin, _ausenciaId);
+    }
+    
+    /**
+    * 
+    * @param _source
+    * @param _rutEmpleado
+    * @param _rutAutorizador
+    * @param _fechaIngresoInicio
+    * @param _fechaIngresoFin
+    * @return 
+    */
+    public int getPermisosAdministrativosCount(String _source,
+            String _rutEmpleado,
+            String _rutAutorizador, 
+            String _fechaIngresoInicio, 
+            String _fechaIngresoFin){
+        return detAusenciaDao.getPermisosAdministrativosCount(_source, 
+            _rutEmpleado, 
+            _rutAutorizador, _fechaIngresoInicio, 
+            _fechaIngresoFin);
     }
     
     public int getDetallesAusenciasHistCount(String _rutEmpleado,

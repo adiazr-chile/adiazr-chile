@@ -319,6 +319,7 @@ public class LoadItems extends BaseServlet {
                 }
         }else if (type.compareTo("autorizadores") == 0) {
                 //DetalleAusenciaBp autorizaAusenciaBp = new DetalleAusenciaBp(appProperties);    
+                
                 List<DetalleAusenciaVO> auxautorizadores = (List<DetalleAusenciaVO>)session.getAttribute("autorizadores");//autorizaAusenciaBp.getAutorizadoresDisponibles();
                 Iterator<DetalleAusenciaVO> iterAutorizadores = auxautorizadores.iterator();
                 while (iterAutorizadores.hasNext()) {

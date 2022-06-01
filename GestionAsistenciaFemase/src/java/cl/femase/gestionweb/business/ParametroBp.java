@@ -9,6 +9,7 @@ import cl.femase.gestionweb.vo.MaintenanceEventVO;
 import cl.femase.gestionweb.vo.MaintenanceVO;
 import cl.femase.gestionweb.vo.ParametroVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -48,6 +49,17 @@ public class ParametroBp {
         return lista;
     }
 
+    
+    /**
+    * Retorna todos los parametros definidos para la empresa especificada
+    * @param _empresaId
+    * @return 
+    */
+    public HashMap<String, Double> getParametrosEmpresa(String _empresaId){
+        return parametrosService.getParametrosEmpresa(_empresaId);
+    }
+    
+    
     /**
     * Obtiene parametro by code
     * 

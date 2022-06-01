@@ -125,7 +125,8 @@ th, td {
              </tr>
     <%}%>
     <tr>
-              <th align="right" scope="col" class="label_tabla"><input name="action" type="hidden" id="action" value="create" />
+              <th align="right" scope="col" class="label_tabla">
+                  <input name="action" type="hidden" id="action" value="create" />
         <input name="fechaDesde" type="hidden" id="fechaDesde" value="<%=fechaDesde%>" />
         <input name="fechaHasta" type="hidden" id="fechaHasta" value="<%=fechaHasta%>" />
         

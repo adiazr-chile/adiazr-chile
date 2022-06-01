@@ -35,6 +35,16 @@ public class PropertiesVO {
     private String startYear;
     private String currentYear;
 
+    HashMap<String, Double> parametrosSistema= new HashMap<>();
+
+    public HashMap<String, Double> getParametrosSistema() {
+        return parametrosSistema;
+    }
+
+    public void setParametrosSistema(HashMap<String, Double> parametrosSistema) {
+        this.parametrosSistema = parametrosSistema;
+    }
+    
     public String getCurrentYear() {
         return currentYear;
     }

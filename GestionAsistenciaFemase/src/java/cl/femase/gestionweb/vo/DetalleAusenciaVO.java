@@ -73,8 +73,34 @@ public class DetalleAusenciaVO implements Serializable{
     private double saldoVBAPostVacaciones;
     private double saldoVPPostVacaciones;
     
+    /**
+     * Nuevos atributos para guardar dias solicitados
+     */
+    private double diasSolicitados;
+    
+    //Saldo de dias administrativos post permiso administrativo
+    private double saldoPostPA;
+    
     public DetalleAusenciaVO() {
         
+    }
+
+    public double getSaldoPostPA() {
+        return saldoPostPA;
+    }
+
+    public void setSaldoPostPA(double saldoPostPA) {
+        this.saldoPostPA = saldoPostPA;
+    }
+
+    
+    
+    public double getDiasSolicitados() {
+        return diasSolicitados;
+    }
+
+    public void setDiasSolicitados(double diasSolicitados) {
+        this.diasSolicitados = diasSolicitados;
     }
 
     public int getDiasEfectivosVBA() {

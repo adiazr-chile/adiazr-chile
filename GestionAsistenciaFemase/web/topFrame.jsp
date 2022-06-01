@@ -1,3 +1,5 @@
+<%@page import="cl.femase.gestionweb.vo.SolicitudPermisoAdministrativoVO"%>
+<%@page import="cl.femase.gestionweb.dao.SolicitudPermisoAdministrativoDAO"%>
 <%@page import="cl.femase.gestionweb.vo.PropertiesVO"%>
 <%@page import="cl.femase.gestionweb.vo.SolicitudVacacionesVO"%>
 <%@page import="cl.femase.gestionweb.vo.UsuarioCentroCostoVO"%>
@@ -15,7 +17,8 @@
     String labelAnios = startYear + "-" + currentYear;
     
     UsuarioVO userInSession = (UsuarioVO)session.getAttribute("usuarioObj");
-    int numSolicitudesPendientes = 0;
+    int numSolicitudesVACPendientes = 0;
+    int numSolicitudesPAPendientes = 0;
         
     if (userInSession.getIdPerfil() == Constantes.ID_PERFIL_DIRECTOR 
         || userInSession.getIdPerfil() == Constantes.ID_PERFIL_DIRECTOR_TR
@@ -25,18 +28,21 @@
         System.out.println("[topFrame.jsp]Rescatar solicitudes "
             + "de vacaciones pendientes de algunos de los empleados "
             + "en alguno de los cencos del usuario");
-        SolicitudVacacionesBp solicitudesBp = new SolicitudVacacionesBp(null);
-
+        SolicitudVacacionesBp solicitudesVacBp = new SolicitudVacacionesBp(null);
+        SolicitudPermisoAdministrativoDAO solicitudesPADao = new SolicitudPermisoAdministrativoDAO();
         /**
             - Si es perfil usuario director:
-            - Rescatar todas las solicitudes de vacaciones que est�n pendientes. En alguno de los cencos donde el usuario es director
+            - Rescatar todas las solicitudes de vacaciones y de permisos administrativos
+             que esten pendientes. En alguno de los cencos donde el usuario es director
         */
+        
         List<UsuarioCentroCostoVO> listaCencos = userInSession.getCencos();
         
         for (int i = 0; i < listaCencos.size(); i++) {
             UsuarioCentroCostoVO itcenco = listaCencos.get(i);
-            List<SolicitudVacacionesVO> listaSolicitudes = 
-                solicitudesBp.getSolicitudes(userInSession.getEmpresaId(), 
+            
+            List<SolicitudVacacionesVO> listaSolicitudesVAC = 
+                solicitudesVacBp.getSolicitudes(userInSession.getEmpresaId(), 
                 itcenco.getCcostoId(),
                 userInSession.getRunEmpleado(),
                 null,
@@ -49,11 +55,34 @@
                 "solic_fec_ingreso");
             System.out.println("[topFrame.jsp]"
                 + "cencoId= " + itcenco.getCcostoId()
-                + ", numSolicitudesPendientes= " + numSolicitudesPendientes);
-            numSolicitudesPendientes += listaSolicitudes.size();
+                + ", numSolicitudesPendientes= " + numSolicitudesVACPendientes);
+            numSolicitudesVACPendientes += listaSolicitudesVAC.size();
+            
+            //buscar solicitudes de permiso administrativo PENDIENTES
+            List<SolicitudPermisoAdministrativoVO> listaSolicitudesPA = 
+                solicitudesPADao.getSolicitudes(userInSession.getEmpresaId(), 
+                itcenco.getCcostoId(),
+                userInSession.getRunEmpleado(),
+                null,
+                null,
+                userInSession,
+                false,
+                Constantes.ESTADO_SOLICITUD_PENDIENTE,
+                0, 
+                0, 
+                "solic_fec_ingreso");
+            System.out.println("[topFrame.jsp]"
+                + "cencoId= " + itcenco.getCcostoId()
+                + ", numSolicitudesPendientes= " + numSolicitudesPAPendientes);
+            numSolicitudesPAPendientes += listaSolicitudesPA.size();
+            
         }
         System.out.println("[topFrame.jsp]"
-            + "total solicitudesPendientes= " + numSolicitudesPendientes);
+            + "(Final)Num solicitudes Vacaciones Pendientes= " + numSolicitudesVACPendientes);
+        System.out.println("[topFrame.jsp]"
+            + "(Final)Num solicitudes Permiso Administrativo Pendientes= " + numSolicitudesPAPendientes);
+        
+        
     }
 %>
 
@@ -195,12 +224,22 @@
                 	<%if (userInSession.getIdPerfil() == Constantes.ID_PERFIL_DIRECTOR 
                                 || userInSession.getIdPerfil() == Constantes.ID_PERFIL_DIRECTOR_TR
                                 || userInSession.getIdPerfil() == Constantes.ID_PERFIL_JEFE_TECNICO_NACIONAL){
-                            if (numSolicitudesPendientes > 0){
-                                System.out.println("[topFrame.jsp]Mostrar notificaciones de solicitudes");%>
+                            
+                            if (numSolicitudesVACPendientes > 0){
+                                System.out.println("[topFrame.jsp]Mostrar notificaciones de solicitudes de vacaciones");%>
                                 <a href="<%=request.getContextPath()%>/vacaciones/sol_vacaciones_aprobar_rechazar.jsp" 
                                    class="notification" target="mainFrame">
-                                  <span>Solicitudes Vacaciones Pendientes</span>
-                                  <span class="badge"><%=numSolicitudesPendientes%></span>
+                                  <span>Solic. Vacaciones Pendientes</span>
+                                  <span class="badge"><%=numSolicitudesVACPendientes%></span>
+                                </a>
+                            <%}%>
+                            <%
+                            if (numSolicitudesPAPendientes > 0){
+                                System.out.println("[topFrame.jsp]Mostrar notificaciones de solicitudes de permisos administrativos");%>
+                                <a href="<%=request.getContextPath()%>/permisos_administrativos/sol_pa_aprobar_rechazar.jsp" 
+                                   class="notification" target="mainFrame">
+                                  <span>Solic. PA Pendientes</span>
+                                  <span class="badge"><%=numSolicitudesPAPendientes%></span>
                                 </a>
                             <%}%>
                     <%}%>
