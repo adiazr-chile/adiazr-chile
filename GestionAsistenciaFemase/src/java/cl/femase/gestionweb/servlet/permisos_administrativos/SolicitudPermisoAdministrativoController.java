@@ -382,13 +382,17 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
                         solicitud.getRunEmpleado());
                     
                     //VacacionesBp vacacionesBp = new VacacionesBp(null);
-                    int diasEfectivosSolicitados = 
-                        permisoAdminDao.getDiasEfectivos(solicitud.getFechaInicioPA(), 
-                            solicitud.getFechaFinPA(), 
-                            solicitud.getEmpresaId(), 
-                            solicitud.getRunEmpleado());
-                    solicitud.setDiasSolicitados(diasEfectivosSolicitados);
-                    
+                    if (solicitud.getJornada().compareTo("TODO_EL_DIA") == 0){
+                        int diasEfectivosSolicitados = 
+                            permisoAdminDao.getDiasEfectivos(solicitud.getFechaInicioPA(), 
+                                solicitud.getFechaFinPA(), 
+                                solicitud.getEmpresaId(), 
+                                solicitud.getRunEmpleado());
+                        solicitud.setDiasSolicitados(diasEfectivosSolicitados);
+                    }else{
+                        solicitud.setDiasSolicitados(0.5);
+                    }
+                                        
                     Calendar mycal = Calendar.getInstance(new Locale("es","CL"));
                     int anioActual = mycal.get(Calendar.YEAR);
     
@@ -401,12 +405,12 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
                         doubleSaldoPADisponible = saldoPA.getDiasDisponibles();
                     }
                     
-                    double saldoPostPA = doubleSaldoPADisponible - diasEfectivosSolicitados;
+                    double saldoPostPA = doubleSaldoPADisponible - solicitud.getDiasSolicitados();
                     System.out.println("[SolicitudPermisoAdministrativoController]"
                         + "[precreate]empresaId: : " + solicitud.getEmpresaId()    
                         + ", run_empleado: : " + solicitud.getRunEmpleado()
                         + ", saldo_PA_disponible: : " + doubleSaldoPADisponible
-                        + ", diasSolicitados: : " + diasEfectivosSolicitados
+                        + ", diasSolicitados: : " + solicitud.getDiasSolicitados()
                         + ", saldoPostPA: : " + saldoPostPA);
                     
                     ArrayList<DestinatarioSolicitudVO> destinatarios = 
@@ -435,9 +439,9 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
                     mensajes.add(new MensajeUsuarioVO("Termino Permiso Administrativo", solicitud.getFechaFinPA()));
                     mensajes.add(new MensajeUsuarioVO("Jornada", jornada));
                     mensajes.add(new MensajeUsuarioVO("Año", "" + solicitud.getAnio()));
-                    mensajes.add(new MensajeUsuarioVO("Dias solicitados", "" + diasEfectivosSolicitados));
+                    mensajes.add(new MensajeUsuarioVO("Dias solicitados", "" + solicitud.getDiasSolicitados()));
                     
-                    if (diasEfectivosSolicitados > doubleSaldoPADisponible){
+                    if (solicitud.getDiasSolicitados() > doubleSaldoPADisponible){
                         MensajeUsuarioVO msgError = new MensajeUsuarioVO("Observación", 
                             "Los dias solicitados superan los dias disponibles "
                             + "(" + doubleSaldoPADisponible + ")");
@@ -459,7 +463,7 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
                     request.setAttribute("fechaDesde", reqDesde);
                     request.setAttribute("fechaHasta", reqHasta);
                     request.setAttribute("jornada", jornada);
-                    request.setAttribute("diasEfectivosSolicitados", "" + diasEfectivosSolicitados);
+                    request.setAttribute("diasEfectivosSolicitados", "" + solicitud.getDiasSolicitados());
                     request.setAttribute("saldoPostPA", "" + saldoPostPA);
                     
                     request.setAttribute("mensajes", mensajes);
@@ -487,6 +491,7 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
                     solicitud.setFechaFinPA(reqHasta);
                     solicitud.setJornada(jornada);
                     solicitud.setAnio(cal.get(Calendar.YEAR));
+                    solicitud.setDiasSolicitados(Double.parseDouble(diasEfectivosSolicitados));
                     
                     System.out.println("[SolicitudPermisoAdministrativoController]"
                         + "Insertar solicitud de Permiso Administrativo. "
@@ -495,6 +500,7 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
                         + ", rut_empleado: " + solicitud.getRunEmpleado()
                         + ", inicio_permiso administrativo: " + solicitud.getFechaInicioPA()
                         + ", fin_permiso administrativo: " + solicitud.getFechaFinPA()
+                        + ", dias solicitados: " + solicitud.getDiasSolicitados()    
                         + ", jornada: " + solicitud.getJornada()
                         + ", anio: " + solicitud.getAnio());
                     EmpleadoVO infoEmpleado = empleadosbp.getEmpleado(solicitud.getEmpresaId(), 
@@ -509,8 +515,8 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
                         + "para enviar mail");
                     NotificacionSolicitudPermisoAdministrativoVO evento = notificaEventoSolicitud("INGRESO_SOLICITUD",
                         "Ingreso de Solicitud de Permiso Administrativo", 
-                        solicitud, userConnected, request,null,null,-1);
-                    solicitud.setDiasSolicitados(evento.getDiasSolicitados());
+                        solicitud, userConnected, request,null,null,solicitud.getDiasSolicitados());
+                    //solicitud.setDiasSolicitados(evento.getDiasSolicitados());
                     String mensajeFinal = evento.getMensajeFinal();
                     session.setAttribute("mensaje", "Solicitud de Permiso Administrativo ingresada exitosamente."
                         + "<p>" + mensajeFinal);

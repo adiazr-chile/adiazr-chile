@@ -1393,7 +1393,7 @@ public class DetalleAusenciaDAO extends BaseDAO{
                 data.setNombreAusencia(rs.getString("ausencia_nombre"));
                 data.setFechaInicioAsStr(rs.getString("fecha_inicio_str"));
                 data.setFechaFinAsStr(rs.getString("fecha_fin_str"));
-                data.setDiasSolicitados(rs.getInt("dias_solicitados"));
+                data.setDiasSolicitados(rs.getDouble("dias_solicitados"));
                 
                 lista.add(data);
             }

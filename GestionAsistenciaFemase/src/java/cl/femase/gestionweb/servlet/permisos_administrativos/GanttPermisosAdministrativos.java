@@ -203,8 +203,10 @@ public class GanttPermisosAdministrativos extends BaseServlet {
 //                                    detalleAusenciaBp.updateDiasEfectivosVacaciones(ausencia.getCorrelativo(), diasFectivos);
 //                                }
 //                            }
-                            
-                            itValue.setName(fullName + " / " + empleado.getRut() + " / " + ausencia.getDiasSolicitados() + " dias");
+                            String auxName = fullName + " / " + empleado.getRut() + " / " + ausencia.getDiasSolicitados() + " dias";
+                            System.out.println("[servlet.GanttPermisosAdministrativos]"
+                                + "auxName: "+ auxName);
+                            itValue.setName(auxName);
                             itValue.setStart(ausencia.getFechaInicioAsStr());
                             itValue.setEnd(ausencia.getFechaFinAsStr());
                             arbol.add(itValue);
