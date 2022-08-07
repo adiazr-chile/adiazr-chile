@@ -748,6 +748,14 @@ public class VacacionesBp {
         String fechaFinVacaciones;
         int diasEfectivos = 0;
         
+        System.out.println("[VacacionesBp."
+            + "getDiasEfectivos]"
+            + "empresaId: " + _empresaId
+            + ", Run empleado: " + _runEmpleado
+            + ", vacaciones especiales?: " + _vacacionesEspeciales    
+            + ", inicio vacaciones: " + _inicioVacaciones
+            + ", fin vacaciones: " + _finVacaciones);
+        
         try{
             Date date1 = m_sdf.parse(_inicioVacaciones);
             Date date2 = m_sdf.parse(_finVacaciones);

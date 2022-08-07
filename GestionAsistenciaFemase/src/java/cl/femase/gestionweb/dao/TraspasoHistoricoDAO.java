@@ -7,10 +7,12 @@ package cl.femase.gestionweb.dao;
 
 import cl.femase.gestionweb.common.DatabaseException;
 import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.RegistroHistoricoVO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Hashtable;
 
 /**
  *
@@ -21,7 +23,15 @@ public class TraspasoHistoricoDAO extends BaseDAO{
     //private Connection dbConn;
     //DbDirectConnection dbconnection = DbDirectConnection.getInstance();
     
+    private Hashtable<String,String> NOMBRE_TABLAS_HISTORICAS = new Hashtable<>();
+    
     public TraspasoHistoricoDAO() {
+        NOMBRE_TABLAS_HISTORICAS.put("marca", "marca_historica");
+        NOMBRE_TABLAS_HISTORICAS.put("marca_rechazo", "marca_rechazo_historica");
+        NOMBRE_TABLAS_HISTORICAS.put("detalle_ausencia", "detalle_ausencia_historica");
+        NOMBRE_TABLAS_HISTORICAS.put("detalle_asistencia", "detalle_asistencia_historica");
+        NOMBRE_TABLAS_HISTORICAS.put("mantencion_evento", "mantencion_evento_historico");
+        
         //dbConn = dbLocator.getConnection(m_dbpoolName);
     }
     
@@ -153,7 +163,7 @@ public class TraspasoHistoricoDAO extends BaseDAO{
                 + "and empresa_cod='" + _empresaId + "' "
                 + "and (rut_empleado in (" + _cadenaRuts + ") )";
 
-            dbConn = dbLocator.getConnection(m_dbpoolName,"[TraspasoHistoricosFMCJob.insertMarcasRechazosHistoricas]");
+            dbConn = dbLocator.getConnection(m_dbpoolName,"[TraspasoHistoricoDAO.insertMarcasRechazosHistoricas]");
             ps = dbConn.prepareStatement(sql);
             
             affectedRows = ps.executeUpdate();
@@ -167,7 +177,7 @@ public class TraspasoHistoricoDAO extends BaseDAO{
             resultado.setMsg(sqle.getMessage());
             resultado.setMsgError(sqle.toString());
             System.err.println("[GestionFemase."
-                + "TraspasoHistoricosFMCJob.insertMarcasRechazosHistoricas]"
+                + "TraspasoHistoricoDAO.insertMarcasRechazosHistoricas]"
                 + "Error:" + sqle.toString());
         }
         
@@ -221,7 +231,7 @@ public class TraspasoHistoricoDAO extends BaseDAO{
                 + "where fecha_inicio <= '" + _fecha + "' "
                     + "and (empleado.empl_rut in (" + _cadenaRuts + ") )"; 
             
-            dbConn = dbLocator.getConnection(m_dbpoolName,"[TraspasoHistoricosFMCJob.insertAusenciasHistoricas]");
+            dbConn = dbLocator.getConnection(m_dbpoolName,"[TraspasoHistoricoDAO.insertAusenciasHistoricas]");
             ps = dbConn.prepareStatement(sql);
             
             affectedRows = ps.executeUpdate();
@@ -235,7 +245,7 @@ public class TraspasoHistoricoDAO extends BaseDAO{
             resultado.setMsg(sqle.getMessage());
             resultado.setMsgError(sqle.toString());
             System.err.println("[GestionFemase."
-                + "TraspasoHistoricosFMCJob."
+                + "TraspasoHistoricoDAO."
                 + "insertAusenciasHistoricas]Error: " + sqle.toString());
         }
         
@@ -283,7 +293,7 @@ public class TraspasoHistoricoDAO extends BaseDAO{
                     + "and (rut_empleado in (" + _cadenaRuts + ") )";
             
             dbConn = dbLocator.getConnection(m_dbpoolName,
-                "[TraspasoHistoricosFMCJob.insertDetalleAsistenciaHistoricos]");
+                "[TraspasoHistoricoDAO.insertDetalleAsistenciaHistoricos]");
             ps = dbConn.prepareStatement(sql);
             
             affectedRows = ps.executeUpdate();
@@ -297,7 +307,7 @@ public class TraspasoHistoricoDAO extends BaseDAO{
             resultado.setMsg(sqle.getMessage());
             resultado.setMsgError(sqle.toString());
             System.err.println("[GestionFemase."
-                + "TraspasoHistoricosFMCJob.insertDetalleAsistenciaHistoricos]"
+                + "TraspasoHistoricoDAO.insertDetalleAsistenciaHistoricos]"
                 + "Error: " + sqle.toString());
         }
         
@@ -328,7 +338,7 @@ public class TraspasoHistoricoDAO extends BaseDAO{
                 + "where fecha_hora::date <= '" + _fecha + "' "
                     + "and empresa_id_source='" + _empresaId + "'"; 
             
-            dbConn = dbLocator.getConnection(m_dbpoolName,"[TraspasoHistoricosFMCJob.insertLogEventosHistoricos]");
+            dbConn = dbLocator.getConnection(m_dbpoolName,"[TraspasoHistoricoDAO.insertLogEventosHistoricos]");
             ps = dbConn.prepareStatement(sql);
             
             affectedRows = ps.executeUpdate();
@@ -342,7 +352,7 @@ public class TraspasoHistoricoDAO extends BaseDAO{
             resultado.setMsg(sqle.getMessage());
             resultado.setMsgError(sqle.toString());
             System.err.println("[GestionFemase."
-                + "TraspasoHistoricosFMCJob."
+                + "TraspasoHistoricoDAO."
                 + "insertLogEventosHistoricos]Error: " + sqle.toString());
         }
         
@@ -372,7 +382,7 @@ public class TraspasoHistoricoDAO extends BaseDAO{
                     + "and empresa_cod='" + _empresaId + "' "
                     + "and (rut_empleado in (" + _cadenaRuts + ") )";
 
-            dbConn = dbLocator.getConnection(m_dbpoolName,"[TraspasoHistoricosFMCJob.met]");
+            dbConn = dbLocator.getConnection(m_dbpoolName,"[TraspasoHistoricoDAO.met]");
             ps = dbConn.prepareStatement(sql);
             
             affectedRows = ps.executeUpdate();
@@ -409,7 +419,7 @@ public class TraspasoHistoricoDAO extends BaseDAO{
                     + "and empresa_cod='" + _empresaId + "' "
                     + "and (rut_empleado in (" + _cadenaRuts + ") )";
 
-            dbConn = dbLocator.getConnection(m_dbpoolName,"[TraspasoHistoricosFMCJob.met]");
+            dbConn = dbLocator.getConnection(m_dbpoolName,"[TraspasoHistoricoDAO.met]");
             ps = dbConn.prepareStatement(sql);
             
             rowsAffected = ps.executeUpdate();
@@ -447,7 +457,7 @@ public class TraspasoHistoricoDAO extends BaseDAO{
                     + "and empresa_id = '" + _empresaId + "' "
                     + "and (rut_empleado in (" + _cadenaRuts + ") )";
 
-            dbConn = dbLocator.getConnection(m_dbpoolName,"[TraspasoHistoricosFMCJob.met]");
+            dbConn = dbLocator.getConnection(m_dbpoolName,"[TraspasoHistoricoDAO.met]");
             ps = dbConn.prepareStatement(sql);
             
             rowsAffected = ps.executeUpdate();
@@ -485,7 +495,7 @@ public class TraspasoHistoricoDAO extends BaseDAO{
                     + "and (rut_empleado in (" + _cadenaRuts + ") )";
 
             dbConn = dbLocator.getConnection(m_dbpoolName,
-                "[TraspasoHistoricosFMCJob.deleteAusencias]");
+                "[TraspasoHistoricoDAO.deleteAusencias]");
             ps = dbConn.prepareStatement(sql);
             
             rowsAffected = ps.executeUpdate();
@@ -519,7 +529,7 @@ public class TraspasoHistoricoDAO extends BaseDAO{
                 + "where fecha_hora::date <= '" + _fecha + "' "
                     + "and empresa_id_source='" + _empresaId + "'";
 
-            dbConn = dbLocator.getConnection(m_dbpoolName,"[TraspasoHistoricosFMCJob.met]");
+            dbConn = dbLocator.getConnection(m_dbpoolName,"[TraspasoHistoricoDAO.met]");
             ps = dbConn.prepareStatement(sql);
             
             rowsAffected = ps.executeUpdate();
@@ -532,6 +542,7 @@ public class TraspasoHistoricoDAO extends BaseDAO{
         }
         
     }
+    
     
     /**
     * Obtiene registros existentes y que seran traspasados a la respectiva tabla historica
@@ -779,8 +790,562 @@ public class TraspasoHistoricoDAO extends BaseDAO{
             dbLocator.freeConnection(dbConn);
         } catch (Exception ex) {
             System.out.println("[GestionFemase."
-                + "TraspasoHistoricosFMCJob."
+                + "TraspasoHistoricoDAO."
                 + "closeConnection]Error al cerrar conexion: " + ex.toString());
         }
     }
+    
+    /**
+    * Obtiene ultimo registro historico traspasado
+    * 
+    * @param _empresaId
+    * @param _tabla
+    * @return 
+    */
+    public RegistroHistoricoVO getUltimoRegistroHistorico(String _empresaId, 
+            String _tabla){
+        RegistroHistoricoVO registro = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        Connection dbConn       = null;
+        try{
+            /**
+             *  marca_historica			fecha_hora          empresa_cod		
+                marca_rechazo_historica		fecha_hora          empresa_cod
+                detalle_ausencia_historica	fecha_inicio        empresa_id
+                detalle_asistencia_historica	fecha_hora_calculo  empresa_id
+                mantencion_evento_historico	fecha_hora          empresa_id
+             */
+            
+            String columnaFechaHora = "fecha_hora";
+            if (_tabla.compareTo("detalle_ausencia") == 0) columnaFechaHora = "fecha_inicio";
+            else if (_tabla.compareTo("detalle_asistencia") == 0) columnaFechaHora = "fecha_hora_calculo";
+            
+            String columnaEmpresa = "empresa_id";
+            if (_tabla.compareTo("marca") == 0 || _tabla.compareTo("marca_rechazo") == 0) columnaEmpresa = "empresa_cod";
+            
+            String nombreTablaHist = NOMBRE_TABLAS_HISTORICAS.get(_tabla);
+            
+            String sql = "select to_char(" + columnaFechaHora + ",'yyyy-MM-dd') fecha_registro,"
+                + "to_char(fecha_hora_traspaso,'yyyy-MM-dd HH24:MI:SS') fecha_hora_traspaso "
+                + "from " + nombreTablaHist
+                + " where " + columnaEmpresa + " = '" + _empresaId + "' "
+                + "order by fecha_hora_traspaso desc limit 1";
+            
+            System.out.println("[GestionFemase."
+                + "TraspasoHistoricosFemaseJob.getUltimoRegistroHistorico]Sql: " + sql);
+            
+            dbConn = dbLocator.getConnection(m_dbpoolName,
+                "[TraspasoHistoricoDAO.getUltimoRegistroHistorico]");
+            ps = dbConn.prepareStatement(sql);
+            rs = ps.executeQuery();
+
+            if (rs.next()){
+                registro = new RegistroHistoricoVO();
+                registro.setEmpresaId(_empresaId);
+                registro.setTabla(_tabla);
+                registro.setFechaRegistro(rs.getString("fecha_registro"));
+                registro.setFechaHoraTraspaso(rs.getString("fecha_hora_traspaso"));
+            }
+            
+            ps.close();
+            rs.close();
+            dbLocator.freeConnection(dbConn);
+        }catch(SQLException|DatabaseException sqle){
+            System.err.println("[GestionFemase."
+                + "TraspasoHistoricoDAO."
+                + "getUltimoRegistroHistorico]"
+                + "Error: " + sqle.toString());
+        }
+        
+        return registro;
+    }
+    
+    /**
+    * Obtiene numero de registros para traspaso a historico
+    * 
+    * @param _empresaId
+    * @param _tabla
+     * @param _startDate
+     * @param _endDate
+    * 
+    * @return 
+    */
+    public RegistroHistoricoVO getVistaPreviaTraspasoHistorico(String _empresaId, 
+            String _tabla, 
+            String _startDate, 
+            String _endDate){
+        RegistroHistoricoVO registro = new RegistroHistoricoVO();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        Connection dbConn       = null;
+        try{
+            String strSql = "";
+            switch (_tabla){
+                case "marca":
+                    strSql = "select count(fecha_hora) registros "
+                        + "from marca "
+                        + "where empresa_cod = '" + _empresaId + "' "
+                        + "and fecha_hora::date between '" + _startDate + "' and '" + _endDate + "'";
+                    break;
+                case "marca_rechazo":
+                    strSql = "select count(fecha_hora) registros "
+                        + "from marca_rechazo "
+                        + "where empresa_cod = '" + _empresaId + "' "
+                        + "and fecha_hora::date between '" + _startDate + "' and '" + _endDate + "'";
+                    break;    
+                case "detalle_ausencia":
+                    strSql = "select count(fecha_inicio) registros "
+                        + "from detalle_ausencia "
+                        + "where rut_empleado in "
+                            + "( "
+                            + "select empl_rut from empleado where empresa_id = '" + _empresaId + "' "
+                            + ") "
+                            + "and fecha_inicio::date between '" + _startDate + "' and '" + _endDate + "'";
+                    break;
+                case "detalle_asistencia":
+                    strSql = "select count(fecha_hora_calculo) registros "
+                        + "from detalle_asistencia "
+                        + "where empresa_id = '" + _empresaId + "' "
+                        + "and fecha_hora_calculo::date between '" + _startDate + "' and '" + _endDate + "'";
+                    break;    
+                case "mantencion_evento":
+                    strSql = "select count(fecha_hora) registros "
+                        + "from mantencion_evento "
+                        + "where empresa_id = '" + _empresaId + "' "
+                        + "and fecha_hora::date between '" + _startDate + "' and '" + _endDate + "'";
+                    break;    
+            }
+
+            System.out.println("[GestionFemase."
+                + "TraspasoHistoricosFemaseJob.getVistaPreviaTraspasoHistorico]Sql: " + strSql);
+            
+            dbConn = dbLocator.getConnection(m_dbpoolName,
+                "[TraspasoHistoricoDAO.getVistaPreviaTraspasoHistorico]");
+            ps = dbConn.prepareStatement(strSql);
+            rs = ps.executeQuery();
+
+            if (rs.next()){
+                registro = new RegistroHistoricoVO();
+                registro.setEmpresaId(_empresaId);
+                registro.setTabla(_tabla);
+                registro.setNumRegistros(rs.getDouble("registros"));
+            }
+            
+            ps.close();
+            rs.close();
+            dbLocator.freeConnection(dbConn);
+        }catch(SQLException|DatabaseException sqle){
+            System.err.println("[GestionFemase."
+                + "TraspasoHistoricoDAO."
+                + "getVistaPreviaTraspasoHistorico]"
+                + "Error: " + sqle.toString());
+        }
+        
+        return registro;
+    }
+    
+    /**
+    * Metodo que traspasa a historico las marcas de asistencia
+    * 
+    * @param _empresaId
+    * @param _startDate
+    * @param _endDate
+    * @return 
+    */
+    public MaintenanceVO traspasaMarcasHistoricas(String _empresaId, 
+            String _startDate, 
+            String _endDate){
+        MaintenanceVO resultado = new MaintenanceVO();
+        int affectedRows        = 0;
+        PreparedStatement ps    = null;
+        Connection dbConn       = null;
+        try{
+            String sql = "insert into marca_historica ("
+                    + "cod_dispositivo,"
+                    + "empresa_cod,"
+                    + "rut_empleado,"
+                    + "fecha_hora,"
+                    + "cod_tipo_marca,"
+                    + "fecha_hora_actualizacion,"
+                    + "id,"
+                    + "hashcode,"
+                    + "modificada,"
+                    + "comentario, "
+                    + "cod_tpo_marca_manual,"
+                    + "fecha_hora_traspaso, "
+                    + "latitud, "
+                    + "longitud,"
+                    + "correlativo) "
+                + "select "
+                    + "cod_dispositivo,"
+                    + "empresa_cod,"
+                    + "rut_empleado,"
+                    + "fecha_hora,"
+                    + "cod_tipo_marca,"
+                    + "fecha_hora_actualizacion,"
+                    + "id,"
+                    + "hashcode,"
+                    + "modificada,"
+                    + "comentario,"
+                    + "cod_tpo_marca_manual,"
+                    + "current_timestamp, "
+                    + "latitud, "
+                    + "longitud,"
+                    + "correlativo "
+                + "from marca "
+                + "where empresa_cod = '" + _empresaId + "' "
+                    + "and fecha_hora::date between '" + _startDate + "' and '" + _endDate + "'";
+            
+            System.err.println("[GestionFemase."
+                + "TraspasoHistoricosFemaseJob.traspasaMarcasHistoricas]Sql: " + sql);
+            
+            dbConn = dbLocator.getConnection(m_dbpoolName,
+                "[TraspasoHistoricoDAO.traspasaMarcasHistoricas]");
+            ps = dbConn.prepareStatement(sql);
+            
+            affectedRows = ps.executeUpdate();
+            resultado.setFilasAfectadas(affectedRows);
+            ps.close();
+            dbLocator.freeConnection(dbConn);
+        }catch(SQLException|DatabaseException sqle){
+            affectedRows = -1;
+            resultado.setFilasAfectadas(affectedRows);
+            resultado.setThereError(true);
+            resultado.setMsg(sqle.getMessage());
+            resultado.setMsgError(sqle.toString());
+            
+            System.err.println("[GestionFemase."
+                + "TraspasoHistoricoDAO."
+                + "traspasaMarcasHistoricas]"
+                + "Error: " + sqle.toString());
+        }
+        
+        return resultado;
+    }
+    
+    
+    /**
+    * Metodo que traspasa a historico las marcas de asistencia rechazadas
+    * 
+    * @param _empresaId
+    * @param _startDate
+    * @param _endDate
+    * 
+    * @return 
+    */
+    public MaintenanceVO traspasaMarcasRechazosHistoricas(String _empresaId, 
+            String _startDate, 
+            String _endDate){
+        MaintenanceVO resultado = new MaintenanceVO();
+        int affectedRows =0;
+        PreparedStatement ps = null;
+        Connection dbConn = null;
+        try{
+            String sql = "insert into marca_rechazo_historica ("
+                        + "cod_dispositivo,"
+                        + "empresa_cod,"
+                        + "rut_empleado,"
+                        + "fecha_hora,"
+                        + "cod_tipo_marca,"
+                        + "fecha_hora_actualizacion,"
+                        + "id,"
+                        + "hashcode,"
+                        + "motivo_rechazo,"
+                        + "correlativo_rechazo,"
+                        + "fecha_hora_traspaso, "
+                        + "latitud, "
+                        + "longitud) "
+                + "select cod_dispositivo,"
+                    + "empresa_cod,"
+                    + "rut_empleado,"
+                    + "fecha_hora,"
+                    + "cod_tipo_marca,"
+                    + "fecha_hora_actualizacion,"
+                    + "id,"
+                    + "hashcode,"
+                    + "motivo_rechazo,"
+                    + "correlativo_rechazo, "
+                    + "current_timestamp, "
+                    + "latitud, "
+                    + "longitud "
+                + "from marca_rechazo "
+                + "where empresa_cod = '" + _empresaId + "' "
+                + "and fecha_hora::date between '" + _startDate + "' and '" + _endDate + "'";
+
+            dbConn = dbLocator.getConnection(m_dbpoolName,
+                "[TraspasoHistoricoDAO.traspasaMarcasRechazosHistoricas]");
+            ps = dbConn.prepareStatement(sql);
+            
+            affectedRows = ps.executeUpdate();
+            resultado.setFilasAfectadas(affectedRows);
+            ps.close();
+            dbLocator.freeConnection(dbConn);
+        }catch(SQLException|DatabaseException sqle){
+            affectedRows = -1;
+            resultado.setFilasAfectadas(affectedRows);
+            resultado.setThereError(true);
+            resultado.setMsg(sqle.getMessage());
+            resultado.setMsgError(sqle.toString());
+            System.err.println("[GestionFemase."
+                + "TraspasoHistoricoDAO.traspasaMarcasRechazosHistoricas]"
+                + "Error:" + sqle.toString());
+        }
+        
+        return resultado;
+    }
+ 
+    
+    /**
+    * Metodo que traspasa a historico los detalles ausencias.
+    * 
+    * @param _empresaId
+    * @param _startDate
+    * @param _endDate
+    * @return 
+    */
+    public MaintenanceVO traspasaDetallesAusenciasHistoricas(String _empresaId, 
+            String _startDate, 
+            String _endDate){
+        MaintenanceVO resultado = new MaintenanceVO();
+        int affectedRows =0;
+        PreparedStatement ps = null;
+        Connection dbConn = null;
+        try{
+            String sql = "insert into detalle_ausencia_historica ("
+                    + "rut_empleado,"
+                    + "fecha_ingreso,"
+                    + "ausencia_id,"
+                    + "fecha_inicio,fecha_fin,rut_autoriza_ausencia,"
+                    + "ausencia_autorizada,fecha_actualizacion,hora_inicio,"
+                    + "hora_fin,allow_hour,correlativo,"
+                    + "fecha_hora_traspaso, empresa_id, dias_efectivos_vacaciones) "
+                + " select "
+                    + " rut_empleado, "
+                    + " fecha_ingreso,"
+                    + "ausencia_id,"
+                    + " fecha_inicio,"
+                    + "fecha_fin,"
+                    + "rut_autoriza_ausencia,"
+                    + " ausencia_autorizada,"
+                    + "fecha_actualizacion,"
+                    + "hora_inicio,"
+                    + "hora_fin,"
+                    + "allow_hour,"
+                    + "correlativo,"
+                    + "current_timestamp, "
+                    + "'" + _empresaId + "',"
+                    + "dias_efectivos_vacaciones "
+                + " from detalle_ausencia "
+                + "where rut_empleado in "
+                    + "( "
+                    + "select empl_rut from empleado where empresa_id = '" + _empresaId + "' "
+                    + ") "
+                    + "and fecha_inicio::date between '" + _startDate + "' and '" + _endDate + "'";
+            
+            dbConn = dbLocator.getConnection(m_dbpoolName,
+                "[TraspasoHistoricoDAO.traspasaDetallesAusenciasHistoricas]");
+            ps = dbConn.prepareStatement(sql);
+            
+            affectedRows = ps.executeUpdate();
+            resultado.setFilasAfectadas(affectedRows);
+            ps.close();
+            dbLocator.freeConnection(dbConn);
+        }catch(SQLException|DatabaseException sqle){
+            affectedRows =-1;
+            resultado.setFilasAfectadas(affectedRows);
+            resultado.setThereError(true);
+            resultado.setMsg(sqle.getMessage());
+            resultado.setMsgError(sqle.toString());
+            System.err.println("[GestionFemase."
+                + "TraspasoHistoricoDAO."
+                + "traspasaDetallesAusenciasHistoricas]Error: " + sqle.toString());
+        }
+        
+        return resultado;
+    }
+    
+    /**
+    * Metodo que traspasa a historico los calculos de asistencia
+    * 
+    * @param _empresaId
+    * @param _startDate
+    * @param _endDate
+    * @return 
+    */
+    public MaintenanceVO traspasaDetalleAsistenciaHistoricos(String _empresaId, 
+            String _startDate, 
+            String _endDate){
+        MaintenanceVO resultado = new MaintenanceVO();
+        int affectedRows =0;
+        PreparedStatement ps = null;
+        Connection dbConn = null;
+        try{
+            String sql = "insert into detalle_asistencia_historica ("
+                + "empresa_id ,  depto_id ,  cenco_id ,  rut_empleado,  fecha_hora_calculo,"
+                + "  fecha_marca_entrada,  hora_entrada ,  hora_salida ,  horas_teoricas ,"
+                + "  horas_trabajadas ,  minutos_extras_50 ,  hora_inicio_ausencia ,"
+                + "  hora_fin_ausencia ,  minutos_trabajados ,  horas_extras ,  holgura_minutos ,"
+                + "  es_feriado ,  minutos_extras_100 ,  hora_entrada_teorica ,  hora_salida_teorica ,"
+                + "  minutos_extras ,  art22 ,  minutos_atraso ,  minutos_no_trabajados_entrada ,"
+                + "  minutos_no_trabajados_salida ,  autoriza_mins_no_trab_entrada ,  autoriza_mins_no_trab_salida,"
+                + "  hrs_presenciales,  hrs_trabajadas,  observacion,  hrs_ausencia,  fecha_marca_salida,"
+                + "  hhmm_extras,  hhmm_atraso,  autoriza_atraso,  autoriza_hrsextras,  hhmm_justificadas,"
+                + "  hhmm_extras_autorizadas,  marca_entrada_comentario,  marca_salida_comentario,  hhmm_salida_anticipada, fecha_hora_traspaso) "
+                + "select "
+                + "  empresa_id ,  depto_id ,  cenco_id ,  rut_empleado,  fecha_hora_calculo,  fecha_marca_entrada,  hora_entrada ,"
+                + "  hora_salida ,  horas_teoricas ,  horas_trabajadas ,  minutos_extras_50 ,  hora_inicio_ausencia ,  hora_fin_ausencia ,"
+                + "  minutos_trabajados ,  horas_extras ,  holgura_minutos ,  es_feriado ,  minutos_extras_100 ,  hora_entrada_teorica ,"
+                + "  hora_salida_teorica ,  minutos_extras ,  art22 ,  minutos_atraso ,  minutos_no_trabajados_entrada ,  minutos_no_trabajados_salida ,"
+                + "  autoriza_mins_no_trab_entrada ,  autoriza_mins_no_trab_salida,  hrs_presenciales,  hrs_trabajadas,  observacion,"
+                + "  hrs_ausencia,  fecha_marca_salida,  hhmm_extras,  hhmm_atraso,  autoriza_atraso,  autoriza_hrsextras,  hhmm_justificadas,"
+                + "  hhmm_extras_autorizadas,  marca_entrada_comentario,  marca_salida_comentario,  hhmm_salida_anticipada, current_timestamp "
+                + "  from detalle_asistencia "
+                + "where empresa_id = '" + _empresaId + "' "
+                + "and fecha_hora_calculo::date between '" + _startDate + "' and '" + _endDate + "'";
+            
+            dbConn = dbLocator.getConnection(m_dbpoolName,
+                "[TraspasoHistoricoDAO.traspasaDetalleAsistenciaHistoricos]");
+            ps = dbConn.prepareStatement(sql);
+            
+            affectedRows = ps.executeUpdate();
+            resultado.setFilasAfectadas(affectedRows);
+            ps.close();
+            dbLocator.freeConnection(dbConn);
+        }catch(SQLException|DatabaseException sqle){
+            affectedRows =-1;
+            resultado.setFilasAfectadas(affectedRows);
+            resultado.setThereError(true);
+            resultado.setMsg(sqle.getMessage());
+            resultado.setMsgError(sqle.toString());
+            System.err.println("[GestionFemase."
+                + "TraspasoHistoricoDAO.traspasaDetalleAsistenciaHistoricos]"
+                + "Error: " + sqle.toString());
+        }
+        
+        return resultado;
+    }
+    
+    /**
+    * Metodo que traspasa a historico los logs de auditoria.
+    * 
+    * @param _empresaId
+    * @param _startDate
+    * @param _endDate
+    * @return 
+    */
+    public MaintenanceVO traspasaLogEventosHistoricos(String _empresaId, 
+            String _startDate, 
+            String _endDate){
+        MaintenanceVO resultado = new MaintenanceVO();
+        int affectedRows =0;
+        PreparedStatement ps = null;
+        Connection dbConn = null;
+        try{
+            String sql = "insert into mantencion_evento_historico "
+                + "(username,  descripcion_evento,  ip_usuario,"
+                + "tipo_evento,fecha_hora,empresa_id,depto_id,"
+                + "cenco_id,empleado_rut,empresa_id_source,fecha_hora_traspaso) "
+                + "select "
+                + "username,descripcion_evento,ip_usuario,tipo_evento,"
+                + "fecha_hora,empresa_id,depto_id,cenco_id,"
+                + "empleado_rut,empresa_id_source,current_timestamp "
+                + "from mantencion_evento "
+                + "where empresa_id = '" + _empresaId + "' "
+                + "and fecha_hora::date between '" + _startDate + "' and '" + _endDate + "'";
+            
+            dbConn = dbLocator.getConnection(m_dbpoolName,"[TraspasoHistoricoDAO.insertLogEventosHistoricos]");
+            ps = dbConn.prepareStatement(sql);
+            
+            affectedRows = ps.executeUpdate();
+            resultado.setFilasAfectadas(affectedRows);
+            ps.close();
+            dbLocator.freeConnection(dbConn);
+        }catch(SQLException|DatabaseException sqle){
+            affectedRows =-1;
+            resultado.setFilasAfectadas(affectedRows);
+            resultado.setThereError(true);
+            resultado.setMsg(sqle.getMessage());
+            resultado.setMsgError(sqle.toString());
+            System.err.println("[GestionFemase."
+                + "TraspasoHistoricoDAO."
+                + "insertLogEventosHistoricos]Error: " + sqle.toString());
+        }
+        
+        return resultado;
+    }
+    
+    /**
+    * Metodo que elimina las marcas recien traspasadas a historico
+    * de los ruts especificados y para la empresa indicada.Solo se consideran los registros cuya fecha sea menor o igual a la fecha especificada.
+    * 
+    * @param _empresaId
+    * @param _tabla
+    * @param _startDate
+    * @param _endDate
+    * @return 
+    * 
+    */
+    public int eliminaRegistrosTraspasados(String _empresaId, 
+            String _tabla, 
+            String _startDate, 
+            String _endDate){
+        int affectedRows =0;
+        PreparedStatement ps = null;
+        Connection dbConn = null;
+        try{
+            String strSql = "";
+            
+            switch (_tabla){
+                case "marca":
+                    strSql = "delete "
+                        + "from marca "
+                        + "where empresa_cod = '" + _empresaId + "' "
+                        + "and fecha_hora::date between '" + _startDate + "' and '" + _endDate + "'";
+                    break;
+                case "marca_rechazo":
+                    strSql = "delete "
+                        + "from marca_rechazo "
+                        + "where empresa_cod = '" + _empresaId + "' "
+                        + "and fecha_hora::date between '" + _startDate + "' and '" + _endDate + "'";
+                    break;    
+                case "detalle_ausencia":
+                    strSql = "delete "
+                        + "from detalle_ausencia "
+                        + "where rut_empleado in "
+                            + "( "
+                            + "select empl_rut from empleado where empresa_id = '" + _empresaId + "' "
+                            + ") "
+                            + "and fecha_inicio::date between '" + _startDate + "' and '" + _endDate + "'";
+                    break;
+                case "detalle_asistencia":
+                    strSql = "delete "
+                        + "from detalle_asistencia "
+                        + "where empresa_id = '" + _empresaId + "' "
+                        + "and fecha_hora_calculo::date between '" + _startDate + "' and '" + _endDate + "'";
+                    break;    
+                case "mantencion_evento":
+                    strSql = "delete "
+                        + "from mantencion_evento "
+                        + "where empresa_id = '" + _empresaId + "' "
+                        + "and fecha_hora::date between '" + _startDate + "' and '" + _endDate + "'";
+                    break;    
+            }
+            
+            dbConn = dbLocator.getConnection(m_dbpoolName,
+                "[TraspasoHistoricoDAO.eliminaRegistrosTraspasados]");
+            ps = dbConn.prepareStatement(strSql);
+            
+            affectedRows = ps.executeUpdate();
+            
+            ps.close();
+            dbLocator.freeConnection(dbConn);
+        }catch(SQLException|DatabaseException sqle){
+            System.err.println("[GestionFemase."
+                + "TraspasoHistoricoDAO.eliminaRegistrosTraspasados]Error:"+sqle.toString());
+        }
+        
+        return affectedRows;
+    }
+    
 }

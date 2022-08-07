@@ -24,7 +24,7 @@ public class SolicitudPermisoAdministrativoVO implements Serializable{
     private String fechaInicioPA;
     private String fechaFinPA;
     private double diasSolicitados;
-    private String jornada;//{'TODO EL DIA', 'AM-MAÑANA', 'PM-TARDE'} 
+    private String jornada;//{'TODO_EL_DIA', 'AM', 'PM'} 
     private String usernameSolicita;
     private String usernameApruebaRechaza;
     private String fechaHoraApruebaRechaza;

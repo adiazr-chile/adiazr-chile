@@ -79,7 +79,7 @@ public class TurnosRotativosAsignacionController extends BaseServlet {
         ServletContext application = this.getServletContext();
         PropertiesVO appProperties=(PropertiesVO)application.getAttribute("appProperties");
         UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
-        TurnoRotativoBp auxnegocio  = new TurnoRotativoBp(appProperties);
+        TurnoRotativoBp turnoRotativoBp  = new TurnoRotativoBp(appProperties);
         EmpleadosBp auxempleados    = new EmpleadosBp(appProperties);
         if(request.getParameter("action") != null){
             System.out.println("[TurnosRotativosAsignacionController]"
@@ -216,7 +216,7 @@ public class TurnosRotativosAsignacionController extends BaseServlet {
                             //iterar empleados y para c/u rescatar el mas reciente turno rotativo
                             for (int i = 0; i < listaEmpleados.size(); i++) {
                                 EmpleadoVO empleado = listaEmpleados.get(i);
-                                List<AsignacionTurnoRotativoVO> asignaciones = auxnegocio.getAsignacionTurnosRotativosByRut(pEmpresa,
+                                List<AsignacionTurnoRotativoVO> asignaciones = turnoRotativoBp.getAsignacionTurnosRotativosByRut(pEmpresa,
                                     empleado.getRut(), -1, null, null, 1); 
                                 if (asignaciones.size() > 0) {
                                     empleado.setNombreTurno(asignaciones.get(0).getNombreTurno());
@@ -269,7 +269,7 @@ public class TurnosRotativosAsignacionController extends BaseServlet {
                     
                     //obtener asignacion de turnos
                     List<AsignacionTurnoRotativoVO> listaTurnos = 
-                        auxnegocio.getAsignacionTurnosRotativosByRut(pEmpresa, pRutEmpleado, 0, null, null,0);
+                        turnoRotativoBp.getAsignacionTurnosRotativosByRut(pEmpresa, pRutEmpleado, 0, null, null,0);
                     
                     request.setAttribute("infoempleado", infoempleado);
                     request.setAttribute("listaturnos", listaTurnos);
@@ -279,6 +279,12 @@ public class TurnosRotativosAsignacionController extends BaseServlet {
                     String pEmpresa     = request.getParameter("empresaId");
                     String pRutEmpleado = request.getParameter("rutEmpleado");
                     String asignacionKey = request.getParameter("asignacionKey");//
+                    
+                    EmpleadoVO infoempleado = auxempleados.getEmpleado(pEmpresa, pRutEmpleado);
+                    List<TurnoRotativoVO> turnosAsignadosCenco = 
+                        turnoRotativoBp.getTurnosAsignadosByCencoAsArrayList(pEmpresa, 
+                            infoempleado.getDepartamento().getId(), infoempleado.getCentroCosto().getId());
+                                        
                     int idTurno         = 0;
                     String fechaDesde   = "";
                     String fechaHasta   = "";
@@ -293,7 +299,7 @@ public class TurnosRotativosAsignacionController extends BaseServlet {
                         }
                         //obtener asignacion de turnos
                         List<AsignacionTurnoRotativoVO> listaTurnos = 
-                            auxnegocio.getAsignacionTurnosRotativosByRut(pEmpresa, 
+                            turnoRotativoBp.getAsignacionTurnosRotativosByRut(pEmpresa, 
                                 pRutEmpleado, 
                                 idTurno, 
                                 fechaDesde, 
@@ -305,9 +311,9 @@ public class TurnosRotativosAsignacionController extends BaseServlet {
                             + "Controller]Crear nueva "
                             + "asignacion de turno...");
                     }
-                    EmpleadoVO infoempleado = auxempleados.getEmpleado(pEmpresa, pRutEmpleado);
-                    List<TurnoRotativoVO> turnos = auxnegocio.getTurnos(pEmpresa, null, 0, 0, "id_turno");
-                    ArrayList<DuracionVO> duraciones = auxnegocio.getDuraciones();
+                    
+                    
+                    ArrayList<DuracionVO> duraciones = turnoRotativoBp.getDuraciones();
                     if (turnoAsignado != null){
                         System.out.println("[TurnosRotativosAsignacion"
                             + "Controller]"
@@ -320,7 +326,7 @@ public class TurnosRotativosAsignacionController extends BaseServlet {
                     request.setAttribute("infoempleado", infoempleado);
                     request.setAttribute("turnoAsignado", turnoAsignado);
                     request.setAttribute("duraciones", duraciones);
-                    request.setAttribute("turnos", turnos);
+                    request.setAttribute("turnos", turnosAsignadosCenco);
                     request.getRequestDispatcher("/mantencion/turno_rotativo_asignacion_3.jsp").forward(request, response);
             }else if (action.compareTo("crear") == 0){ //------------------------------------------------------------------------------ Crear nueva asignacion ------------------------
                     System.out.println("[TurnosRotativosAsignacion"
@@ -355,7 +361,7 @@ public class TurnosRotativosAsignacionController extends BaseServlet {
                         deleteAsignacion.setIdTurno(idTurnoConflicto);
                         deleteAsignacion.setFechaDesde(fecInicioConflicto);
                         deleteAsignacion.setFechaHasta(fecTerminoConflicto);
-                        auxnegocio.deleteAsignacion(deleteAsignacion, resultado);
+                        turnoRotativoBp.deleteAsignacion(deleteAsignacion, resultado);
                     }
                                         
                     EmpleadoVO infoempleado = auxempleados.getEmpleado(pEmpresa, pRutEmpleado);
@@ -393,7 +399,7 @@ public class TurnosRotativosAsignacionController extends BaseServlet {
                      * Validar interseccion de turnos
                      */
                     List<AsignacionTurnoRotativoVO> asignacionesConflicto = 
-                        auxnegocio.getAsignacionesConflicto(pEmpresa, 
+                        turnoRotativoBp.getAsignacionesConflicto(pEmpresa, 
                             pRutEmpleado, 
                             0,
                             fecInicio, 
@@ -409,7 +415,7 @@ public class TurnosRotativosAsignacionController extends BaseServlet {
                             + ",fecInicio: " + fecInicio
                             + ",fecTermino: " + fecTermino    
                         );
-                        auxnegocio.insertAsignacion(newAsignacion, resultado);
+                        turnoRotativoBp.insertAsignacion(newAsignacion, resultado);
                         request.getRequestDispatcher("/TurnosRotativosAsignacionController?"
                             + "action=mostrarAsignacionEmpleado"
                             + "&empresa=" + pEmpresa 
@@ -419,11 +425,12 @@ public class TurnosRotativosAsignacionController extends BaseServlet {
                          * La asignacion a ingresar intersecta con una o mas
                          * asignaciones existentes.
                          */
-                        List<TurnoRotativoVO> turnos 
-                            = auxnegocio.getTurnos(pEmpresa, null, 
-                                    0, 0, "id_turno");
+                        
+                        List<TurnoRotativoVO> turnosAsignadosCenco = 
+                            turnoRotativoBp.getTurnosAsignadosByCencoAsArrayList(pEmpresa, 
+                                infoempleado.getDepartamento().getId(), infoempleado.getCentroCosto().getId());
                         ArrayList<DuracionVO> duraciones
-                            = auxnegocio.getDuraciones();
+                            = turnoRotativoBp.getDuraciones();
                         //seteo de asignaciones conflicto
                         request.setAttribute("asignacionesConflicto", asignacionesConflicto);
                         //seteo de objetos a utilizar
@@ -431,7 +438,7 @@ public class TurnosRotativosAsignacionController extends BaseServlet {
                         request.setAttribute("newTurnoAsignado", newAsignacion);
                         request.setAttribute("infoempleado", infoempleado);
                         request.setAttribute("duraciones", duraciones);
-                        request.setAttribute("turnos", turnos);
+                        request.setAttribute("turnos", turnosAsignadosCenco);
                         
                         request.setAttribute("newIdDuracion", ""+idDuracion);
                         request.setAttribute("newIdTurno", idTurno);
@@ -465,7 +472,7 @@ public class TurnosRotativosAsignacionController extends BaseServlet {
                     
                     //obtener asignacion de turno actual
                     List<AsignacionTurnoRotativoVO> listaTurnos = 
-                        auxnegocio.getAsignacionTurnosRotativosByRut(pEmpresa, 
+                        turnoRotativoBp.getAsignacionTurnosRotativosByRut(pEmpresa, 
                             pRutEmpleado, 
                             currentIdTurno, 
                             currentFechaInicio, 
@@ -496,7 +503,7 @@ public class TurnosRotativosAsignacionController extends BaseServlet {
                         deleteAsignacion.setIdTurno(idTurnoConflicto);
                         deleteAsignacion.setFechaDesde(fecInicioConflicto);
                         deleteAsignacion.setFechaHasta(fecTerminoConflicto);
-                        auxnegocio.deleteAsignacion(deleteAsignacion, resultado);
+                        turnoRotativoBp.deleteAsignacion(deleteAsignacion, resultado);
                     }
                                         
                     EmpleadoVO infoempleado = auxempleados.getEmpleado(pEmpresa, pRutEmpleado);
@@ -534,7 +541,7 @@ public class TurnosRotativosAsignacionController extends BaseServlet {
                      * Validar interseccion de turnos antes de modificar asignacion de turno
                      */
                     List<AsignacionTurnoRotativoVO> asignacionesConflicto = 
-                        auxnegocio.getAsignacionesConflicto(pEmpresa, 
+                        turnoRotativoBp.getAsignacionesConflicto(pEmpresa, 
                             pRutEmpleado, 
                             newAsignacion.getIdTurno(),
                             newFecInicio, 
@@ -542,7 +549,7 @@ public class TurnosRotativosAsignacionController extends BaseServlet {
                     
                     if (asignacionesConflicto.isEmpty()){
                        
-                        auxnegocio.modifyAsignacion(currentAsignacion, 
+                        turnoRotativoBp.modifyAsignacion(currentAsignacion, 
                                 newAsignacion, resultado);
                         request.getRequestDispatcher("/TurnosRotativosAsignacionController?"
                             + "action=mostrarAsignacionEmpleado"
@@ -553,10 +560,10 @@ public class TurnosRotativosAsignacionController extends BaseServlet {
                          * La asignacion a actualizar intersecta con una o mas
                          * asignaciones existentes.
                          */
-                        List<TurnoRotativoVO> turnos 
-                            = auxnegocio.getTurnos(pEmpresa, null, 
-                                    0, 0, "id_turno");
-                        ArrayList<DuracionVO> duraciones = auxnegocio.getDuraciones();
+                        List<TurnoRotativoVO> turnosAsignadosCenco = 
+                            turnoRotativoBp.getTurnosAsignadosByCencoAsArrayList(pEmpresa, 
+                                infoempleado.getDepartamento().getId(), infoempleado.getCentroCosto().getId());
+                        ArrayList<DuracionVO> duraciones = turnoRotativoBp.getDuraciones();
                         //seteo de asignaciones conflicto
                         request.setAttribute("asignacionesConflicto", asignacionesConflicto);
                         //seteo de objetos a utilizar
@@ -564,7 +571,7 @@ public class TurnosRotativosAsignacionController extends BaseServlet {
                         request.setAttribute("newTurnoAsignado", newAsignacion);
                         request.setAttribute("infoempleado", infoempleado);
                         request.setAttribute("duraciones", duraciones);
-                        request.setAttribute("turnos", turnos);
+                        request.setAttribute("turnos", turnosAsignadosCenco);
                         
                         request.setAttribute("newIdDuracion", ""+newIdDuracion);
                         request.setAttribute("newIdTurno", newIdTurno);
@@ -614,7 +621,7 @@ public class TurnosRotativosAsignacionController extends BaseServlet {
                             deleteAsignacion.setIdTurno(idTurno);
                             deleteAsignacion.setFechaDesde(fechaDesde);
                             deleteAsignacion.setFechaHasta(fechaHasta);
-                            auxnegocio.deleteAsignacion(deleteAsignacion, resultado);
+                            turnoRotativoBp.deleteAsignacion(deleteAsignacion, resultado);
                         }
                     
                     }
@@ -624,20 +631,24 @@ public class TurnosRotativosAsignacionController extends BaseServlet {
                     String pEmpresa = request.getParameter("empresaId");
                     ArrayList<EmpleadoVO> empleados=new ArrayList<>();
                     String[] checksValues = request.getParameterValues("rutSelected");
+                    String deptoId  = "";
+                    int cencoId     = -1;
                     for (int i = 0; i < checksValues.length; i++) {
                         String rutSelected = checksValues[i];//
                         EmpleadoVO infoempleado = auxempleados.getEmpleado(pEmpresa, rutSelected);
+                        deptoId = infoempleado.getDepartamento().getId();
+                        cencoId = infoempleado.getCentroCosto().getId();
                         empleados.add(infoempleado);
                         System.out.println("[TurnosRotativos"
                             + "AsignacionController]rutSelected: "+rutSelected);
                     }
                     
-                    List<TurnoRotativoVO> turnos 
-                        = auxnegocio.getTurnos(pEmpresa, null, 
-                                    0, 0, "id_turno");
-                    ArrayList<DuracionVO> duraciones = auxnegocio.getDuraciones();
+                    List<TurnoRotativoVO> turnosAsignadosCenco = 
+                            turnoRotativoBp.getTurnosAsignadosByCencoAsArrayList(pEmpresa, 
+                                deptoId, cencoId);
+                    ArrayList<DuracionVO> duraciones = turnoRotativoBp.getDuraciones();
                     request.setAttribute("duraciones", duraciones);
-                    request.setAttribute("turnos", turnos);    
+                    request.setAttribute("turnos", turnosAsignadosCenco);    
                     request.setAttribute("empleados", empleados);
                     request.getRequestDispatcher("/mantencion/turno_rotativo_asignacion_masiva_2.jsp").forward(request, response);        
             }else if (action.compareTo("guardarAsignacionMasiva") == 0){
@@ -681,7 +692,7 @@ public class TurnosRotativosAsignacionController extends BaseServlet {
                             inserta la nueva asignacion...
                             */
                             List<AsignacionTurnoRotativoVO> asignacionesConflicto = 
-                                auxnegocio.getAsignacionesConflicto(empresaId, 
+                                turnoRotativoBp.getAsignacionesConflicto(empresaId, 
                                         rutEmpleado, 
                                         0,
                                         fecInicio, 
@@ -702,7 +713,7 @@ public class TurnosRotativosAsignacionController extends BaseServlet {
                                         deleteAsignacion.setIdTurno(Integer.parseInt(idTurno));
                                         deleteAsignacion.setFechaDesde(fecInicio);
                                         deleteAsignacion.setFechaHasta(fecTermino);
-                                        auxnegocio.deleteAsignacion(deleteAsignacion, resultado);
+                                        turnoRotativoBp.deleteAsignacion(deleteAsignacion, resultado);
                                 }
                             }
                             
@@ -729,7 +740,7 @@ public class TurnosRotativosAsignacionController extends BaseServlet {
                             newAsignacion.setFechaDesde(fecInicio);
                             newAsignacion.setFechaHasta(fecTermino);
                             
-                            auxnegocio.insertAsignacion(newAsignacion, resultado);
+                            turnoRotativoBp.insertAsignacion(newAsignacion, resultado);
 //                            request.getRequestDispatcher("/TurnosRotativosAsignacionController?"
 //                            + "action=mostrarAsignacionEmpleado"
 //                            + "&empresa=" + pEmpresa 

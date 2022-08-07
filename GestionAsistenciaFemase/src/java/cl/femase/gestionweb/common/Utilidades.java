@@ -22,6 +22,7 @@ import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -90,6 +91,19 @@ public class Utilidades {
             ex.printStackTrace();
         }
         return error_message;
+    }
+    
+    /**
+    * 
+    * @param _numero
+    * @return 
+    */
+    public static String formatDouble(double _numero){
+        NumberFormat nf = NumberFormat.getInstance(new Locale("es", "CL"));
+        String val = nf.format(_numero);
+        //System.out.println("numero: " + registros+", con formato: " + val);
+        
+        return val;
     }
     
     /**

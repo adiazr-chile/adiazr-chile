@@ -13,11 +13,11 @@ import cl.femase.gestionweb.vo.TurnoRotativoVO;
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
 import cl.femase.gestionweb.vo.MaintenanceVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
+import cl.femase.gestionweb.vo.TurnoCentroCostoVO;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -28,12 +28,12 @@ public class TurnoRotativoBp {
     public PropertiesVO props;
     /** para guardar los eventos de mantencion de informacion*/
     private final cl.femase.gestionweb.dao.MaintenanceEventsDAO eventsService;
-    private final cl.femase.gestionweb.dao.TurnoRotativoDAO turnoRotativoService;
+    private final cl.femase.gestionweb.dao.TurnoRotativoDAO turnosRotativosDao;
     
     public TurnoRotativoBp(PropertiesVO props) {
         this.props = props;
         eventsService = new cl.femase.gestionweb.dao.MaintenanceEventsDAO(this.props);
-        turnoRotativoService = new cl.femase.gestionweb.dao.TurnoRotativoDAO(this.props);
+        turnosRotativosDao = new cl.femase.gestionweb.dao.TurnoRotativoDAO(this.props);
     }
 
     public List<TurnoRotativoVO> getTurnos(String _empresaId, String _nombreTurno,
@@ -42,7 +42,7 @@ public class TurnoRotativoBp {
             String _jtSorting){
         
         List<TurnoRotativoVO> lista = 
-            turnoRotativoService.getTurnos(_empresaId, _nombreTurno, _jtStartIndex, 
+            turnosRotativosDao.getTurnos(_empresaId, _nombreTurno, _jtStartIndex, 
                 _jtPageSize, _jtSorting);
 
         return lista;
@@ -51,7 +51,7 @@ public class TurnoRotativoBp {
     public TurnoRotativoVO getTurno(int _idTurno){
         
         TurnoRotativoVO data = 
-            turnoRotativoService.getTurno(_idTurno);
+            turnosRotativosDao.getTurno(_idTurno);
 
         return data;
     }
@@ -62,7 +62,7 @@ public class TurnoRotativoBp {
             int _cencoId,
             int cargoId){
         List<EmpleadoVO> lista = 
-            turnoRotativoService.getEmpleadosNoAsignados(_idTurno, _empresaId, _deptoId, _cencoId, cargoId);
+            turnosRotativosDao.getEmpleadosNoAsignados(_idTurno, _empresaId, _deptoId, _cencoId, cargoId);
 
         return lista;
     }
@@ -73,14 +73,14 @@ public class TurnoRotativoBp {
             int _cencoId,
             int cargoId){
         List<EmpleadoVO> lista = 
-            turnoRotativoService.getEmpleados(_idTurno, _empresaId, _deptoId, _cencoId, cargoId);
+            turnosRotativosDao.getEmpleados(_idTurno, _empresaId, _deptoId, _cencoId, cargoId);
 
         return lista;
     }
     
     public MaintenanceVO update(TurnoRotativoVO _turnoToUpdate, 
             MaintenanceEventVO _eventdata){
-        MaintenanceVO updValues = turnoRotativoService.update(_turnoToUpdate);
+        MaintenanceVO updValues = turnosRotativosDao.update(_turnoToUpdate);
         
         //if (!updValues.isThereError()){
             String msgFinal = updValues.getMsg();
@@ -103,7 +103,7 @@ public class TurnoRotativoBp {
     public MaintenanceVO updateTurnoEmpleado(String _rutEmpleado,int _idTurno, 
             MaintenanceEventVO _eventdata){
         
-        MaintenanceVO insValues = turnoRotativoService.updateTurnoEmpleado(_rutEmpleado, _idTurno);
+        MaintenanceVO insValues = turnosRotativosDao.updateTurnoEmpleado(_rutEmpleado, _idTurno);
         
         //if (!updValues.isThereError()){
             String msgFinal = insValues.getMsg();
@@ -119,7 +119,7 @@ public class TurnoRotativoBp {
     public void insertarAsignaciones(ArrayList<AsignacionTurnoRotativoVO> _asignaciones){
     
         try {
-            turnoRotativoService.insertarAsignaciones(_asignaciones);
+            turnosRotativosDao.insertarAsignaciones(_asignaciones);
             
 //        //if (!updValues.isThereError()){
 //            String msgFinal = insValues.getMsg();
@@ -139,7 +139,7 @@ public class TurnoRotativoBp {
     public void eliminarAsignaciones(ArrayList<AsignacionTurnoRotativoVO> _asignaciones){
     
         try {
-            turnoRotativoService.eliminarAsignaciones(_asignaciones);
+            turnosRotativosDao.eliminarAsignaciones(_asignaciones);
             
 //        //if (!updValues.isThereError()){
 //            String msgFinal = insValues.getMsg();
@@ -159,7 +159,7 @@ public class TurnoRotativoBp {
     public MaintenanceVO insert(TurnoRotativoVO _objToInsert, 
             MaintenanceEventVO _eventdata){
         
-        MaintenanceVO insValues = turnoRotativoService.insert(_objToInsert);
+        MaintenanceVO insValues = turnosRotativosDao.insert(_objToInsert);
         
         //if (!updValues.isThereError()){
             String msgFinal = insValues.getMsg();
@@ -176,7 +176,7 @@ public class TurnoRotativoBp {
             AsignacionTurnoRotativoVO _updatedAsignacion, 
             MaintenanceEventVO _eventdata){
         
-        MaintenanceVO updatedValues = turnoRotativoService.modifyAsignacion(_currentAsignacion, _updatedAsignacion);
+        MaintenanceVO updatedValues = turnosRotativosDao.modifyAsignacion(_currentAsignacion, _updatedAsignacion);
         
         //if (!updValues.isThereError()){
             String msgFinal = updatedValues.getMsg();
@@ -190,13 +190,13 @@ public class TurnoRotativoBp {
     }
         
     public int getTurnosCount(String _empresaId,String _nombreTurno){
-        return turnoRotativoService.getTurnosCount(_empresaId, _nombreTurno);
+        return turnosRotativosDao.getTurnosCount(_empresaId, _nombreTurno);
     }
 
     public List<TurnoRotativoVO> getTurnosConDetalle(String _empresaId){
         
         List<TurnoRotativoVO> lista = 
-            turnoRotativoService.getTurnosConDetalle(_empresaId);
+            turnosRotativosDao.getTurnosConDetalle(_empresaId);
 
         return lista;
     }
@@ -204,7 +204,7 @@ public class TurnoRotativoBp {
     public List<TurnoRotativoVO> getTurnosSinDetalle(String _empresaId){
         
         List<TurnoRotativoVO> lista = 
-            turnoRotativoService.getTurnosSinDetalle(_empresaId);
+            turnosRotativosDao.getTurnosSinDetalle(_empresaId);
 
         return lista;
     }
@@ -217,7 +217,7 @@ public class TurnoRotativoBp {
             String _fechaHasta, 
             int _limit){
         
-        return turnoRotativoService.getAsignacionTurnosRotativosByRut(_empresaId,
+        return turnosRotativosDao.getAsignacionTurnosRotativosByRut(_empresaId,
                 _rutEmpleado,
                 _idTurno,
                 _fechaDesde,
@@ -231,7 +231,7 @@ public class TurnoRotativoBp {
 //            int  _idTurno, 
 //            String _fechaDesde, 
 //            String _fechaHasta){
-//        return turnoRotativoService.getAsignacion(_empresaId, 
+//        return turnosRotativosDao.getAsignacion(_empresaId, 
 //                _rutEmpleado,
 //                _idTurno,
 //                _fechaDesde,
@@ -239,12 +239,12 @@ public class TurnoRotativoBp {
 //    }    
     
     public ArrayList<DuracionVO> getDuraciones(){
-        return turnoRotativoService.getDuraciones();
+        return turnosRotativosDao.getDuraciones();
     }
  
     public MaintenanceVO insertAsignacion(AsignacionTurnoRotativoVO _objToInsert, 
             MaintenanceEventVO _eventdata){
-        MaintenanceVO insValues = turnoRotativoService.insertAsignacion(_objToInsert);
+        MaintenanceVO insValues = turnosRotativosDao.insertAsignacion(_objToInsert);
         
         //if (!updValues.isThereError()){
             String msgFinal = insValues.getMsg();
@@ -259,7 +259,7 @@ public class TurnoRotativoBp {
     
     public MaintenanceVO deleteAsignacion(AsignacionTurnoRotativoVO _objToDelete, 
             MaintenanceEventVO _eventdata){
-        MaintenanceVO deletedValues = turnoRotativoService.deleteAsignacion(_objToDelete);
+        MaintenanceVO deletedValues = turnosRotativosDao.deleteAsignacion(_objToDelete);
         
         //if (!updValues.isThereError()){
             String msgFinal = deletedValues.getMsg();
@@ -278,7 +278,7 @@ public class TurnoRotativoBp {
             String _fechaDesde, 
             String _fechaHasta){
     
-        return turnoRotativoService.getAsignacionesConflicto(_empresaId, 
+        return turnosRotativosDao.getAsignacionesConflicto(_empresaId, 
                 _rutEmpleado, 
                 _idTurno,
                 _fechaDesde, 
@@ -295,7 +295,7 @@ public class TurnoRotativoBp {
     public DetalleTurnoVO getAsignacionTurnoByFecha(String _empresaId, 
             String _rutEmpleado,
             String _fecha){
-        return turnoRotativoService.getAsignacionTurnoByFecha(_empresaId, _rutEmpleado, _fecha);
+        return turnosRotativosDao.getAsignacionTurnoByFecha(_empresaId, _rutEmpleado, _fecha);
     }
     
     public String getAsignacionTurnoByFechaJson(String _empresaId, 
@@ -303,13 +303,95 @@ public class TurnoRotativoBp {
             String _fecha){
         
         String jsonOutput = 
-            turnoRotativoService.getAsignacionTurnoByFechaJson(_empresaId, _rutEmpleado, _fecha);
+            turnosRotativosDao.getAsignacionTurnoByFechaJson(_empresaId, _rutEmpleado, _fecha);
 
         return jsonOutput;
     }
     
     public boolean updateTodos(TurnoRotativoVO _turno){
-        return turnoRotativoService.updateTodos(_turno);
+        return turnosRotativosDao.updateTodos(_turno);
     }
+    
+    //************************************************************************
+    //*** Nuevos metodos para la administracion de turnos rotativos asignados a centros de costo
+    //************************************************************************
+    
+    
+    /**
+    * 
+    * @param _empresaId
+    * @param _deptoId
+    * @param _cencoId
+    * @return 
+    */
+    public LinkedHashMap<Integer, TurnoRotativoVO> getTurnosAsignadosByCenco(String _empresaId,
+            String _deptoId, 
+            int _cencoId){
+        
+        return turnosRotativosDao.getTurnosAsignadosByCenco(_empresaId, _deptoId, _cencoId);
+        
+    }
+    
+    /**
+    * 
+    * @param _empresaId
+    * @param _deptoId
+    * @param _cencoId
+    * @return 
+    */
+    public ArrayList<TurnoRotativoVO> getTurnosAsignadosByCencoAsArrayList(String _empresaId,
+            String _deptoId, 
+            int _cencoId){
+        
+        LinkedHashMap<Integer, TurnoRotativoVO> lhashmapTurnosAsignados = 
+            turnosRotativosDao.getTurnosAsignadosByCenco(_empresaId, _deptoId, _cencoId);
+        
+        ArrayList<TurnoRotativoVO> listValues
+            = new ArrayList<>(lhashmapTurnosAsignados.values());
+        
+        return listValues;
+    }
+     
+    /**
+    * 
+    * @param _empresaId
+    * @param _deptoId
+    * @param _cencoId
+    * 
+    * @return 
+    */
+    public LinkedHashMap<Integer, TurnoRotativoVO> getTurnosNoAsignadosByCenco(String _empresaId,
+            String _deptoId, 
+            int _cencoId){
+        
+        return turnosRotativosDao.getTurnosNoAsignadosByCenco(_empresaId, _deptoId, _cencoId);
+        
+    }
+    
+    /**
+    * 
+    * @param _asignaciones
+    */
+    public void eliminarAsignacionesCencos(ArrayList<TurnoCentroCostoVO> _asignaciones){
+       try{
+            turnosRotativosDao.eliminarAsignacionesCencos(_asignaciones);
+        } catch (SQLException ex) {
+            System.err.println("[TurnosBp."
+                + "eliminarAsignacionesCencos]Error: "+ex.toString());
+        }
+    }
+    
+    /**
+    * 
+    * @param _asignaciones
+    */
+    public void insertarAsignacionesCencos(ArrayList<TurnoCentroCostoVO> _asignaciones){
+       try{
+            turnosRotativosDao.insertarAsignacionesCencos(_asignaciones);
+        } catch (SQLException ex) {
+            System.err.println("[TurnosBp."
+                + "insertarAsignacionesCencos]Error: "+ex.toString());
+        }
+   }
     
 }

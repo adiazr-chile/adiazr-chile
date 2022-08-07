@@ -346,7 +346,7 @@ public class SolicitudVacacionesController extends BaseServlet {
                     String strFechaHoraActual = sdf.format(fechaActual);
                     String reqDesde = request.getParameter("fechaDesde");
                     String reqHasta = request.getParameter("fechaHasta");
-                    
+                    VacacionesVO saldoVacaciones=new VacacionesVO();
                     solicitud.setUsernameSolicita(userConnected.getUsername());
                     solicitud.setEmpresaId(userConnected.getEmpresaId());
                     solicitud.setFechaIngreso(strFechaHoraActual);
@@ -365,19 +365,40 @@ public class SolicitudVacacionesController extends BaseServlet {
                         solicitud.getRutEmpleado());
                     
                     VacacionesBp vacacionesBp = new VacacionesBp(null);
+                    
+                    List<VacacionesVO> infoVacaciones = 
+                        vacacionesBp.getInfoVacaciones(userConnected.getEmpresaId(), 
+                            solicitud.getRutEmpleado(), -1, -1, -1, "vac.rut_empleado");
+                    if (infoVacaciones.isEmpty()){
+                         System.out.println("[SolicitudVacacionesController]"
+                        + "Vista previa antes de Insertar solicitud de vacaciones. "
+                        + "el trabajador no tiene registro en la tabla 'vacaciones', Salir");
+                         return;
+                    }else{
+                        saldoVacaciones = infoVacaciones.get(0);
+                    }
+                    
+                    System.out.println("[SolicitudVacacionesController]"
+                        + "Vista previa antes de Insertar solicitud de vacaciones. "
+                        + "Username: : " + userConnected.getUsername()
+                        + ", empresaId: : " + solicitud.getEmpresaId()    
+                        + ", rut_empleado: : " + solicitud.getRutEmpleado()
+                        + ", inicio_vacaciones: : " + solicitud.getInicioVacaciones()
+                        + ", fin_vacaciones: : " + solicitud.getFinVacaciones()
+                        + ", dias_especiales: : " + saldoVacaciones.getDiasEspeciales());
+                    
                     int diasEfectivosSolicitados = 
                         vacacionesBp.getDiasEfectivos(solicitud.getInicioVacaciones(), 
-                            solicitud.getFinVacaciones(), "N", 
+                            solicitud.getFinVacaciones(), 
+                            saldoVacaciones.getDiasEspeciales(), 
                             solicitud.getEmpresaId(), 
                             solicitud.getRutEmpleado());
                     solicitud.setDiasEfectivosVacacionesSolicitadas(diasEfectivosSolicitados);
                     
                     double doubleSaldoVacaciones = 0;
-                    List<VacacionesVO> infoVacaciones = 
-                        vacacionesBp.getInfoVacaciones(userConnected.getEmpresaId(), 
-                            solicitud.getRutEmpleado(), -1, -1, -1, "vac.rut_empleado");
+                    
                     if (!infoVacaciones.isEmpty()){
-                        VacacionesVO saldoVacaciones = infoVacaciones.get(0);
+                        //VacacionesVO saldoVacaciones = infoVacaciones.get(0);
                         doubleSaldoVacaciones = saldoVacaciones.getSaldoDias();
                     }
                     
@@ -807,6 +828,11 @@ public class SolicitudVacacionesController extends BaseServlet {
             + "EmpresaId: " + _solicitud.getEmpresaId()
             + ", rutEmpleado: " + _solicitud.getRutEmpleado());
                 
+        List<VacacionesVO> infoVacaciones = 
+            vacacionesbp.getInfoVacaciones(_solicitud.getEmpresaId(), 
+                _solicitud.getRutEmpleado(), -1, -1, -1, "vac.rut_empleado");
+        VacacionesVO saldoVacaciones=new VacacionesVO();
+        saldoVacaciones = infoVacaciones.get(0);
         EmpleadoVO empleado = 
             empleadobp.getEmpleado(_solicitud.getEmpresaId(), 
             _solicitud.getRutEmpleado());
@@ -916,7 +942,8 @@ public class SolicitudVacacionesController extends BaseServlet {
         if (_solicitud.getDiasEfectivosVacacionesSolicitadas() == 0){
             diasSolicitados = 
                 vacacionesbp.getDiasEfectivos(_solicitud.getInicioVacaciones(), 
-                    _solicitud.getFinVacaciones(), "N", 
+                    _solicitud.getFinVacaciones(), 
+                    saldoVacaciones.getDiasEspeciales(), 
                     _solicitud.getEmpresaId(), 
                     _solicitud.getRutEmpleado());
         }

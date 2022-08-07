@@ -310,14 +310,14 @@ public class TurnosDAO extends BaseDAO{
     }
     
     /**
-     * Retorna lista con los turnos existentes en el sistema
-     * 
-     * @param _empresaId
-     * @param _deptoId
-     * @param _cencoId
-     * 
-     * @return 
-     */
+    * Retorna lista con los turnos existentes en el sistema
+    * 
+    * @param _empresaId
+    * @param _deptoId
+    * @param _cencoId
+    * 
+    * @return 
+    */
     public LinkedHashMap<Integer, TurnoVO> getTurnosAsignadosByCenco(String _empresaId,
             String _deptoId, 
             int _cencoId){
@@ -458,15 +458,16 @@ public class TurnosDAO extends BaseDAO{
         
         return lista;
     }
+    
     /**
-     * Retorna lista de turnos no asignados al centro de costo.
-     * 
-     * @param _empresaId
-     * @param _deptoId
-     * @param _cencoId
-     * 
-     * @return 
-     */
+    * Retorna lista de turnos no asignados al centro de costo.
+    * 
+    * @param _empresaId
+    * @param _deptoId
+    * @param _cencoId
+    * 
+    * @return 
+    */
     public LinkedHashMap<Integer, TurnoVO> getTurnosNoAsignadosByCenco(String _empresaId,
             String _deptoId, 
             int _cencoId){
@@ -534,8 +535,8 @@ public class TurnosDAO extends BaseDAO{
     
     /**
     * 
-     * @param _asignaciones
-     * @throws java.sql.SQLException
+    * @param _asignaciones
+    * @throws java.sql.SQLException
     */
     public void eliminarAsignacionesCencos(ArrayList<TurnoCentroCostoVO> _asignaciones) throws SQLException{
         

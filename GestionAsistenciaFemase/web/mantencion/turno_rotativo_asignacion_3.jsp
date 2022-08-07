@@ -330,7 +330,7 @@ action="<%=request.getContextPath()%>/TurnosRotativosAsignacionController">
                             String strLabel = "";
                             while(iteraturnos.hasNext() ) {
                                 TurnoRotativoVO auxturno = iteraturnos.next();
-                                strLabel = auxturno.getNombre() + "[" 
+                                strLabel = "(" + auxturno.getId() +") "+ auxturno.getNombre() + "[" 
                                     + auxturno.getHoraEntrada() 
                                     + " - " + auxturno.getHoraSalida()+"]";
                                 %> 

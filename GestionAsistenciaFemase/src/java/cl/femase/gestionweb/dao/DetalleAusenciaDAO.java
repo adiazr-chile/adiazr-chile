@@ -733,6 +733,7 @@ public class DetalleAusenciaDAO extends BaseDAO{
             + ", horaInicio: " + _data.getHoraInicioFullAsStr()    
             + ", fechaFin: " + _data.getFechaFinAsStr()
             + ", horaFin: " + _data.getHoraFinFullAsStr()   
+            + ", permiteHora: " + _data.getPermiteHora()       
             + ", rutAutorizador: " + _data.getRutAutorizador()
             + ", ausenciaAutorizada: " + _data.getAusenciaAutorizada()
             + ", dias solicitados: " + _data.getDiasSolicitados();
@@ -746,10 +747,14 @@ public class DetalleAusenciaDAO extends BaseDAO{
             + ", horaInicio [" + _data.getHoraInicioFullAsStr() + "]"    
             + ", fechaFin [" + _data.getFechaFinAsStr() + "]"
             + ", horaFin [" + _data.getHoraFinFullAsStr() + "]"    
+            + ", permiteHora [" + _data.getPermiteHora() + "]"        
             + ", rutAutorizador [" + _data.getRutAutorizador() + "]"
             + ", ausenciaAutorizada [" + _data.getAusenciaAutorizada() + "]"
             + ", dias solicitados [" + _data.getDiasSolicitados() + "]";
-            
+        
+        System.out.println("[DetalleAusenciaDAO."
+            + "insertaPermisoAdministrativo]" + msgFinal);
+        
         objresultado.setMsg(msgFinal);
         PreparedStatement insert    = null;
         

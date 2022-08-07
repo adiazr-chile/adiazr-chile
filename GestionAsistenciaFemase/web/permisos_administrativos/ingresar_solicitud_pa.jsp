@@ -1,3 +1,4 @@
+<%@page import="java.text.SimpleDateFormat"%>
 <%@page import="cl.femase.gestionweb.vo.PermisoAdministrativoVO"%>
 <%@page import="java.util.Locale"%>
 <%@page import="java.util.Calendar"%>
@@ -15,7 +16,10 @@
     double diasUtilizados   = 0;
     boolean haySaldo = true;
     String msgSaldo=""; 
-    
+    Calendar mycal = Calendar.getInstance(new Locale("es","CL"));
+    int anioActual = mycal.get(Calendar.YEAR);
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    String fechaActual = sdf.format(mycal.getTime());
     if (userConnected.getIdPerfil() == Constantes.ID_PERFIL_DIRECTOR 
             || userConnected.getIdPerfil() == Constantes.ID_PERFIL_DIRECTOR_TR){
                 haySaldo = false;
@@ -27,8 +31,7 @@
             || userConnected.getIdPerfil() == Constantes.ID_PERFIL_DIRECTOR_TR){
                 runEmpleado = userConnected.getRunEmpleado();
         }    
-        Calendar mycal = Calendar.getInstance(new Locale("es","CL"));
-        int anioActual = mycal.get(Calendar.YEAR);
+        
         // -------------- ----------------- ---------------------------------------------------
         System.out.println("[ingresar_solicitud_pa.jsp]"
             + "Consultar saldos en tabla permiso_administrativo. "
@@ -75,10 +78,6 @@
     <head>
         <title>Nueva Solicitud de permiso administrativo</title>
         <script src="../mantencion/js/jquery-3.4.1.min.js"></script>
-        <!-- javascript y estilo para calendario datepicker  -->
-        <script src="../jquery-plugins/datepicker/js/jquery.datepick.js"></script>
-        <script src="../jquery-plugins/datepicker/js/jquery.plugin.min.js"></script>
-        <script src="../jquery-plugins/datepicker/js/jquery.datepick.js"></script>
         
         <script type="text/javascript">
 			
@@ -92,52 +91,85 @@
                 var strHasta = '';
         	
             function validate(){
+				var jornada = document.getElementById("jornada").value;
+				strDesde = document.getElementById("fechaDesde").value;
+				strHasta = document.getElementById("fechaHasta").value;
+				if (jornada==='TODO_EL_DIA'){
+					if (strDesde !== '' && strHasta !== ''){	
+						document.getElementById("form1").submit();
+					}else{
+						alert('Seleccione fechas');	
+					}
+				}else if (jornada==='AM' || jornada==='PM'){
+					if (strDesde !== ''){	
+						document.getElementById("form1").submit();
+					}else{
+						alert('Seleccione fecha');	
+					}
+				}
+					
+				
 				  //alert('validar rango');	
 				  //if (strDesde !== '' && strHasta !== ''){				 
 					 // alert('strdesde: ' + strDesde + ', strhasta: ' + strHasta); 
-					  var auxDesde = strDesde.split("-");
-					  var year  = parseInt(auxDesde[0]);
-					  var month = parseInt(auxDesde[1]);
-					  var day   = parseInt(auxDesde[2]);
-					  month++; 
-					  var desde = new Date(year,month, day);
-					  
-					  var auxHasta = strHasta.split("-");
-					  year  = parseInt(auxHasta[0]);
-					  month = parseInt(auxHasta[1]);
-					  day   = parseInt(auxHasta[2]);
-					  month++; 
-					  var hasta = new Date(year,month, day);
-					  
-					 if (isNaN(desde.getTime()) && isNaN(hasta.getTime())) {
-					  // Date is unreal.
-					 } else {
-						 //alert('desde: ' + desde + ', hasta: ' + hasta);
-						 //if (strDesde !== '' && strHasta !== ''){
-							 if (desde <= hasta){
-								//alert('rango valido'); 
-								$('#range').removeClass('invalid').addClass('valid');
-								$('.change_password').removeAttr('disabled');
-							 }else {
-								//alert('rango no valido');
-								$('#range').removeClass('valid').addClass('invalid');
-								$('.change_password').attr('disabled', 'disabled');
-							 }
-						 //}
-					 } 
+				 /*
+				  
+				  var auxDesde = strDesde.split("-");
+				  var year  = parseInt(auxDesde[0]);
+				  var month = parseInt(auxDesde[1]);
+				  var day   = parseInt(auxDesde[2]);
+				  month++; 
+				  var desde = new Date(year,month, day);
+				  
+				  var auxHasta = strHasta.split("-");
+				  year  = parseInt(auxHasta[0]);
+				  month = parseInt(auxHasta[1]);
+				  day   = parseInt(auxHasta[2]);
+				  month++; 
+				  var hasta = new Date(year,month, day);
+				  
+				 if (isNaN(desde.getTime()) && isNaN(hasta.getTime())) {
+				  // Date is unreal.
+				 } else {
+					 //alert('desde: ' + desde + ', hasta: ' + hasta);
+					 //if (strDesde !== '' && strHasta !== ''){
+						 if (desde <= hasta){
+							//alert('rango valido'); 
+							$('#range').removeClass('invalid').addClass('valid');
+							//$('.change_password').removeAttr('disabled');
+							document.getElementById("form1").submit();
+						 }else {
+							//alert('rango no valido');
+							$('#range').removeClass('valid').addClass('invalid');
+							//$('.change_password').attr('disabled', 'disabled');
+						 }
+					 //}
+				 } */
 				  //}//fin	
 				  
 				 
  			}//fin function
     	
-                        function setFechaHasta(jornada){
-                            if (jornada === 'AM' || jornada === 'PM'){
-                                var fechaDesde = document.getElementById("fechaDesde").value;
-                                if (fechaDesde !== ''){
-                                    document.getElementById("fechaHasta").value = document.getElementById("fechaDesde").value;
-                                }
-                            }
-                        }
+			function setFechaHasta(jornada){
+				if (jornada === 'AM' || jornada === 'PM'){
+					//habilitar fecha desde
+					//alert('Habilitar solo fecha desde');
+					$("#fechaDesde").attr("disabled", false);
+					$("#fechaHasta").attr("disabled", true);
+					//$('#fechaDesde').prop('readonly', false);
+					
+					//var fechaDesde = document.getElementById("fechaDesde").value;
+					//if (fechaDesde !== ''){
+					//	document.getElementById("fechaHasta").value = document.getElementById("fechaDesde").value;
+					//}
+				}else{
+					//habilitar ambas fechas
+					//alert('Habilitar ambas fechas');
+					$("#fechaDesde").attr("disabled", false);
+					$("#fechaHasta").attr("disabled", false);
+					
+				}
+			}
         
 		</script>	
         
@@ -162,15 +194,17 @@
       
     </table>
                 <%if (haySaldo){%>
-                    <input type="text" id="fechaDesde" name="fechaDesde" value="" placeholder="Ingrese fecha de inicio" readonly/>
-                    <input type="text" id="fechaHasta" name="fechaHasta" value="" placeholder="Ingrese fecha de termino" readonly/>
-                    <label for="jornada">&nbsp;</label>
-                    <select name="jornada" id="jornada" onchange="setFechaHasta(this.value)">
+                    <select name="jornada" id="jornada" onChange="setFechaHasta(this.value)">
                       <option value="TODO_EL_DIA">TODO EL DIA</option>
                       <option value="AM">AM-MA&Ntilde;ANA</option>
                       <option value="PM">PM-TARDE</option>
-                    </select><br>
-                    <input type="submit" class="change_password" value="Vista previa" disabled >
+                    </select>
+                    
+                    <input type="date" id="fechaDesde" name="fechaDesde" min="<%=fechaActual%>" value="" placeholder="Ingrese fecha de inicio" />
+                    <input type="date" id="fechaHasta" name="fechaHasta" min="<%=fechaActual%>" value="" placeholder="Ingrese fecha de termino" />
+                    <label for="jornada">&nbsp;</label>
+                    <br>
+                    <input type="button" class="change_password" value="Vista previa" onClick="validate()" >
                 <%}%>
             </form>
 
@@ -204,43 +238,9 @@
         <script type="text/javascript">
     
         $(function() {
-            $('#fechaDesde').datepick(
-                {
-                    dateFormat: 'yyyy-mm-dd',
-                    minDate: 1,
-                    directionReverse: true,
-                        onSelect: function(dateText) {
-                          //alert("Selected date desde: " + dateText + ", Current Selected Value= " + this.value);
-                          strDesde = this.value;
-                          $(this).change();
-                        }
-            }).on("change", function() {
-                //alert("Change event fec desde");
-                validate();
-            });
-				
-            $('#fechaHasta').datepick(
-            {
-                dateFormat: 'yyyy-mm-dd',
-                minDate: 1,
-                directionReverse: true,
-                onSelect: function(dateText) {
-                  //alert("Selected date desde: " + dateText + ", Current Selected Value= " + this.value);
-                  strHasta = this.value;
-                  $(this).change();
-                }
-            }).on("change", function() {
-                //alert("Change event fec hasta");
-                validate();
-            });
-			
+           
         });
 		
-		/*
-		function DisplayDate(message) {
-        	alert(message);
-    	};
-		*/
     
     </script>
     </body>

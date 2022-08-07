@@ -35,6 +35,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -359,6 +360,28 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
                     String reqHasta = request.getParameter("fechaHasta");
                     String jornada  = request.getParameter("jornada");
              
+                    if (reqHasta == null || reqHasta.compareTo("") == 0) reqHasta = reqDesde;
+                    
+                    SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
+                    SimpleDateFormat sdf2 = new SimpleDateFormat("dd-MM-yyyy");
+                    Date dteDesde = new Date();
+                    Date dteHasta = new Date();
+                    try{
+                        dteDesde = sdf2.parse(reqDesde);
+                        dteHasta = sdf2.parse(reqHasta);
+                    }catch(ParseException pex){
+                        System.err.println("[SolicitudPermisoAdministrativoController]"
+                            + "Error al parsear fechas: " + pex.toString());
+                    }
+                    
+                    String strFechaDesde = sdf1.format(dteDesde);
+                    String strFechaHasta = sdf1.format(dteHasta);
+                    System.out.println("[SolicitudPermisoAdministrativoController]"
+                        + "strFechaDesde: " + strFechaDesde
+                        + ", strFechaHasta: " + strFechaHasta);
+                    solicitud.setFechaInicioPA(strFechaDesde);
+                    solicitud.setFechaFinPA(strFechaHasta);
+                    
                     solicitud.setUsernameSolicita(userConnected.getUsername());
                     solicitud.setEmpresaId(userConnected.getEmpresaId());
                     solicitud.setFechaIngreso(strFechaHoraActual);
@@ -612,11 +635,12 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
                     response.getWriter().print(listData);
                 }else if (action.compareTo("apruebaRechaza") == 0) {//**********************************************************************************  
                     Calendar cal = Calendar.getInstance(new Locale("es","CL"));
-                    Date fechaActual = cal.getTime();    
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", new Locale("es","CL"));
-                    String strFechaHoraActual = sdf.format(fechaActual);
-                    String strAccion = request.getParameter("Accion");
-                    
+                    Date fechaActual            = cal.getTime();    
+                    SimpleDateFormat sdf        = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", new Locale("es","CL"));
+                    String strFechaHoraActual   = sdf.format(fechaActual);
+                    String strAccion            = request.getParameter("Accion");
+                    String permiteHora          = "N";
+                    boolean ausenciaPorHora = false;
                     System.out.println("[SolicitudPermisoAdministrativoController]"
                         + "Aprobar/Rechazar solicitud de permiso administrativo. "
                         + "Id solicitud: : " + solicitud.getId());
@@ -629,13 +653,22 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
                         + "Id solicitud: : " + solicitud.getId()
                         + ", inicio permiso administrativo: " + solicitudFromBd.getFechaInicioPA()
                         + ", fin permiso administrativo: " + solicitudFromBd.getFechaFinPA()
-                        + ", dias Solicitados: " + solicitudFromBd.getDiasSolicitados()    
+                        + ", dias Solicitados: " + solicitudFromBd.getDiasSolicitados()
+                        + ", jornada: " + solicitudFromBd.getJornada()    
                         + ", username: : " + userConnected.getUsername()
                         + ", empresaId: : " + solicitudFromBd.getEmpresaId()    
                         + ", run_empleado: : " + solicitudFromBd.getRunEmpleado()
                         + ", accion a realizar: " + strAccion
                         + ", nota_observacion: " + solicitud.getNotaObservacion());
 
+                    if (solicitudFromBd.getJornada().compareTo(Constantes.JORNADA_PERMISO_ADMINISTRATIVO_AM) == 0
+                            || solicitudFromBd.getJornada().compareTo(Constantes.JORNADA_PERMISO_ADMINISTRATIVO_PM) == 0){
+                        System.out.println("[SolicitudPermisoAdministrativoController]"
+                        + "Setear PA x mediodia---Ausencia x hora");
+                        permiteHora     = "S";
+                        ausenciaPorHora = true;
+                    }
+                    
                     solicitud.setDiasSolicitados(solicitudFromBd.getDiasSolicitados());
                     
                     EmpleadoVO infoEmpleado = empleadosbp.getEmpleado(solicitudFromBd.getEmpresaId(), 
@@ -653,7 +686,7 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
                         //validar ausencias conflicto
                         ArrayList<DetalleAusenciaVO> ausenciasConflicto = 
                             detAusenciaBp.getAusenciasConflicto(solicitudFromBd.getRunEmpleado(),
-                            false,
+                            ausenciaPorHora,
                             solicitudFromBd.getFechaInicioPA(),
                             solicitudFromBd.getFechaFinPA(), 
                             null, 
@@ -700,7 +733,7 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
                             newAusencia.setIdAusencia(Constantes.ID_AUSENCIA_PERMISO_ADMINISTRATIVO);
                             newAusencia.setRutAutorizador(userConnected.getRunEmpleado());
                             newAusencia.setAusenciaAutorizada("S");
-                            newAusencia.setPermiteHora("N");
+                            newAusencia.setPermiteHora(permiteHora);
                             newAusencia.setDiasSolicitados(solicitud.getDiasSolicitados());
                             MaintenanceVO insertResult = new MaintenanceVO();
                             insertResult = 

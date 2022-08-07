@@ -244,11 +244,17 @@ target="_parent"
                             Iterator<TurnoRotativoVO> iteraturnos = turnos.iterator();
                             while(iteraturnos.hasNext() ) {
                                 TurnoRotativoVO auxturno = iteraturnos.next();
+                                /*
                                 String strLabel = auxturno.getNombre() 
                                     + "[" 
                                     + auxturno.getHoraEntrada() 
                                     + " - " 
                                     + auxturno.getHoraSalida() + "]";
+                                */
+                                String strLabel = "(" + auxturno.getId() +") "+ auxturno.getNombre() + "[" 
+                                    + auxturno.getHoraEntrada() 
+                                    + " - " + auxturno.getHoraSalida()+"]";    
+
                                 %>
                                 <option value="<%=auxturno.getId()%>"><%=strLabel%></option>
                                 <%

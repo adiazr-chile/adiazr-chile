@@ -370,9 +370,14 @@
                                         while(iteraTurnos.hasNext() ) {
                                             TurnoRotativoVO turno = iteraTurnos.next();
                                             int turnoId = turno.getId();
-                                            String turnoName = turno.getNombre() 
-                                                + " [" + turno.getHoraEntrada()
-                                                + "-" + turno.getHoraSalida() + "]";
+                                            //String turnoName = turno.getNombre() 
+                                            //    + " [" + turno.getHoraEntrada()
+                                            //    + "-" + turno.getHoraSalida() + "]";
+                                            
+                                            String turnoName = "(" + turno.getId() +") "+ turno.getNombre() + "[" 
+                                                + turno.getHoraEntrada() 
+                                                + " - " + turno.getHoraSalida()+"]";    
+
                                         %>    
                                         <option value="<%=turnoId%>"><%=turnoName%></option>
                                         <%}%>    

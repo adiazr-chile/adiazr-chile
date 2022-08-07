@@ -15,6 +15,7 @@ import cl.femase.gestionweb.vo.EmpleadoVO;
 import cl.femase.gestionweb.vo.MaintenanceVO;
 import cl.femase.gestionweb.vo.TurnoRotativoVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
+import cl.femase.gestionweb.vo.TurnoCentroCostoVO;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -23,6 +24,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 import org.apache.log4j.Logger;
 
@@ -871,7 +873,7 @@ public class TurnoRotativoDAO extends BaseDAO{
             asDate = horaformat.parse(_hora);
             theTime = new java.sql.Time(asDate.getTime());
         }catch(ParseException pex){
-            System.err.println("[DetalleTurnosDAO.getHora]"
+            System.err.println("[DetalleTurnoRotativoDAO.getHora]"
                 + "Error al parsear hora entrada: "+pex.getMessage());
         }
         
@@ -1730,4 +1732,289 @@ public class TurnoRotativoDAO extends BaseDAO{
         }
         return data;
     }
+    
+    //*****nuevos metodos 06-08-2022
+    
+    /**
+    * Retorna lista con los turnos existentes en el sistema
+    * 
+    * @param _empresaId
+    * @param _deptoId
+    * @param _cencoId
+    * 
+    * @return 
+    */
+    public LinkedHashMap<Integer, TurnoRotativoVO> getTurnosAsignadosByCenco(String _empresaId,
+            String _deptoId, 
+            int _cencoId){
+               
+        LinkedHashMap<Integer, TurnoRotativoVO> lista = new LinkedHashMap<>();
+        
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        TurnoRotativoVO turno;
+        
+        try{
+            String sql = "SELECT "
+                    + "turno.id_turno,"
+                    + "turno.empresa_id,"
+                    + "turno.nombre_turno,"
+                    + "turno.estado_turno,"
+                    + "turno.holgura,"
+                    + "to_char(turno.hora_entrada,'HH24:mi') hora_entrada,"
+                    + "to_char(turno.hora_salida,'HH24:mi') hora_salida,"
+                    + "turno.fecha_creacion,"
+                    + "turno.fecha_modificacion,"
+                    + "turno.minutos_colacion,"
+                    + "'S' rotativo,"
+                    + "to_char(tcc.fecha_asignacion,'YYYY-MM-DD HH24:MI:SS') fecha_asignacion,"
+                    + "centro_costo.ccosto_nombre "
+                + "FROM turno_rotativo turno "
+                + "inner join turno_rotativo_centrocosto tcc "
+                + "on (turno.empresa_id = tcc.empresa_id and turno.id_turno = tcc.id_turno) "
+                    + "inner join centro_costo on (centro_costo.ccosto_id = tcc.cenco_id and centro_costo.depto_id = tcc.depto_id)"
+                + "where (tcc.empresa_id = '" + _empresaId + "' "
+                    + " and tcc.depto_id = '" + _deptoId + "' "
+                    + " and cenco_id = " + _cencoId + " "
+                    + ") "
+                + "order by nombre_turno";
+            System.out.println("[TurnoRotativoDAO."
+                + "getTurnosAsignadosByCenco]sql: " + sql);
+            dbConn = dbLocator.getConnection(m_dbpoolName,"[TurnoRotativoDAO.getTurnosAsignadosByCenco]");
+            ps = dbConn.prepareStatement(sql);
+            rs = ps.executeQuery();
+
+            while (rs.next()){
+                turno = new TurnoRotativoVO();
+                turno.setId(rs.getInt("id_turno"));
+                turno.setNombre(rs.getString("nombre_turno"));
+                turno.setEmpresaId(rs.getString("empresa_id"));
+                turno.setFechaAsignacionStr(rs.getString("fecha_asignacion"));
+                turno.setCencoNombre(rs.getString("ccosto_nombre"));
+                turno.setRotativo(rs.getString("rotativo"));
+                turno.setHoraEntrada(rs.getString("hora_entrada"));
+                turno.setHoraSalida(rs.getString("hora_salida"));
+                
+                lista.put(turno.getId(),turno);
+            }
+
+            ps.close();
+            rs.close();
+            dbLocator.freeConnection(dbConn);
+        }catch(SQLException|DatabaseException sqle){
+            m_logger.error("Error: "+sqle.toString());
+        }finally{
+            try {
+                if (ps != null) ps.close();
+                dbLocator.freeConnection(dbConn);
+            } catch (SQLException ex) {
+                System.err.println("Error: "+ex.toString());
+            }
+        }
+        
+        return lista;
+    }
+    
+    /**
+    * Retorna lista de turnos no asignados al centro de costo.
+    * 
+    * @param _empresaId
+    * @param _deptoId
+    * @param _cencoId
+    * 
+    * @return 
+    */
+    public LinkedHashMap<Integer, TurnoRotativoVO> getTurnosNoAsignadosByCenco(String _empresaId,
+            String _deptoId, 
+            int _cencoId){
+               
+        LinkedHashMap<Integer, TurnoRotativoVO> lista = new LinkedHashMap<>();
+        
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        TurnoRotativoVO turno;
+        
+        try{
+            String sql = "SELECT "
+                    + "turno.id_turno,"
+                    + "turno.nombre_turno,"
+                    + "turno.empresa_id,"
+                    + "turno.holgura, "
+                    + "turno.estado_turno,"
+                    + "to_char(turno.hora_entrada,'HH24:mi') hora_entrada,"
+                    + "to_char(turno.hora_salida,'HH24:mi') hora_salida,"
+                    + "turno.fecha_creacion, "
+                    + "turno.fecha_modificacion, "
+                    + "turno.minutos_colacion, "
+                    + "'S' rotativo "
+                + "from turno_rotativo turno "
+                + "where turno.empresa_id = '" + _empresaId + "' and turno.id_turno<>-1 "
+                    + "and turno.id_turno not in ("
+                    + "select id_turno "
+                    + "from turno_rotativo_centrocosto "
+                    + "where turno_rotativo_centrocosto.empresa_id = '" + _empresaId + "' "
+                    + "and turno_rotativo_centrocosto.depto_id = '" + _deptoId + "' "
+                    + "and turno_rotativo_centrocosto.cenco_id = " + _cencoId + " "
+                    + ") "
+                + "order by turno.nombre_turno";
+
+            System.out.println("[TurnoRotativoDAO."
+                + "getTurnosNoAsignadosByCenco]sql: "+ sql);
+            dbConn = dbLocator.getConnection(m_dbpoolName,"[TurnoRotativoDAO.getTurnosNoAsignadosByCenco]");
+            ps = dbConn.prepareStatement(sql);
+            rs = ps.executeQuery();
+
+            while (rs.next()){
+                turno = new TurnoRotativoVO();
+                turno.setId(rs.getInt("id_turno"));
+                turno.setNombre(rs.getString("nombre_turno"));
+                turno.setEmpresaId(rs.getString("empresa_id"));
+                turno.setRotativo(rs.getString("rotativo"));
+                turno.setHoraEntrada(rs.getString("hora_entrada"));
+                turno.setHoraSalida(rs.getString("hora_salida"));
+                lista.put(turno.getId(),turno);
+            }
+
+            ps.close();
+            rs.close();
+            dbLocator.freeConnection(dbConn);
+        }catch(SQLException|DatabaseException sqle){
+            m_logger.error("Error: "+sqle.toString());
+        }finally{
+            try {
+                if (ps != null) ps.close();
+                dbLocator.freeConnection(dbConn);
+            } catch (SQLException ex) {
+                System.err.println("Error: "+ex.toString());
+            }
+        }
+        
+        return lista;
+    }
+    
+    
+    /**
+    * 
+    * @param _asignaciones
+    * @throws java.sql.SQLException
+    */
+    public void eliminarAsignacionesCencos(ArrayList<TurnoCentroCostoVO> _asignaciones) throws SQLException{
+        
+        try{
+            dbConn = dbLocator.getConnection(m_dbpoolName,"[TurnoRotativoDAO.eliminarAsignacionesCencos]");
+            int i = 0;
+            System.out.println("[TurnoRotativoDAO.eliminarAsignacionesCencos]"
+                + "items a eliminar: " + _asignaciones.size());
+            String sqlDelete = "delete "
+                    + "from turno_rotativo_centrocosto "
+                + "where "
+                    + "empresa_id = ? "
+                    + "and depto_id = ? "
+                    + "and cenco_id = ?";
+            PreparedStatement statement = dbConn.prepareStatement(sqlDelete);
+            
+            for (TurnoCentroCostoVO asignacion : _asignaciones) {
+                System.out.println("[TurnoRotativoDAO.eliminarAsignacionesCencos] "
+                    + "Eliminar asignacion turno. "
+                    + "EmpresaId= " + asignacion.getEmpresaId()    
+                    + ",deptoId= " + asignacion.getDeptoId()
+                    + ", cencoId= " + asignacion.getCencoId());
+                
+                statement.setString(1,  asignacion.getEmpresaId());
+                statement.setString(2,  asignacion.getDeptoId());
+                statement.setInt(3,  asignacion.getCencoId());
+                
+                // ...
+                statement.addBatch();
+                i++;
+
+                if (i % 50 == 0 || i == _asignaciones.size()) {
+                    int[] rowsAffected = statement.executeBatch(); // Execute every 1000 items.
+                    System.out.println("[TurnoRotativoDAO."
+                        + "eliminarAsignacionesCencos]"
+                        + "filas afectadas= "+rowsAffected.length);
+                }
+            }
+            dbLocator.freeConnection(dbConn);
+        }catch(SQLException ex){
+            System.err.println("[TurnoRotativoDAO."
+                + "eliminarAsignacionesCencos]Error= " + ex.toString());
+            ex.printStackTrace();
+            dbLocator.freeConnection(dbConn);
+        }catch(DatabaseException dbex){
+            System.err.println("[TurnoRotativoDAO."
+                + "eliminarAsignacionesCencos]Error= " + dbex.toString());
+            dbex.printStackTrace();
+            dbLocator.freeConnection(dbConn);
+        }
+        finally{
+            dbLocator.freeConnection(dbConn);
+
+        }
+    }
+    
+    /**
+    * 
+    * @param _asignaciones
+    * @throws java.sql.SQLException
+    */
+    public void insertarAsignacionesCencos(ArrayList<TurnoCentroCostoVO> _asignaciones) throws SQLException{
+        
+        try{
+            dbConn = dbLocator.getConnection(m_dbpoolName,"[TurnoRotativoDAO.insertarAsignacionesCencos]");
+            int i = 0;
+            System.out.println("[TurnoRotativoDAO.insertarAsignacionesCencos]"
+                + "items a insertar: "+_asignaciones.size());
+            String sqlInsert = "INSERT INTO turno_rotativo_centrocosto("
+                    + " empresa_id, id_turno, depto_id, cenco_id, fecha_asignacion) "
+                    + " VALUES (?, ?, ?, ?, current_timestamp)";
+            PreparedStatement statement = dbConn.prepareStatement(sqlInsert);
+            
+            for (TurnoCentroCostoVO asignacion : _asignaciones) {
+                System.out.println("[TurnoRotativoDAO.insertarAsignacionesCencos] "
+                    + "Insert turno_rotativo_centrocosto. "
+                    + "EmpresaId= " + asignacion.getEmpresaId()    
+                    + ",idTurno= " + asignacion.getTurnoId()
+                    + ", deptoId= " + asignacion.getDeptoId()
+                    + ", cencoId= " + asignacion.getCencoId());
+                
+                statement.setString(1,  asignacion.getEmpresaId());
+                statement.setInt(2,  asignacion.getTurnoId());
+                statement.setString(3,  asignacion.getDeptoId());
+                statement.setInt(4,  asignacion.getCencoId());
+                
+                // ...
+                statement.addBatch();
+                i++;
+
+                if (i % 50 == 0 || i == _asignaciones.size()) {
+                    int[] rowsAffected = statement.executeBatch(); // Execute every 1000 items.
+                    System.out.println("[TurnoRotativoDAO."
+                        + "insertarAsignacionesCencos]"
+                        + "filas afectadas= "+rowsAffected.length);
+                }
+            }
+            dbLocator.freeConnection(dbConn);
+        }catch(SQLException ex){
+            System.err.println("[TurnoRotativoDAO."
+                + "insertarAsignacionesCencos]Error= " + ex.toString());
+            ex.printStackTrace();
+            dbLocator.freeConnection(dbConn);
+        }catch(DatabaseException dbex){
+            System.err.println("[TurnoRotativoDAO."
+                + "insertarAsignacionesCencos]Error= " + dbex.toString());
+            dbex.printStackTrace();
+            dbLocator.freeConnection(dbConn);
+        }
+        finally{
+            dbLocator.freeConnection(dbConn);
+//            try {
+//                //dbLocator.freeConnection(dbConn);
+//            } catch (SQLException|DatabaseException ex) {
+//                System.err.println("Error: "+ex.toString());
+//            }
+        }
+    }
+    
+    
 }

@@ -226,10 +226,6 @@ public class AsignacionCiclicaServlet extends BaseServlet {
                     session.setAttribute("duracion", paramDuracion);
                     session.setAttribute("detalle_ciclo", dates);
                     
-                    session.setAttribute("turnos_rotativos", 
-                        turnoRotativoBp.getTurnos((String)session.getAttribute("empresaId"), 
-                            null,0, 0, "nombre_turno"));
-                    
                     //setear empleados seleccionados
                     empresaId = (String)session.getAttribute("empresaId");
                     deptoId = (String)session.getAttribute("deptoId");
@@ -255,6 +251,12 @@ public class AsignacionCiclicaServlet extends BaseServlet {
                         System.out.println("[AsignacionCiclicaServlet]-1-Set empleados asignados en sesion...");
                         session.setAttribute("empleados_seleccionados", listaEmpleados);
                     }
+                    
+                    //set lista de turnos en sesion
+                    session.setAttribute("turnos_rotativos", 
+                        turnoRotativoBp.getTurnosAsignadosByCencoAsArrayList(empresaId, 
+                            deptoId,
+                            Integer.parseInt(cencoId)));
                     
                     //session.setAttribute("asignados_turno", listaEmpleadosAsignados);
                     request.getRequestDispatcher("/mantencion/turnos/asignacion_ciclica.jsp").forward(request, response);

@@ -102,9 +102,9 @@ public class Constantes {
     public static final String ESTADO_SOLICITUD_RECHAZADA_LABEL = "Rechazada";
     
     //Permisos administrativos
-    public static final String JORNADA_PERMISO_ADMINISTRATIVO_TODO_EL_DIA= "TODO EL DIA";
-    public static final String JORNADA_PERMISO_ADMINISTRATIVO_AM= "AM-MAÑANA";
-    public static final String JORNADA_PERMISO_ADMINISTRATIVO_PM= "PM-TARDE";
+    public static final String JORNADA_PERMISO_ADMINISTRATIVO_TODO_EL_DIA= "TODO_EL_DIA";
+    public static final String JORNADA_PERMISO_ADMINISTRATIVO_AM= "AM";
+    public static final String JORNADA_PERMISO_ADMINISTRATIVO_PM= "PM";
         
     
     /**
