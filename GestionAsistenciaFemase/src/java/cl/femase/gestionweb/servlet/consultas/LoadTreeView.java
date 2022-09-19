@@ -60,7 +60,7 @@ public class LoadTreeView extends BaseServlet {
         DepartamentoDAO deptosDAO = new DepartamentoDAO(appProperties);
         CentroCostoDAO cencosDAO = new CentroCostoDAO(appProperties);
         List<EmpresaVO> listaEmpresas = new ArrayList<EmpresaVO>();
-        System.out.println("[LoadTreeView]Obtener lista de empresas, deptos y cencos...");
+        System.out.println(WEB_NAME+"[LoadTreeView]Obtener lista de empresas, deptos y cencos...");
         listaEmpresas = empresasDAO.getEmpresas();
         
         //contiene todos los nodos
@@ -79,7 +79,7 @@ public class LoadTreeView extends BaseServlet {
             List<DepartamentoVO> departamentos = deptosDAO.getDepartamentosEmpresa(userConnected, empresaId);
             for (int idxdepto = 0; idxdepto < departamentos.size(); idxdepto++) {
                 DepartamentoVO itDepto= departamentos.get(idxdepto);
-                System.out.println("[LoadTreeView]"
+                System.out.println(WEB_NAME+"[LoadTreeView]"
                     + "Depto: " + itDepto.getId()
                     + ", nombre: " + itDepto.getNombre());
                 //**********Nodo Depto
@@ -118,7 +118,7 @@ public class LoadTreeView extends BaseServlet {
                         }
                         nodoCenco.setNodes(empleadosNodos);
                         //set nums de empleados para el cenco
-                        System.out.println("[LoadTreeViewServlet]"
+                        System.out.println(WEB_NAME+"[LoadTreeViewServlet]"
                             + "Set nodo empleados. "
                             + "Empresa_id:" + empresaId
                             +", deptoId: " + itDepto.getId()
@@ -138,7 +138,7 @@ public class LoadTreeView extends BaseServlet {
 
                 }//fin iteracion de centros de costo
                 //set nums de cencos para el depto
-                System.out.println("[LoadTreeViewServlet] set nodo cenco. "
+                System.out.println(WEB_NAME+"[LoadTreeViewServlet] set nodo cenco. "
                     + "Empresa_id:" + empresaId
                     +", deptoId: " + nodoDepto.getText()
                     +", numCencos: " + cencos.size());
@@ -148,12 +148,12 @@ public class LoadTreeView extends BaseServlet {
                 //nodoDepto.setNodes(deptosNodos);
                 deptosNodos.add(nodoDepto);
 
-                System.out.println("\n\n");
+                System.out.println(WEB_NAME+"\n");
                 
             }//fin iteracion de departamentos de la empresa
         
         //set nums de deptos para la empresa
-        System.out.println("[LoadTreeViewServlet]Final Nodo empresa_id:" + empresaId
+        System.out.println(WEB_NAME+"[LoadTreeViewServlet]Final Nodo empresa_id:" + empresaId
             +", deptoId: " + nodoEmpresa.getText()
             +", numDeptos: " + departamentos.size());
         int[] tagsDeptos    = new int[1];
@@ -165,12 +165,12 @@ public class LoadTreeView extends BaseServlet {
         //mostrar nodos
         for (int idxdepto = 0; idxdepto < deptosNodos.size(); idxdepto++) {
             NodeVO itDeptoNodo = deptosNodos.get(idxdepto);
-            System.out.println("\n\n[LoadTreeViewServlet] "
+            System.out.println(WEB_NAME+"\n[LoadTreeViewServlet] "
                 + "Depto: " + itDeptoNodo.getText());
             if (!itDeptoNodo.getNodes().isEmpty()){
                 for (int idxcenco = 0; idxcenco < itDeptoNodo.getNodes().size(); idxcenco++) {
                     NodeVO itCencoNodo = itDeptoNodo.getNodes().get(idxcenco);
-                    System.out.println("\t[LoadTreeViewServlet] "
+                    System.out.println(WEB_NAME+"\t[LoadTreeViewServlet] "
                         + "Cenco: " + itCencoNodo.getText());
                 }
             }
@@ -180,7 +180,7 @@ public class LoadTreeView extends BaseServlet {
         
         String jsonStr = gson.toJson(nodoEmpresa);
         String finalJsonStr= "[" + jsonStr + "]";
-//        System.out.println("[Treeview.LoadTreeViewServlet] "
+//        System.out.println(WEB_NAME+"[Treeview.LoadTreeViewServlet] "
 //            + "jsonStr: " + finalJsonStr);
         
         response.getWriter().print(finalJsonStr);
@@ -200,7 +200,7 @@ public class LoadTreeView extends BaseServlet {
             String _deptoId, 
             int _cencoId){
     
-        System.out.println("[LoadTreeView]empresa: "+_empresaId
+        System.out.println(WEB_NAME+"[LoadTreeView]empresa: "+_empresaId
             +", depto: "+_deptoId
             +", cenco: "+_cencoId);
         

@@ -17,7 +17,7 @@ import java.util.List;
  *
  * @author Alexander
  */
-public class MaintenanceEventsBp {
+public class MaintenanceEventsBp  extends BaseBp{
 
     public PropertiesVO props;
     private cl.femase.gestionweb.dao.MaintenanceEventsDAO eventosDao;

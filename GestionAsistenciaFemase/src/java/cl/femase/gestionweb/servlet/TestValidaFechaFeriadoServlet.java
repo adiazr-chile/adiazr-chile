@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.util.Date;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -21,7 +20,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author aledi
  */
 @WebServlet(name = "TestValidaFechaFeriadoServlet", urlPatterns = {"/TestValidaFechaFeriadoServlet"})
-public class TestValidaFechaFeriadoServlet extends HttpServlet {
+public class TestValidaFechaFeriadoServlet extends BaseServlet {
 
     /**
     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -36,7 +35,7 @@ public class TestValidaFechaFeriadoServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try {
-            System.out.println("[TestValidaFechaFeriadoServlet]Entrando...");
+            System.out.println(WEB_NAME+"[TestValidaFechaFeriadoServlet]Entrando...");
             //parametros de entrada de la funcion
             String startDate    = request.getParameter("startDate");
             String endDate      = request.getParameter("endDate");
@@ -63,25 +62,25 @@ public class TestValidaFechaFeriadoServlet extends HttpServlet {
         CalendarioFeriadoDAO daoFeriados = new CalendarioFeriadoDAO(new PropertiesVO());
         
         //***********************************************************************************************
-        System.out.println("[TestValidaFechaFeriadoServlet]date:[ " 
+        System.out.println(WEB_NAME+"[TestValidaFechaFeriadoServlet]date:[ " 
             + new Date() + "] INICIO invocar funcion validaFechaFeriado en un solo SQL...");
         String strFechasJson = daoFeriados.getValidaFechasJson(_empresaId, _cencoId, _runEmpleado, _startDate, _endDate);
-        System.out.println("[TestValidaFechaFeriadoServlet]"
+        System.out.println(WEB_NAME+"[TestValidaFechaFeriadoServlet]"
             + "retorno JSON: " + strFechasJson);
-        System.out.println("[TestValidaFechaFeriadoServlet]date:[ " 
+        System.out.println(WEB_NAME+"[TestValidaFechaFeriadoServlet]date:[ " 
             + new Date() + "] INICIO invocar funcion validaFechaFeriado en un solo SQL...");
         //***********************************************************************************************
-        System.out.println("[TestValidaFechaFeriadoServlet]date:[ " 
+        System.out.println(WEB_NAME+"[TestValidaFechaFeriadoServlet]date:[ " 
             + new Date() + "] INICIO invocando funcion validaFechaFeriado fecha x fecha...");
         String[] fechas = Utilidades.getFechas(_startDate, _endDate);
         for (int x = 0; x < fechas.length ; x++){
-            System.out.println("[TestValidaFechaFeriadoServlet]"
+            System.out.println(WEB_NAME+"[TestValidaFechaFeriadoServlet]"
                 + "invocando funcion validaFechaFeriado con fecha : " + fechas[x]);
             String strRetorno = daoFeriados.esFeriadoJson(_empresaId, _cencoId, _runEmpleado, fechas[x]);
-            System.out.println("[TestValidaFechaFeriadoServlet]"
+            System.out.println(WEB_NAME+"[TestValidaFechaFeriadoServlet]"
                 + "retorno JSON: " + strRetorno);
         }
-        System.out.println("[TestValidaFechaFeriadoServlet]date:[ " 
+        System.out.println(WEB_NAME+"[TestValidaFechaFeriadoServlet]date:[ " 
             + new Date() + "] FIN invocando funcion validaFechaFeriado fecha x fecha...");
         //***********************************************************************************************
     }

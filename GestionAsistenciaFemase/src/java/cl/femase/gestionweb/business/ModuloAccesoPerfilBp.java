@@ -15,7 +15,7 @@ import java.util.LinkedHashMap;
  *
  * @author Alexander
  */
-public class ModuloAccesoPerfilBp {
+public class ModuloAccesoPerfilBp  extends BaseBp{
 
     public PropertiesVO props;
     /** para guardar los eventos de mantencion de informacion*/

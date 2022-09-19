@@ -24,8 +24,8 @@
         || userInSession.getIdPerfil() == Constantes.ID_PERFIL_DIRECTOR_TR
         || userInSession.getIdPerfil() == Constantes.ID_PERFIL_JEFE_TECNICO_NACIONAL){
     
-        System.out.println("[topFrame.jsp]Usuario perfil Director/TR o Jefe Tecnico Nacional");
-        System.out.println("[topFrame.jsp]Rescatar solicitudes "
+        System.out.println("[GestionFemaseWeb]topFrame.jsp]Usuario perfil Director/TR o Jefe Tecnico Nacional");
+        System.out.println("[GestionFemaseWeb]topFrame.jsp]Rescatar solicitudes "
             + "de vacaciones pendientes de algunos de los empleados "
             + "en alguno de los cencos del usuario");
         SolicitudVacacionesBp solicitudesVacBp = new SolicitudVacacionesBp(null);
@@ -53,7 +53,7 @@
                 0, 
                 0, 
                 "solic_fec_ingreso");
-            System.out.println("[topFrame.jsp]"
+            System.out.println("[GestionFemaseWeb]topFrame.jsp]"
                 + "cencoId= " + itcenco.getCcostoId()
                 + ", numSolicitudesPendientes= " + numSolicitudesVACPendientes);
             numSolicitudesVACPendientes += listaSolicitudesVAC.size();
@@ -71,15 +71,15 @@
                 0, 
                 0, 
                 "solic_fec_ingreso");
-            System.out.println("[topFrame.jsp]"
+            System.out.println("[GestionFemaseWeb]topFrame.jsp]"
                 + "cencoId= " + itcenco.getCcostoId()
                 + ", numSolicitudesPendientes= " + numSolicitudesPAPendientes);
             numSolicitudesPAPendientes += listaSolicitudesPA.size();
             
         }
-        System.out.println("[topFrame.jsp]"
+        System.out.println("[GestionFemaseWeb]topFrame.jsp]"
             + "(Final)Num solicitudes Vacaciones Pendientes= " + numSolicitudesVACPendientes);
-        System.out.println("[topFrame.jsp]"
+        System.out.println("[GestionFemaseWeb]topFrame.jsp]"
             + "(Final)Num solicitudes Permiso Administrativo Pendientes= " + numSolicitudesPAPendientes);
         
         
@@ -226,7 +226,7 @@
                                 || userInSession.getIdPerfil() == Constantes.ID_PERFIL_JEFE_TECNICO_NACIONAL){
                             
                             if (numSolicitudesVACPendientes > 0){
-                                System.out.println("[topFrame.jsp]Mostrar notificaciones de solicitudes de vacaciones");%>
+                                System.out.println("[GestionFemaseWeb]topFrame.jsp]Mostrar notificaciones de solicitudes de vacaciones");%>
                                 <a href="<%=request.getContextPath()%>/vacaciones/sol_vacaciones_aprobar_rechazar.jsp" 
                                    class="notification" target="mainFrame">
                                   <span>Solic. Vacaciones Pendientes</span>
@@ -235,7 +235,7 @@
                             <%}%>
                             <%
                             if (numSolicitudesPAPendientes > 0){
-                                System.out.println("[topFrame.jsp]Mostrar notificaciones de solicitudes de permisos administrativos");%>
+                                System.out.println("[GestionFemaseWeb]topFrame.jsp]Mostrar notificaciones de solicitudes de permisos administrativos");%>
                                 <a href="<%=request.getContextPath()%>/permisos_administrativos/sol_pa_aprobar_rechazar.jsp" 
                                    class="notification" target="mainFrame">
                                   <span>Solic. PA Pendientes</span>

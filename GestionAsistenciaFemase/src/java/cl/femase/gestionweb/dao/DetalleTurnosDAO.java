@@ -96,7 +96,7 @@ public class DetalleTurnosDAO extends BaseDAO{
             
             int filasAfectadas = insert.executeUpdate();
             if (filasAfectadas == 1){
-                System.out.println("[insert detalle turno]"
+                System.out.println(WEB_NAME+"[insert detalle turno]"
                     + ", idTurno:" +_data.getIdTurno()
                     + ", cod_dia:" +_data.getCodDia()
                     + ", hraEntrada:" + _data.getHoraEntrada() + " "
@@ -182,7 +182,7 @@ public class DetalleTurnosDAO extends BaseDAO{
             
             int filasAfectadas = insert.executeUpdate();
             if (filasAfectadas == 1){
-                System.out.println("[update detalle turno]"
+                System.out.println(WEB_NAME+"[update detalle turno]"
                     + ", idTurno:" +_data.getIdTurno()
                     + ", cod_dia:" +_data.getCodDia()
                     + ", hraEntrada:" + _data.getHoraEntrada() + " "
@@ -248,7 +248,7 @@ public class DetalleTurnosDAO extends BaseDAO{
             
             int filasAfectadas = insert.executeUpdate();
             if (filasAfectadas == 1){
-                System.out.println("[delete detalle turno]"
+                System.out.println(WEB_NAME+"[delete detalle turno]"
                     + ", idTurno:" +_data.getIdTurno()
                     + ", cod_dia:" +_data.getCodDia()
                     + ", hraEntrada:" + _data.getHoraEntrada() + " "
@@ -324,7 +324,7 @@ public class DetalleTurnosDAO extends BaseDAO{
                 + "where dt.id_turno=" + _idTurno
                     +" and dt.cod_dia= " + _codDia;
             
-            System.out.println("[DetalleTurnosDAO.getDetalleTurno]Sql: "+sql);
+            System.out.println(WEB_NAME+"[DetalleTurnosDAO.getDetalleTurno]Sql: "+sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,"[DetalleTurnosDAO.getDetalleTurno]");
             ps = dbConn.prepareStatement(sql);
@@ -494,7 +494,7 @@ public class DetalleTurnosDAO extends BaseDAO{
            
             sql += " order by detalle_turno.cod_dia";
             
-            System.out.println("[DetalleTurnosDAO."
+            System.out.println(WEB_NAME+"[DetalleTurnosDAO."
                     + "getHashDetalleTurno]"
                     + "Sql: " +sql);
             

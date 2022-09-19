@@ -16,7 +16,7 @@ import java.util.List;
  *
  * @author Alexander
  */
-public class RegionBp {
+public class RegionBp  extends BaseBp{
 
     public PropertiesVO props;
     /** para guardar los eventos de mantencion de informacion*/

@@ -10,7 +10,7 @@
 <%@page import="java.util.List"%>
 <%
     List<EmpresaVO> empresas            = (List<EmpresaVO>)session.getAttribute("empresas");
-    //System.out.println("[asignacion_turno_rotativo.jsp]empresas.size= " + empresas.size());
+    //System.out.println("[GestionFemaseWeb]asignacion_turno_rotativo.jsp]empresas.size= " + empresas.size());
     
 	
 	

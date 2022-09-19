@@ -77,7 +77,7 @@ public class VacacionesLogController extends BaseServlet {
         VacacionesLogBp vacacionesLogBp = new VacacionesLogBp(appProperties);
         
         if(request.getParameter("action") != null){
-            System.out.println("[VacacionesLogController]"
+            System.out.println(WEB_NAME+"[VacacionesLogController]"
                 + "action is: " + request.getParameter("action"));
             List<VacacionesVO> listaObjetos = new ArrayList<>();
             String action=(String)request.getParameter("action");
@@ -108,7 +108,7 @@ public class VacacionesLogController extends BaseServlet {
                     String paramEmpresa = null;
                     String paramDepto   = null;
                     String cencoId      = "";
-                    System.out.println("[VacacionesLogController]"
+                    System.out.println(WEB_NAME+"[VacacionesLogController]"
                         + "token param 'cencoID'= " + paramCencoID);
                     if (paramCencoID != null && paramCencoID.compareTo("-1") != 0){
                         StringTokenizer tokenCenco  = new StringTokenizer(paramCencoID, "|");
@@ -120,7 +120,7 @@ public class VacacionesLogController extends BaseServlet {
                             }
                         }
                     }
-                    System.out.println("[VacacionesLogController]"
+                    System.out.println(WEB_NAME+"[VacacionesLogController]"
                         + "Listar info vacaciones. "
                         + "empresa: " + paramEmpresa
                         + ", depto: " + paramDepto

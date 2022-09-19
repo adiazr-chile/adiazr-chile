@@ -95,21 +95,21 @@ public class VacacionesReport extends BaseServlet {
                 + "VacacionesReport.processRequestRut]"
                 + "Error: "+ex.toString());
         }
-        System.out.println("[VacacionesReport.processRequestRut]"
+        System.out.println(WEB_NAME+"[VacacionesReport.processRequestRut]"
             + "Abrir conexion a la BD. Datasource: " + m_dbpoolName);
-        System.out.println("[servlet.reportes."
+        System.out.println(WEB_NAME+"[servlet.reportes."
             + "VacacionesReport.processRequestRut]tipoParam: "+tipoParam);
         if (tipoParam.compareTo("1") == 0){
             if (_rutParam==null) return null;
             String jasperfile= "vacaciones.jasper";
-            System.out.println("[servlet.reportes."
+            System.out.println(WEB_NAME+"[servlet.reportes."
                 + "VacacionesReport]"
                 + "tipo: " + tipoParam
                 + ", formato: " + formato);
             fileName = "vacaciones_"+_rutParam+"."+formato;
             
             String jasperFileName = appProperties.getReportesPath() + File.separator +jasperfile;
-            System.out.println("[servlet.reportes."
+            System.out.println(WEB_NAME+"[servlet.reportes."
                 + "VacacionesReport.processRequestRut]"
                 + "jasperfile: " + jasperFileName
                 +", datasource a usar: "+m_dbpoolName);
@@ -127,7 +127,7 @@ public class VacacionesReport extends BaseServlet {
                         + "processRequestRut]Error: "+ex.toString());
                 }
                 if (formato.compareTo("pdf") == 0){
-                    System.out.println("[servlet.reportes."
+                    System.out.println(WEB_NAME+"[servlet.reportes."
                         + "VacacionesReport.processRequestRut]"
                         + "Generar PDF."
                         + " fileName: " + fileName);
@@ -166,12 +166,12 @@ public class VacacionesReport extends BaseServlet {
         VacacionesBp vacacionesBp     = new VacacionesBp(appProperties);
         EmpresaBp empresaBp         = new EmpresaBp(appProperties);
         SimpleDateFormat sdfyyyy_MM_dd = new SimpleDateFormat("yyyy-MM-dd");
-        System.out.println("[servlet.reportes."
+        System.out.println(WEB_NAME+"[servlet.reportes."
             + "VacacionesReport.getParameters]Inicio...");
         String empresaParam = _request.getParameter("empresa");
         HashMap parameters = new HashMap();
                 
-        System.out.println("[servlet.reportes."
+        System.out.println(WEB_NAME+"[servlet.reportes."
             + "VacacionesReport.getParameters]. "
             + "Param rut= " + _rutEmpleado);
         EmpleadoVO infoEmpleado = empleadosBp.getEmpleado(empresaParam, _rutEmpleado);
@@ -191,7 +191,7 @@ public class VacacionesReport extends BaseServlet {
 ////        /**
 ////        * Calcular dias de vacaciones, para tener la informacion actualizada.
 ////        */
-////        System.out.println("[servlet.reportes."
+////        System.out.println(WEB_NAME+"[servlet.reportes."
 ////            + "VacacionesReport.getParameters]"
 ////            + "ReCalcular saldo dias de vacaciones "
 ////            + "para empleado. empresa_id: " + empresaParam
@@ -199,7 +199,7 @@ public class VacacionesReport extends BaseServlet {
 ////        vacacionesBp.calculaDiasVacaciones(_username, 
 ////            empresaParam, _rutEmpleado, 
 ////            m_parametrosSistema);
-////        System.out.println("[servlet.reportes."
+////        System.out.println(WEB_NAME+"[servlet.reportes."
 ////            + "VacacionesReport.getParameters]"
 ////            + "Actualizar saldos de vacaciones "
 ////            + "en tabla detalle_ausencia "
@@ -209,7 +209,7 @@ public class VacacionesReport extends BaseServlet {
 ////        detAusenciaBp.actualizaSaldosVacaciones(_rutEmpleado);
         
         dataVacaciones = new VacacionesVO();
-        System.out.println("[servlet.reportes."
+        System.out.println(WEB_NAME+"[servlet.reportes."
             + "VacacionesReport.getParameters]"
             + "Obtener Info vacaciones existentes (tabla vacaciones)...");
         infoVacaciones = vacacionesBp.getInfoVacaciones(empresaParam, _rutEmpleado, 
@@ -217,7 +217,7 @@ public class VacacionesReport extends BaseServlet {
         if (!infoVacaciones.isEmpty()){
             dataVacaciones = infoVacaciones.get(0);
             diasTotalesAsignadosPeriodo = dataVacaciones.getDiasEfectivos();
-            System.out.println("[servlet.reportes."
+            System.out.println(WEB_NAME+"[servlet.reportes."
                 + "VacacionesReport.getParameters]Datos en info vacaciones."
                 + "Dias de vacaciones asignados: " + diasTotalesAsignadosPeriodo
                 + ", dias efectivos: " + dataVacaciones.getDiasEfectivos()        
@@ -225,7 +225,7 @@ public class VacacionesReport extends BaseServlet {
                 + ", dias especiales?: " + dataVacaciones.getDiasEspeciales()
                 + ", zona extrema?: " + infoEmpleado.getCentroCosto().getZonaExtrema());
         }
-        System.out.println("\n\n[servlet.reportes."
+        System.out.println(WEB_NAME+"\n[servlet.reportes."
             + "VacacionesReport.getParameters]Actualizar datos "
             + "segun antiguedad del empleado a la fecha (mes vencido)");
         //**************************************************************************************
@@ -233,13 +233,13 @@ public class VacacionesReport extends BaseServlet {
         Calendar calendarPrimerDia = Calendar.getInstance(new Locale("es","CL"));
         calendarPrimerDia.set(Calendar.DATE, 1);
         Date fecha1erDiaMes = calendarPrimerDia.getTime();
-        System.out.println("[servlet.reportes."
+        System.out.println(WEB_NAME+"[servlet.reportes."
             + "VacacionesReport.getParameters]"
             + "fecha1erDiaMesActual: " + fecha1erDiaMes);
         
         // 1.- Calcular d�as normales (1.25 por mes, a partir de la fecha de ingreso del empleado) 
         Date fechaMesVencido = vacacionesBp.getFechaMesVencido(fechaInicioContrato, fechaDesvinculacion);
-        System.out.println("[VacacionesBp."
+        System.out.println(WEB_NAME+"[VacacionesBp."
             + "getFechaMesVencido]Calcular antiguedad entre:"
             + "Fecha inicio contrato: " + fechaInicioContrato
             +", fechaMesVencido: " + fechaMesVencido);
@@ -248,12 +248,12 @@ public class VacacionesReport extends BaseServlet {
         DiferenciaEntreFechasVO difFechas = Utilidades.getDiferenciaEntreFechas(fechaInicioContrato, fechaMesVencido);
         BigDecimal bgMesesAntiguedad = new BigDecimal(difFechas.getMonths()).setScale(2,BigDecimal.ROUND_HALF_DOWN);
         bgMesesAntiguedad = new BigDecimal(bgMesesAntiguedad.doubleValue());
-        System.out.println("[servlet.reportes."
+        System.out.println(WEB_NAME+"[servlet.reportes."
             + "VacacionesReport.getParameters]"
             + "rut_empleado: " + _rutEmpleado
             + ", fecha inicio contrato: " + fechaInicioContrato    
             + ", meses antiguedad a la fecha fin del reporte: " + bgMesesAntiguedad);
-        System.out.println("[servlet.reportes."
+        System.out.println(WEB_NAME+"[servlet.reportes."
             + "VacacionesReport.getParameters]Calcular dias de vacaciones a favor...");
         double paramFactorVacacionesNormales    = 1.25;
         double paramFactorVacacionesEspeciales  = 2.5;
@@ -268,7 +268,7 @@ public class VacacionesReport extends BaseServlet {
         //BigDecimal bgDiasAFavor;
         
         if (dataVacaciones.getDiasEspeciales().compareTo("S") == 0){
-            System.out.println("[servlet.reportes."
+            System.out.println(WEB_NAME+"[servlet.reportes."
                 + "VacacionesReport.getParameters]"
                 + "rut_empleado: " + _rutEmpleado
                 + ", cenco: " + infoEmpleado.getCentroCosto().getNombre()
@@ -277,14 +277,14 @@ public class VacacionesReport extends BaseServlet {
             //bgDiasAFavor = bgMesesAntiguedad.multiply(new BigDecimal(paramFactorVacacionesEspeciales)).setScale(2,BigDecimal.ROUND_HALF_DOWN);
             //dblDiasEspeciales = bgDiasAFavor.doubleValue();
             dblDiasEspeciales = dataVacaciones.getDiasAcumulados();
-            /*System.out.println("[servlet.reportes."
+            /*System.out.println(WEB_NAME+"[servlet.reportes."
                 + "VacacionesReport.getParameters]"
                 + "rut_empleado: " + _rutEmpleado
                 + ", cenco: " + infoEmpleado.getCentroCosto().getNombre()
                 +". dias_especiales(antes= " + dblDiasEspeciales);*/
         }else if (infoEmpleado.getCentroCosto().getZonaExtrema().compareTo("S") == 0){ 
             //paramFactorVacaciones = paramFactorVacacionesZonaExtrema;
-            System.out.println("[servlet.reportes."
+            System.out.println(WEB_NAME+"[servlet.reportes."
                 + "VacacionesReport.getParameters]"
                 + "rut_empleado: " + _rutEmpleado
                 + ", cenco: " + infoEmpleado.getCentroCosto().getNombre()
@@ -293,7 +293,7 @@ public class VacacionesReport extends BaseServlet {
 //            dblDiasZonaExtrema = bgDiasAFavor.doubleValue();
             dblDiasZonaExtrema = dataVacaciones.getDiasAcumulados();
         }else{
-            System.out.println("[servlet.reportes."
+            System.out.println(WEB_NAME+"[servlet.reportes."
                 + "VacacionesReport.getParameters]"
                 + "rut_empleado: " + _rutEmpleado
                 + ", cenco: " + infoEmpleado.getCentroCosto().getNombre()
@@ -309,7 +309,7 @@ public class VacacionesReport extends BaseServlet {
             + dblDiasNormales 
             + dataVacaciones.getDiasAdicionales();
         double diasDisponibles = (diasAcumulados - diasTotalesAsignadosPeriodo);
-        System.out.println("[servlet.reportes."
+        System.out.println(WEB_NAME+"[servlet.reportes."
             + "VacacionesReport.getParameters]"
             + "rut_empleado: " + _rutEmpleado
             + ", diasZonaExtrema(+): " + dblDiasZonaExtrema
@@ -364,7 +364,7 @@ public class VacacionesReport extends BaseServlet {
         //parameters.put("startDate", startDateParam);
         parameters.put("endDate", sdfyyyy_MM_dd.format(fecha1erDiaMes));
             
-        System.out.println("[servlet.reportes."
+        System.out.println(WEB_NAME+"[servlet.reportes."
             + "VacacionesReport.getParameters]Fin.");
         
         return parameters;
@@ -379,7 +379,7 @@ public class VacacionesReport extends BaseServlet {
         LinkedHashMap<String, AsistenciaTotalesVO>  totalesAsistencia 
             = new LinkedHashMap<>();
         EmpleadosBp empleadosBp = new EmpleadosBp(new PropertiesVO());
-        System.out.println("[servlet.reportes."
+        System.out.println(WEB_NAME+"[servlet.reportes."
             + "VacacionesReport.getEmpleados]"
             + "empresaId: " + _empresaId
             + ",deptoId: " + _deptoId    
@@ -403,7 +403,7 @@ public class VacacionesReport extends BaseServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(true);
-        System.out.println("[VacacionesReport.doGet]entrando...");
+        System.out.println(WEB_NAME+"[VacacionesReport.doGet]entrando...");
         if (session!=null) session.removeAttribute("mensaje");else session = request.getSession();
         UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
 //
@@ -415,7 +415,7 @@ public class VacacionesReport extends BaseServlet {
         }else{
             session.setAttribute("mensaje", "Sesion de usuario "+request.getParameter("username")
                 +" no valida");
-            System.out.println("Sesion de usuario "+request.getParameter("username")
+            System.out.println(WEB_NAME+"Sesion de usuario "+request.getParameter("username")
                 +" no valida");
             request.getRequestDispatcher("/mensaje.jsp").forward(request, response);
         }
@@ -450,7 +450,7 @@ public class VacacionesReport extends BaseServlet {
         DetalleAusenciaBp detAusenciasBp = new DetalleAusenciaBp(appProperties);
         
         m_parametrosSistema = (HashMap<String, Double>)session.getAttribute("parametros_sistema");
-        System.out.println("[VacacionesReport.doPost]"
+        System.out.println(WEB_NAME+"[VacacionesReport.doPost]"
             + "empresaId: " + empresaId
             + ", deptoId: " + deptoId
             + ", strCencoId: " + strCencoId
@@ -470,7 +470,7 @@ public class VacacionesReport extends BaseServlet {
                 && tipoParam.compareTo("3") != 0){
             //generar informes por centro de costo.
             LinkedHashMap<String, String> archivosGenerados = new LinkedHashMap<>();
-            System.out.println("[VacacionesReport.doPost]"
+            System.out.println(WEB_NAME+"[VacacionesReport.doPost]"
                 + "Generar informes para todos los empleados de "
                 + "empresaId: " + empresaId
                 +", deptoId: " + deptoId
@@ -480,7 +480,7 @@ public class VacacionesReport extends BaseServlet {
             FileGeneratedVO archivoGenerado;
             String nombreCenco="";
             for (EmpleadoVO empleado : listaEmpleados) {
-                System.out.println("[VacacionesReport.doPost]"
+                System.out.println(WEB_NAME+"[VacacionesReport.doPost]"
                     + "Generar informe para empleado rut: " + empleado.getRut()
                     +", nombre: " + empleado.getNombreCompleto());
                 //List<DetalleAusenciaVO> ausencias = detAusenciasBp.getDetallesAusencias(empleado.getRut(), 
@@ -489,7 +489,7 @@ public class VacacionesReport extends BaseServlet {
                     if (nombreCenco.compareTo("") == 0) nombreCenco = empleado.getCencoNombre();
                     archivoGenerado = processRequestRut(request, response, empleado.getRut());
                     if (archivoGenerado != null){
-                        System.out.println("[VacacionesReport.doPost]Add "
+                        System.out.println(WEB_NAME+"[VacacionesReport.doPost]Add "
                             + "archivo generado: " + archivoGenerado.getFileName());
                         archivosGenerados.put(empleado.getRut(), archivoGenerado.getFilePath());
                     }
@@ -506,11 +506,11 @@ public class VacacionesReport extends BaseServlet {
             }
             
         }else{
-            System.out.println("[VacacionesReport.doPost]"
+            System.out.println(WEB_NAME+"[VacacionesReport.doPost]"
                 + "Generar reporte asistencia solo para el rut: " + rutParam);
             FileGeneratedVO filegenerated=processRequestRut(request, response, rutParam);
             if (filegenerated != null){
-                System.out.println("[VacacionesReport.doPost]Add "
+                System.out.println(WEB_NAME+"[VacacionesReport.doPost]Add "
                     + "archivo generado: " + filegenerated.getFileName());
                 showFileToDownload(filegenerated, tipoParam, formato, response);
                 File auxpdf=new File(filegenerated.getFilePath());
@@ -532,7 +532,7 @@ public class VacacionesReport extends BaseServlet {
         File auxFile = new File(_fileGenerated.getFilePath());
         int length   = 0;
         //pdf
-        System.out.println("[VacacionesReport.showFileToDownload]Generar PDF."
+        System.out.println(WEB_NAME+"[VacacionesReport.showFileToDownload]Generar PDF."
             + " fileName: " + _fileGenerated.getFileName());
         try{
             File pointToFile = new File(_fileGenerated.getFilePath());
@@ -586,7 +586,7 @@ public class VacacionesReport extends BaseServlet {
             + "_"+_cencoNombre + "_todos.pdf");
 
         archivoGenerado=new FileGeneratedVO(mergedFile.getName(), mergedFile.getAbsolutePath());
-        System.out.println("\n[servlet.reportes."
+        System.out.println(WEB_NAME+"[servlet.reportes."
             + "VacacionesReport.mergePdfFiles]"
             + "uniendo archivos en uno solo. "
             + "Path: " + mergedFile.getAbsolutePath());
@@ -597,7 +597,7 @@ public class VacacionesReport extends BaseServlet {
             for( String key : _archivos.keySet() ){
                 String pathFile = _archivos.get(key);
                 File itFile = new File(pathFile);
-                System.out.println("[servlet.reportes."
+                System.out.println(WEB_NAME+"[servlet.reportes."
                     + "VacacionesReport.mergePdfFiles]itera archivo " + pathFile);
                 
                 mergePdf.addSource(itFile);
@@ -609,7 +609,7 @@ public class VacacionesReport extends BaseServlet {
             for( String key : _archivos.keySet() ){
                 String pathFile2 = _archivos.get(key);
                 File itFile2 = new File(pathFile2);
-                System.out.println("[servlet.reportes."
+                System.out.println(WEB_NAME+"[servlet.reportes."
                     + "VacacionesReport.mergePdfFiles]Eliminando archivo " + pathFile2);
                 itFile2.delete();
             }

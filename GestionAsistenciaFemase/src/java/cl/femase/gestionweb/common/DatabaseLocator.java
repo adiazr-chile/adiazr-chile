@@ -17,7 +17,8 @@ import javax.naming.NamingException;
 *  
 */
 public class DatabaseLocator {
-
+    public static String WEB_NAME = "[GestionFemaseWeb]";
+    
     private static DatabaseLocator me;
     private InitialContext ctx;
     private Map dsNames;
@@ -27,7 +28,7 @@ public class DatabaseLocator {
             ctx = new InitialContext();
 
             if (ctx == null) {
-                System.out.println("Contexto nulo!");
+                System.out.println(WEB_NAME+"Contexto nulo!");
                 throw new DatabaseException(DatabaseException.ERROR_SIN_CONTEXTO, "Contexto nulo.");
             }
         } catch (NamingException e) {
@@ -60,7 +61,7 @@ public class DatabaseLocator {
     */
     public Connection getConnection(String dsName, String _fromMethod) throws DatabaseException {
         Connection conn = null;
-        System.out.println("[DatabaseLocator.getConnection]"
+        System.out.println(WEB_NAME+"[DatabaseLocator.getConnection]"
             + "Obteniendo conexion a la BD desde metodo: " + _fromMethod);
         try {
             DataSource ds = (DataSource) ctx.lookup("java:/" + dsName);
@@ -117,7 +118,7 @@ public class DatabaseLocator {
 //     */
 //    public void freeConnection(Connection conn) {
 //        try {
-//            System.out.println("Liberando conexion a la BD...");
+//            System.out.println(WEB_NAME+"Liberando conexion a la BD...");
 //            if (conn != null) {
 //                conn.close();
 //            }

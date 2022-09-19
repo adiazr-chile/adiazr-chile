@@ -99,6 +99,14 @@
                 </select>
             </label>
             <label>Nombre: <input type="text" name="filtroNombre" id="filtroNombre" /></label>
+            <label for="estado">Estado</label>
+                <select id="filtroEstado" name="filtroEstado" 
+                           class="chosen-select" style="width:150px;" tabindex="2">
+                        <option value="-1" selected>Cualquiera</option>
+                        <option value="1" >Vigente</option>
+                        <option value="2">No Vigente</option>
+                    </select>
+            
             <button type="submit" class="button button-blue" id="LoadRecordsButton">Buscar</button>
             <!-- <input name="botoncrear" type="button" value="Nuevo Turno" class="button button-blue" onclick="crearTurno();">-->
         </form>
@@ -237,7 +245,8 @@
             e.preventDefault();
             $('#TurnosRotTableContainer').jtable('load', {
                 filtroEmpresa: $('#filtroEmpresa').val(),
-                filtroNombre: $('#filtroNombre').val()
+                filtroNombre: $('#filtroNombre').val(),
+                filtroEstado: $('#filtroEstado').val()
             });
         });
 

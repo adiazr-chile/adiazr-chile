@@ -178,7 +178,7 @@ public class ComunaDAO extends BaseDAO{
                                                
             int filasAfectadas = insert.executeUpdate();
             if (filasAfectadas == 1){
-                System.out.println("[insert comuna]"
+                System.out.println(WEB_NAME+"[insert comuna]"
                     + ", nombre: " +_data.getNombre()
                     + ", region_id: " +_data.getRegionId()
                     +" insert OK!");
@@ -240,7 +240,7 @@ public class ComunaDAO extends BaseDAO{
             
             int rowAffected = psupdate.executeUpdate();
             if (rowAffected == 1){
-                System.out.println("[update]Comuna"
+                System.out.println(WEB_NAME+"[update]Comuna"
                     + ", id:" +_data.getRegionId()
                     + ", nombre:" +_data.getNombre()
                     + ", region_id:" +_data.getRegionId()

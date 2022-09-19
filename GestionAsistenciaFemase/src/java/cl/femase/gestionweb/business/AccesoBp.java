@@ -15,7 +15,7 @@ import java.util.List;
  *
  * @author Alexander
  */
-public class AccesoBp {
+public class AccesoBp  extends BaseBp{
 
     /**
      *

@@ -149,7 +149,7 @@ public class MarcacionVirtualServlet extends BaseServlet {
         String tipoMarca = request.getParameter("tipoMarca");
         String fechaHora = fechaActual + " " + soloHora;
         
-        System.out.println("[MarcacionVirtualServlet."
+        System.out.println(WEB_NAME+"[MarcacionVirtualServlet."
             + "processRequest]"
             + "Run empleado: " + userConnected.getUsername()
             + ", fecha_hora: " + fechaHora
@@ -185,7 +185,7 @@ public class MarcacionVirtualServlet extends BaseServlet {
         String keyPhrase = infomarca.getRutEmpleado()+infomarca.getFechaHora()+infomarca.getTipoMarca();
         infomarca.setHashcode(Utilidades.getMD5EncryptedValue(keyPhrase));
 
-        System.out.println("[GestionFemase.MarcacionVirtualServlet]Insertar marca. "
+        System.out.println(WEB_NAME+"[GestionFemase.MarcacionVirtualServlet]Insertar marca. "
             + "Empresa: " + userConnected.getEmpresaId()
             + ", rut: " + infomarca.getRutEmpleado()
             + ", fechaHora: " + infomarca.getFechaHora()
@@ -194,7 +194,7 @@ public class MarcacionVirtualServlet extends BaseServlet {
             + ", hashcode(md5: " + infomarca.getHashcode());
 
         MaintenanceVO doCreate = marcasBp.insertWithLog(infomarca, resultado);
-        System.out.println("[GestionFemase.MarcacionVirtualServlet]Mensaje "
+        System.out.println(WEB_NAME+"[GestionFemase.MarcacionVirtualServlet]Mensaje "
             + "del sp new_inserta_marca_manual: " + doCreate.getMsgFromSp());
         //if (!doCreate.isThereError()){
             informaCreacionMarca(doCreate.getMsgFromSp(), infomarca, userConnected, request);
@@ -214,16 +214,16 @@ public class MarcacionVirtualServlet extends BaseServlet {
         //Return Json in the format required by jTable plugin
         String jsonMsgFromSp = gson.toJson(doCreate.getMsgFromSp());
         String jsonOkMessage="{\"Result\":\"OK\",\"Record\":"+json+"}";
-        System.out.println("[GestionFemase.MarcacionVirtualServlet]result sp: "+ jsonMsgFromSp);
+        System.out.println(WEB_NAME+"[GestionFemase.MarcacionVirtualServlet]result sp: "+ jsonMsgFromSp);
         String resultMessage = "";
         
         if (!doCreate.getMsgFromSp().startsWith("00-")){
             resultMessage = "Error al registrar marca virtual: " + jsonMsgFromSp;//jsonMsgFromSp;
-            System.out.println("[GestionFemase.MarcacionVirtualServlet]"+ resultMessage);
+            System.out.println(WEB_NAME+"[GestionFemase.MarcacionVirtualServlet]"+ resultMessage);
             request.setAttribute("isOk", false);
         }else{
             resultMessage = "Marca Virtual registrada exitosamente";//jsonOkMessage;
-            System.out.println("[GestionFemase.MarcacionVirtualServlet]"+ resultMessage);
+            System.out.println(WEB_NAME+"[GestionFemase.MarcacionVirtualServlet]"+ resultMessage);
             request.setAttribute("isOk", true);
         }
         request.setAttribute("resultMessage", resultMessage);        
@@ -274,7 +274,7 @@ public class MarcacionVirtualServlet extends BaseServlet {
         resultado.setCencoId(empleado.getCencoId());
         resultado.setRutEmpleado(empleado.getRut());
         
-        System.out.println("[mantencionEvento]"
+        System.out.println(WEB_NAME+"[mantencionEvento]"
             + "EmpresaId: " + resultado.getEmpresaId()
             + ", deptoId: " + resultado.getDeptoId()
             + ", cencoId: " + resultado.getCencoId());

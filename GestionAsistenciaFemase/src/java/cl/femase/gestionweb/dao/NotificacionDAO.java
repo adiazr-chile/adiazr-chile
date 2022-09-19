@@ -109,7 +109,7 @@ public class NotificacionDAO extends BaseDAO{
             
             int filasAfectadas = insert.executeUpdate();
             if (filasAfectadas == 1){
-                System.out.println("[insert notificacion]"
+                System.out.println(WEB_NAME+"[insert notificacion]"
                     + "Username:" +_data.getUsername()    
                     + ", empresaId:" +_data.getEmpresaId()
                     + ", cencoId:" +_data.getCencoId()

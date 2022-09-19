@@ -13,6 +13,8 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class ClientInfo {
     
+    public static String WEB_NAME = "[GestionFemaseWeb]";
+    
     public void printClientInfo(HttpServletRequest request) {
         final String referer = getReferer(request);
         final String fullURL = getFullURL(request);
@@ -21,13 +23,12 @@ public class ClientInfo {
         final String clientBrowser = getClientBrowser(request);
         final String userAgent = getUserAgent(request);
         
-        System.out.println("\n" +
-            "User Agent \t" + userAgent + "\n" +
-            "Operating System\t" + clientOS + "\n" +
-            "Browser Name\t" + clientBrowser + "\n" +
-            "IP Address\t" + clientIpAddr + "\n" +
-            "Full URL\t" + fullURL + "\n" +
-            "Referrer\t" + referer);
+        System.out.println(WEB_NAME + "User Agent:\t\t" + userAgent);
+        System.out.println(WEB_NAME + "Operating System:\t" + clientOS);
+        System.out.println(WEB_NAME + "Browser Name:\t\t" + clientBrowser);
+        System.out.println(WEB_NAME + "IP Address:\t\t" + clientIpAddr);
+        System.out.println(WEB_NAME + "Full URL:\t\t\t" + fullURL);
+        System.out.println(WEB_NAME + "Referrer:\t\t\t" + referer);
     }
 
     public String getReferer(HttpServletRequest request) {

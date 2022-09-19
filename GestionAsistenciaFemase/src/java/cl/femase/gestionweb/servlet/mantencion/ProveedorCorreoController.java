@@ -89,7 +89,7 @@ public class ProveedorCorreoController extends BaseServlet {
         MaintenanceEventsDAO daoEventsService = new MaintenanceEventsDAO(appProperties);
         
         if(request.getParameter("action") != null){
-            System.out.println("[ProveedorCorreoController.processRequest]"
+            System.out.println(WEB_NAME+"[ProveedorCorreoController.processRequest]"
                 + "action is: " + request.getParameter("action"));
             List<ProveedorCorreoVO> listaObjetos = new ArrayList<ProveedorCorreoVO>();
             String action=(String)request.getParameter("action");
@@ -133,11 +133,11 @@ public class ProveedorCorreoController extends BaseServlet {
             }
             
             if (action.compareTo("list") == 0) {
-                    System.out.println("[ProveedorCorreoController."
+                    System.out.println(WEB_NAME+"[ProveedorCorreoController."
                         + "processRequest]Listar proveedores "
                         + "de correo, nombre: " + request.getParameter("param_name"));
                     try{
-//                        System.out.println("Ordenar por columna "+jtSorting);
+//                        System.out.println(WEB_NAME+"Ordenar por columna "+jtSorting);
                         listaObjetos = dao.getProveedores(request.getParameter("param_name"), 
                                 startPageIndex, 
                                 numRecordsPerPage, 
@@ -165,7 +165,7 @@ public class ProveedorCorreoController extends BaseServlet {
                         ex.printStackTrace();
                     }   
             }else if (action.compareTo("create") == 0) {
-                        System.out.println("[ProveedorCorreoController."
+                        System.out.println(WEB_NAME+"[ProveedorCorreoController."
                             + "processRequest]Insertar proveedor de correo...");
                         MaintenanceVO doCreate = dao.insert(proveedor);
                         
@@ -183,7 +183,7 @@ public class ProveedorCorreoController extends BaseServlet {
                         response.getWriter().print(listData);
             }else if (action.compareTo("update") == 0) {  
                         String key = proveedor.getCode();
-                        System.out.println("[ProveedorCorreoController."
+                        System.out.println(WEB_NAME+"[ProveedorCorreoController."
                             + "processRequest]"
                             + "Modificar proveedor de correo, code = " + key);
                         MaintenanceVO doUpdate = dao.update(proveedor);
@@ -205,7 +205,7 @@ public class ProveedorCorreoController extends BaseServlet {
             }
             else if (action.compareTo("delete") == 0) {  
                     //Delete record
-                    System.out.println("[ProveedorCorreoController."
+                    System.out.println(WEB_NAME+"[ProveedorCorreoController."
                         + "processRequest]Eliminar proveedor de correo, "
                         + "code: " + proveedor.getCode());
                     try{

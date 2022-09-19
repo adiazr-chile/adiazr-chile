@@ -93,7 +93,7 @@ public class AusenciaDAO extends BaseDAO{
             psupdate.setInt(7,  _data.getId());
             int rowAffected = psupdate.executeUpdate();
             if (rowAffected == 1){
-                System.out.println("[update]ausencia"
+                System.out.println(WEB_NAME+"[update]ausencia"
                     + ", id:" +_data.getId()
                     + ", nombre:" +_data.getNombre()
                     + ", nombreCorto:" +_data.getNombreCorto()
@@ -169,7 +169,7 @@ public class AusenciaDAO extends BaseDAO{
             
             int filasAfectadas = insert.executeUpdate();
             if (filasAfectadas == 1){
-                System.out.println("[insert ausencia]"
+                System.out.println(WEB_NAME+"[insert ausencia]"
                     + ", nombre:" +_data.getNombre()
                     + ", nombreCorto:" +_data.getNombreCorto()
                     + ", tipo:" +_data.getTipoId()

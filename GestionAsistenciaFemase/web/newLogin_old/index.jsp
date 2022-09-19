@@ -2,7 +2,7 @@
     String version  = "4.0.0";
     String appAnios = "2017-2021";
     String mensaje = (String) session.getAttribute("mensaje");
-    System.out.println("[login/index.jsp]mensaje: " + mensaje);
+    System.out.println("[GestionFemaseWeb]login/index.jsp]mensaje: " + mensaje);
 	//if (mensaje==null) mensaje="&nbsp;";
     session.removeAttribute("mensaje");
 %>

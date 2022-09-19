@@ -111,7 +111,7 @@ public class MarcasEventosDAO extends BaseDAO{
                 sql += " limit "+_jtPageSize + " offset "+_jtStartIndex;
             }
             
-            System.out.println("[MarcaModificadaDAO.getMarcasEventos]sql: "+sql);
+            System.out.println(WEB_NAME+"[MarcaModificadaDAO.getMarcasEventos]sql: "+sql);
                         
             dbConn = dbLocator.getConnection(m_dbpoolName,"[MarcasEventosDAO.getMarcasEventos]");
             ps = dbConn.prepareStatement(sql);
@@ -213,7 +213,7 @@ public class MarcasEventosDAO extends BaseDAO{
                 sql += " limit "+_jtPageSize + " offset "+_jtStartIndex;
             }
             
-            System.out.println("[MarcaModificadaDAO.getEventos]sql: "+sql);
+            System.out.println(WEB_NAME+"[MarcaModificadaDAO.getEventos]sql: "+sql);
                         
             dbConn = dbLocator.getConnection(m_dbpoolName,"[MarcasEventosDAO.getMarcasEventos]");
             ps = dbConn.prepareStatement(sql);
@@ -465,7 +465,7 @@ public class MarcasEventosDAO extends BaseDAO{
             
             int filasAfectadas = insert.executeUpdate();
             if (filasAfectadas == 1){
-                System.out.println("[insert marcas_eventos]"
+                System.out.println(WEB_NAME+"[insert marcas_eventos]"
                     +" insertada OK!");
             }
             

@@ -63,28 +63,28 @@ public class SolicitudPermisoAdministrativoDAO extends BaseDAO{
         
         try{
             String sql = "SELECT "
-                + "solicitud.solic_id,"
-                + "to_char(solicitud.solic_fec_ingreso,'yyyy-MM-dd HH24:MI:SS') solic_fec_ingreso,"
-                + "solicitud.status_id,"
-                + "estado.status_label,"
-                + "solicitud.solic_inicio,"
-                + "solicitud.solic_fin,"
-                + "solicitud.empresa_id,"
-                + "solicitud.run_empleado,"
-                + "e.empl_nombres || ' ' || e.empl_ape_paterno|| ' ' || e.empl_ape_materno nombre_empleado,"
-                + "solicitud.username_solicita,"
-                + "solicitud.username_aprueba_rechaza,"
-                + "solicitud.fechahora_aprueba_rechaza,"
-                + "solicitud.fechahora_cancela,"
-                + "coalesce(solicitud.nota_observacion,'') nota_observacion,"
-                + "solicitud.dias_solicitados,"
-                + "solicitud.anio,"
-                + "solicitud.jornada " 
+                    + "solicitud.solic_id,"
+                    + "to_char(solicitud.solic_fec_ingreso,'yyyy-MM-dd HH24:MI:SS') solic_fec_ingreso,"
+                    + "solicitud.status_id,"
+                    + "estado.status_label,"
+                    + "solicitud.solic_inicio,"
+                    + "solicitud.solic_fin,"
+                    + "solicitud.empresa_id,"
+                    + "solicitud.run_empleado,"
+                    + "e.empl_nombres || ' ' || e.empl_ape_paterno|| ' ' || e.empl_ape_materno nombre_empleado,"
+                    + "solicitud.username_solicita,"
+                    + "solicitud.username_aprueba_rechaza,"
+                    + "solicitud.fechahora_aprueba_rechaza,"
+                    + "solicitud.fechahora_cancela,"
+                    + "coalesce(solicitud.nota_observacion,'') nota_observacion,"
+                    + "solicitud.dias_solicitados,"
+                    + "solicitud.anio,solicitud.semestre,"
+                    + "solicitud.jornada,"
+                    + "to_char(solicitud.hora_inicio, 'HH24:MI:SS') hora_inicio_str,"
+                    + "to_char(solicitud.hora_fin, 'HH24:MI:SS') hora_fin_str "    
                 + "FROM solicitud_permiso_administrativo solicitud "
-                + " inner join empleado e on (solicitud.empresa_id=e.empresa_id and solicitud.run_empleado=e.empl_rut) "
-                + "inner join estado_solicitud estado on (solicitud.status_id = estado.status_id)  "
-                //+ " left outer join admingestionweb.vacaciones vac  "
-                //+ " on (solicitud.empresa_id = vac.empresa_id and solicitud.rut_empleado = vac.rut_empleado) "
+                    + " inner join empleado e on (solicitud.empresa_id=e.empresa_id and solicitud.run_empleado=e.empl_rut) "
+                    + "inner join estado_solicitud estado on (solicitud.status_id = estado.status_id)  "
                 + " where 1 = 1";
 
             if (_propias){
@@ -119,7 +119,7 @@ public class SolicitudPermisoAdministrativoDAO extends BaseDAO{
                 sql += " limit "+_jtPageSize + " offset "+_jtStartIndex;
             }
             
-            System.out.println("[SolicitudPermisoAdministrativoDAO."
+            System.out.println(WEB_NAME+"[SolicitudPermisoAdministrativoDAO."
                 + "getSolicitudes]Sql: "+ sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,"[SolicitudPermisoAdministrativoDAO.getSolicitudes]");
@@ -145,7 +145,10 @@ public class SolicitudPermisoAdministrativoDAO extends BaseDAO{
                 
                 data.setDiasSolicitados(rs.getDouble("dias_solicitados"));
                 data.setAnio(rs.getInt("anio"));
+                data.setSemestre(rs.getInt("semestre"));
                 data.setJornada(rs.getString("jornada"));
+                data.setHoraInicioPA_AMPM(rs.getString("hora_inicio_str"));
+                data.setHoraFinPA_AMPM(rs.getString("hora_fin_str"));
                 
                 lista.add(data);
             }
@@ -219,12 +222,12 @@ public class SolicitudPermisoAdministrativoDAO extends BaseDAO{
                     + "solicitud.fechahora_aprueba_rechaza,"
                     + "solicitud.fechahora_cancela,"
                     + "coalesce(solicitud.nota_observacion,'') nota_observacion,"
-                    //+ "vac.saldo_dias saldo_vacaciones,"
-                      //  + "vac.dias_especiales, "
                     + "cargo.cargo_nombre,"
                     + "solicitud.dias_solicitados,"
-                    + "solicitud.anio,"
-                    + "solicitud.jornada " 
+                    + "solicitud.anio,solicitud.semestre,"
+                    + "solicitud.jornada,"
+                    + "to_char(solicitud.hora_inicio, 'HH24:MI:SS') hora_inicio_str,"
+                    + "to_char(solicitud.hora_fin, 'HH24:MI:SS') hora_fin_str "
                 + "FROM solicitud_permiso_administrativo solicitud "
                     + " inner join empleado e on (solicitud.empresa_id=e.empresa_id and solicitud.run_empleado=e.empl_rut) "
                     + " inner join estado_solicitud estado on (solicitud.status_id = estado.status_id) "
@@ -275,7 +278,7 @@ public class SolicitudPermisoAdministrativoDAO extends BaseDAO{
                 sql += " limit "+_jtPageSize + " offset "+_jtStartIndex;
             }
             
-            System.out.println("[SolicitudPermisoAdministrativoDAO."
+            System.out.println(WEB_NAME+"[SolicitudPermisoAdministrativoDAO."
                 + "getSolicitudesAprobarRechazar]Sql: "+ sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,"[SolicitudPermisoAdministrativoDAO.getSolicitudesAprobarRechazar]");
@@ -300,9 +303,13 @@ public class SolicitudPermisoAdministrativoDAO extends BaseDAO{
                 data.setNotaObservacion(rs.getString("nota_observacion"));
                 data.setDiasSolicitados(rs.getDouble("dias_solicitados"));
                 data.setAnio(rs.getInt("anio"));
+                data.setSemestre(rs.getInt("semestre"));
                 data.setJornada(rs.getString("jornada"));
                 
                 data.setLabelEmpleado(data.getNombreEmpleado() + "(" + rs.getString("cargo_nombre") + ")");
+                
+                data.setHoraInicioPA_AMPM(rs.getString("hora_inicio_str"));
+                data.setHoraFinPA_AMPM(rs.getString("hora_fin_str"));
                 
                 lista.add(data);
             }
@@ -341,29 +348,31 @@ public class SolicitudPermisoAdministrativoDAO extends BaseDAO{
        
         try{
             String sql = "SELECT "
-                + "solicitud.solic_id,"
-                + "to_char(solicitud.solic_fec_ingreso,'yyyy-MM-dd HH24:MI:SS') solic_fec_ingreso,"
-                + "solicitud.status_id,"
-                + "estado.status_label,"
-                + "solicitud.solic_inicio,"
-                + "solicitud.solic_fin,"
-                + "solicitud.empresa_id,"
-                + "solicitud.run_empleado,"
-                + "e.empl_nombres || ' ' || e.empl_ape_paterno|| ' ' || e.empl_ape_materno nombre_empleado,"
-                + "solicitud.username_solicita,"
-                + "solicitud.username_aprueba_rechaza,"
-                + "solicitud.fechahora_aprueba_rechaza,"
-                + "solicitud.fechahora_cancela,"
-                + "coalesce(solicitud.nota_observacion,'') nota_observacion,"
-                + "solicitud.dias_solicitados,"
-                + "solicitud.anio,"
-                + "solicitud.jornada " 
+                    + "solicitud.solic_id,"
+                    + "to_char(solicitud.solic_fec_ingreso,'yyyy-MM-dd HH24:MI:SS') solic_fec_ingreso,"
+                    + "solicitud.status_id,"
+                    + "estado.status_label,"
+                    + "solicitud.solic_inicio,"
+                    + "solicitud.solic_fin,"
+                    + "solicitud.empresa_id,"
+                    + "solicitud.run_empleado,"
+                    + "e.empl_nombres || ' ' || e.empl_ape_paterno|| ' ' || e.empl_ape_materno nombre_empleado,"
+                    + "solicitud.username_solicita,"
+                    + "solicitud.username_aprueba_rechaza,"
+                    + "solicitud.fechahora_aprueba_rechaza,"
+                    + "solicitud.fechahora_cancela,"
+                    + "coalesce(solicitud.nota_observacion,'') nota_observacion,"
+                    + "solicitud.dias_solicitados,"
+                    + "solicitud.anio,solicitud.semestre,"
+                    + "solicitud.jornada,"
+                    + "to_char(solicitud.hora_inicio, 'HH24:MI:SS') hora_inicio_str,"
+                    + "to_char(solicitud.hora_fin, 'HH24:MI:SS') hora_fin_str "
                 + "FROM solicitud_permiso_administrativo solicitud "
                 + " inner join empleado e on (solicitud.empresa_id=e.empresa_id and solicitud.run_empleado=e.empl_rut) "
                 + "inner join estado_solicitud estado on (solicitud.status_id = estado.status_id)  "
                 + " where solicitud.solic_id = " + _id;
 
-            System.out.println("[SolicitudPermisoAdministrativoDAO."
+            System.out.println(WEB_NAME+"[SolicitudPermisoAdministrativoDAO."
                 + "getSolicitudes]Sql: "+ sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,
@@ -390,7 +399,11 @@ public class SolicitudPermisoAdministrativoDAO extends BaseDAO{
                
                 data.setDiasSolicitados(rs.getDouble("dias_solicitados"));
                 data.setAnio(rs.getInt("anio"));
+                data.setSemestre(rs.getInt("semestre"));
                 data.setJornada(rs.getString("jornada"));
+                
+                data.setHoraInicioPA_AMPM(rs.getString("hora_inicio_str"));
+                data.setHoraFinPA_AMPM(rs.getString("hora_fin_str"));
                 
             }
 
@@ -591,55 +604,82 @@ public class SolicitudPermisoAdministrativoDAO extends BaseDAO{
             + "Solicitud de Permiso Administrativo (PA). "
             + " Empresa_id: " + _data.getEmpresaId()
             + ", runEmpleado: " + _data.getRunEmpleado()
-            + ", anio: " + _data.getAnio()    
+            + ", anio: " + _data.getAnio()
+            + ", semestre: " + _data.getSemestre()    
             + ", inicio PA: " + _data.getFechaInicioPA()
             + ", fin PA: " + _data.getFechaFinPA()
             + ", dias solicitados: " + _data.getDiasSolicitados()
-            + ", jornada: " + _data.getJornada()    
+            + ", jornada: " + _data.getJornada()  
+            + ", hora inicio: " + _data.getHoraInicioPA_AMPM()
+            + ", hora fin: " + _data.getHoraFinPA_AMPM()    
             + ", usernameSolicita: " + _data.getUsernameSolicita();
         
        String msgFinal = " Inserta Solicitud de Permiso Administrativo (PA):"
             + "empresaId [" + _data.getEmpresaId() + "],"
             +  ", runEmpleado [" + _data.getRunEmpleado() + "]"
-            +  ", anio [" + _data.getAnio() + "]"   
+            +  ", anio [" + _data.getAnio() + "]"
+            +  ", semestre [" + _data.getSemestre() + "]"   
             +  ", inicio PA [" + _data.getFechaInicioPA() + "]"      
             +  ", fin PA [" + _data.getFechaFinPA() + "]"
             +  ", dias solicitados [" + _data.getDiasSolicitados() + "]"   
-            +  ", jornada [" + _data.getJornada() + "]"      
+            +  ", jornada [" + _data.getJornada() + "]"
+            +  ", hora inicio [" + _data.getHoraInicioPA_AMPM() + "]"
+            +  ", hora fin [" + _data.getHoraFinPA_AMPM() + "]"   
             +  ", usernameSolicita [" + _data.getUsernameSolicita() + "]";            
         objresultado.setMsg(msgFinal);
         PreparedStatement insert    = null;
         
         try{
-            String sql = "INSERT INTO solicitud_permiso_administrativo ("
-                + "solic_fec_ingreso,"
-                + "status_id,"
-                + "solic_inicio,"
-                + "solic_fin,"
-                + "empresa_id,"
-                + "run_empleado,"
-                + "username_solicita, "
-                + "dias_solicitados, "
-                + "anio, "
-                + "jornada) "
-                + " VALUES ('" + _data.getFechaIngreso() + "', "
+            String hraInicio    = null;
+            String hraFin       = null;   
+            if (_data.getHoraInicioPA_AMPM() != null){
+                hraInicio = "'" + _data.getHoraInicioPA_AMPM() + "'";
+            }
+            if (_data.getHoraFinPA_AMPM() != null){
+                hraFin = "'" + _data.getHoraFinPA_AMPM() + "'";
+            }
+            
+            String strSql = "INSERT INTO solicitud_permiso_administrativo ("
+                    + "solic_fec_ingreso,"
+                    + "status_id,"
+                    + "solic_inicio,"
+                    + "solic_fin,"
+                    + "empresa_id,"
+                    + "run_empleado,"
+                    + "username_solicita, "
+                    + "dias_solicitados, "
+                    + "anio, "
+                    + "jornada, semestre";
+                if (_data.getJornada().compareTo(Constantes.JORNADA_PERMISO_ADMINISTRATIVO_TODO_EL_DIA) != 0){    
+                    strSql += ",hora_inicio,hora_fin";
+                }
+                strSql += ") ";
+                
+                strSql += " VALUES ('" + _data.getFechaIngreso() + "', "
                     + "?, "
                     + "'" + _data.getFechaInicioPA() + "', "
                     + "'" + _data.getFechaFinPA() + "', "
                     + "'" + _data.getEmpresaId() + "', "
                     + "'" + _data.getRunEmpleado() + "',"
-                    + "'" + _data.getUsernameSolicita() + "', ?, ?, ?)";
-                         
+                    + "'" + _data.getUsernameSolicita() + "', ?, ?, ?, ? ";
+                if (_data.getJornada().compareTo(Constantes.JORNADA_PERMISO_ADMINISTRATIVO_TODO_EL_DIA) != 0){
+                    strSql += ", '" + _data.getHoraInicioPA_AMPM() + "',";
+                    strSql += "'" + _data.getHoraFinPA_AMPM() + "'";
+                }
+                strSql += ")";
+            System.out.println(WEB_NAME+"[SolicitudPermisoAdministrativoDAO."
+                + "insert]Sql: " + strSql);             
             dbConn = dbLocator.getConnection(m_dbpoolName,"[SolicitudPermisoAdministrativoDAO.insert]");
-            insert = dbConn.prepareStatement(sql);
+            insert = dbConn.prepareStatement(strSql);
             insert.setString(1,  Constantes.ESTADO_SOLICITUD_PENDIENTE);
             insert.setDouble(2,  _data.getDiasSolicitados());
             insert.setInt(3,  _data.getAnio());
             insert.setString(4,  _data.getJornada());
+            insert.setInt(5,  _data.getSemestre());
             
             int filasAfectadas = insert.executeUpdate();
             if (filasAfectadas == 1){
-                System.out.println("[SolicitudPermisoAdministrativoDAO.insert]"
+                System.out.println(WEB_NAME+"[SolicitudPermisoAdministrativoDAO.insert]"
                     + " Empresa_id: " + _data.getEmpresaId()
                     + ", runEmpleado: " + _data.getRunEmpleado()
                     + ", anio: " + _data.getAnio()    
@@ -647,6 +687,8 @@ public class SolicitudPermisoAdministrativoDAO extends BaseDAO{
                     + ", fin PA: " + _data.getFechaFinPA()
                     + ", dias solicitados: " + _data.getDiasSolicitados() 
                     + ", jornada: " + _data.getJornada()    
+                    + ", hora inicio: " + _data.getHoraInicioPA_AMPM()
+                    + ", hora fin: " + _data.getHoraFinPA_AMPM()        
                     + ", usernameSolicita: " + _data.getUsernameSolicita()
                     + ", insert OK!");
             }
@@ -691,7 +733,7 @@ public class SolicitudPermisoAdministrativoDAO extends BaseDAO{
             String msgFinal = " Cancelar Solicitud de permiso administrativo:"
                 + "id [" + _idSolicitud + "]" 
                 + ", username [" + _username+ "]";
-            System.out.println("[SolicitudPermisoAdministrativoDAO.cancelarSolicitud]" + msgFinal);
+            System.out.println(WEB_NAME+"[SolicitudPermisoAdministrativoDAO.cancelarSolicitud]" + msgFinal);
             objresultado.setMsg(msgFinal);
             
             String sql = "UPDATE solicitud_permiso_administrativo "
@@ -709,7 +751,7 @@ public class SolicitudPermisoAdministrativoDAO extends BaseDAO{
             
             int rowAffected = psupdate.executeUpdate();
             if (rowAffected == 1){
-                System.out.println("[SolicitudPermisoAdministrativoDAO.cancelarSolicitud]"
+                System.out.println(WEB_NAME+"[SolicitudPermisoAdministrativoDAO.cancelarSolicitud]"
                     + ", id: " + _idSolicitud
                     +" update OK!");
             }
@@ -761,7 +803,7 @@ public class SolicitudPermisoAdministrativoDAO extends BaseDAO{
                 + "id [" + _idSolicitud + "]" 
                 + ", username aprueba [" + _usernameAprueba + "]"
                 + ", notaObservacion [" + _notaObservacion + "]";
-            System.out.println("[SolicitudPermisoAdministrativoDAO.aprobarSolicitud]" + msgFinal);
+            System.out.println(WEB_NAME+"[SolicitudPermisoAdministrativoDAO.aprobarSolicitud]" + msgFinal);
             objresultado.setMsg(msgFinal);
             String sql = "UPDATE solicitud_permiso_administrativo "
                 + " SET status_id = ?, "
@@ -778,7 +820,7 @@ public class SolicitudPermisoAdministrativoDAO extends BaseDAO{
             
             int rowAffected = psupdate.executeUpdate();
             if (rowAffected == 1){
-                System.out.println("[SolicitudPermisoAdministrativoDAO.aprobarSolicitud]"
+                System.out.println(WEB_NAME+"[SolicitudPermisoAdministrativoDAO.aprobarSolicitud]"
                     + ", id: " + _idSolicitud
                     +" update OK!");
             }
@@ -831,7 +873,7 @@ public class SolicitudPermisoAdministrativoDAO extends BaseDAO{
                 + ", username rechaza[" + _usernameRechaza + "]"
                     + ", nota_observacion[" + _notaObservacion + "]";
             
-            System.out.println("[SolicitudPermisoAdministrativoDAO.rechazarSolicitud]" + msgFinal);
+            System.out.println(WEB_NAME+"[SolicitudPermisoAdministrativoDAO.rechazarSolicitud]" + msgFinal);
             objresultado.setMsg(msgFinal);
             
             String sql = "UPDATE solicitud_permiso_administrativo "
@@ -849,7 +891,7 @@ public class SolicitudPermisoAdministrativoDAO extends BaseDAO{
             
             int rowAffected = psupdate.executeUpdate();
             if (rowAffected == 1){
-                System.out.println("[SolicitudPermisoAdministrativoDAO.rechazarSolicitud]"
+                System.out.println(WEB_NAME+"[SolicitudPermisoAdministrativoDAO.rechazarSolicitud]"
                     + ", id: " + _idSolicitud
                     +" update OK!");
             }

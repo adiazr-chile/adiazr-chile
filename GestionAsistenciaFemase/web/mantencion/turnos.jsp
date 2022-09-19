@@ -95,6 +95,13 @@
                 </select>
             </label>
             <label>Nombre: <input type="text" name="filtroNombre" id="filtroNombre" /></label>
+            <label for="estado">Estado</label>
+                <select id="filtroEstado" name="filtroEstado" 
+                           class="chosen-select" style="width:150px;" tabindex="2">
+                        <option value="-1" selected>Cualquiera</option>
+                        <option value="1" >Vigente</option>
+                        <option value="2">No Vigente</option>
+                    </select>
             <button type="submit" id="LoadRecordsButton">Buscar</button>
         </form>
     </div>
@@ -197,7 +204,8 @@
             e.preventDefault();
             $('#TurnosTableContainer').jtable('load', {
                 filtroNombre: $('#filtroNombre').val(),
-                filtroEmpresa: $('#filtroEmpresa').val()
+                filtroEmpresa: $('#filtroEmpresa').val(),
+                filtroEstado: $('#filtroEstado').val()
             });
         });
 

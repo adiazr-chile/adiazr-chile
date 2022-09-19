@@ -24,7 +24,7 @@
     String msgError     = (String)request.getAttribute("msgerror");	
     String cencoId      = (String)request.getParameter("cencoId");
     String rutEmpleado  = (String)request.getParameter("rut");
-    System.out.println("[crear_detalle_ausencia]cencoId param: " + cencoId + ", rut param: "+rutEmpleado);
+    System.out.println("[GestionFemaseWeb]crear_detalle_ausencia]cencoId param: " + cencoId + ", rut param: "+rutEmpleado);
     
 %>
 <!DOCTYPE html>

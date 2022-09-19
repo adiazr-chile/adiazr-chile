@@ -108,19 +108,19 @@ public class AsistenciaReport extends BaseServlet {
         String fileName = "";        
         String fullPath = "";
         
-        System.out.println("[servlet.reportes."
+        System.out.println(WEB_NAME+"[servlet.reportes."
             + "AsistenciaReport.processRequestRut]"
             + "tipoParam: "+tipoParam
             +", usuario conectado: "+userConnected.getUsername());
         if (tipoParam.compareTo("3") == 0){
             //Asistencia CSV resumido por empresa
-            System.out.println("[servlet.reportes."
+            System.out.println(WEB_NAME+"[servlet.reportes."
                 + "AsistenciaReport.processRequestRut]Generar "
                 + "Asistencia CSV resumido, tipo: " + tipoParam);
             LinkedHashMap<String, AsistenciaTotalesVO> totalesAsistencia = 
                 getTotalesAsistenciaEmpresa(request, userConnected);
             
-            System.out.println("[servlet.reportes."
+            System.out.println(WEB_NAME+"[servlet.reportes."
                 + "AsistenciaReport.processRequestRut]"
                 + "totalesAsistencia.size: " + totalesAsistencia.size());
             if (totalesAsistencia.size() > 0){
@@ -134,7 +134,7 @@ public class AsistenciaReport extends BaseServlet {
             if (_empleado == null) return null;
             
             String jasperfile= "detalle_asistencia.jasper";
-            System.out.println("[AsistenciaReport.processRequestRut]"
+            System.out.println(WEB_NAME+"[AsistenciaReport.processRequestRut]"
                 + "tipo: " + tipoParam
                 + ", formato: " + formato);
             fileName = "asistencia_" + _empleado.getRut() + "." + formato;
@@ -146,17 +146,17 @@ public class AsistenciaReport extends BaseServlet {
 
             String jasperFileName = 
                 appProperties.getReportesPath() + File.separator +jasperfile;
-            System.out.println("[AsistenciaReport."
+            System.out.println(WEB_NAME+"[AsistenciaReport."
                 + "processRequestRut]jasperfile: " + jasperFileName);
             
-            System.out.println("[AsistenciaReport."
+            System.out.println(WEB_NAME+"[AsistenciaReport."
                 + "processRequestRut]Iterar empleadoRut: " + _empleado.getRut());
             Map parameters = getParameters(request, _empleado, _detalleAsistencia);
             
             if (parameters != null){
-                System.out.println("[AsistenciaReport.processRequestRut]Generar archivo...");
+                System.out.println(WEB_NAME+"[AsistenciaReport.processRequestRut]Generar archivo...");
                 if (formato.compareTo("pdf") == 0){
-                    System.out.println("[processRequestRut.processRequestRut]"
+                    System.out.println(WEB_NAME+"[processRequestRut.processRequestRut]"
                         + "Generar PDF."
                         + " fileName: " + fileName);
                     try{
@@ -171,7 +171,7 @@ public class AsistenciaReport extends BaseServlet {
                 }
                 fileGenerated = new FileGeneratedVO(fileName,fullPath);     
             }else{
-                System.out.println("[AsistenciaReport."
+                System.out.println(WEB_NAME+"[AsistenciaReport."
                     + "processRequestRut]NO Generar archivo...");
                 fileGenerated = null;
             }
@@ -199,7 +199,7 @@ public class AsistenciaReport extends BaseServlet {
 //        String tipoParam = _request.getParameter("tipo");
 //        HashMap parameters = new HashMap();
 //                
-//        System.out.println("AsistenciaReport."
+//        System.out.println(WEB_NAME+"AsistenciaReport."
 //            + "getParameters. "
 //            + "Param rut= " +rutParam
 //            + ", startDate= " +startDateParam
@@ -326,7 +326,7 @@ public class AsistenciaReport extends BaseServlet {
         HashMap parameters = null;
         EmpresaBp empresaBp         = new EmpresaBp(appProperties);
        
-        System.out.println("AsistenciaReport."
+        System.out.println(WEB_NAME+"AsistenciaReport."
             + "getParameters. "
             + "Param rut= " + _objEmpleado.getRut()
             + ", startDate= " +startDateParam
@@ -346,7 +346,7 @@ public class AsistenciaReport extends BaseServlet {
         
         List<DetalleAsistenciaVO> registros = _registros;
         if (_registros == null){
-            System.out.println("[AsistenciaReport."
+            System.out.println(WEB_NAME+"[AsistenciaReport."
                 + "getParameters]Consultar detalles_asistencia a la BD...");
             registros = m_detAsistenciaBp.getDetalles(_objEmpleado.getRut(), 
                     startDateParam, endDateParam);
@@ -377,7 +377,7 @@ public class AsistenciaReport extends BaseServlet {
                 strAuxHextras = detalle.getHorasMinsExtrasAutorizadas();
                 if (strAuxHextras != null) listaHorasExtras.add(strAuxHextras);
                 strAuxHrsJustificadas = detalle.getHhmmJustificadas();
-                System.out.println("[AsistenciaReport."
+                System.out.println(WEB_NAME+"[AsistenciaReport."
                     + "getParameters]fecha: " + detalle.getFechaEntradaMarca()
                     + ", hrs trabajadas: " + strAuxHt
                     + ", observacion: " + detalle.getObservacion());
@@ -390,7 +390,7 @@ public class AsistenciaReport extends BaseServlet {
                         || (strAuxHt != null) ){
                     countDiasTrabajados++;
                 }
-                System.out.println("[AsistenciaReport."
+                System.out.println(WEB_NAME+"[AsistenciaReport."
                     + "getParameters]"
                     + "Fecha entrada= " + detalle.getFechaEntradaMarca()
                     + ", getObservacion= " + detalle.getHrsAusencia()
@@ -402,7 +402,7 @@ public class AsistenciaReport extends BaseServlet {
 
                 if (detalle.getObservacion() != null 
                         && detalle.getObservacion().compareTo("Sin marcas") == 0){
-                    System.out.println("[AsistenciaReport.getParameters]Sumo dias de ausencia");
+                    System.out.println(WEB_NAME+"[AsistenciaReport.getParameters]Sumo dias de ausencia");
                     countDiasAusente++;
                 }  
 
@@ -434,12 +434,12 @@ public class AsistenciaReport extends BaseServlet {
                 totalHrsJustificadas = Utilidades.sumTimesList(listaHorasJustificadas);
             }
             String auxRut = _objEmpleado.getRut();
-            System.out.println("[AsistenciaReport."
+            System.out.println(WEB_NAME+"[AsistenciaReport."
                 + "getParameters]auxRut: " + auxRut);
             
             if (_objEmpleado.getAction() != null 
                     && _objEmpleado.getAction().compareTo("solo_un_rut") == 0){
-                System.out.println("[AsistenciaReport."
+                System.out.println(WEB_NAME+"[AsistenciaReport."
                     + "getParameters]Un solo rut, "
                     + "buscar datos faltantes en tabla empleado...");
                 _objEmpleado = 
@@ -448,7 +448,7 @@ public class AsistenciaReport extends BaseServlet {
                     Integer.parseInt(turnoParam));
             }
             if (_objEmpleado != null){
-                System.out.println("[AsistenciaReport]"
+                System.out.println(WEB_NAME+"[AsistenciaReport]"
                     + "totalHrsTrabajadas: " + totalHrsTrabajadas
                     + ", countDiasTrabajados: " + countDiasTrabajados);
                 
@@ -490,7 +490,7 @@ public class AsistenciaReport extends BaseServlet {
                 parameters = null;
             }
             
-            System.out.println("[AsistenciaReport."
+            System.out.println(WEB_NAME+"[AsistenciaReport."
                 + "getParameters]"
                 + "startDate= " +startDateParam
                 + ", endDate= " +endDateParam);
@@ -507,7 +507,7 @@ public class AsistenciaReport extends BaseServlet {
         listaEmpleados = new ArrayList<>();
         
         EmpleadosBp empleadosBp = new EmpleadosBp(new PropertiesVO());
-        System.out.println("[AsistenciaReport.getEmpleados]"
+        System.out.println(WEB_NAME+"[AsistenciaReport.getEmpleados]"
             + "empresaId: " + _empresaId
             + ",deptoId: " + _deptoId    
             + ", cenco Id: " + _cencoId
@@ -540,7 +540,7 @@ public class AsistenciaReport extends BaseServlet {
 ////////            deptosBp.getDepartamentosEmpresa(empresaId);
 ////////        for (int i = 0; i < departamentos.size(); i++) {
 ////////            DepartamentoVO itDepto= departamentos.get(i);
-////////            System.out.println("[AsistenciaReport.getTotalesAsistencia]"
+////////            System.out.println(WEB_NAME+"[AsistenciaReport.getTotalesAsistencia]"
 ////////                + "Depto: " + itDepto.getId()
 ////////                + ", nombre: " + itDepto.getNombre());
 ////////            UsuarioVO auxUser = new UsuarioVO();
@@ -549,7 +549,7 @@ public class AsistenciaReport extends BaseServlet {
 ////////                cencosBp.getCentrosCostoDepto(auxUser, itDepto.getId());
 //////            //for (int j = 0; j < cencos.size(); j++) {
 //////                //CentroCostoVO itCenco = cencos.get(j);
-//////                System.out.println("[AsistenciaReport.getTotalesAsistencia]"
+//////                System.out.println(WEB_NAME+"[AsistenciaReport.getTotalesAsistencia]"
 //////                    + "Cenco Id: " + cencoId);
 //////                //if (itCenco.getId() != -1){
 //////                    //empleados del cenco
@@ -558,7 +558,7 @@ public class AsistenciaReport extends BaseServlet {
 //////                    //iterar empleados...
 //////                    if (listaEmpleados.size() > 0){
 //////                        for (EmpleadoVO empleado : listaEmpleados) {
-//////                            System.out.println("[AsistenciaReport.getTotalesAsistencia]"
+//////                            System.out.println(WEB_NAME+"[AsistenciaReport.getTotalesAsistencia]"
 //////                                + "Empleado a mostrar: " + empleado.getRut()
 //////                                +", Cenco nombre: " + empleado.getCentroCosto().getNombre());
 //////
@@ -612,7 +612,7 @@ public class AsistenciaReport extends BaseServlet {
         String startDateParam = _request.getParameter("startDate");
         String endDateParam = _request.getParameter("endDate");
         
-        System.out.println("[AsistenciaReport."
+        System.out.println(WEB_NAME+"[AsistenciaReport."
             + "getTotalesAsistenciaEmpresa]"
             + "perfil usuario: " + _userConnected.getIdPerfil()
             + "param empresa: " + empresaId);
@@ -621,7 +621,7 @@ public class AsistenciaReport extends BaseServlet {
         //deptosBp.getDepartamentosEmpresa(_userConnected, empresaId);
         List<CentroCostoVO> cencos=null;
         if (deptoParamId != null && deptoParamId.compareTo("-1") != 0){
-            System.out.println("[AsistenciaReport."
+            System.out.println(WEB_NAME+"[AsistenciaReport."
                 + "getTotalesAsistenciaEmpresa]"
                 + "Generar reporte solo para deptoId: " + deptoParamId);
             DepartamentoVO auxDepto = 
@@ -629,7 +629,7 @@ public class AsistenciaReport extends BaseServlet {
             departamentos = new ArrayList<DepartamentoVO>();
             departamentos.add(auxDepto);
         }else{
-            System.out.println("[AsistenciaReport."
+            System.out.println(WEB_NAME+"[AsistenciaReport."
                 + "getTotalesAsistenciaEmpresa]"
                 + "Generar reporte para todos los deptos de la empresaId: " + empresaId);
             departamentos = deptosBp.getDepartamentosEmpresa(_userConnected, empresaId);
@@ -637,11 +637,11 @@ public class AsistenciaReport extends BaseServlet {
         
         for (int i = 0; i < departamentos.size(); i++) {
             DepartamentoVO itDepto= departamentos.get(i);
-            System.out.println("[AsistenciaReport.getTotalesAsistenciaEmpresa]"
+            System.out.println(WEB_NAME+"[AsistenciaReport.getTotalesAsistenciaEmpresa]"
                 + "Depto: " + itDepto.getId()
                 + ", nombre: " + itDepto.getNombre());
             if (cencoParamId != null && cencoParamId.compareTo("-1") != 0){
-                System.out.println("[AsistenciaReport."
+                System.out.println(WEB_NAME+"[AsistenciaReport."
                     + "getTotalesAsistenciaEmpresa]"
                     + "Generar reporte solo para cencoId: " + cencoParamId);
                 CentroCostoVO auxCenco = 
@@ -649,7 +649,7 @@ public class AsistenciaReport extends BaseServlet {
                 cencos = new ArrayList<CentroCostoVO>();
                 cencos.add(auxCenco);
             }else{
-                System.out.println("[AsistenciaReport."
+                System.out.println(WEB_NAME+"[AsistenciaReport."
                     + "getTotalesAsistenciaEmpresa]"
                     + "Generar reporte para todos los "
                     + "cencos de la empresaId: " + empresaId
@@ -659,13 +659,13 @@ public class AsistenciaReport extends BaseServlet {
             }
             for (int j = 0; j < cencos.size(); j++) {
                 CentroCostoVO itCenco = cencos.get(j);
-                System.out.println("[AsistenciaReport.getTotalesAsistenciaEmpresa]"
+                System.out.println(WEB_NAME+"[AsistenciaReport.getTotalesAsistenciaEmpresa]"
                     + "Cenco Id: " + itCenco.getId() 
                     + ", Cenco Name: " + itCenco.getNombre() 
                     + ". Solo empleados vigentes y sin articulo22");
                 if (itCenco.getId() != -1){
                     //empleados del cenco
-                    System.out.println("[AsistenciaReport.getTotalesAsistenciaEmpresa]"
+                    System.out.println(WEB_NAME+"[AsistenciaReport.getTotalesAsistenciaEmpresa]"
                         + "Buscar empleados para empresaId: " + empresaId 
                         + ", deptoId: " + itDepto.getId()
                         + ", cencoId: " + itCenco.getId());
@@ -673,7 +673,7 @@ public class AsistenciaReport extends BaseServlet {
                         empleadosBp.getEmpleadosSimpleByFiltro(empresaId, 
                         itDepto.getId(), itCenco.getId(), 1, false);
                     if (listaEmpleados.size() > 0){
-                        System.out.println("[AsistenciaReport.getTotalesAsistenciaEmpresa]"
+                        System.out.println(WEB_NAME+"[AsistenciaReport.getTotalesAsistenciaEmpresa]"
                             + "Obteniendo detalle asistencia "
                             + "para todos los empleados vigentes y sin articulo22...");
                         LinkedHashMap<String,List<DetalleAsistenciaVO>> detalles 
@@ -684,11 +684,11 @@ public class AsistenciaReport extends BaseServlet {
                         //iterar empleados...
                     
                         for (EmpleadoVO empleado : listaEmpleados) {
-                            System.out.println("[AsistenciaReport.getTotalesAsistenciaEmpresa]"
+                            System.out.println(WEB_NAME+"[AsistenciaReport.getTotalesAsistenciaEmpresa]"
                                 + "Empleado a mostrar: " + empleado.getRut()
                                 +", Cenco nombre: " + empleado.getCencoNombre());
                             List<DetalleAsistenciaVO> detalleAsistenciaRut = detalles.get(empleado.getRut());
-                            System.out.println("[AsistenciaReport.getTotalesAsistenciaEmpresa]aquiii "
+                            System.out.println(WEB_NAME+"[AsistenciaReport.getTotalesAsistenciaEmpresa]aquiii "
                                 + "detalleAsistenciaRut: " + detalleAsistenciaRut);
                             
                             //m_detAsistenciaBp.openDbConnection();
@@ -720,7 +720,7 @@ public class AsistenciaReport extends BaseServlet {
                             }
                         }
                     }else{
-                        System.out.println("[AsistenciaReport.getTotalesAsistenciaEmpresa]"
+                        System.out.println(WEB_NAME+"[AsistenciaReport.getTotalesAsistenciaEmpresa]"
                             + "No hay empleados para empresaId: " + empresaId 
                             + ", deptoId: " + itDepto.getId()
                             + ", cencoId: " + itCenco.getId());
@@ -749,7 +749,7 @@ public class AsistenciaReport extends BaseServlet {
             String endDateParam     = _request.getParameter("endDate");
             int intCencoId          = Integer.parseInt(strCencoId);
             CentroCostoBp cencoBp   = new CentroCostoBp(appProperties);
-            System.out.println("[AsistenciaReport.setTotalesAsistenciaToCSV]"
+            System.out.println(WEB_NAME+"[AsistenciaReport.setTotalesAsistenciaToCSV]"
                 + "empresaId: " + empresaId
                 + ", deptoId: " + deptoId
                 + ", strCencoId: " + strCencoId
@@ -840,7 +840,7 @@ public class AsistenciaReport extends BaseServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(true);
-        System.out.println("[AsistenciaReport.doGet]entrando...");
+        System.out.println(WEB_NAME+"[AsistenciaReport.doGet]entrando...");
         if (session!=null) session.removeAttribute("mensaje");else session = request.getSession();
         UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
 //
@@ -852,7 +852,7 @@ public class AsistenciaReport extends BaseServlet {
         }else{
             session.setAttribute("mensaje", "Sesion de usuario "+request.getParameter("username")
                 +" no valida");
-            System.out.println("Sesion de usuario "+request.getParameter("username")
+            System.out.println(WEB_NAME+"Sesion de usuario "+request.getParameter("username")
                 +" no valida");
             request.getRequestDispatcher("/mensaje.jsp").forward(request, response);
         }
@@ -883,7 +883,7 @@ public class AsistenciaReport extends BaseServlet {
         String formato          = request.getParameter("formato");
         String startDateParam   = request.getParameter("startDate");
         String endDateParam     = request.getParameter("endDate");
-        System.out.println("[AsistenciaReport.doPost]"
+        System.out.println(WEB_NAME+"[AsistenciaReport.doPost]"
             + "empresaId: " + empresaId
             + ", deptoId: " + deptoId
             + ", strCencoId: " + strCencoId
@@ -901,7 +901,7 @@ public class AsistenciaReport extends BaseServlet {
             m_dbLocator             = DatabaseLocator.getInstance();
             m_dbpoolName            = appProperties.getDbPoolName();
             m_databaseConnection    = m_dbLocator.getConnection(m_dbpoolName,"[AsistenciaReport.doPost]");
-            System.out.println("[AsistenciaReport.doPost]"
+            System.out.println(WEB_NAME+"[AsistenciaReport.doPost]"
                 + "Abrir conexion a la BD. Datasource: " + m_dbpoolName);
         } catch (DatabaseException ex) {
             System.err.println("Error: "+ex.toString());
@@ -912,7 +912,7 @@ public class AsistenciaReport extends BaseServlet {
                 && tipoParam.compareTo("3") != 0){
             //generar informes por centro de costo
             LinkedHashMap<String, String> archivosGenerados = new LinkedHashMap<>();
-            System.out.println("[AsistenciaReport.doPost]"
+            System.out.println(WEB_NAME+"[AsistenciaReport.doPost]"
                 + "Generar informes para todos los empleados de "
                 + "empresaId: " + empresaId
                 + ", deptoId: " + deptoId
@@ -925,29 +925,29 @@ public class AsistenciaReport extends BaseServlet {
             FileGeneratedVO archivoGenerado;
             String nombreCenco="";
             
-            System.out.println("[AsistenciaReport.doPost]"
+            System.out.println(WEB_NAME+"[AsistenciaReport.doPost]"
                 + "Obteniendo detalle asistencia para todos los empleados seleccionados...");
             LinkedHashMap<String,List<DetalleAsistenciaVO>> detalles 
                 = m_detAsistenciaBp.getDetallesInforme(listaEmpleados, startDateParam, endDateParam,-1);
                     
             for (EmpleadoVO empleado : listaEmpleados) {
-                System.out.println("[AsistenciaReport.doPost]"
+                System.out.println(WEB_NAME+"[AsistenciaReport.doPost]"
                     + "Generar informe para empleado rut: " + empleado.getRut()
                     +", nombre: " + empleado.getNombreCompleto());
                 if (nombreCenco.compareTo("") == 0) nombreCenco = empleado.getCencoNombre();
                 List<DetalleAsistenciaVO> detalleAsistenciaRut = detalles.get(empleado.getRut());
                 if (detalleAsistenciaRut!=null){
-                    System.out.println("[AsistenciaReport.doPost]"
+                    System.out.println(WEB_NAME+"[AsistenciaReport.doPost]"
                         + "detalleAsistenciaRut != null!");
                 }else{
-                    System.out.println("[AsistenciaReport.doPost]"
+                    System.out.println(WEB_NAME+"[AsistenciaReport.doPost]"
                         + "detalleAsistenciaRut is null!");
                 }
                 
                 archivoGenerado = processRequestRut(request, response, empleado, detalleAsistenciaRut);
                 
                 if (archivoGenerado != null){
-                    System.out.println("[AsistenciaReport.doPost]Add "
+                    System.out.println(WEB_NAME+"[AsistenciaReport.doPost]Add "
                         + "archivo generado: " + archivoGenerado.getFileName());
                     archivosGenerados.put(empleado.getRut(), archivoGenerado.getFilePath());
                 }    
@@ -980,14 +980,14 @@ public class AsistenciaReport extends BaseServlet {
             
             //m_detAsistenciaBp.closeDbConnection();
         }else{
-            System.out.println("[AsistenciaReport.doPost]"
+            System.out.println(WEB_NAME+"[AsistenciaReport.doPost]"
                 + "Generar reporte asistencia solo para el rut: " + rutParam);
             EmpleadoVO singleEmpleado = new EmpleadoVO();
             singleEmpleado.setRut(rutParam);
             singleEmpleado.setAction("solo_un_rut");
             FileGeneratedVO filegenerated=processRequestRut(request, response, singleEmpleado, null);
             if (filegenerated != null){
-                System.out.println("[AsistenciaReport.doPost]Add "
+                System.out.println(WEB_NAME+"[AsistenciaReport.doPost]Add "
                     + "archivo generado: " + filegenerated.getFileName());
                 showFileToDownload(filegenerated, tipoParam, formato, response);
                 File auxpdf=new File(filegenerated.getFilePath());
@@ -1006,13 +1006,13 @@ public class AsistenciaReport extends BaseServlet {
                 resultado.setDescription("Consulta reporte de asistencia.");
                 eventosBp.addEvent(resultado);
             }else{
-                System.out.println("[AsistenciaReport.doPost]No Generar "
+                System.out.println(WEB_NAME+"[AsistenciaReport.doPost]No Generar "
                     + "archivo. Mostrar mensaje...");
                 session.setAttribute("mensaje", Constantes.REPORTE_SIN_DATOS);
                 request.getRequestDispatcher("/mensaje.jsp").forward(request, response);
             }
         }
-        System.out.println("[AsistenciaReport.doPost]Cerrar conexiones a la BD...");
+        System.out.println(WEB_NAME+"[AsistenciaReport.doPost]Cerrar conexiones a la BD...");
         //m_empleadosBp.closeDbConnection();
         //m_detAsistenciaBp.closeDbConnection();
     }
@@ -1056,7 +1056,7 @@ public class AsistenciaReport extends BaseServlet {
             }else{
                 //pdf
                 if (_formato.compareTo("pdf") == 0){
-                    System.out.println("[showFileToDownload]Generar PDF."
+                    System.out.println(WEB_NAME+"[showFileToDownload]Generar PDF."
                         + " fileName: " + _fileGenerated.getFileName());
                     try{
     //                    fullPath = 
@@ -1119,7 +1119,7 @@ public class AsistenciaReport extends BaseServlet {
             + "_"+_cencoNombre + "_todos.pdf");
 
         archivoGenerado=new FileGeneratedVO(mergedFile.getName(), mergedFile.getAbsolutePath());
-        System.out.println("\n[mergePdfFiles]"
+        System.out.println(WEB_NAME+"[mergePdfFiles]"
             + "uniendo archivos en uno solo. "
             + "Path: " + mergedFile.getAbsolutePath());
 
@@ -1129,7 +1129,7 @@ public class AsistenciaReport extends BaseServlet {
             for( String key : _archivos.keySet() ){
                 String pathFile = _archivos.get(key);
                 File itFile = new File(pathFile);
-                System.out.println("[mergePdfFiles]itera archivo " + pathFile);
+                System.out.println(WEB_NAME+"[mergePdfFiles]itera archivo " + pathFile);
                 
                 mergePdf.addSource(itFile);
                 
@@ -1140,7 +1140,7 @@ public class AsistenciaReport extends BaseServlet {
             for( String key : _archivos.keySet() ){
                 String pathFile2 = _archivos.get(key);
                 File itFile2 = new File(pathFile2);
-                System.out.println("[mergePdfFiles]Eliminando archivo " + pathFile2);
+                System.out.println(WEB_NAME+"[mergePdfFiles]Eliminando archivo " + pathFile2);
                 itFile2.delete();
             }
             
@@ -1186,7 +1186,7 @@ public class AsistenciaReport extends BaseServlet {
 //        File mergedFile = null;
 //        mergedFile = new File(appProperties.getPathExportedFiles()+File.separator+_usuario.getUsername()+"_todos.pdf");
 //        FileGeneratedVO archivoGenerado=new FileGeneratedVO(mergedFile.getName(), mergedFile.getAbsolutePath());
-//        System.out.println("\n[mergePdfFiles]uniendo archivos en uno solo...");
+//        System.out.println(WEB_NAME+"[mergePdfFiles]uniendo archivos en uno solo...");
 //        try{
 //            Document document = new Document();
 //            FileOutputStream fos = new FileOutputStream(mergedFile);
@@ -1200,7 +1200,7 @@ public class AsistenciaReport extends BaseServlet {
 //            LinkedHashMap<String, PdfReader> readers = new LinkedHashMap<>();
 //            for( String key : _archivos.keySet() ){
 //                String pathFile = _archivos.get(key);
-//                System.out.println("[mergePdfFiles]itera archivo " + pathFile);
+//                System.out.println(WEB_NAME+"[mergePdfFiles]itera archivo " + pathFile);
 //                PdfReader itReader = new PdfReader(pathFile);
 //                int n = itReader.getNumberOfPages();
 //                for (int i = 1; i <= itReader.getNumberOfPages(); i++) {

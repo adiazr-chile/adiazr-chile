@@ -80,7 +80,7 @@ public class ProcesosDAO extends BaseDAO{
             if (_jtPageSize > 0){
                 sql += " limit "+_jtPageSize + " offset "+_jtStartIndex;
             }
-            System.out.println("[ProcesosDAO.getProcesos]-2-Sql: "+sql);
+            System.out.println(WEB_NAME+"[ProcesosDAO.getProcesos]-2-Sql: "+sql);
             dbConn = dbLocator.getConnection(m_dbpoolName,"[ProcesosDAO.getProcesos]");
             ps = dbConn.prepareStatement(sql);
             rs = ps.executeQuery();
@@ -228,7 +228,7 @@ public class ProcesosDAO extends BaseDAO{
             }
             
             sql += " order by empresa_id, proc_id";
-            System.out.println("[ProcesosDAO.getProcesos]-1-Sql: "+sql);
+            System.out.println(WEB_NAME+"[ProcesosDAO.getProcesos]-1-Sql: "+sql);
             dbConn = dbLocator.getConnection(m_dbpoolName,"[ProcesosDAO.getProcesos]");
             ps = dbConn.prepareStatement(sql);
             rs = ps.executeQuery();
@@ -283,7 +283,7 @@ public class ProcesosDAO extends BaseDAO{
             }
             
             sql += " order by empresa_id, proc_id";
-            System.out.println("[ProcesosDAO.getProcesoByJobName]-1-Sql: " + sql);
+            System.out.println(WEB_NAME+"[ProcesosDAO.getProcesoByJobName]-1-Sql: " + sql);
             dbConn = dbLocator.getConnection(m_dbpoolName,"[ProcesosDAO.getProcesoByJobName]");
             ps = dbConn.prepareStatement(sql);
             rs = ps.executeQuery();
@@ -335,7 +335,7 @@ public class ProcesosDAO extends BaseDAO{
                 + "and prog.proc_id = proc.proc_id) "
                 + "where prog.cod_dia = " + _dia
                 + " order by proc.proc_id";
-            System.out.println("[ProcesosDAO.getProgramacionProcesosDia]Sql: "+sql);    
+            System.out.println(WEB_NAME+"[ProcesosDAO.getProgramacionProcesosDia]Sql: "+sql);    
             dbConn = dbLocator.getConnection(m_dbpoolName,"[ProcesosDAO.getProgramacionProcesosDia]");
             ps = dbConn.prepareStatement(sql);
             rs = ps.executeQuery();
@@ -439,7 +439,7 @@ public class ProcesosDAO extends BaseDAO{
             
             int rowAffected = psupdate.executeUpdate();
             if (rowAffected == 1){
-                System.out.println("[update]proceso."
+                System.out.println(WEB_NAME+"[update]proceso."
                     + " empresaId:" +_data.getEmpresaId()
                     + ", idProceso:" +_data.getId()
                     + ", nombre:" +_data.getNombre()    
@@ -499,7 +499,7 @@ public class ProcesosDAO extends BaseDAO{
             
             int filasAfectadas = insert.executeUpdate();
             if (filasAfectadas == 1){
-                System.out.println("[insert proceso]"
+                System.out.println(WEB_NAME+"[insert proceso]"
                     + " empresaId:" +_data.getEmpresaId()
                     + ", nombre:" +_data.getNombre()
                     + ", jobName:" +_data.getJobName()
@@ -547,7 +547,7 @@ public class ProcesosDAO extends BaseDAO{
                 + "and proc_id = " + _idProceso 
                 + " and cod_dia = " + _codDia;
             
-            System.out.println("[GestionFemase."
+            System.out.println(WEB_NAME+"[GestionFemase."
                 + "ProcesosDAO.getProgramacion]Sql: "+sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,"[ProcesosDAO.getProgramacion]");
@@ -618,7 +618,7 @@ public class ProcesosDAO extends BaseDAO{
                     + "proceso.proc_id = " + _idProceso
                 + " order by proceso_filtro.orden";
             
-            System.out.println("[GestionFemase."
+            System.out.println(WEB_NAME+"[GestionFemase."
                 + "ProcesosDAO.getFiltros]Sql: "+sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,"[ProcesosDAO.getFiltros]");
@@ -697,7 +697,7 @@ public class ProcesosDAO extends BaseDAO{
                         
             int filasAfectadas = insert.executeUpdate();
             if (filasAfectadas == 1){
-                System.out.println("[insert proceso_programacion]"
+                System.out.println(WEB_NAME+"[insert proceso_programacion]"
                     + " empresaId:" + _data.getEmpresaId()
                     + ", idProceso:" + _data.getProcesoId()
                     + ", codDia:" + _data.getCodDia()
@@ -773,7 +773,7 @@ public class ProcesosDAO extends BaseDAO{
                         
             int filasAfectadas = insert.executeUpdate();
             if (filasAfectadas == 1){
-                System.out.println("[insert proceso_itinerario_ejecucion]"
+                System.out.println(WEB_NAME+"[insert proceso_itinerario_ejecucion]"
                     + " empresaId:" + _data.getEmpresaId()
                     + ", idProceso:" + _data.getProcesoId()
                     + ", inicio:" + _data.getFechaHoraInicioEjecucion()
@@ -912,7 +912,7 @@ public class ProcesosDAO extends BaseDAO{
             if (_jtPageSize > 0){
                 sql += " limit "+_jtPageSize + " offset "+_jtStartIndex;
             }
-            System.out.println("[ProcesosDAO.getItinerario]Sql: "+sql);
+            System.out.println(WEB_NAME+"[ProcesosDAO.getItinerario]Sql: "+sql);
             dbConn = dbLocator.getConnection(m_dbpoolName,"[ProcesosDAO.getItinerario]");
             ps = dbConn.prepareStatement(sql);
             rs = ps.executeQuery();

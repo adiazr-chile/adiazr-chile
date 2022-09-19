@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <%
     String dataPoints = (String)request.getAttribute("dataPoints");
-    System.out.println("[google_chart_linea.jsp]dataPoints: "+dataPoints);
+    System.out.println("[GestionFemaseWeb]google_chart_linea.jsp]dataPoints: "+dataPoints);
 %>
  
 <!DOCTYPE HTML>

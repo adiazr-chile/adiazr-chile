@@ -129,7 +129,7 @@ public class VacacionesDAO extends BaseDAO{
             
             int rowAffected = psupdate.executeUpdate();
             if (rowAffected == 1){
-                System.out.println("[VacacionesDAO.update]vacaciones"
+                System.out.println(WEB_NAME+"[VacacionesDAO.update]vacaciones"
                    + ", empresaId:" + _data.getEmpresaId()
                     + ", rutEmpleado:" + _data.getRutEmpleado()    
                     + ", dias_acumulados:" +_data.getDiasAcumulados()
@@ -203,7 +203,7 @@ public class VacacionesDAO extends BaseDAO{
             
             int rowAffected = psupdate.executeUpdate();
             if (rowAffected == 1){
-                System.out.println("[VacacionesDAO.updateSaldoYUltimasVacaciones]vacaciones"
+                System.out.println(WEB_NAME+"[VacacionesDAO.updateSaldoYUltimasVacaciones]vacaciones"
                    + ", empresaId:" + _data.getEmpresaId()
                     + ", rutEmpleado:" + _data.getRutEmpleado()    
                     + ", dias_acumulados:" +_data.getDiasAcumulados()
@@ -276,7 +276,7 @@ public class VacacionesDAO extends BaseDAO{
             
             int rowAffected = psupdate.executeUpdate();
             if (rowAffected == 1){
-                System.out.println("[VacacionesDAO.updateSaldosVacacionesVBAyVP]"
+                System.out.println(WEB_NAME+"[VacacionesDAO.updateSaldosVacacionesVBAyVP]"
                    + ", empresaId:" + _data.getEmpresaId()
                     + ", rutEmpleado:" + _data.getRutEmpleado()    
                     +" saldos VBA y VP actualizados OK!");
@@ -353,7 +353,7 @@ public class VacacionesDAO extends BaseDAO{
             
             int rowAffected = psupdate.executeUpdate();
             if (rowAffected == 1){
-                System.out.println("[VacacionesDAO.updateUltimasVacaciones]"
+                System.out.println(WEB_NAME+"[VacacionesDAO.updateUltimasVacaciones]"
                    + ", empresaId:" + _data.getEmpresaId()
                     + ", rutEmpleado:" + _data.getRutEmpleado()    
                     +" actualizada OK!");
@@ -457,7 +457,7 @@ public class VacacionesDAO extends BaseDAO{
             
             int rowAffected = psupdate.executeUpdate();
             if (rowAffected == 1){
-                System.out.println("[VacacionesDAO.updateFromCalculo]vacaciones"
+                System.out.println(WEB_NAME+"[VacacionesDAO.updateFromCalculo]vacaciones"
                    + ", empresaId:" + _data.getEmpresaId()
                     + ", rutEmpleado:" + _data.getRutEmpleado()    
                     + ", dias_progresivos:" + _data.getDiasProgresivos()
@@ -584,7 +584,7 @@ public class VacacionesDAO extends BaseDAO{
                         
             int filasAfectadas = insert.executeUpdate();
             if (filasAfectadas == 1){
-                System.out.println("[VacacionesDAO.insert]vacaciones"
+                System.out.println(WEB_NAME+"[VacacionesDAO.insert]vacaciones"
                     + ", empresaId:" + _data.getEmpresaId()
                     + ", rutEmpleado:" + _data.getRutEmpleado()    
                     + ", dias_acumulados:" +_data.getDiasAcumulados()
@@ -656,7 +656,7 @@ public class VacacionesDAO extends BaseDAO{
             
             int filasAfectadas = insert.executeUpdate();
             if (filasAfectadas > 0){
-                System.out.println("[VacacionesDAO."
+                System.out.println(WEB_NAME+"[VacacionesDAO."
                     + "insertVacacionesFaltantes]"
                     + ", empresaId:" + _empresaId 
                     + "." + filasAfectadas +" insertadas OK!");
@@ -820,7 +820,7 @@ public class VacacionesDAO extends BaseDAO{
                 sql += " limit "+_jtPageSize + " offset "+_jtStartIndex;
             }
             
-            System.out.println("[VacacionesDAO."
+            System.out.println(WEB_NAME+"[VacacionesDAO."
                 + "getInfoVacaciones]sql: " + sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,"[VacacionesDAO.getInfoVacaciones]");
@@ -967,7 +967,7 @@ public class VacacionesDAO extends BaseDAO{
                 sql += " limit "+_jtPageSize + " offset "+_jtStartIndex;
             }
             
-            System.out.println("[VacacionesDAO."
+            System.out.println(WEB_NAME+"[VacacionesDAO."
                 + "getInfoVacacionesDesvincula2]sql: " + sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,
@@ -1057,7 +1057,7 @@ public class VacacionesDAO extends BaseDAO{
                 + "sum(dias_efectivos_vacaciones) suma_dias "
                 + "from detalle_ausencia "
                 + "where rut_empleado = '" + _rutEmpleado + "'";
-            System.out.println("[VacacionesDAO."
+            System.out.println(WEB_NAME+"[VacacionesDAO."
                 + "getAllDiasEfectivosVacaciones]sql: "+sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,"[VacacionesDAO.getAllDiasEfectivosVacaciones]");
@@ -1106,7 +1106,7 @@ public class VacacionesDAO extends BaseDAO{
                 + "get_all_vacaciones_json" 
                     + "('" + _empresaId + "','" + _rutEmpleado + "') strjson";
 
-            System.out.println("[VacacionesDAO."
+            System.out.println(WEB_NAME+"[VacacionesDAO."
                 + "getAllVacaciones]Sql: "+sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,"[VacacionesDAO.getAllVacaciones]");
@@ -1163,7 +1163,7 @@ public class VacacionesDAO extends BaseDAO{
                 + "get_vacaciones_json_rango_meses"
                     + "('" + _rutEmpleado + "','" + _mesInicio + "','" + _mesFin + "') strjson";
 
-            System.out.println("[VacacionesDAO."
+            System.out.println(WEB_NAME+"[VacacionesDAO."
                 + "getVacacionesRangoMeses]Sql: "+sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,"[VacacionesDAO.getVacacionesRangoMeses]");
@@ -1320,10 +1320,10 @@ public class VacacionesDAO extends BaseDAO{
         ) {
             
             int i = 0;
-            System.out.println("[VacacionesDAO.saveListVacaciones]"
+            System.out.println(WEB_NAME+"[VacacionesDAO.saveListVacaciones]"
                 + "items a insertar: "+_vacaciones.size());
             for (VacacionesVO entity : _vacaciones) {
-                System.out.println("[VacacionesDAO.saveListVacaciones] "
+                System.out.println(WEB_NAME+"[VacacionesDAO.saveListVacaciones] "
                     + "Insert info vacaciones. "
                     + "EmpresaId= " + entity.getEmpresaId()
                     + ", rut empleado= " + entity.getRutEmpleado()
@@ -1347,7 +1347,7 @@ public class VacacionesDAO extends BaseDAO{
 
                 if (i % 50 == 0 || i == _vacaciones.size()) {
                     int[] rowsAffected = statement.executeBatch(); // Execute every 1000 items.
-                    System.out.println("[VacacionesDAO."
+                    System.out.println(WEB_NAME+"[VacacionesDAO."
                         + "saveListVacaciones]filas afectadas= "+rowsAffected.length);
                 }
             }
@@ -1365,10 +1365,10 @@ public class VacacionesDAO extends BaseDAO{
         ) {
             
             int i = 0;
-            System.out.println("[VacacionesDAO.deleteListVacaciones]"
+            System.out.println(WEB_NAME+"[VacacionesDAO.deleteListVacaciones]"
                 + "items a insertar: "+_vacaciones.size());
             for (VacacionesVO entity : _vacaciones) {
-                System.out.println("[VacacionesDAO.deleteListVacaciones] "
+                System.out.println(WEB_NAME+"[VacacionesDAO.deleteListVacaciones] "
                     + "Insert info vacaciones. "
                     + "EmpresaId= " + entity.getEmpresaId()
                     + ", rut empleado= " + entity.getRutEmpleado());
@@ -1382,7 +1382,7 @@ public class VacacionesDAO extends BaseDAO{
 
                 if (i % 50 == 0 || i == _vacaciones.size()) {
                     int[] rowsAffected = statement.executeBatch(); // Execute every 1000 items.
-                    System.out.println("[VacacionesDAO."
+                    System.out.println(WEB_NAME+"[VacacionesDAO."
                         + "deleteListVacaciones]filas afectadas= "+rowsAffected.length);
                 }
             }

@@ -76,7 +76,7 @@ public class MarcasRechazadasController extends BaseServlet {
         MarcasRechazosBp auxnegocio=new MarcasRechazosBp(appProperties);
 
         if(request.getParameter("action") != null){
-            System.out.println("[MarcasRechazadasController]"
+            System.out.println(WEB_NAME+"[MarcasRechazadasController]"
                 + "action is: " + request.getParameter("action"));
             List<MarcaRechazoVO> listaObjetos = new ArrayList<>();
             String action=(String)request.getParameter("action");
@@ -102,7 +102,7 @@ public class MarcasRechazadasController extends BaseServlet {
             if (request.getParameter("jtSorting") != null) 
                 jtSorting   = request.getParameter("jtSorting").trim();
             
-            System.out.println("[MarcasRechazadasController."
+            System.out.println(WEB_NAME+"[MarcasRechazadasController."
                 + "processRequest()]."
                 + " jtSorting antes_1: " + jtSorting);
             
@@ -115,14 +115,14 @@ public class MarcasRechazadasController extends BaseServlet {
             //else if (jtSorting.contains("fechaHoraActualizacion")) jtSorting = jtSorting.replaceFirst("fechaHoraActualizacion","fecha_hora_actualizacion");
             
 //            if (jtSorting.compareTo("fechaHoraStr ASC") == 0){
-//                System.out.println("--->set 1");
+//                System.out.println(WEB_NAME+"--->set 1");
 //                jtSorting = "fecha_hora ASC";
 //            }else if (jtSorting.compareTo("fechaHoraStr DESC") == 0){
-//                System.out.println("--->set 2");
+//                System.out.println(WEB_NAME+"--->set 2");
 //                jtSorting = "fecha_hora DESC";
 //            } 
             
-            System.out.println("[MarcasRechazadasController."
+            System.out.println(WEB_NAME+"[MarcasRechazadasController."
                 + "processRequest()]."
                 + " jtSorting despues_2: " + jtSorting);
        
@@ -133,7 +133,7 @@ public class MarcasRechazadasController extends BaseServlet {
             String deptoId  = "-1";
             String cencoId  = "-1";
             String paramCencoID         = request.getParameter("cencoId");
-            System.out.println("[MarcasRechazadasController]"
+            System.out.println(WEB_NAME+"[MarcasRechazadasController]"
                 + "token param 'cencoID'= " + paramCencoID);
             if (paramCencoID != null && paramCencoID.compareTo("-1") != 0){
                 StringTokenizer tokenCenco  = new StringTokenizer(paramCencoID, "|");
@@ -145,7 +145,7 @@ public class MarcasRechazadasController extends BaseServlet {
                     }
                 }
             }
-            System.out.println("[MarcasRechazadasController]"
+            System.out.println(WEB_NAME+"[MarcasRechazadasController]"
                 + "empresaId: " + empresaId
                 + ",deptoId: " + deptoId
                 + ",cencoId: " + cencoId
@@ -174,7 +174,7 @@ public class MarcasRechazadasController extends BaseServlet {
            // empresaId= null, deptoId= -1, cencoId= -1, rutEmpleado= -1, dispositivoId= null, startDate= , endDate= 
 
             if (action.compareTo("list") == 0){
-                System.out.println("[MarcasRechazadasController]"
+                System.out.println(WEB_NAME+"[MarcasRechazadasController]"
                     + "mostrando marcas rechazadas..."+
                         "empresaId= " + empresaId
                         +", deptoId= " + deptoId

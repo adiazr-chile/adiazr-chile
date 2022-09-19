@@ -78,13 +78,13 @@ public class UploadMarcasServlet extends BaseServlet {
                 List<FileItem> multiparts = new ServletFileUpload(
                     new DiskFileItemFactory()).parseRequest(request);
                 
-                System.out.println("[UploadMarcasServlet]"
+                System.out.println(WEB_NAME+"[UploadMarcasServlet]"
                     + "Iterar marcas...");
 
                 //process only if its multipart content
                 if(ServletFileUpload.isMultipartContent(request)){
                     String pathUploadedFiles = appProperties.getUploadsPath();
-                    System.out.println("[UploadMarcasServlet]"
+                    System.out.println(WEB_NAME+"[UploadMarcasServlet]"
                         + "paso 1...");
 //                    int correlativo=1;
                     LinkedHashMap<String,MarcaVO> marcasOk=
@@ -99,13 +99,13 @@ public class UploadMarcasServlet extends BaseServlet {
                                 String filename = csvfile.getName();
                                 String filePathLoaded= pathUploadedFiles + File.separator + filename;
                                 String extension = FilenameUtils.getExtension(filename);
-                                System.out.println("[UploadMarcasServlet]"  
+                                System.out.println(WEB_NAME+"[UploadMarcasServlet]"  
                                     + "Filename: " + filename
                                     + ", extension: " + extension);
                                 item2.write( new File(filePathLoaded));
                                 if (extension.compareTo("csv") == 0){
                                     Reader reader = new FileReader(filePathLoaded);
-                                    System.out.println("[UploadMarcasServlet]"  
+                                    System.out.println(WEB_NAME+"[UploadMarcasServlet]"  
                                         + "filePathLoaded: " + filePathLoaded); 
                                     //Reader reader = Files.newBufferedReader(Paths.get(filePathLoaded));
                                     CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT);
@@ -123,17 +123,17 @@ public class UploadMarcasServlet extends BaseServlet {
                                         
                                         intTipoMarca = Integer.parseInt(tipoMarca);
                                         
-                                        System.out.println("[UploadMarcasServlet]Record No - " + csvRecord.getRecordNumber());
-                                        System.out.println("[UploadMarcasServlet]---------------");
-                                        System.out.println("[UploadMarcasServlet]Empresa : " + empresaId);
-                                        System.out.println("[UploadMarcasServlet]NumFicha : " + numFicha);
-                                        System.out.println("[UploadMarcasServlet]Fecha : " + fecha);
-                                        System.out.println("[UploadMarcasServlet]Hora : " + hora);
-                                        System.out.println("[UploadMarcasServlet]TipoMarca : " + tipoMarca);
-                                        System.out.println("[UploadMarcasServlet]IdDispositivo : " + idDispositivo);
-                                        System.out.println("[UploadMarcasServlet]Id marca : " + id);
-                                        System.out.println("[UploadMarcasServlet]Hashcode : " + hashcode);
-                                        System.out.println("---------------\n\n");
+                                        System.out.println(WEB_NAME+"[UploadMarcasServlet]Record No - " + csvRecord.getRecordNumber());
+                                        System.out.println(WEB_NAME+"[UploadMarcasServlet]---------------");
+                                        System.out.println(WEB_NAME+"[UploadMarcasServlet]Empresa : " + empresaId);
+                                        System.out.println(WEB_NAME+"[UploadMarcasServlet]NumFicha : " + numFicha);
+                                        System.out.println(WEB_NAME+"[UploadMarcasServlet]Fecha : " + fecha);
+                                        System.out.println(WEB_NAME+"[UploadMarcasServlet]Hora : " + hora);
+                                        System.out.println(WEB_NAME+"[UploadMarcasServlet]TipoMarca : " + tipoMarca);
+                                        System.out.println(WEB_NAME+"[UploadMarcasServlet]IdDispositivo : " + idDispositivo);
+                                        System.out.println(WEB_NAME+"[UploadMarcasServlet]Id marca : " + id);
+                                        System.out.println(WEB_NAME+"[UploadMarcasServlet]Hashcode : " + hashcode);
+                                        System.out.println(WEB_NAME+"---------------\n\n");
                                         MarcaVO newMark=new MarcaVO();
                                         newMark.setCodDispositivo(idDispositivo);
                                         newMark.setEmpresaCod(empresaId);
@@ -147,7 +147,7 @@ public class UploadMarcasServlet extends BaseServlet {
                                         //EmpleadoVO empleado = empleadosBp.getEmpleado(empresaId, numFicha);
 //                                        if (empleado!=null){
                                             //validar si tiene contrato vigente
-//                                            System.out.println("[UploadMarcasServlet]numFicha: " + numFicha
+//                                            System.out.println(WEB_NAME+"[UploadMarcasServlet]numFicha: " + numFicha
 //                                                +", rut: "+empleado.getRut());
                                             //if (empleadosBp.tieneContratoVigente(empleado.getEmpresa().getId(), empleado.getRut(), empleado.getCentroCosto().getId())){
                                                 //insertar marca

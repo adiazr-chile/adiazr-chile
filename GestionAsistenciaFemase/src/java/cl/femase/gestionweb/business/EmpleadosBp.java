@@ -35,7 +35,7 @@ import javax.servlet.http.HttpServletRequest;
  *
  * @author Alexander
  */
-public class EmpleadosBp {
+public class EmpleadosBp  extends BaseBp{
 
     public PropertiesVO props;
     /** para guardar los eventos de mantencion de informacion*/
@@ -190,7 +190,7 @@ public class EmpleadosBp {
             int _cencoId,
             List<String> _listaRuts){
     
-        System.out.println("[EmpleadosBp."
+        System.out.println(WEB_NAME+"[EmpleadosBp."
             + "getListaEmpleadosComplete]"
             + "empresa: "+_empresaId
             +", depto: "+_deptoId
@@ -202,7 +202,7 @@ public class EmpleadosBp {
         Iterator<String> it = _listaRuts.iterator();
         while(it.hasNext()){
             String strRut = it.next();
-            System.out.println("[EmpleadosBp."
+            System.out.println(WEB_NAME+"[EmpleadosBp."
                 + "getListaEmpleadosComplete]"
                 + "get info completa de "
                 + "empleado rut: "+ strRut);
@@ -246,7 +246,7 @@ public class EmpleadosBp {
             String _deptoId, 
             int _cencoId){
     
-        System.out.println("[EmpleadosBp."
+        System.out.println(WEB_NAME+"[EmpleadosBp."
             + "getListaEmpleadosJson]empresa: "+_empresaId
             +", depto: "+_deptoId
             +", cenco: "+_cencoId);
@@ -272,7 +272,7 @@ public class EmpleadosBp {
                             empleadosBp.getEmpleadosJson(_empresaId, 
                             _deptoId, 
                             _cencoId);
-                        //System.out.println("[EmpleadosBp."
+                        //System.out.println(WEB_NAME+"[EmpleadosBp."
                           //  + "getListaEmpleadosJson]jsonOutput: "+jsonOutput);
                     Type listType = new TypeToken<ArrayList<EmpleadoVO>>() {}.getType();
                     listaEmpleados = new Gson().fromJson(jsonOutput, listType);
@@ -323,7 +323,7 @@ public class EmpleadosBp {
     public ArrayList<ResultadoCargaDataCsvVO> procesaEmpleadosCSV(HttpServletRequest _request,
             UsuarioVO _userConnected, 
             ArrayList<EmpleadoVO> _empleados){
-        System.out.println("[EmpleadosBp.procesaEmpleadosCSV]Entrando...");
+        System.out.println(WEB_NAME+"[EmpleadosBp.procesaEmpleadosCSV]Entrando...");
         ArrayList<ResultadoCargaDataCsvVO> listaResultados = new ArrayList<>();
         //insertar empleado
         MaintenanceEventVO evento = new MaintenanceEventVO();
@@ -332,7 +332,7 @@ public class EmpleadosBp {
         evento.setUserIP(_request.getRemoteAddr());
         evento.setType("EMP");
         evento.setEmpresaIdSource(_userConnected.getEmpresaId());
-        System.out.println("[EmpleadosBp.procesaEmpleadosCSV]Size empleados: " + _empleados.size());
+        System.out.println(WEB_NAME+"[EmpleadosBp.procesaEmpleadosCSV]Size empleados: " + _empleados.size());
         
         EmpresaBp empresasBp    = new EmpresaBp(null);
         DepartamentoBp deptosBp = new DepartamentoBp(null);
@@ -342,7 +342,7 @@ public class EmpleadosBp {
         
         //Itera empleados
         _empleados.forEach((EmpleadoVO empleado) -> {
-            System.out.println("[EmpleadosBp.procesaEmpleadosCSV] "
+            System.out.println(WEB_NAME+"[EmpleadosBp.procesaEmpleadosCSV] "
                 + "Procesando empleado. "
                 + "Rut(sin puntos- PK)= " + empleado.getCodInterno()
                 + ", codInterno(con puntos)= " + empleado.getRut()
@@ -358,49 +358,49 @@ public class EmpleadosBp {
             boolean isOk = true;
             EmpresaVO empresa       = empresasBp.getEmpresaByKey(empleado.getEmpresa().getId());
             DepartamentoVO depto    = deptosBp.getDepartamentoByKey(empleado.getDepartamento().getId());
-             System.out.println("[EmpleadosBp.procesaEmpleadosCSV]"
+             System.out.println(WEB_NAME+"[EmpleadosBp.procesaEmpleadosCSV]"
                 + "validar Cenco...");
             CentroCostoVO cenco     = 
                 cencoBp.getCentroCostoByKey(empleado.getDepartamento().getId(), 
                     empleado.getCentroCosto().getId());
-            System.out.println("[EmpleadosBp.procesaEmpleadosCSV]"
+            System.out.println(WEB_NAME+"[EmpleadosBp.procesaEmpleadosCSV]"
                 + "Cenco: " + cenco);
             CargoVO cargo    = cargoBp.getCargoByKey(empleado.getIdCargo());
             TurnoVO turno    = turnoBp.getTurno(empleado.getIdTurno());
-            System.out.println("[EmpleadosBp.procesaEmpleadosCSV]"
+            System.out.println(WEB_NAME+"[EmpleadosBp.procesaEmpleadosCSV]"
                 + "Validar DeptoId: " + empleado.getDepartamento().getId()
                 + ", cencoId= " + empleado.getCentroCosto().getId());
             if (empresa == null) {
                 mensajes.add(new ResultadoCargaCsvVO("ERROR", "Empresa Id no existe."));
-                System.out.println("[EmpleadosBp.procesaEmpleadosCSV]"
+                System.out.println(WEB_NAME+"[EmpleadosBp.procesaEmpleadosCSV]"
                     + "Empresa no existe");
                 isOk = false;
             }
             if (depto == null){ 
                 mensajes.add(new ResultadoCargaCsvVO("ERROR", "Departamento Id no existe."));
-                System.out.println("[EmpleadosBp.procesaEmpleadosCSV]"
+                System.out.println(WEB_NAME+"[EmpleadosBp.procesaEmpleadosCSV]"
                     + "Departamento no existe");
                 isOk = false;
             }
             if (cenco == null){
                 mensajes.add(new ResultadoCargaCsvVO("ERROR", "Centro de costo Id no existe."));
-                System.out.println("[EmpleadosBp.procesaEmpleadosCSV]"
+                System.out.println(WEB_NAME+"[EmpleadosBp.procesaEmpleadosCSV]"
                     + "Centro de costo no existe");
                 isOk = false;
             }
             if (cargo == null) {
                 mensajes.add(new ResultadoCargaCsvVO("ERROR", "Cargo Id no existe."));
-                System.out.println("[EmpleadosBp.procesaEmpleadosCSV]"
+                System.out.println(WEB_NAME+"[EmpleadosBp.procesaEmpleadosCSV]"
                     + "Cargo no existe");
                 isOk = false;
             }
             if (turno == null) {
                 mensajes.add(new ResultadoCargaCsvVO("ERROR", "Turno Id no existe."));
-                System.out.println("[EmpleadosBp.procesaEmpleadosCSV]"
+                System.out.println(WEB_NAME+"[EmpleadosBp.procesaEmpleadosCSV]"
                     + "Turno no existe");
                 isOk = false;
             }
-            System.out.println("[EmpleadosBp.procesaEmpleadosCSV]"
+            System.out.println(WEB_NAME+"[EmpleadosBp.procesaEmpleadosCSV]"
                 + "isOk: " + isOk);
             if (isOk){
                 //-------------------------------------------------------
@@ -413,19 +413,19 @@ public class EmpleadosBp {
                 boolean existeEmpleado =this.existeEmpleado(empleado.getEmpresa().getId(), empleado.getRut(), empleado.getCodInterno()); 
                 String rutPK        = empleado.getCodInterno();
                 String codInterno   = empleado.getRut();
-                System.out.println("[EmpleadosBp.procesaEmpleadosCSV]"
+                System.out.println(WEB_NAME+"[EmpleadosBp.procesaEmpleadosCSV]"
                     + "Existe empleado. PK: " + rutPK);
             
                 if (existeEmpleado){
                     //update
-                    System.out.println("[EmpleadosBp.procesaEmpleadosCSV]Actualizar datos del empleado...");
+                    System.out.println(WEB_NAME+"[EmpleadosBp.procesaEmpleadosCSV]Actualizar datos del empleado...");
                     empleado.setCodInterno(rutPK);
                     empleado.setRut(codInterno);
                     update(empleado, evento);
                     mensajes.add(new ResultadoCargaCsvVO("OK", "Empleado ya existe."));
                     mensajes.add(new ResultadoCargaCsvVO("OK", "Empleado reemplazado exitosamente."));
                 } else {
-                    System.out.println("[EmpleadosBp.procesaEmpleadosCSV]Insertar nuevo empleado...");
+                    System.out.println(WEB_NAME+"[EmpleadosBp.procesaEmpleadosCSV]Insertar nuevo empleado...");
                     MaintenanceVO insertObj = insert(empleado, evento);
                     if (!insertObj.isThereError()){ 
                         mensajes.add(new ResultadoCargaCsvVO("OK", "Empleado creado exitosamente."));
@@ -444,7 +444,7 @@ public class EmpleadosBp {
                     }
                 }
             }else{
-                System.out.println("[EmpleadosBp.procesaEmpleadosCSV]"
+                System.out.println(WEB_NAME+"[EmpleadosBp.procesaEmpleadosCSV]"
                     + "no cumple validaciones...");
             }  
             resultado.setMensajes(mensajes);
@@ -466,11 +466,28 @@ public class EmpleadosBp {
         return empleadosDao.getEmpleado(_empresaId, _codInterno);
     }
     
+    /**
+    * 
+    * 
+    * @param _empresaId
+    * @param _codInterno
+    * @param _turnoId
+    * @return 
+    */
     public EmpleadoVO getEmpleado(String _empresaId, 
             String _codInterno, int _turnoId){
         return empleadosDao.getEmpleado(_empresaId, _codInterno, _turnoId);
     }
     
+    /**
+    * 
+    * @param _empresaId
+    * @param _runEmpleado
+    * @return 
+    */
+    public EmpleadoVO getEmpleadoByEmpresaRun(String _empresaId, String _runEmpleado){
+        return empleadosDao.getEmpleadoByEmpresaRun(_empresaId, _runEmpleado);
+    }
     
     
     /**
@@ -701,7 +718,7 @@ public class EmpleadosBp {
     */
     public MaintenanceVO update(EmpleadoVO _empleadoToUpdate, 
             MaintenanceEventVO _eventdata){
-        System.out.println("[EmpleadosBp.update]"
+        System.out.println(WEB_NAME+"[EmpleadosBp.update]"
             + "Actualizar empleado "
             + ", rut(PK): " + _empleadoToUpdate.getCodInterno()
             + ", numFicha: " + _empleadoToUpdate.getRut()
@@ -719,11 +736,11 @@ public class EmpleadosBp {
                 + "Rut: '" + _empleadoToUpdate.getRut() + "'. "
                 + "El email " + _empleadoToUpdate.getEmail()
                 +" ya existe en el Sistema.");
-            System.out.println("[EmpleadosBp.update]Error: " + updValues.getMsg());
+            System.out.println(WEB_NAME+"[EmpleadosBp.update]Error: " + updValues.getMsg());
         }else{
             updValues = empleadosDao.update(_empleadoToUpdate);
             //if (_empleadoToUpdate.getEstado() == Constantes.ESTADO_NO_VIGENTE){
-                System.out.println("[EmpleadosBp.update]"
+                System.out.println(WEB_NAME+"[EmpleadosBp.update]"
                     + "Actualizar estado del usuario (Vigente/No Vigente).");
                 UsersDAO usuarioDao = new UsersDAO(null);
                 String codInterno = _empleadoToUpdate.getCodInterno();
@@ -759,7 +776,7 @@ public class EmpleadosBp {
             //insertar evento 
             eventsService.addEvent(_eventdata); 
         //}
-        System.out.println("[EmpleadosBp.update]"
+        System.out.println(WEB_NAME+"[EmpleadosBp.update]"
             + "Valida si hay cambio de turno para el empleado "
             + ", rut(PK): "+_empleadoToUpdate.getCodInterno()
             + ", numFicha: "+_empleadoToUpdate.getRut());
@@ -792,7 +809,7 @@ public class EmpleadosBp {
                 + "Rut: '" + _empleadoToInsert.getRut() + "'. "
                 + "El email " + _empleadoToInsert.getEmail()
                 +" ya existe en el Sistema.");
-            System.out.println("[EmpleadosBp.insert]Error: " + insValues.getMsg());
+            System.out.println(WEB_NAME+"[EmpleadosBp.insert]Error: " + insValues.getMsg());
         }else{
             insValues = empleadosDao.insert(_empleadoToInsert);
             int perfilUsuario = Constantes.ID_PERFIL_EMPLEADO;
@@ -828,7 +845,7 @@ public class EmpleadosBp {
                 calendar11.setTime(_empleadoToInsert.getFechaNacimiento());
                 newPassword = nombres.substring(0, 1) + calendar11.get(Calendar.YEAR);
             }
-            System.out.println("[EmpleadosBp.insert]"
+            System.out.println(WEB_NAME+"[EmpleadosBp.insert]"
                 + "Insertar usuario con perfil Empleado o Director...");
             insertarUsuario(_empleadoToInsert, perfilUsuario, newUsername, newPassword, _eventdata);
             
@@ -840,7 +857,7 @@ public class EmpleadosBp {
             //insertar evento 
             eventsService.addEvent(_eventdata); 
         //}
-        System.out.println("[EmpleadosBp.insert]"
+        System.out.println(WEB_NAME+"[EmpleadosBp.insert]"
             + "Ingresar asignacion de turno para el empleado "
             + ", rut(PK): " + _empleadoToInsert.getCodInterno()
             + ", numFicha: " + _empleadoToInsert.getRut());
@@ -974,7 +991,7 @@ public class EmpleadosBp {
             int _cencoId, int _turnoId){
         List<EmpleadoVO> listaEmpleados = new ArrayList<>();
         
-        System.out.println("[EmpleadosBp."
+        System.out.println(WEB_NAME+"[EmpleadosBp."
             + "getListaEmpleados]empresa: "+_empresaId
             +", depto: "+_deptoId
             +", cenco: "+_cencoId);
@@ -1008,7 +1025,7 @@ public class EmpleadosBp {
     
         List<EmpleadoVO> listaEmpleados = new ArrayList<>();
         
-        System.out.println("[EmpleadosBp."
+        System.out.println(WEB_NAME+"[EmpleadosBp."
             + "getEmpleadosSimpleByFiltro]empresa: " + _empresaId
             + ", depto: " + _deptoId
             + ", cenco: " + _cencoId
@@ -1030,7 +1047,7 @@ public class EmpleadosBp {
             int _cencoId){
         List<EmpleadoVO> listaEmpleados = new ArrayList<>();
         
-        System.out.println("[EmpleadosBp."
+        System.out.println(WEB_NAME+"[EmpleadosBp."
             + "getListaEmpleadosSimple]empresa: "+_empresaId
             +", depto: "+_deptoId
             +", cenco: "+_cencoId);

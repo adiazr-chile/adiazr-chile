@@ -9,6 +9,7 @@ import cl.femase.gestionweb.business.CentroCostoBp;
 import cl.femase.gestionweb.business.DepartamentoBp;
 import cl.femase.gestionweb.business.EmpleadosBp;
 import cl.femase.gestionweb.dao.TraspasoHistoricoDAO;
+import cl.femase.gestionweb.servlet.BaseServlet;
 import cl.femase.gestionweb.vo.CentroCostoVO;
 import cl.femase.gestionweb.vo.DepartamentoVO;
 import cl.femase.gestionweb.vo.EmpleadoVO;
@@ -22,7 +23,6 @@ import java.util.List;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -32,7 +32,7 @@ import javax.servlet.http.HttpSession;
  * @author aledi
  */
 @WebServlet(name = "TraspasoHistorico", urlPatterns = {"/servlet/TraspasoHistorico"})
-public class TraspasoHistorico extends HttpServlet {
+public class TraspasoHistorico extends BaseServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -61,7 +61,7 @@ public class TraspasoHistorico extends HttpServlet {
         String paramRUN              = request.getParameter("rut");
         int intCencoId          = Integer.parseInt(cencoId);
         
-        System.out.println("[GestionFemase."
+        System.out.println(WEB_NAME+"[GestionFemase."
             + "servlet.TraspasoHistorico.processRequest]"
             + "Fecha: " + fecha
             + ", empresaId: " + empresa
@@ -79,7 +79,7 @@ public class TraspasoHistorico extends HttpServlet {
             paramRUN);
         String cadenaRuts = "";
         if (empleados != null && !empleados.isEmpty()){
-            System.out.println("[GestionFemase."
+            System.out.println(WEB_NAME+"[GestionFemase."
                 + "servlet.TraspasoHistorico.processRequest]"
                 + "num empleados: "+ empleados.size());
             
@@ -88,14 +88,14 @@ public class TraspasoHistorico extends HttpServlet {
             }
             cadenaRuts = cadenaRuts.substring(0, cadenaRuts.length()-1);
         }
-        System.out.println("[GestionFemase."
+        System.out.println(WEB_NAME+"[GestionFemase."
             + "servlet.TraspasoHistorico.processRequest]"
             + "cadenaRuts: " + cadenaRuts);
         
         HashMap<String, MaintenanceVO> hashFilasAfectadas = new HashMap<>();
         int affectedRows = 0;
         MaintenanceVO resultado = new MaintenanceVO();
-        System.out.println("[GestionFemase."
+        System.out.println(WEB_NAME+"[GestionFemase."
             + "servlet.TraspasoHistorico.processRequest]"
             + "Obtener num registros antes de realizar el traspaso historico.");
         
@@ -107,7 +107,7 @@ public class TraspasoHistorico extends HttpServlet {
                 resultado = historicosDao.insertMarcasHistoricas(empresa, fecha, cadenaRuts);
                 affectedRows = resultado.getFilasAfectadas();
                 if (affectedRows > 0) {
-                    System.out.println("[GestionFemase."
+                    System.out.println(WEB_NAME+"[GestionFemase."
                         + "servlet.TraspasoHistorico.processRequest]"
                         + "Eliminando marcas recien traspasadas a historico");
                     historicosDao.deleteMarcas(empresa, fecha, cadenaRuts);
@@ -116,7 +116,7 @@ public class TraspasoHistorico extends HttpServlet {
                     resultado = historicosDao.insertMarcasRechazosHistoricas(empresa, fecha, cadenaRuts);
                     affectedRows = resultado.getFilasAfectadas();
                     if (affectedRows > 0) {
-                        System.out.println("[GestionFemase."
+                        System.out.println(WEB_NAME+"[GestionFemase."
                             + "servlet.TraspasoHistorico.processRequest]"
                             + "Eliminando marcas rechazadas recien traspasadas a historico");
                         historicosDao.deleteMarcasRechazadas(empresa, fecha, cadenaRuts);
@@ -125,7 +125,7 @@ public class TraspasoHistorico extends HttpServlet {
                     resultado = historicosDao.insertAusenciasHistoricas(empresa, fecha, cadenaRuts);
                     affectedRows = resultado.getFilasAfectadas();
                     if (affectedRows > 0) {
-                        System.out.println("[GestionFemase."
+                        System.out.println(WEB_NAME+"[GestionFemase."
                             + "servlet.TraspasoHistorico.processRequest]"
                             + "Eliminando ausencias recien traspasadas a historico");
                         historicosDao.deleteAusencias(empresa, fecha, cadenaRuts);
@@ -134,7 +134,7 @@ public class TraspasoHistorico extends HttpServlet {
                     resultado = historicosDao.insertDetalleAsistenciaHistoricos(empresa, fecha, cadenaRuts);
                     affectedRows = resultado.getFilasAfectadas();
                     if (affectedRows > 0) {
-                        System.out.println("[GestionFemase."
+                        System.out.println(WEB_NAME+"[GestionFemase."
                             + "servlet.TraspasoHistorico.processRequest]"
                             + "Eliminando calculos de asistencia recien traspasadas a historico");
                         historicosDao.deleteDetalleAsistencia(empresa, fecha, cadenaRuts);
@@ -143,13 +143,13 @@ public class TraspasoHistorico extends HttpServlet {
                     resultado = historicosDao.insertLogEventosHistoricos(empresa, fecha);
                     affectedRows = resultado.getFilasAfectadas();
                     if (affectedRows > 0) {
-                        System.out.println("[GestionFemase."
+                        System.out.println(WEB_NAME+"[GestionFemase."
                             + "servlet.TraspasoHistorico.processRequest]"
                             + "Eliminando registros de log recien traspasados a historico");
                         historicosDao.deleteLogEventos(empresa, fecha);
                     }
             }
-            System.out.println("[GestionFemase."
+            System.out.println(WEB_NAME+"[GestionFemase."
                 + "servlet.TraspasoHistorico.processRequest]"
                 + "add resultado: [tabla, numRows] = [" + tableName + "," + resultado.getFilasAfectadas() + "]" );
             hashFilasAfectadas.put(tableName, resultado);
@@ -181,32 +181,32 @@ public class TraspasoHistorico extends HttpServlet {
             if (tableName.compareTo("marca") == 0){
                 affectedRows = _historicosDao.getCountMarcas(_empresaId, _fecha, _cadenaRuts);
                 hashTableRows.put(tableName, affectedRows);
-                System.out.println("[GestionFemase."
+                System.out.println(WEB_NAME+"[GestionFemase."
                     + "servlet.TraspasoHistorico.showNumEffectedRows]"
                     + "Marcas que seran traspasadas a historico) = " + affectedRows);
                 
             }else if (tableName.compareTo("marca_rechazo") == 0){
                     affectedRows = _historicosDao.getCountMarcasRechazadas(_empresaId, _fecha, _cadenaRuts);
                     hashTableRows.put(tableName, affectedRows);
-                    System.out.println("[GestionFemase."
+                    System.out.println(WEB_NAME+"[GestionFemase."
                         + "servlet.TraspasoHistorico.showNumEffectedRows]"
                         + "Marcas rechazadas que seran traspasadas a historico) = " + affectedRows);
             }else if (tableName.compareTo("detalle_ausencia") == 0){
                     affectedRows = _historicosDao.getCountAusencias(_empresaId, _fecha, _cadenaRuts);
                     hashTableRows.put(tableName, affectedRows);
-                    System.out.println("[GestionFemase."
+                    System.out.println(WEB_NAME+"[GestionFemase."
                         + "servlet.TraspasoHistorico.showNumEffectedRows]"
                         + "Ausencias que seran traspasadas a historico) = " + affectedRows);
             }else if (tableName.compareTo("detalle_asistencia") == 0){
                     affectedRows = _historicosDao.getCountAsistencia(_empresaId, _fecha, _cadenaRuts);
                     hashTableRows.put(tableName, affectedRows);
-                    System.out.println("[GestionFemase."
+                    System.out.println(WEB_NAME+"[GestionFemase."
                         + "servlet.TraspasoHistorico.showNumEffectedRows]"
                         + "Detalles de asistencia que seran traspasadas a historico) = " + affectedRows);
             }else if (tableName.compareTo("mantencion_evento") == 0){
                     affectedRows = _historicosDao.getCountLogEventos(_empresaId, _fecha);
                     hashTableRows.put(tableName, affectedRows);
-                    System.out.println("[GestionFemase."
+                    System.out.println(WEB_NAME+"[GestionFemase."
                         + "servlet.TraspasoHistorico.showNumEffectedRows]"
                         + "Log de eventos (auditoria) que seran traspasadas a historico) = " + affectedRows);
             }
@@ -225,7 +225,7 @@ public class TraspasoHistorico extends HttpServlet {
             int _cencoId, 
             String _rutEmpleado){
         
-        System.out.println("[GestionFemase."
+        System.out.println(WEB_NAME+"[GestionFemase."
             + "servlet.TraspasoHistorico.getEmpleados]"
             + "EmpresaId: " + _empresaId
             + ", deptoId: " + _deptoId
@@ -243,7 +243,7 @@ public class TraspasoHistorico extends HttpServlet {
         List<CentroCostoVO> cencos          = new ArrayList<>(); 
         
         if ( _todaLaEmpresa.compareTo("S") == 0 || _deptoId.compareTo("-1") == 0 ){
-            System.out.println("[GestionFemase."
+            System.out.println(WEB_NAME+"[GestionFemase."
                 + "servlet.TraspasoHistorico.getEmpleados]"
                 + "Traspasar a historico todos los departamentos "
                 + "de la EmpresaId: " + _empresaId);
@@ -252,7 +252,7 @@ public class TraspasoHistorico extends HttpServlet {
         }else{
             DepartamentoVO auxDepto = deptosBp.getDepartamentoByKey(_deptoId);
             departamentos.add(auxDepto);
-            System.out.println("[GestionFemase."
+            System.out.println(WEB_NAME+"[GestionFemase."
                 + "servlet.TraspasoHistorico.getEmpleados]"
                 + "Traspasar a historico solo el departamento "
                 + "ID: " + auxDepto.getId() + ", nombre: " + auxDepto.getNombre());
@@ -260,12 +260,12 @@ public class TraspasoHistorico extends HttpServlet {
         
         for (int i = 0; i < departamentos.size(); i++) {
             DepartamentoVO itDepto= departamentos.get(i);
-            System.out.println("[GestionFemase."
+            System.out.println(WEB_NAME+"[GestionFemase."
                 + "servlet.TraspasoHistorico.getEmpleados]Depto: " + itDepto.getId()
                 + ", nombre: " + itDepto.getNombre());
             
             if (_cencoId == -1){
-                System.out.println("[GestionFemase."
+                System.out.println(WEB_NAME+"[GestionFemase."
                     + "servlet.TraspasoHistorico.getEmpleados]"
                     + "Traspasar a historico todos los centros de costo "
                     + "de la EmpresaId: " + _empresaId);
@@ -274,7 +274,7 @@ public class TraspasoHistorico extends HttpServlet {
             }else{
                 CentroCostoVO auxCenco = cencosBp.getCentroCostoByKey(_deptoId, _cencoId);
                 cencos.add(auxCenco);
-                System.out.println("[GestionFemase."
+                System.out.println(WEB_NAME+"[GestionFemase."
                     + "servlet.TraspasoHistorico.getEmpleados]"
                     + "Traspasar a historico solo el cenco "
                     + "ID: " + auxCenco.getId() + ", nombre: " + auxCenco.getNombre());
@@ -283,13 +283,13 @@ public class TraspasoHistorico extends HttpServlet {
             for (int j = 0; j < cencos.size(); j++) {
                 CentroCostoVO itCenco = cencos.get(j);
                 if (itCenco.getId() != -1){
-                    System.out.println("[GestionFemase."
+                    System.out.println(WEB_NAME+"[GestionFemase."
                         + "servlet.TraspasoHistorico.getEmpleados]"
                         + "Buscar empleados para Cenco: " + itCenco.getId()
                         +", nombre: " + itCenco.getNombre());
 					
                     if ( _rutEmpleado.compareTo("-1") == 0 ){
-                        System.out.println("[GestionFemase."
+                        System.out.println(WEB_NAME+"[GestionFemase."
                             + "servlet.TraspasoHistorico.getEmpleados]"
                             + "Traspasar a historico todos los empleados "
                             + "de la [empresaId,deptoId,cencoId] "
@@ -304,14 +304,14 @@ public class TraspasoHistorico extends HttpServlet {
                             listaEmpleadosFinal.add(listaEmpleadosIteracion.get(k));
                         }
                     }else{
-                        System.out.println("[GestionFemase."
+                        System.out.println(WEB_NAME+"[GestionFemase."
                             + "servlet.TraspasoHistorico.getEmpleados]"
                             + "Traspasar a historico solo el RUN empleado: " + _rutEmpleado);
                         listaEmpleadosIteracion.add(_rutEmpleado);
                         listaEmpleadosFinal.add(_rutEmpleado);
                     }
                     
-                    System.out.println("[GestionFemase."
+                    System.out.println(WEB_NAME+"[GestionFemase."
                         + "servlet.TraspasoHistorico.getEmpleados]"
                         + "empleados.size()= " + listaEmpleadosFinal.size());
                 }
@@ -334,7 +334,7 @@ public class TraspasoHistorico extends HttpServlet {
             String _deptoId, 
             int _cencoId){
     
-        System.out.println("[GestionFemase."
+        System.out.println(WEB_NAME+"[GestionFemase."
             + "CalculaAsistenciaFemaseJob]empresa: "+_empresaId
             +", depto: "+_deptoId
             +", cenco: "+_cencoId);

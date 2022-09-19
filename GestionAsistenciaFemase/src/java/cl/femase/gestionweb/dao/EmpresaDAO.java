@@ -87,7 +87,7 @@ public class EmpresaDAO extends BaseDAO{
             if (_jtPageSize > 0){
                 sql += " limit "+_jtPageSize + " offset "+_jtStartIndex;
             }
-            System.out.println("[EmpresasDAO.getEmpresas]Sql: " + sql);
+            System.out.println(WEB_NAME+"[EmpresasDAO.getEmpresas]Sql: " + sql);
             dbConn = dbLocator.getConnection(m_dbpoolName,"[EmpresaDAO.getEmpresas]");
             ps = dbConn.prepareStatement(sql);
             rs = ps.executeQuery();
@@ -210,7 +210,7 @@ public class EmpresaDAO extends BaseDAO{
         try{
             String strcencos = "-1";
             List cencos = _usuario.getCencos();
-            System.out.println("[EmpresasDAO.getEmpresas]"
+            System.out.println(WEB_NAME+"[EmpresasDAO.getEmpresas]"
                 + "usuario:" + _usuario.getUsername() 
                 + ", adminEmpresa? " + _usuario.getAdminEmpresa()
                 + ", cencos.size= " + cencos.size());
@@ -255,7 +255,7 @@ public class EmpresaDAO extends BaseDAO{
             }
             sql += " order by empresa_nombre";
 
-            System.out.println("[EmpresasDAO.getEmpresas]"
+            System.out.println(WEB_NAME+"[EmpresasDAO.getEmpresas]"
                 + ", Sql: "+sql);
 
             dbConn = dbLocator.getConnection(m_dbpoolName,"[EmpresaDAO.getEmpresas]");
@@ -271,7 +271,7 @@ public class EmpresaDAO extends BaseDAO{
                 data.setComunaId(rs.getInt("comuna_id"));
                 data.setEstadoId(rs.getInt("empresa_estado"));
                 
-                System.out.println("[EmpresasDAO.getEmpresas]"
+                System.out.println(WEB_NAME+"[EmpresasDAO.getEmpresas]"
                     + "add empresa_id: " + data.getId()
                     + ", nombre: " + data.getNombre());
                 
@@ -381,7 +381,7 @@ public class EmpresaDAO extends BaseDAO{
             
             int rowAffected = psupdate.executeUpdate();
             if (rowAffected == 1){
-                System.out.println("[update]empresa"
+                System.out.println(WEB_NAME+"[update]empresa"
                     + ", id:" +_data.getId()
                     + ", rut:" +_data.getRut()    
                     + ", nombre:" +_data.getNombre()
@@ -453,7 +453,7 @@ public class EmpresaDAO extends BaseDAO{
             
             int filasAfectadas = insert.executeUpdate();
             if (filasAfectadas == 1){
-                System.out.println("[insert empresa]"
+                System.out.println(WEB_NAME+"[insert empresa]"
                     + ", nombre:" +_data.getNombre()
                     + ", id:" +_data.getId()
                     + ", rut:" +_data.getRut()

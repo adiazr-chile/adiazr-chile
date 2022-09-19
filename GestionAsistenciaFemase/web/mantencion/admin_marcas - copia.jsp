@@ -18,12 +18,12 @@
     
     String startDate = (String)session.getAttribute("startDate");
     String endDate = (String)session.getAttribute("endDate");
-    System.out.println("[adminMarcas.jsp]"
+    System.out.println("[GestionFemaseWeb]adminMarcas.jsp]"
         + "startDate= "+startDate
         + ",endDate= "+endDate);
     String paramEmpresa = (String)request.getAttribute("empresa");
     String paramRut     = (String)request.getAttribute("rut_empleado");
-    System.out.println("[adminMarcas.jsp]"
+    System.out.println("[GestionFemaseWeb]adminMarcas.jsp]"
         + "paramEmpresa= " + paramEmpresa
         + ",paramRut= " + paramRut
         + ",usuario= " + theUser.getUsername()

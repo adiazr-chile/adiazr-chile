@@ -10,7 +10,7 @@
     try{
         UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
         String filename = (String)session.getAttribute("downloadFileTurnosCencos|" + userConnected.getUsername());
-        System.out.println("[download_resultados_cencos.jsp]full pathfile: " + filename);
+        System.out.println("[GestionFemaseWeb]download_resultados_cencos.jsp]full pathfile: " + filename);
         File auxFile = new File(filename);
         int length   = 0;    
         String mimetype = "application/octet-stream";

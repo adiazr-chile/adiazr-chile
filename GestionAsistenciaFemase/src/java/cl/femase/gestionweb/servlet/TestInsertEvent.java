@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author aledi
  */
 @WebServlet(name = "TestInsertEvent", urlPatterns = {"/TestInsertEvent"})
-public class TestInsertEvent extends HttpServlet {
+public class TestInsertEvent extends BaseServlet {
 
     /**
     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -39,7 +39,7 @@ public class TestInsertEvent extends HttpServlet {
         try {
             //parametros de entrada de la funcion
             int iteraciones = Integer.parseInt(request.getParameter("iteraciones"));
-            System.out.println("[TestInsertEvent]Num iteraciones= " + iteraciones);
+            System.out.println(WEB_NAME+"[TestInsertEvent]Num iteraciones= " + iteraciones);
             for (int x = 0; x <= iteraciones; x++){
                 insertEvent(request, x);
             }
@@ -72,7 +72,7 @@ public class TestInsertEvent extends HttpServlet {
                 + "Error al insertar log de auditoria. "
                 + "Detalle: " + respuesta.getMsgError());
         }else{
-            System.out.println("[TestInsertEvent]date:[ " 
+            System.out.println(WEB_NAME+"[TestInsertEvent]date:[ " 
                 + new Date() + "] Inserta Log auditoria OK");
         }
         

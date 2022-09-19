@@ -79,7 +79,7 @@ public class AusenciasController extends BaseServlet {
         AusenciaBp auxnegocio=new AusenciaBp(appProperties);
 
         if(request.getParameter("action") != null){
-            System.out.println("---->action is: " + request.getParameter("action"));
+            System.out.println(WEB_NAME+"---->action is: " + request.getParameter("action"));
             List<AusenciaVO> listaObjetos = new ArrayList<>();
             String action=(String)request.getParameter("action");
             Gson gson = new Gson();
@@ -152,7 +152,7 @@ public class AusenciasController extends BaseServlet {
             }
             
             if (action.compareTo("list") == 0) {
-                    System.out.println("Mantenedor - Ausencias - mostrando ausencias...");
+                    System.out.println(WEB_NAME+"Mantenedor - Ausencias - mostrando ausencias...");
                     try{
                         listaObjetos = auxnegocio.getAusencias(nombre,
                             tipo,
@@ -190,7 +190,7 @@ public class AusenciasController extends BaseServlet {
                         ex.printStackTrace();
                     }   
             }else if (action.compareTo("create") == 0) {
-                        System.out.println("Mantenedor - Ausencias - Insertar ausencia...");
+                        System.out.println(WEB_NAME+"Mantenedor - Ausencias - Insertar ausencia...");
                         MaintenanceVO doCreate = auxnegocio.insert(auxdata, resultado);					
                         listaObjetos.add(auxdata);
 
@@ -200,7 +200,7 @@ public class AusenciasController extends BaseServlet {
                         String listData="{\"Result\":\"OK\",\"Record\":"+json+"}";											
                         response.getWriter().print(listData);
             }else if (action.compareTo("update") == 0) {  
-                    System.out.println("Mantenedor - Ausencias - Actualizar ausencia...");
+                    System.out.println(WEB_NAME+"Mantenedor - Ausencias - Actualizar ausencia...");
                     try{
                         MaintenanceVO doUpdate = auxnegocio.update(auxdata, resultado);
                         listaObjetos.add(auxdata);

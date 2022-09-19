@@ -69,6 +69,9 @@ public class TurnosController extends BaseServlet {
         }
     }
 
+    /**
+    * 
+    */
     @Override
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -79,7 +82,7 @@ public class TurnosController extends BaseServlet {
         TurnosBp auxnegocio=new TurnosBp(appProperties);
 
         if(request.getParameter("action") != null){
-            System.out.println("[TurnosController]"
+            System.out.println(WEB_NAME+"[TurnosController]"
                 + "action is: " + request.getParameter("action"));
             List<TurnoVO> listaObjetos = new ArrayList<TurnoVO>();
             String action=(String)request.getParameter("action");
@@ -100,6 +103,7 @@ public class TurnosController extends BaseServlet {
             /** filtros de busqueda */
             String filtroNombre      = "";
             String filtroEmpresa     = "";
+            int filtroEstado     = -1;
             
             if (request.getParameter("jtStartIndex") != null) 
                 startPageIndex = Integer.parseInt(request.getParameter("jtStartIndex"));
@@ -119,6 +123,8 @@ public class TurnosController extends BaseServlet {
                 filtroNombre  = request.getParameter("filtroNombre");
             if (request.getParameter("filtroEmpresa") != null) 
                 filtroEmpresa = request.getParameter("filtroEmpresa");
+            if (request.getParameter("filtroEstado") != null) 
+                filtroEstado = Integer.parseInt(request.getParameter("filtroEstado"));
             
             //objeto usado para update/insert
             TurnoVO auxdata = new TurnoVO();
@@ -163,7 +169,7 @@ public class TurnosController extends BaseServlet {
                 }
                 empresaId = request.getParameter("empresaId");
                 deptoId = request.getParameter("deptoId");
-                System.out.println("Mantenedor de Turnos."
+                System.out.println(WEB_NAME+"Mantenedor de Turnos."
                     + "asignacion empleados. "
                     + "idTurno: "+idTurno
                     + ",idEmpresa: "+empresaId
@@ -172,23 +178,25 @@ public class TurnosController extends BaseServlet {
                     + ",idCargo: "+idCargo);
             }
             if (action.compareTo("list")==0) {
-                System.out.println("Mantenedor - Turnos - "
-                    + "mostrando turnos. "
+                System.out.println(WEB_NAME + "[Mantenedor - Turnos]"
+                    + "Mostrando turnos. "
                     + "Empresa: " + filtroEmpresa
-                    + ", nombre: " + filtroNombre);
+                    + ", nombre: " + filtroNombre
+                    + ", estado: " + filtroEstado);
                             
                 try{
                     int objectsCount = 0;
                     if (filtroEmpresa.compareTo("-1") != 0){
                         listaObjetos = auxnegocio.getTurnos(filtroEmpresa, 
-                            filtroNombre, 
+                            filtroNombre,
+                            filtroEstado, 
                             startPageIndex, 
                             numRecordsPerPage, 
                             jtSorting);
 
                         //Get Total Record Count for Pagination
                         objectsCount = auxnegocio.getTurnosCount(filtroEmpresa, 
-                            filtroNombre);
+                            filtroNombre, filtroEstado);
                     }
                     //Convert Java Object to Json
                     JsonElement element = gson.toJsonTree(listaObjetos,
@@ -203,7 +211,7 @@ public class TurnosController extends BaseServlet {
                     listData="{\"Result\":\"OK\",\"Records\":" + 
                         listData+",\"TotalRecordCount\": " + 
                         objectsCount + "}";
-                    System.out.println("[TurnosController]json data: "+listData);
+                    System.out.println(WEB_NAME+"[TurnosController]json data: "+listData);
                     response.getWriter().print(listData);
                     //request.getRequestDispatcher("/mantenedores/mantenedoresFrmSet.jsp").forward(request, response);
                 }catch(Exception ex){
@@ -212,7 +220,7 @@ public class TurnosController extends BaseServlet {
                     ex.printStackTrace();
                 }   
             }else if (action.compareTo("create") == 0) {
-                    System.out.println("Mantenedor - Turnos - Insertar Turno...");
+                    System.out.println(WEB_NAME+"Mantenedor - Turnos - Insertar Turno...");
                     MaintenanceVO doCreate = auxnegocio.insert(auxdata, resultado);					
                     listaObjetos.add(auxdata);
 
@@ -222,7 +230,7 @@ public class TurnosController extends BaseServlet {
                     String listData="{\"Result\":\"OK\",\"Record\":"+json+"}";											
                     response.getWriter().print(listData);
             }else if (action.compareTo("update") == 0) {  
-                    System.out.println("Mantenedor - Turnos - Actualizar Turno...");
+                    System.out.println(WEB_NAME+"Mantenedor - Turnos - Actualizar Turno...");
                     try{
                         MaintenanceVO doUpdate = auxnegocio.update(auxdata, resultado);
                         listaObjetos.add(auxdata);
@@ -238,7 +246,7 @@ public class TurnosController extends BaseServlet {
                         response.getWriter().print(error);
                     }
             }else if (action.compareTo("asignacion_start") == 0) {  
-                    System.out.println("Mantenedor - Turnos"
+                    System.out.println(WEB_NAME+"Mantenedor - Turnos"
                         + "- Mostrar Formulario Asignacion "
                             + "masiva de Turnos");
                     
@@ -252,7 +260,7 @@ public class TurnosController extends BaseServlet {
                     session.setAttribute("asignados_turno", listaEmpleadosAsignados);
                     request.getRequestDispatcher("/mantencion/asignacion_turnos.jsp").forward(request, response);        
             }else if (action.compareTo("load_asignacion") == 0) {
-                    System.out.println("\n\nMantenedor - Turnos"
+                    System.out.println(WEB_NAME+"\nMantenedor - Turnos"
                         + "- Mostrar Asignacion "
                         + "para el turno: " + 
                             idTurno);
@@ -269,7 +277,7 @@ public class TurnosController extends BaseServlet {
                     
                     request.getRequestDispatcher("/mantencion/asignacion_turnos.jsp").forward(request, response);        
             }else if (action.compareTo("save_asignacion") == 0) {  
-                     System.out.println("\n\n[Mantenedor - "
+                     System.out.println(WEB_NAME+"\n[Mantenedor - "
                         + "Turnos]- "
                         + "Guardar Asignacion "
                         + "de empleados "
@@ -280,10 +288,10 @@ public class TurnosController extends BaseServlet {
                     String[] empleados = request.getParameterValues("empleados_selected");
                     if (empleados!=null){
                         for (int x=0;x < empleados.length;x++){
-                            System.out.println("empleado seleccionado["+x+"] = "+empleados[x]);
+                            System.out.println(WEB_NAME+"empleado seleccionado["+x+"] = "+empleados[x]);
                             auxnegocio.updateTurnoEmpleado(empleados[x], idTurno, resultado);
                         }     
-                    }else System.out.println("\n\n[Mantenedor - Asignacion Turnos"
+                    }else System.out.println(WEB_NAME+"\n[Mantenedor - Asignacion Turnos"
                         + "]- No hay empleados asignados para el Turno: " + 
                             idTurno);
                     

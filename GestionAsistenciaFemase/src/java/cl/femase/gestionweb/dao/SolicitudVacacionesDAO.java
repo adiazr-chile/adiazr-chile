@@ -120,7 +120,7 @@ public class SolicitudVacacionesDAO extends BaseDAO{
                 sql += " limit "+_jtPageSize + " offset "+_jtStartIndex;
             }
             
-            System.out.println("[SolicitudVacacionesDAO."
+            System.out.println(WEB_NAME+"[SolicitudVacacionesDAO."
                 + "getSolicitudes]Sql: "+ sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,"[SolicitudVacacionesDAO.getSolicitudes]");
@@ -277,7 +277,7 @@ public class SolicitudVacacionesDAO extends BaseDAO{
                 sql += " limit "+_jtPageSize + " offset "+_jtStartIndex;
             }
             
-            System.out.println("[SolicitudVacacionesDAO."
+            System.out.println(WEB_NAME+"[SolicitudVacacionesDAO."
                 + "getSolicitudesAprobarRechazar]Sql: "+ sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,"[SolicitudVacacionesDAO.getSolicitudesAprobarRechazar]");
@@ -372,7 +372,7 @@ public class SolicitudVacacionesDAO extends BaseDAO{
                     + " on (sv.empresa_id = vac.empresa_id and sv.rut_empleado = vac.rut_empleado) "
                 + " where sv.solic_id = " + _id;
 
-            System.out.println("[SolicitudVacacionesDAO."
+            System.out.println(WEB_NAME+"[SolicitudVacacionesDAO."
                 + "getSolicitudes]Sql: "+ sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,
@@ -643,7 +643,7 @@ public class SolicitudVacacionesDAO extends BaseDAO{
             
             int filasAfectadas = insert.executeUpdate();
             if (filasAfectadas == 1){
-                System.out.println("[SolicitudVacacionesDAO.insert]"
+                System.out.println(WEB_NAME+"[SolicitudVacacionesDAO.insert]"
                     + " Empresa_id: " + _data.getEmpresaId()
                     + ", rutEmpleado: " + _data.getRutEmpleado()
                     + ", inicioVacaciones: " + _data.getInicioVacaciones()
@@ -692,7 +692,7 @@ public class SolicitudVacacionesDAO extends BaseDAO{
             String msgFinal = " Cancelar Solicitud de vacaciones:"
                 + "id [" + _idSolicitud + "]" 
                 + ", username [" + _username+ "]";
-            System.out.println("[SolicitudVacacionesDAO.cancelarSolicitud]" + msgFinal);
+            System.out.println(WEB_NAME+"[SolicitudVacacionesDAO.cancelarSolicitud]" + msgFinal);
             objresultado.setMsg(msgFinal);
             
             String sql = "UPDATE solicitud_vacaciones "
@@ -710,7 +710,7 @@ public class SolicitudVacacionesDAO extends BaseDAO{
             
             int rowAffected = psupdate.executeUpdate();
             if (rowAffected == 1){
-                System.out.println("[SolicitudVacacionesDAO.cancelarSolicitud]"
+                System.out.println(WEB_NAME+"[SolicitudVacacionesDAO.cancelarSolicitud]"
                     + ", id: " + _idSolicitud
                     +" update OK!");
             }
@@ -761,7 +761,7 @@ public class SolicitudVacacionesDAO extends BaseDAO{
                 + "id [" + _idSolicitud + "]" 
                 + ", username aprueba [" + _usernameAprueba + "]"
                 + ", notaObservacion [" + _notaObservacion + "]";
-            System.out.println("[SolicitudVacacionesDAO.aprobarSolicitud]" + msgFinal);
+            System.out.println(WEB_NAME+"[SolicitudVacacionesDAO.aprobarSolicitud]" + msgFinal);
             objresultado.setMsg(msgFinal);
             String sql = "UPDATE solicitud_vacaciones "
                 + " SET status_id = ?, "
@@ -778,7 +778,7 @@ public class SolicitudVacacionesDAO extends BaseDAO{
             
             int rowAffected = psupdate.executeUpdate();
             if (rowAffected == 1){
-                System.out.println("[SolicitudVacacionesDAO.aprobarSolicitud]"
+                System.out.println(WEB_NAME+"[SolicitudVacacionesDAO.aprobarSolicitud]"
                     + ", id: " + _idSolicitud
                     +" update OK!");
             }
@@ -830,7 +830,7 @@ public class SolicitudVacacionesDAO extends BaseDAO{
                 + ", username rechaza[" + _usernameRechaza + "]"
                     + ", nota_observacion[" + _notaObservacion + "]";
             
-            System.out.println("[SolicitudVacacionesDAO.rechazarSolicitud]" + msgFinal);
+            System.out.println(WEB_NAME+"[SolicitudVacacionesDAO.rechazarSolicitud]" + msgFinal);
             objresultado.setMsg(msgFinal);
             
             String sql = "UPDATE solicitud_vacaciones "
@@ -848,7 +848,7 @@ public class SolicitudVacacionesDAO extends BaseDAO{
             
             int rowAffected = psupdate.executeUpdate();
             if (rowAffected == 1){
-                System.out.println("[SolicitudVacacionesDAO.rechazarSolicitud]"
+                System.out.println(WEB_NAME+"[SolicitudVacacionesDAO.rechazarSolicitud]"
                     + ", id: " + _idSolicitud
                     +" update OK!");
             }

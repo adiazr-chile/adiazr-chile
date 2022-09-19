@@ -55,7 +55,7 @@ public class CargoDAO extends BaseDAO{
                 + "cargo_estado "
                 + " from cargo "
                 + " where cargo_id = " + _cargoId;
-            System.out.println("[CargoDAO.getCargoByKey]"
+            System.out.println(WEB_NAME+"[CargoDAO.getCargoByKey]"
                 + "Sql: " + sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,
@@ -123,7 +123,7 @@ public class CargoDAO extends BaseDAO{
             
             int rowAffected = psupdate.executeUpdate();
             if (rowAffected == 1){
-                System.out.println("[update]Cargo"
+                System.out.println(WEB_NAME+"[update]Cargo"
                     + ", id:" +_data.getId()
                     + ", nombre:" +_data.getNombre()
                     + ", estado:" +_data.getEstado()
@@ -180,7 +180,7 @@ public class CargoDAO extends BaseDAO{
                                                
             int filasAfectadas = insert.executeUpdate();
             if (filasAfectadas == 1){
-                System.out.println("[insert Cargo]"
+                System.out.println(WEB_NAME+"[insert Cargo]"
                     + ", nombre:" +_data.getNombre()
                     + ", estado:" +_data.getEstado()
                     +" insertado OK!");
@@ -245,7 +245,7 @@ public class CargoDAO extends BaseDAO{
             if (_jtPageSize > 0){
                 sql += " limit "+_jtPageSize + " offset "+_jtStartIndex;
             }
-            System.out.println("[CargoDAO.getCargos]Sql: "+ sql);
+            System.out.println(WEB_NAME+"[CargoDAO.getCargos]Sql: "+ sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,"[CargoDAO.getCargos]");
             ps = dbConn.prepareStatement(sql);

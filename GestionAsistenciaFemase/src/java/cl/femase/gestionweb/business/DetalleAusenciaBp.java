@@ -18,7 +18,7 @@ import java.util.List;
  *
  * @author Alexander
  */
-public class DetalleAusenciaBp {
+public class DetalleAusenciaBp  extends BaseBp{
 
     public PropertiesVO props;
     /** para guardar los eventos de mantencion de informacion*/
@@ -216,7 +216,7 @@ public class DetalleAusenciaBp {
     public MaintenanceVO update(DetalleAusenciaVO _objToUpdate, 
             MaintenanceEventVO _eventdata){
         MaintenanceVO updValues = detAusenciaDao.update(_objToUpdate);
-        System.out.println("[DetalleAusenciaBp.update]"
+        System.out.println(WEB_NAME+"[DetalleAusenciaBp.update]"
             + "rutEmpleado: " + _objToUpdate.getRutEmpleado());
         EmpleadoVO empleado = empleadosDao.getEmpleado(null, _objToUpdate.getRutEmpleado());
         _eventdata.setEmpresaId(empleado.getEmpresa().getId());
@@ -460,27 +460,27 @@ public class DetalleAusenciaBp {
         
         ArrayList<DetalleAusenciaVO> ausencias = new ArrayList<>();
         if (!_ausenciaPorHora){
-            System.out.println("[DetalleAusenciaBp.getAusenciasConflicto]"
+            System.out.println(WEB_NAME+"[DetalleAusenciaBp.getAusenciasConflicto]"
                 + "La ausencia a insertar es por DIA");
-            System.out.println("[DetalleAusenciaBp.getAusenciasConflicto]"
+            System.out.println(WEB_NAME+"[DetalleAusenciaBp.getAusenciasConflicto]"
                 + "-1- Validar si hay ausencias por Hora");
             ausencias = detAusenciaDao.getAusenciasHoraConflicto(_rutEmpleado, 
                     _fechaInicio, _horaInicio, _horaFin);
             if (ausencias.isEmpty()){
-                System.out.println("[DetalleAusenciaBp.getAusenciasConflicto]"
+                System.out.println(WEB_NAME+"[DetalleAusenciaBp.getAusenciasConflicto]"
                     + "-2- Validar si hay ausencias por Dia");
                 ausencias = detAusenciaDao.getAusenciasDiaConflicto(_rutEmpleado, 
                     _fechaInicio, _fechaFin);
             }
         }else{
-            System.out.println("[DetalleAusenciaBp.getAusenciasConflicto]"
+            System.out.println(WEB_NAME+"[DetalleAusenciaBp.getAusenciasConflicto]"
                 + "La ausencia a insertar es por HORA");
-            System.out.println("[DetalleAusenciaBp.getAusenciasConflicto]"
+            System.out.println(WEB_NAME+"[DetalleAusenciaBp.getAusenciasConflicto]"
                 + "-1- Validar si hay ausencias por Dia");
             ausencias = detAusenciaDao.getAusenciasDiaConflicto(_rutEmpleado, 
                 _fechaInicio, _fechaFin);
             if (ausencias.isEmpty()){
-                System.out.println("[DetalleAusenciaBp.getAusenciasConflicto]"
+                System.out.println(WEB_NAME+"[DetalleAusenciaBp.getAusenciasConflicto]"
                     + "-2- Validar si hay ausencias por Hora");
                 ausencias = detAusenciaDao.getAusenciasHoraConflicto(_rutEmpleado, 
                     _fechaInicio, _horaInicio, _horaFin);

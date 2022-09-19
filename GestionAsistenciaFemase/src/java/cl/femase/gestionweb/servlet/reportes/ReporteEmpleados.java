@@ -62,7 +62,7 @@ public class ReporteEmpleados extends BaseServlet {
         String formato      = request.getParameter("formato");
         int cargo = -1;
         
-        System.out.println("cl.femase.gestionweb."
+        System.out.println(WEB_NAME+"cl.femase.gestionweb."
             + "servlet.reportes."
             + "ReporteEmpleados."
             + "processRequest(). "
@@ -81,9 +81,9 @@ public class ReporteEmpleados extends BaseServlet {
             cargo = Integer.parseInt(request.getParameter("cargo"));
         }
         
-        System.out.println("[GestionFemase.ReporteEmpleados]"
+        System.out.println(WEB_NAME+"[GestionFemase.ReporteEmpleados]"
             + "userConnected: " + userConnected);
-        System.out.println("[GestionFemase.ReporteEmpleados]"
+        System.out.println(WEB_NAME+"[GestionFemase.ReporteEmpleados]"
             + "empresa: " + empresa
             + ", depto: " + departamento
             + ", centrocosto: " + centro_costo
@@ -131,7 +131,7 @@ public class ReporteEmpleados extends BaseServlet {
     ////            "Trimestral",
     ////            "Periodo:" + strstartdate +" al "+ strenddate, 
     ////            nemotecnico,"TRIMESTRE");
-    ////        System.out.println("--->PATH FINAL: "+fullPDFXLSfilename);        
+    ////        System.out.println(WEB_NAME+"--->PATH FINAL: "+fullPDFXLSfilename);        
     ////        pointToFile = new File(fullPDFXLSfilename);
     ////
             ByteArrayInputStream byteArrayInputStream = 
@@ -153,7 +153,7 @@ public class ReporteEmpleados extends BaseServlet {
             response.getOutputStream().close();
                 
             if (pointToFile.delete()){
-                System.out.println("cl.femase.gestionweb."
+                System.out.println(WEB_NAME+"cl.femase.gestionweb."
                     + "servlet.ReporteEmpleados."
                     + "Archivo PDF eliminado con exito...");
             }
@@ -181,7 +181,7 @@ public class ReporteEmpleados extends BaseServlet {
     throws ServletException, IOException {
         HttpSession session = request.getSession(true);
         UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
-        System.out.println("cl.femase.gestionweb.servlet."
+        System.out.println(WEB_NAME+"cl.femase.gestionweb.servlet."
                 + "reportes.ReporteEmpleados.doGet(). Formato: "+request.getParameter("formato"));
         if (request.getParameter("formato")!=null && 
             request.getParameter("formato").compareTo("csv")==0){
@@ -193,7 +193,7 @@ public class ReporteEmpleados extends BaseServlet {
             String formato      = request.getParameter("formato");
             int cargo = -1;
 
-            System.out.println("cl.femase.gestionweb."
+            System.out.println(WEB_NAME+"cl.femase.gestionweb."
                 + "servlet.reportes."
                 + "ReporteEmpleados."
                 + "doGet(). "
@@ -212,9 +212,9 @@ public class ReporteEmpleados extends BaseServlet {
                 cargo = Integer.parseInt(request.getParameter("cargo"));
             }
         
-            System.out.println("[GestionFemase.ReporteEmpleados]"
+            System.out.println(WEB_NAME+"[GestionFemase.ReporteEmpleados]"
                 + "userConnected: " + userConnected);
-            System.out.println("[GestionFemase.ReporteEmpleados]"
+            System.out.println(WEB_NAME+"[GestionFemase.ReporteEmpleados]"
                 + "empresa: " + empresa
                 + ", depto: " + departamento
                 + ", centrocosto: " + centro_costo
@@ -285,7 +285,7 @@ public class ReporteEmpleados extends BaseServlet {
                 response.getOutputStream().close();
                 
                 if (pointToFile.delete()){
-                    System.out.println("cl.femase.gestionweb."
+                    System.out.println(WEB_NAME+"cl.femase.gestionweb."
                         + "servlet.ReporteEmpleados."
                         + "Archivo PDF eliminado con exito...");
                 }
@@ -328,10 +328,10 @@ public class ReporteEmpleados extends BaseServlet {
 ////                new InstrumentosManager(appProperties);
 ////        strpriceformat =  nemosManager.getFormatoPrecio(_symbol, true);
 ////        
-////        System.out.println("[Certificados]Formato precio instrumento "
+////        System.out.println(WEB_NAME+"[Certificados]Formato precio instrumento "
 ////                +strpriceformat);
 ////        
-////        System.out.println("[Certificados]Excel de salida: "
+////        System.out.println(WEB_NAME+"[Certificados]Excel de salida: "
 ////                +_outputfilename);
 ////        
 ////        SitrelFormatter sformat = new SitrelFormatter(strpriceformat);
@@ -450,7 +450,7 @@ public class ReporteEmpleados extends BaseServlet {
 ////            filePath = appProperties.getPathExportedFiles()+
 ////                    File.separator+
 ////                    userConnected.getUsername()+"_empleados.csv";
-////            System.out.println("cl.femase.gestionweb.servlet."
+////            System.out.println(WEB_NAME+"cl.femase.gestionweb.servlet."
 ////                + "DataExportServlet.exportEmpleadosToCSV(). filePath:" + filePath);
 ////            FileWriter filewriter = new FileWriter(filePath);
 ////

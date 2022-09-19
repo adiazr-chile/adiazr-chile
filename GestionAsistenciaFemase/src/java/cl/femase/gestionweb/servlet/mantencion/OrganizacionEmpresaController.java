@@ -85,7 +85,7 @@ public class OrganizacionEmpresaController extends BaseServlet {
         OrganizacionEmpresaBp auxnegocio=new OrganizacionEmpresaBp(appProperties);
 
         if(request.getParameter("action") != null){
-            System.out.println("\n\n[OrganizacionEmpresaController]action is: " + request.getParameter("action"));
+            System.out.println(WEB_NAME+"\n[OrganizacionEmpresaController]action is: " + request.getParameter("action"));
             List<OrganizacionEmpresaVO> listaObjetos = new ArrayList<OrganizacionEmpresaVO>();
             String action=(String)request.getParameter("action");
             Gson gson = new Gson();
@@ -118,7 +118,7 @@ public class OrganizacionEmpresaController extends BaseServlet {
             if (jtSorting.contains("deptoId")) jtSorting = jtSorting.replaceFirst("deptoId","depto_id");
             if (jtSorting.contains("cencoId")) jtSorting = jtSorting.replaceFirst("cencoId","ccosto_id");
             
-             System.out.println("Mantenedor - Organizacion - "
+             System.out.println(WEB_NAME+"Mantenedor - Organizacion - "
                 + "params para insert-update-delete. "
                 + "empresaId: "+request.getParameter("empresaId")
                 + ",deptoId: "+request.getParameter("deptoId")
@@ -136,12 +136,12 @@ public class OrganizacionEmpresaController extends BaseServlet {
                 auxdata.setCencoId(Integer.parseInt(request.getParameter("cencoId")));
             }
                     
-            System.out.println("Mantenedor - Organizacion - "
+            System.out.println(WEB_NAME+"Mantenedor - Organizacion - "
                 + "params para buscar. "
                 + "filtroEmpresa: "+request.getParameter("filtroEmpresa")
                 + ",filtroDepto: "+request.getParameter("filtroDepto")
                 + ",filtroCenco: "+request.getParameter("filtroCenco"));
-            System.out.println("Mantenedor - Organizacion - "
+            System.out.println(WEB_NAME+"Mantenedor - Organizacion - "
                 + "params para insert/update/delete. "
                 + "idEmpresa: "+auxdata.getEmpresaId()
                 + ",idDepto: "+auxdata.getDeptoId()
@@ -151,12 +151,12 @@ public class OrganizacionEmpresaController extends BaseServlet {
             while(names.hasMoreElements()) {
                 String name = names.nextElement();
                 String value = request.getParameter(name);
-                System.out.println("Param:"+name+" = "+value);
+                System.out.println(WEB_NAME+"Param:"+name+" = "+value);
                 
             } 
              
             if (action.compareTo("list")==0) {
-                System.out.println("Mantenedor - Organizacion - "
+                System.out.println(WEB_NAME+"Mantenedor - Organizacion - "
                     + "mostrando organizacion empresa...");
                 try{
                     listaObjetos = auxnegocio.getOrganizacion(request.getParameter("filtroEmpresa"), 
@@ -170,7 +170,7 @@ public class OrganizacionEmpresaController extends BaseServlet {
                     int objectsCount = auxnegocio.getOrganizacionCount(request.getParameter("filtroEmpresa"), 
                             request.getParameter("filtroDepto"), 
                             Integer.parseInt(request.getParameter("filtroCenco")));
-                    System.out.println("Mantenedor - Organizacion - "
+                    System.out.println(WEB_NAME+"Mantenedor - Organizacion - "
                         + "items organizacion empresa= "+objectsCount);
                     //Convert Java Object to Json
                     JsonElement element = gson.toJsonTree(listaObjetos,
@@ -192,7 +192,7 @@ public class OrganizacionEmpresaController extends BaseServlet {
                     ex.printStackTrace();
                 }   
             }else if (action.compareTo("create") == 0) {
-                    System.out.println("Mantenedor - Organizacion - Insertar...");
+                    System.out.println(WEB_NAME+"Mantenedor - Organizacion - Insertar...");
                     MaintenanceVO doCreate = auxnegocio.insert(auxdata, resultado);					
                     listaObjetos.add(auxdata);
 
@@ -203,7 +203,7 @@ public class OrganizacionEmpresaController extends BaseServlet {
                     response.getWriter().print(listData);
             }else if (action.compareTo("delete") == 0) {  
                     //Delete record
-                    System.out.println("Eliminando Organizacion- "
+                    System.out.println(WEB_NAME+"Eliminando Organizacion- "
                         + "empresaID: " + auxdata.getEmpresaId()
                         +", deptoID: "+ auxdata.getDeptoId()
                         +", cencoID: "+ auxdata.getCencoId());
@@ -211,7 +211,7 @@ public class OrganizacionEmpresaController extends BaseServlet {
                         auxnegocio.delete(auxdata, resultado);
 //                        String listData="{\"Result\":\"OK\"}";								
 //                        response.getWriter().print(listData);
-                        System.out.println("FIN Eliminar item Organizacion Empresa\n\n");
+                        System.out.println(WEB_NAME+"FIN Eliminar item Organizacion Empresa\n\n");
                         response.sendRedirect(request.getContextPath()+"/mantencion/lista_organizacion.jsp");
                     }catch(Exception ex){
                         String error="{\"Result\":\"ERROR\",\"Message\":"+ex.getStackTrace().toString()+"}";

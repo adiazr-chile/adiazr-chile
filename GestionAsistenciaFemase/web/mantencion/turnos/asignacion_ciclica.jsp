@@ -53,7 +53,7 @@
     if (turnos == null) turnos = new ArrayList<>();
     if (detalleCiclo == null) detalleCiclo = new ArrayList<>();
 	 
-    System.out.println("[asignacion_ciclica.jsp]-1-"
+    System.out.println("[GestionFemaseWeb]asignacion_ciclica.jsp]-1-"
         + ". FechaInicio= " + fechaInicio
         + ", numCiclos= " + numCiclos
         + ", duracion= " + duracion
@@ -292,7 +292,7 @@
  <%if (!listaEmpleados.isEmpty()){%>
     
  <%
-     System.out.println("[asignacion_ciclica.jsp]-2-"
+     System.out.println("[GestionFemaseWeb]asignacion_ciclica.jsp]-2-"
         + ". FechaInicio= " + fechaInicio
         + ", numCiclos= " + numCiclos
         + ", duracion= " + duracion);

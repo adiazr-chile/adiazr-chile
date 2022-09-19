@@ -87,7 +87,7 @@ public class PersonalEmpresaDAO extends BaseDAO{
                         
             int filasAfectadas = insert.executeUpdate();
             if (filasAfectadas == 1){
-                System.out.println("[insert personal_empresa]"
+                System.out.println(WEB_NAME+"[insert personal_empresa]"
                     + " rutEmpleado: "+_data.getRutEmpleado()
                     + ", empresaId: "+_data.getEmpresaId()
                     + ", deptoId: "+_data.getDeptoId()
@@ -153,7 +153,7 @@ public class PersonalEmpresaDAO extends BaseDAO{
             
             int rowAffected = psupdate.executeUpdate();
             if (rowAffected == 1){
-                System.out.println("[delete]personal_empresa"
+                System.out.println(WEB_NAME+"[delete]personal_empresa"
                     + " rutEmpleado(pk): "+ _data.getRutEmpleado()
                     + ", empresaId(pk): " + _data.getEmpresaId()
                     + ", deptoId(pk): "   + _data.getDeptoId()

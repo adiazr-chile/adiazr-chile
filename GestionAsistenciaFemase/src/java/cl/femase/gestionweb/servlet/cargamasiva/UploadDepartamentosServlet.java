@@ -69,11 +69,11 @@ public class UploadDepartamentosServlet extends BaseServlet {
                         if(!item.isFormField()){
                             File auxfile = new File(item.getName());
                             String filename = auxfile.getName();
-                            System.out.println("[UploadDepartamentosServlet]"
+                            System.out.println(WEB_NAME+"[UploadDepartamentosServlet]"
                                 + "Filename: "+filename);
                             String extension = FilenameUtils.getExtension(filename);
                             String filePathLoaded= pathUploadedFiles + File.separator + filename;
-                            System.out.println("[UploadDepartamentosServlet]"
+                            System.out.println(WEB_NAME+"[UploadDepartamentosServlet]"
                                 + "filePathLoaded="+filePathLoaded);
                             item.write( new File(filePathLoaded));
                             if (extension.compareTo("csv") == 0){
@@ -83,7 +83,7 @@ public class UploadDepartamentosServlet extends BaseServlet {
                                     "nombre").parse(in);
                                 DepartamentoVO data;
                                 for (CSVRecord record : records) {
-                                    System.out.println("[UploadDepartamentosServlet]"
+                                    System.out.println(WEB_NAME+"[UploadDepartamentosServlet]"
                                         + "recordNumber: "+record.getRecordNumber()
                                         + "Linea csv: "+record.toString());
                                     if (record.getRecordNumber()>1){
@@ -96,7 +96,7 @@ public class UploadDepartamentosServlet extends BaseServlet {
                                         data.setId(id);
                                         data.setNombre(nombre);
                                                                                     
-                                        System.out.println("[UploadDepartamentosServlet]"
+                                        System.out.println(WEB_NAME+"[UploadDepartamentosServlet]"
                                             + "datadepto:"
                                             + data.toString());
                                         

@@ -206,7 +206,7 @@ public class LogErrorDAO extends BaseDAO{
                                                
             int filasAfectadas = insert.executeUpdate();
             if (filasAfectadas == 1){
-                System.out.println("[LogErrorDao.insert log_error]"
+                System.out.println(WEB_NAME+"[LogErrorDao.insert log_error]"
                     + ", modulo: " +_data.getModulo()
                     + ", evento: " +_data.getEvento()
                     + ", usuario: " +_data.getUserName()

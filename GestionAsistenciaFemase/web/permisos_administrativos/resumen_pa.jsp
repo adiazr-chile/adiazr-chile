@@ -280,16 +280,30 @@
                     edit:false,
                     sorting: false
                 },
-                diasDisponibles:{
-                    title: 'Dias disponibles',
+                diasDisponiblesSemestre1:{
+                    title: 'Dias disponibles 1erSem',
                     width: '7%',
                     list: true,
                     edit:false,
                     sorting: false,
                     defaultValue: '0'
                 },
-                diasUtilizados:{
-                    title: 'Dias utilizados',
+                diasUtilizadosSemestre1:{
+                    title: 'Dias utilizados 1erSem',
+                    width: '6%',
+                    list: true,
+                    sorting: false
+                },
+                diasDisponiblesSemestre2:{
+                    title: 'Dias disponibles 2oSem',
+                    width: '7%',
+                    list: true,
+                    edit:false,
+                    sorting: false,
+                    defaultValue: '0'
+                },
+                diasUtilizadosSemestre2:{
+                    title: 'Dias utilizados 2oSem',
                     width: '6%',
                     list: true,
                     sorting: false

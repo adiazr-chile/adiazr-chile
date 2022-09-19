@@ -15,7 +15,7 @@ import java.util.List;
 *
 * @author Alexander
 */
-public class AfpBp {
+public class AfpBp  extends BaseBp{
 
     public PropertiesVO props;
     /** para guardar los eventos de mantencion de informacion*/

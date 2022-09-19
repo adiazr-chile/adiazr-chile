@@ -34,12 +34,12 @@
     String startDate = sdf3.format(calendart1.getTime());
     String endDate = sdf3.format(auxfechaactual);
     
-    System.out.println("[adminMarcas.jsp]"
+    System.out.println("[GestionFemaseWeb]adminMarcas.jsp]"
         + "startDate= "+startDate
         + ",endDate= "+endDate);
     String paramEmpresa = (String)request.getAttribute("empresa");
     String paramRut     = (String)request.getAttribute("rut_empleado");
-    System.out.println("[adminMarcas.jsp]"
+    System.out.println("[GestionFemaseWeb]adminMarcas.jsp]"
         + "paramEmpresa= " + paramEmpresa
         + ",paramRut= " + paramRut
         + ",usuario= " + theUser.getUsername()

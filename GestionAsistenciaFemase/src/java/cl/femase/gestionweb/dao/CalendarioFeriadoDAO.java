@@ -112,7 +112,7 @@ public class CalendarioFeriadoDAO extends BaseDAO{
                         
             int rowAffected = psupdate.executeUpdate();
             if (rowAffected == 1){
-                System.out.println("[CalendarioFeriadoDAO.update]"
+                System.out.println(WEB_NAME+"[CalendarioFeriadoDAO.update]"
                     + ", fecha: " + _data.getFecha()
                     + ", label: " + _data.getLabel()
                     + ", observacion: " + _data.getObservacion()
@@ -202,7 +202,7 @@ public class CalendarioFeriadoDAO extends BaseDAO{
             
             int filasAfectadas = insert.executeUpdate();
             if (filasAfectadas == 1){
-                System.out.println("[CalendarioFeriadoDAO.insert]"
+                System.out.println(WEB_NAME+"[CalendarioFeriadoDAO.insert]"
                     + ", fecha: " + _data.getFecha()
                     + ", label: " + _data.getLabel()
                     + ", observacion: " + _data.getObservacion()    
@@ -282,7 +282,7 @@ public class CalendarioFeriadoDAO extends BaseDAO{
             
             int filasAfectadas = delete.executeUpdate();
             if (filasAfectadas == 1){
-                System.out.println("[CalendarioFeriadoDAO.delete]"
+                System.out.println(WEB_NAME+"[CalendarioFeriadoDAO.delete]"
                     + ", fecha:" + fechaPK
                     + ", ID_tipo_feriado: " + idTipoFeriadoPK
                     + ", region_id: " + regionIdPK
@@ -374,7 +374,7 @@ public class CalendarioFeriadoDAO extends BaseDAO{
                 sql += " limit "+_jtPageSize + " offset "+_jtStartIndex;
             }
             
-            System.out.println("[CalendarioFeriadoDAO."
+            System.out.println(WEB_NAME+"[CalendarioFeriadoDAO."
                 + "getCalendarioFeriados]"
                 + "anio: "+_anio + ", mes: "+_mes
                 + ", _jtStartIndex: "+_jtStartIndex
@@ -408,7 +408,7 @@ public class CalendarioFeriadoDAO extends BaseDAO{
                     + data.getIdTipoFeriado() + "|" 
                     + data.getRegionId() + "|" 
                     + data.getComunaId();
-                System.out.println("[CalendarioFeriadoDAO."
+                System.out.println(WEB_NAME+"[CalendarioFeriadoDAO."
                     + "getCalendarioFeriados]rowKey: " + strKey);
                 data.setRowKey(strKey);
                 
@@ -455,7 +455,7 @@ public class CalendarioFeriadoDAO extends BaseDAO{
             String sql = "SELECT json_agg(validaFechaFeriado) strjson "
                     + "FROM validaFechaFeriado('" + _empresaId + "'," + _cencoId + ",'" + _rutEmpleado + "','" + _fecha + "')";
             
-            System.out.println("[CalendarioFeriadoDAO.esFeriadoJson]Sql: "+sql);
+            System.out.println(WEB_NAME+"[CalendarioFeriadoDAO.esFeriadoJson]Sql: "+sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,"[CalendarioFeriadoDAO.esFeriadoJson]");
             ps = dbConn.prepareStatement(sql);
@@ -510,7 +510,7 @@ public class CalendarioFeriadoDAO extends BaseDAO{
                 + "from generate_series( '" + _fechaInicio + "'::timestamp, '" + _fechaFin + "'::timestamp, '1 day'::interval) as fecha_it "
                 + "cross join validaFechaFeriado('" + _empresaId + "'," + _cencoId + ",'" + _rutEmpleado + "',fecha_it::date) f";
             
-            System.out.println("[CalendarioFeriadoDAO.getValidaFechasJson]Sql: "+sql);
+            System.out.println(WEB_NAME+"[CalendarioFeriadoDAO.getValidaFechasJson]Sql: "+sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,"[CalendarioFeriadoDAO.getValidaFechasJson]");
             ps = dbConn.prepareStatement(sql);

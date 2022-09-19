@@ -28,7 +28,7 @@ import java.util.Locale;
  *
  * @author Alexander
  */
-public class MarcasBp {
+public class MarcasBp  extends BaseBp{
 
     public PropertiesVO props;
     /** para guardar los eventos de mantencion de informacion*/
@@ -252,7 +252,7 @@ public class MarcasBp {
             int _jtPageSize, 
             String _jtSorting){
     
-        System.out.println("[MarcasBp.getHashMarcas]"
+        System.out.println(WEB_NAME+"[MarcasBp.getHashMarcas]"
             + "empresaId: " + _empresaId
             + ", deptoId: " + _deptoId
             + ", cencoId: " + _cencoId
@@ -262,7 +262,7 @@ public class MarcasBp {
         
         CentroCostoBp cencoBp = new CentroCostoBp(new PropertiesVO());
         CentroCostoVO infoCenco = cencoBp.getCentroCostoByKey(_deptoId, _cencoId);
-        System.out.println("[MarcasBp.getHashMarcas]"
+        System.out.println(WEB_NAME+"[MarcasBp.getHashMarcas]"
             + "regionIdCenco: " + infoCenco.getRegionId()
             + ", comunaIdCenco: " + infoCenco.getComunaId());
         
@@ -277,7 +277,7 @@ public class MarcasBp {
         calendart1.getActualMinimum(Calendar.DAY_OF_MONTH));
         // Extract the Date from the Calendar instance
         Date firstDayOfTheMonth = calendart1.getTime();
-        //System.out.println("1er dia del mes: " + sdf3.format(calendart1.getTime()) + ", fecha actual: " + sdf3.format(auxfechaactual));        
+        //System.out.println(WEB_NAME+"1er dia del mes: " + sdf3.format(calendart1.getTime()) + ", fecha actual: " + sdf3.format(auxfechaactual));        
         
         if (_startDate == null || _startDate.compareTo("") == 0) _startDate = sdf3.format(calendart1.getTime());
         if (_endDate == null || _endDate.compareTo("") == 0) _endDate = sdf3.format(auxfechaactual);
@@ -295,7 +295,7 @@ public class MarcasBp {
             InfoMarcaVO registro = value;
             
             MarcaVO marcaFinal = new MarcaVO();
-//            System.out.println("itera row final. "
+//            System.out.println(WEB_NAME+"itera row final. "
 //                + "Key: " + key 
 //                + ",info: " + registro.toString());
             
@@ -573,7 +573,7 @@ public class MarcasBp {
             marcasDao.getAllMarcasJson(_empresaId, 
                 _rutEmpleado, 
                 _startDate, _endDate);
-        System.out.println("[GestionFemase."
+        System.out.println(WEB_NAME+"[GestionFemase."
             + "MarcasBp.getAllMarcas]"
             + "getMarcasJson jsonOutput: " + jsonOutput);
 
@@ -581,13 +581,13 @@ public class MarcasBp {
         ArrayList<MarcaJsonVO> marcas = new Gson().fromJson(jsonOutput, listType);                
         
         if (marcas == null){
-            System.out.println("[GestionFemase."
+            System.out.println(WEB_NAME+"[GestionFemase."
                 + "MarcasBp.getAllMarcas]Buscar marcas historicas...");
             //buscar marcas historicas
             jsonOutput = marcasDao.getAllMarcasHistJson(_empresaId, 
                 _rutEmpleado, 
                 _startDate, _endDate);
-            System.out.println("[GestionFemase."
+            System.out.println(WEB_NAME+"[GestionFemase."
                 + "MarcasBp.getAllMarcas]"
                 + "getMarcasHistJson jsonOutput: " + jsonOutput);
 
@@ -599,7 +599,7 @@ public class MarcasBp {
         if (marcas != null){
             for(int x=0; x < marcas.size(); x++) {
                 MarcaJsonVO itmarca = marcas.get(x); 
-                System.out.println("[GestionFemase."
+                System.out.println(WEB_NAME+"[GestionFemase."
                 + "MarcasBp.getAllMarcas]"
                     + "iteracion: "
                     + "rut:" + itmarca.getRutempleado()

@@ -497,7 +497,7 @@ public class DetalleAsistenciaVO implements Serializable{
         String firstLetter = dayOfWeek.substring(0, 1).toUpperCase();
         String finalLetters = dayOfWeek.substring(1);
         
-//        System.out.println("dia labe:" + firstLetter+finalLetters+" "+dateString);
+//        System.out.println(WEB_NAME+"dia labe:" + firstLetter+finalLetters+" "+dateString);
         this.fechaMarcaEntradaLabel = firstLetter+finalLetters+" "+dateString;
     }
     
@@ -519,7 +519,7 @@ public class DetalleAsistenciaVO implements Serializable{
         String firstLetter = dayOfWeek.substring(0, 1).toUpperCase();
         String finalLetters = dayOfWeek.substring(1);
         
-//        System.out.println("dia labe:" + firstLetter+finalLetters+" "+dateString);
+//        System.out.println(WEB_NAME+"dia labe:" + firstLetter+finalLetters+" "+dateString);
         this.fechaMarcaSalidaLabel = firstLetter+finalLetters+" "+dateString;
     }
     

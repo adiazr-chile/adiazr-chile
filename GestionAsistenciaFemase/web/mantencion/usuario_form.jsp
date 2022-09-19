@@ -19,7 +19,7 @@
     UsuarioVO auxUser = (UsuarioVO)request.getAttribute("info_usuario");
     ArrayList<PerfilUsuarioVO> perfiles   = (ArrayList<PerfilUsuarioVO>)session.getAttribute("perfiles");
     String msgError = (String)request.getAttribute("mensaje");
-    System.out.println("[usuario_form]msgError: " + msgError);
+    System.out.println("[GestionFemaseWeb]usuario_form]msgError: " + msgError);
     
     String accion	= "create";
 	String run		= "";

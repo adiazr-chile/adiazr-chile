@@ -104,7 +104,7 @@ public class ReporteModifAlterTurnos extends BaseServlet {
                 intTurno = Integer.parseInt(paramTurno);
         }
         
-        System.out.println("[servlet.ReporteModifAlterTurnos]"
+        System.out.println(WEB_NAME+"[servlet.ReporteModifAlterTurnos]"
             + "token param 'cencoID'= " + paramCencoID
             +", turnoId: "+ paramTurno
             +", turnoRotativoId: "+ paramTurnoRotativo);
@@ -119,7 +119,7 @@ public class ReporteModifAlterTurnos extends BaseServlet {
                 }
             }
         }
-        System.out.println("[servlet.ReporteModifAlterTurnos]"
+        System.out.println(WEB_NAME+"[servlet.ReporteModifAlterTurnos]"
             + "empresa: " + paramEmpresa
             + ", depto: " + paramDepto
             + ", cenco: " + intCencoId);
@@ -127,13 +127,13 @@ public class ReporteModifAlterTurnos extends BaseServlet {
         String[] empleadosSelected = request.getParameterValues("rutEmpleado");
         if (empleadosSelected != null){
             for (int x = 0; x < empleadosSelected.length; x++){
-                System.out.println("[servlet.ReporteModifAlterTurnos]"
+                System.out.println(WEB_NAME+"[servlet.ReporteModifAlterTurnos]"
                     + "rut seleccionado[" + x + "] = " + empleadosSelected[x]);
                 EmpleadoVO auxEmpleado=new EmpleadoVO();
                 auxEmpleado.setRut(empleadosSelected[x]);
                 listaEmpleados.add(auxEmpleado);
             }     
-        }else System.out.println("[servlet.ReporteModifAlterTurnos]"
+        }else System.out.println(WEB_NAME+"[servlet.ReporteModifAlterTurnos]"
             + "No hay empleados seleccionados");
                     
         String fileName = userConnected.getUsername() + REPORT_NAME_CSV;
@@ -162,7 +162,7 @@ public class ReporteModifAlterTurnos extends BaseServlet {
                 
         FileGeneratedVO fileGenerated = new FileGeneratedVO(fileName, fullFilePath);
         if (fileGenerated != null){
-            System.out.println("[servlet.ReporteModifAlterTurnos]"
+            System.out.println(WEB_NAME+"[servlet.ReporteModifAlterTurnos]"
                 + "Add archivo generado: " + fileGenerated.getFileName());
             showFileToDownload(fileGenerated, response);
             File auxfile = new File(fileGenerated.getFilePath());
@@ -214,7 +214,7 @@ public class ReporteModifAlterTurnos extends BaseServlet {
             PropertiesVO appProperties=(PropertiesVO)application.getAttribute("appProperties");
             HttpSession session = _request.getSession(true);
             UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
-            System.out.println("[servlet.ReporteModifAlterTurnos.writeCSVFile]"
+            System.out.println(WEB_NAME+"[servlet.ReporteModifAlterTurnos.writeCSVFile]"
                 + "empresaId: " + _empresaId
                 + ", deptoId: " + _deptoId
                 + ", cencoId: " + _cencoId
@@ -334,7 +334,7 @@ public class ReporteModifAlterTurnos extends BaseServlet {
             PropertiesVO appProperties=(PropertiesVO)application.getAttribute("appProperties");
             HttpSession session = _request.getSession(true);
             UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
-            System.out.println("[servlet.ReporteModifAlterTurnos.writeXLSFile]"
+            System.out.println(WEB_NAME+"[servlet.ReporteModifAlterTurnos.writeXLSFile]"
                 + "empresaId: " + _empresaId
                 + ", deptoId: " + _deptoId
                 + ", cencoId: " + _cencoId
@@ -418,7 +418,7 @@ public class ReporteModifAlterTurnos extends BaseServlet {
                 
                 detalles.add(detailReport);
             }else{
-                System.out.println("[servlet."
+                System.out.println(WEB_NAME+"[servlet."
                     + "ReporteModifAlterTurnos.writeXLSFile]"
                     + Constantes.NO_HAY_INFO_TURNOS);
                 ReportDetailVO detailReport = new ReportDetailVO();
@@ -477,7 +477,7 @@ public class ReporteModifAlterTurnos extends BaseServlet {
             PropertiesVO appProperties=(PropertiesVO)application.getAttribute("appProperties");
             HttpSession session = _request.getSession(true);
             UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
-            System.out.println("[servlet.ReporteModifAlterTurnos.writeXMLFile]"
+            System.out.println(WEB_NAME+"[servlet.ReporteModifAlterTurnos.writeXMLFile]"
                 + "empresaId: " + _empresaId
                 + ", deptoId: " + _deptoId
                 + ", cencoId: " + _cencoId
@@ -547,7 +547,7 @@ public class ReporteModifAlterTurnos extends BaseServlet {
                 appendChild(document, detail, "nuevo_horario", turnoVigente.getNombreTurno());
                 appendChild(document, detail, "descripcion", "");
             }else{
-                System.out.println("[servlet."
+                System.out.println(WEB_NAME+"[servlet."
                     + "ReporteModifAlterTurnos.writeXMLFile]"
                     + Constantes.NO_HAY_INFO_TURNOS);
                 Element detail = document.createElement("detail");
@@ -571,7 +571,7 @@ public class ReporteModifAlterTurnos extends BaseServlet {
             // You can use that for debugging 
  
             transformer.transform(domSource, streamResult);
-            System.out.println("[servlet."
+            System.out.println(WEB_NAME+"[servlet."
                 + "ReporteModifAlterTurnos.writeXMLFile]"
                 + "Done creating XML File");
             

@@ -84,7 +84,7 @@ public class PermisosAdministrativosController extends BaseServlet {
         EmpleadosBp empleadosbp = new EmpleadosBp(appProperties);
         
         if(request.getParameter("action") != null){
-            System.out.println("[PermisosAdministrativosController]"
+            System.out.println(WEB_NAME+"[PermisosAdministrativosController]"
                 + "action is: " + request.getParameter("action")
                 + ", tipo: " + request.getParameter("tipo"));
             List<PermisoAdministrativoVO> listaObjetos = new ArrayList<>();
@@ -120,7 +120,7 @@ public class PermisosAdministrativosController extends BaseServlet {
 //            HashMap<String, Double> parametrosSistema = 
 //                (HashMap<String, Double>)session.getAttribute("parametros_sistema");
 //            
-            System.out.println("[PermisosAdministrativosController]"
+            System.out.println(WEB_NAME+"[PermisosAdministrativosController]"
                 + "empresaId: " + request.getParameter("empresaId")
                 + ", empresaKey: " + request.getParameter("empresaKey")
                 + ", rut empleado: " + request.getParameter("rutEmpleado"));
@@ -136,7 +136,7 @@ public class PermisosAdministrativosController extends BaseServlet {
                     int paramAnio = -1;
                     if (strAnio.compareTo("") != 0) paramAnio = Integer.parseInt(strAnio);
                     
-                    System.out.println("[PermisosAdministrativosController]"
+                    System.out.println(WEB_NAME+"[PermisosAdministrativosController]"
                         + "token param 'cencoID'= " + paramCencoID);
                     if (paramCencoID != null && paramCencoID.compareTo("-1") != 0){
                         StringTokenizer tokenCenco  = new StringTokenizer(paramCencoID, "|");
@@ -148,7 +148,7 @@ public class PermisosAdministrativosController extends BaseServlet {
                             }
                         }
                     }
-                    System.out.println("[PermisosAdministrativosController]"
+                    System.out.println(WEB_NAME+"[PermisosAdministrativosController]"
                         + "Listar resumen de Permisos Administrativos. "
                         + "empresa: " + paramEmpresa
                         + ", depto: " + paramDepto

@@ -15,7 +15,7 @@ import java.util.List;
  *
  * @author Alexander
  */
-public class NotificacionBp {
+public class NotificacionBp  extends BaseBp{
 
     /**
      *

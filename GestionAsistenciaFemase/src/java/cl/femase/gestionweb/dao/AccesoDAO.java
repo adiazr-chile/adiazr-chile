@@ -68,7 +68,7 @@ public class AccesoDAO extends BaseDAO{
             psupdate.setInt(4,  _data.getId());
             int rowAffected = psupdate.executeUpdate();
             if (rowAffected == 1){
-                System.out.println("[update]acceso"
+                System.out.println(WEB_NAME+"[update]acceso"
                         + ", id:" +_data.getId()
                         + ", nombre:" +_data.getNombre()
                         + ", label:" +_data.getLabel()
@@ -128,7 +128,7 @@ public class AccesoDAO extends BaseDAO{
                         
             int filasAfectadas = insert.executeUpdate();
             if (filasAfectadas == 1){
-                System.out.println("[insert acceso]"
+                System.out.println(WEB_NAME+"[insert acceso]"
                     + ", nombre:" +_data.getNombre()
                     + ", label:" +_data.getLabel()
                     + ", url:" +_data.getUrl()
@@ -251,7 +251,7 @@ public class AccesoDAO extends BaseDAO{
                 sql += " limit "+_jtPageSize + " offset "+_jtStartIndex;
             }
             
-            System.out.println("[AccesoDAO.getAccesos]"
+            System.out.println(WEB_NAME+"[AccesoDAO.getAccesos]"
                     + "label: "+_label
                     + ", _jtStartIndex: "+_jtStartIndex
                     + ", _jtPageSize: "+_jtPageSize

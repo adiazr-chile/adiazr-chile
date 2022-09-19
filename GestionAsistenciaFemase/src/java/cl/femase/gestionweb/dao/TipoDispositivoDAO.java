@@ -76,7 +76,7 @@ public class TipoDispositivoDAO extends BaseDAO{
             psupdate.setInt(3,  _data.getId());
             int rowAffected = psupdate.executeUpdate();
             if (rowAffected == 1){
-                System.out.println("[update]tipo_dispositivo"
+                System.out.println(WEB_NAME+"[update]tipo_dispositivo"
                     + ", id:" +_data.getId()
                     + ", nombre:" +_data.getName()
                     + ", descripcion:" +_data.getDesc()
@@ -127,7 +127,7 @@ public class TipoDispositivoDAO extends BaseDAO{
                         
             int filasAfectadas = insert.executeUpdate();
             if (filasAfectadas == 1){
-                System.out.println("[insert tipo_dispositivo]"
+                System.out.println(WEB_NAME+"[insert tipo_dispositivo]"
                     + ", nombre:" +_data.getName()
                     + ", descripcion:" +_data.getDesc()
                     +" insertado OK!");

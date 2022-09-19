@@ -81,7 +81,7 @@ public class TiempoExtraDAO extends BaseDAO{
             
             int rowAffected = psupdate.executeUpdate();
             if (rowAffected == 1){
-                System.out.println("[update]tiempo_extra"
+                System.out.println(WEB_NAME+"[update]tiempo_extra"
                     + ", fecha:" +_data.getFechaAsStr()
                     + ", tiempoExtra:" +_data.getTiempoExtra()
                     +" actualizado OK!");
@@ -134,7 +134,7 @@ public class TiempoExtraDAO extends BaseDAO{
             
             int rowAffected = psupdate.executeUpdate();
             if (rowAffected == 1){
-                System.out.println("[delete]tiempo_extra."
+                System.out.println(WEB_NAME+"[delete]tiempo_extra."
                     + ", rut:" +_data.getRut()
                     + ", fecha:" +_data.getFechaAsStr()
                     + ", tiempoExtra:" +_data.getTiempoExtra()
@@ -195,7 +195,7 @@ public class TiempoExtraDAO extends BaseDAO{
                                                
             int filasAfectadas = psinsert.executeUpdate();
             if (filasAfectadas == 1){
-                System.out.println("[insert tiempo_extra]"
+                System.out.println(WEB_NAME+"[insert tiempo_extra]"
                     + ", rut:" +_data.getRut()
                     + ", fecha:" +_data.getFechaAsStr()
                     + ", tiempoExtra:" +_data.getTiempoExtra()    
@@ -253,7 +253,7 @@ public class TiempoExtraDAO extends BaseDAO{
             
             sql += " order by fecha desc"; 
             
-            System.out.println("[TiempoExtrarv."
+            System.out.println(WEB_NAME+"[TiempoExtrarv."
                 + "getTiemposExtra]"
                 + "rut_empleado: "+_rutEmpleado);
             
@@ -341,7 +341,7 @@ public class TiempoExtraDAO extends BaseDAO{
                 sql += " and rut_empleado = '" + _rutEmpleado + "'";
             }
             
-            System.out.println("[TiempoExtrarv."
+            System.out.println(WEB_NAME+"[TiempoExtrarv."
                 + "getTiemposExtra]"
                 + "rut_empleado: "+_rutEmpleado);
             

@@ -9,7 +9,7 @@
 <%  
     UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
     String filename = (String)session.getAttribute("downloadFile|" + userConnected.getUsername());
-    System.out.println("[download_resultados.jsp]full pathfile: " + filename);
+    System.out.println("[GestionFemaseWeb]download_resultados.jsp]full pathfile: " + filename);
     File auxFile = new File(filename);
     int length   = 0;    
     String mimetype = "application/octet-stream";
@@ -37,7 +37,7 @@
     fileInputStream.read(buffer);
  
     File targetFile = new File("asignacion.csv");
-    System.out.println("[download_resultados.jsp]target File " + targetFile.getName());
+    System.out.println("[GestionFemaseWeb]download_resultados.jsp]target File " + targetFile.getName());
     OutputStream outStream = new FileOutputStream(targetFile);
     outStream.write(buffer);
     

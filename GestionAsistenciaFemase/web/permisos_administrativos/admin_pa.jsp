@@ -431,6 +431,24 @@
                     sorting:true,
                     list: true
                 },
+                horaInicioFullAsStr:{
+                    title: 'Hora inicio',
+                    width: '6%',
+                    edit:false,
+                    create:false,
+                    key:false,
+                    list: true,
+                    sorting: false
+                },        
+                horaFinFullAsStr:{
+                    title: 'Hora fin',
+                    width: '6%',
+                    edit:false,
+                    create:false,
+                    key:false,
+                    list: true,
+                    sorting: false
+                },        
                 diasSolicitados:{
                     title: 'Dias solicitados',
                     width: '6%',

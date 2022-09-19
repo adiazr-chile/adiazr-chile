@@ -82,7 +82,7 @@ public class TurnosRotativosAsignacionController extends BaseServlet {
         TurnoRotativoBp turnoRotativoBp  = new TurnoRotativoBp(appProperties);
         EmpleadosBp auxempleados    = new EmpleadosBp(appProperties);
         if(request.getParameter("action") != null){
-            System.out.println("[TurnosRotativosAsignacionController]"
+            System.out.println(WEB_NAME+"[TurnosRotativosAsignacionController]"
                 + "action is: " + request.getParameter("action"));
             List<EmpleadoVO> listaEmpleados = new ArrayList<>();
             String action=(String)request.getParameter("action");
@@ -108,14 +108,14 @@ public class TurnosRotativosAsignacionController extends BaseServlet {
                 numRecordsPerPage   = Integer.parseInt(request.getParameter("jtPageSize"));
             if (request.getParameter("jtSorting") != null) 
                 jtSorting   = request.getParameter("jtSorting");
-            System.out.println("TurnosRotativosAsignacionController." +
+            System.out.println(WEB_NAME+"TurnosRotativosAsignacionController." +
                 " jtSorting: " + request.getParameter("jtSorting"));
             
             if (jtSorting.contains("nombres")) jtSorting = jtSorting.replaceFirst("nombres","empl_nombres");
             else if (jtSorting.contains("rut")) jtSorting = jtSorting.replaceFirst("rut","empl_rut");
             else if (jtSorting.contains("codInterno")) jtSorting = jtSorting.replaceFirst("codInterno","cod_interno");
                     
-            System.out.println("[TurnosRotativosAsignacionController."
+            System.out.println(WEB_NAME+"[TurnosRotativosAsignacionController."
                 + "processRequest]"
                 + ", empresaCod: " + request.getParameter("empresaId")
                 + ", deptoId: " + request.getParameter("deptoId")
@@ -124,7 +124,7 @@ public class TurnosRotativosAsignacionController extends BaseServlet {
             boolean listar=true;
             
             if (action.compareTo("list") == 0){
-                System.out.println("[TurnosRotativosAsignacionController]"
+                System.out.println(WEB_NAME+"[TurnosRotativosAsignacionController]"
                     + "mostrando empleados con turno rotativo."+
                         "empresaId= " + request.getParameter("empresaId")
                         +", deptoId= " + request.getParameter("deptoId")
@@ -183,7 +183,7 @@ public class TurnosRotativosAsignacionController extends BaseServlet {
                     ex.printStackTrace();
                 }   
             }else if (action.compareTo("masivaListEmpleados") == 0){
-                System.out.println("[TurnosRotativosAsignacionController]"
+                System.out.println(WEB_NAME+"[TurnosRotativosAsignacionController]"
                     + "mostrando empleados con turno rotativo mas reciente."+
                         "empresaId= " + request.getParameter("empresaId")
                         +", deptoId= " + request.getParameter("deptoId")
@@ -223,7 +223,7 @@ public class TurnosRotativosAsignacionController extends BaseServlet {
                                     empleado.setFechaDesdeTurno(asignaciones.get(0).getFechaDesde());
                                     empleado.setFechaHastaTurno(asignaciones.get(0).getFechaHasta());
                                 }
-                                System.out.println("[TurnosRotativosAsignacionController]"
+                                System.out.println(WEB_NAME+"[TurnosRotativosAsignacionController]"
                                     + "add empleado final rut: "+empleado.getRut());
                                 listaEmpleadosConTurno.add(empleado);
                             }
@@ -234,7 +234,7 @@ public class TurnosRotativosAsignacionController extends BaseServlet {
                                 intCenco, 
                                 idTurnoRotativo, 
                                 null);
-                            System.out.println("[TurnosRotativosAsignacionController]"
+                            System.out.println(WEB_NAME+"[TurnosRotativosAsignacionController]"
                                     + "rows= "+objectsCount);
                         }
                     }
@@ -262,7 +262,7 @@ public class TurnosRotativosAsignacionController extends BaseServlet {
                     String pRutEmpleado = request.getParameter("rut");
                     EmpleadoVO infoempleado = auxempleados.getEmpleado(pEmpresa, pRutEmpleado);
                     
-                    System.out.println("[TurnosRotativosAsignacionController]"
+                    System.out.println(WEB_NAME+"[TurnosRotativosAsignacionController]"
                         + "mostrarAsignacionEmpleado. "
                         + "Empresa: " + pEmpresa
                         +", rutEmpleado: "+pRutEmpleado);
@@ -290,7 +290,7 @@ public class TurnosRotativosAsignacionController extends BaseServlet {
                     String fechaHasta   = "";
                     AsignacionTurnoRotativoVO turnoAsignado = new AsignacionTurnoRotativoVO();
                     if (asignacionKey!=null && asignacionKey.compareTo("") != 0){
-                        System.out.println("[TurnosRotativosAsignacionController]Ver/Modificar asignacion de turno...");
+                        System.out.println(WEB_NAME+"[TurnosRotativosAsignacionController]Ver/Modificar asignacion de turno...");
                         StringTokenizer tokenTurno = new StringTokenizer(asignacionKey, "|");
                         while (tokenTurno.hasMoreTokens()){
                             idTurno = Integer.parseInt(tokenTurno.nextToken());
@@ -307,7 +307,7 @@ public class TurnosRotativosAsignacionController extends BaseServlet {
                         turnoAsignado = listaTurnos.get(0);
                         
                     }else{
-                        System.out.println("[TurnosRotativosAsignacion"
+                        System.out.println(WEB_NAME+"[TurnosRotativosAsignacion"
                             + "Controller]Crear nueva "
                             + "asignacion de turno...");
                     }
@@ -315,7 +315,7 @@ public class TurnosRotativosAsignacionController extends BaseServlet {
                     
                     ArrayList<DuracionVO> duraciones = turnoRotativoBp.getDuraciones();
                     if (turnoAsignado != null){
-                        System.out.println("[TurnosRotativosAsignacion"
+                        System.out.println(WEB_NAME+"[TurnosRotativosAsignacion"
                             + "Controller]"
                             + "Id turno: " + turnoAsignado.getIdTurno()
                             + ", nombre turno: " + turnoAsignado.getNombreTurno()
@@ -329,7 +329,7 @@ public class TurnosRotativosAsignacionController extends BaseServlet {
                     request.setAttribute("turnos", turnosAsignadosCenco);
                     request.getRequestDispatcher("/mantencion/turno_rotativo_asignacion_3.jsp").forward(request, response);
             }else if (action.compareTo("crear") == 0){ //------------------------------------------------------------------------------ Crear nueva asignacion ------------------------
-                    System.out.println("[TurnosRotativosAsignacion"
+                    System.out.println(WEB_NAME+"[TurnosRotativosAsignacion"
                         + "Controller]Insert "
                         + "asignacion de turno...");
                     String pEmpresa     = request.getParameter("empresaId");
@@ -350,7 +350,7 @@ public class TurnosRotativosAsignacionController extends BaseServlet {
                             fecInicioConflicto = tokenTurno.nextToken();
                             fecTerminoConflicto = tokenTurno.nextToken();
                         }
-                        System.out.println("[TurnosRotativosAsignacionController](Crear)Asignacion conflicto"
+                        System.out.println(WEB_NAME+"[TurnosRotativosAsignacionController](Crear)Asignacion conflicto"
                             + "Eliminar asignacion conflicto. "
                             + "idTurno: " + idTurnoConflicto
                             + ", fechaInicio: " + fecInicioConflicto
@@ -374,7 +374,7 @@ public class TurnosRotativosAsignacionController extends BaseServlet {
                     StringTokenizer tokenDuracion=new StringTokenizer(keyDuracion, "|");
                     int idDuracion = Integer.parseInt(tokenDuracion.nextToken());
                     int numDiasDuracion = Integer.parseInt(tokenDuracion.nextToken());
-                    System.out.println("[TurnosRotativosAsignacion"
+                    System.out.println(WEB_NAME+"[TurnosRotativosAsignacion"
                         + "Controller]Insert "
                         + "asignacion de turno."
                         + "empresa: " + pEmpresa
@@ -406,7 +406,7 @@ public class TurnosRotativosAsignacionController extends BaseServlet {
                             fecTermino);
                     
                     if (asignacionesConflicto.isEmpty()){
-                        System.out.println("[TurnosRotativosAsignacion"
+                        System.out.println(WEB_NAME+"[TurnosRotativosAsignacion"
                             + "Controller]Asignacion de turno correcta. Insertar: "
                             + "empresa: " + pEmpresa
                             + ",rutEmpleado: " + pRutEmpleado
@@ -448,7 +448,7 @@ public class TurnosRotativosAsignacionController extends BaseServlet {
                         
                     }
             }else if (action.compareTo("modificar") == 0){//------------------------------------------------------------------------------ Modificar asignacion ------------------------
-                    System.out.println("[TurnosRotativosAsignacion"
+                    System.out.println(WEB_NAME+"[TurnosRotativosAsignacion"
                         + "Controller]Modificar asignacion de turno existente...");
                     String pEmpresa     = request.getParameter("empresaId");
                     String pRutEmpleado = request.getParameter("rutEmpleado");
@@ -458,7 +458,7 @@ public class TurnosRotativosAsignacionController extends BaseServlet {
                     String newFecInicio    = request.getParameter("startDate");
                     String newFecTermino   = request.getParameter("endDate");
                     
-                    System.out.println("[TurnosRotativosAsignacion"
+                    System.out.println(WEB_NAME+"[TurnosRotativosAsignacion"
                         + "Controller]"
                         + "newKeyDuracion: " + newKeyDuracion
                         + ",newIdTurno: " + newIdTurno
@@ -478,7 +478,7 @@ public class TurnosRotativosAsignacionController extends BaseServlet {
                             currentFechaInicio, 
                             currentFecTermino,0);
                     AsignacionTurnoRotativoVO currentAsignacion = listaTurnos.get(0);
-                    System.out.println("---->Current key duracion: " + 
+                    System.out.println(WEB_NAME+"---->Current key duracion: " + 
                         currentAsignacion.getIdDuracion() + "|" 
                         + currentAsignacion.getDiasDuracion());
                     String asignacionConflictoKey = request.getParameter("asignacionConflictoKey");//
@@ -492,7 +492,7 @@ public class TurnosRotativosAsignacionController extends BaseServlet {
                             fecInicioConflicto = tokenTurno.nextToken();
                             fecTerminoConflicto = tokenTurno.nextToken();
                         }
-                        System.out.println("[TurnosRotativosAsignacionController](Modificar)Asignacion conflicto"
+                        System.out.println(WEB_NAME+"[TurnosRotativosAsignacionController](Modificar)Asignacion conflicto"
                             + "Eliminar asignacion conflicto. "
                             + "idTurno: " + idTurnoConflicto
                             + ", fechaInicio: " + fecInicioConflicto
@@ -516,7 +516,7 @@ public class TurnosRotativosAsignacionController extends BaseServlet {
                     StringTokenizer tokenDuracion=new StringTokenizer(newKeyDuracion, "|");
                     int newIdDuracion = Integer.parseInt(tokenDuracion.nextToken());
                     int newDiasDuracion = Integer.parseInt(tokenDuracion.nextToken());
-                    System.out.println("[TurnosRotativosAsignacion"
+                    System.out.println(WEB_NAME+"[TurnosRotativosAsignacion"
                         + "Controller]Modificar asignacion de turno. Nuevos valores:"
                         + "empresa: " + pEmpresa
                         + ",rutEmpleado: " + pRutEmpleado
@@ -591,7 +591,7 @@ public class TurnosRotativosAsignacionController extends BaseServlet {
                     resultado.setRutEmpleado(pRutEmpleado);
                     
                     String[] checksValues = request.getParameterValues("asignacionKey_del");
-                    System.out.println("[TurnosRotativos"
+                    System.out.println(WEB_NAME+"[TurnosRotativos"
                         + "AsignacionController]"
                         + "Eliminar asignacion de turno. "
                         + "empresaId: " + pEmpresa
@@ -608,7 +608,7 @@ public class TurnosRotativosAsignacionController extends BaseServlet {
                             fechaDesde = tokenTurno.nextToken();
                             fechaHasta = tokenTurno.nextToken();
                             
-                            System.out.println("[TurnosRotativos"
+                            System.out.println(WEB_NAME+"[TurnosRotativos"
                                 + "AsignacionController]"
                                 + "Eliminar asignacion de turno. "
                                 + "turnoId: " + pEmpresa
@@ -626,7 +626,7 @@ public class TurnosRotativosAsignacionController extends BaseServlet {
                     
                     }
             }else if (action.compareTo("seleccionDuracionTurno") == 0){
-                    System.out.println("[TurnosRotativos"
+                    System.out.println(WEB_NAME+"[TurnosRotativos"
                         + "AsignacionController]Mostrar vista de seleccion de turno y duracion...");
                     String pEmpresa = request.getParameter("empresaId");
                     ArrayList<EmpleadoVO> empleados=new ArrayList<>();
@@ -639,7 +639,7 @@ public class TurnosRotativosAsignacionController extends BaseServlet {
                         deptoId = infoempleado.getDepartamento().getId();
                         cencoId = infoempleado.getCentroCosto().getId();
                         empleados.add(infoempleado);
-                        System.out.println("[TurnosRotativos"
+                        System.out.println(WEB_NAME+"[TurnosRotativos"
                             + "AsignacionController]rutSelected: "+rutSelected);
                     }
                     
@@ -652,7 +652,7 @@ public class TurnosRotativosAsignacionController extends BaseServlet {
                     request.setAttribute("empleados", empleados);
                     request.getRequestDispatcher("/mantencion/turno_rotativo_asignacion_masiva_2.jsp").forward(request, response);        
             }else if (action.compareTo("guardarAsignacionMasiva") == 0){
-                        System.out.println("\n[TurnosRotativos"
+                        System.out.println(WEB_NAME+"[TurnosRotativos"
                             + "AsignacionController]"
                             + "Guardar asignacion masiva empleados...");
                         
@@ -678,7 +678,7 @@ public class TurnosRotativosAsignacionController extends BaseServlet {
                             rutEmpleado = tokenEmpleado.nextToken();
 //                            EmpleadoVO infoempleado = auxempleados.getEmpleado(empresaId, rutEmpleado);
                             
-                            System.out.println("[TurnosRotativos"
+                            System.out.println(WEB_NAME+"[TurnosRotativos"
                                 + "AsignacionController]Asignacion masiva "
                                 + ". empresa: " + empresaId
                                 + ", rutEmpleado: " + rutEmpleado);
@@ -701,7 +701,7 @@ public class TurnosRotativosAsignacionController extends BaseServlet {
                             if (!asignacionesConflicto.isEmpty()){
                                 for (int j = 0; j < asignacionesConflicto.size(); j++) {
                                         AsignacionTurnoRotativoVO asignacion = asignacionesConflicto.get(j);
-                                        System.out.println("[TurnosRotativos"
+                                        System.out.println(WEB_NAME+"[TurnosRotativos"
                                             + "AsignacionController]Eliminar asignacion conflicto."
                                             + ". turnoId: " + asignacion.getIdTurno()
                                             + ", fechaInicio: " + asignacion.getFechaDesde()
@@ -717,7 +717,7 @@ public class TurnosRotativosAsignacionController extends BaseServlet {
                                 }
                             }
                             
-                            System.out.println("[TurnosRotativosAsignacion"
+                            System.out.println(WEB_NAME+"[TurnosRotativosAsignacion"
                                 + "Controller]Guardar asignacion masiva."
                                 + "Insert "
                                 + "asignacion de turno."

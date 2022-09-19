@@ -78,7 +78,7 @@ public class EventosMantencionHistController extends BaseServlet {
         MaintenanceEventsBp auxnegocio=new MaintenanceEventsBp(appProperties);
 
         if(request.getParameter("action") != null){
-            System.out.println("\n\n[EventosMantencionHistController]"
+            System.out.println(WEB_NAME+"\n[EventosMantencionHistController]"
                 + "action is: " + request.getParameter("action"));
             List<EventoMantencionVO> listaObjetos = new ArrayList<>();
             String action=(String)request.getParameter("action");
@@ -108,7 +108,7 @@ public class EventosMantencionHistController extends BaseServlet {
             if (request.getParameter("jtSorting") != null) 
                 jtSorting   = request.getParameter("jtSorting");
             
-            System.out.println("cl.femase.gestionweb.servlet."
+            System.out.println(WEB_NAME+"cl.femase.gestionweb.servlet."
                 + "consultas.EventosMantencionHistController."
                 + "processRequest(). jtSorting(1)= "+jtSorting);
             
@@ -130,7 +130,7 @@ public class EventosMantencionHistController extends BaseServlet {
                     Calendar nowCal=Calendar.getInstance();
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                     
-                    System.out.println("[EventosMantencionHistController]"
+                    System.out.println(WEB_NAME+"[EventosMantencionHistController]"
                         + "mostrando registros (1)."
                         + "username: "+username
                         + ", tipoEvento: "+tipoEvento
@@ -138,12 +138,12 @@ public class EventosMantencionHistController extends BaseServlet {
                         + ", endDate: "+endDate);
                     
                     if (startDate == null || startDate.compareTo("") == 0 || startDate.compareTo("null") == 0) {
-                        System.out.println("seteo  fecha actual");
+                        System.out.println(WEB_NAME+"seteo  fecha actual");
                         startDate = sdf.format(nowCal.getTime());
                         endDate = startDate;
                     }
                                         
-                    System.out.println("[EventosMantencionHistController]"
+                    System.out.println(WEB_NAME+"[EventosMantencionHistController]"
                         + "mostrando registros (2)."
                         + "username: "+username
                         + ", tipoEvento: "+tipoEvento

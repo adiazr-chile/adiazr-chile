@@ -74,7 +74,7 @@ public class TurnoRotativoDAO extends BaseDAO{
             psupdate.setString(2,  _rutEmpleado);
             int rowAffected = psupdate.executeUpdate();
             if (rowAffected == 1){
-                System.out.println("[TurnoRotativoDAO.updateTurnoEmpleado]"
+                System.out.println(WEB_NAME+"[TurnoRotativoDAO.updateTurnoEmpleado]"
                     + "rut:" +_rutEmpleado+", idTurno= "+_idTurno
                     +" actualizado OK!");
             }
@@ -122,7 +122,7 @@ public class TurnoRotativoDAO extends BaseDAO{
             
             int rowAffected = psupdate.executeUpdate();
             if (rowAffected == 1){
-                System.out.println("[TurnoRotativoDAO.updateTodos]turno_rotativo"
+                System.out.println(WEB_NAME+"[TurnoRotativoDAO.updateTodos]turno_rotativo"
                     + ", id:" +_turno.getId()
                     +" actualizado OK!");
             }
@@ -206,7 +206,7 @@ public class TurnoRotativoDAO extends BaseDAO{
             
             int rowAffected = psupdate.executeUpdate();
             if (rowAffected == 1){
-                System.out.println("[TurnoRotativoDAO.update]turno_rotativo"
+                System.out.println(WEB_NAME+"[TurnoRotativoDAO.update]turno_rotativo"
                     + ", id:" +_data.getId()
                     + ", nombre:" +_data.getNombre()
                     +" actualizado OK!");
@@ -293,7 +293,7 @@ public class TurnoRotativoDAO extends BaseDAO{
             
             int filasAfectadas = insert.executeUpdate();
             if (filasAfectadas == 1){
-                System.out.println("[TurnoRotativoDAO.insert turno_rotativo]"
+                System.out.println(WEB_NAME+"[TurnoRotativoDAO.insert turno_rotativo]"
                     + ", nombre:" +_data.getNombre()
                     + ", id:" +_data.getId()
                     +" insertado OK!");
@@ -345,7 +345,7 @@ public class TurnoRotativoDAO extends BaseDAO{
                     + "from turno_rotativo_detalle "
                     + "where id_turno = turno.id_turno) "
                 + "order by nombre_turno";
-            System.out.println("[TurnoRotativoDAO.getTurnosSinDetalle]"
+            System.out.println(WEB_NAME+"[TurnoRotativoDAO.getTurnosSinDetalle]"
                 + "Mostrar turnos sin detalle empleados para empresa: "+_empresaId);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,"[TurnoRotativoDAO.getTurnosSinDetalle]");
@@ -408,7 +408,7 @@ public class TurnoRotativoDAO extends BaseDAO{
                     + "from turno_rotativo_detalle "
                     + "where id_turno = turno.id_turno) "
                 + "order by nombre_turno";
-            System.out.println("[TurnoRotativoDAO.getTurnosConDetalle]"
+            System.out.println(WEB_NAME+"[TurnoRotativoDAO.getTurnosConDetalle]"
                 + "Mostrar turnos con detalle empleados para empresa: "+_empresaId);
             dbConn = dbLocator.getConnection(m_dbpoolName,"[TurnoRotativoDAO.getTurnosConDetalle]");
             ps = dbConn.prepareStatement(sql);
@@ -448,13 +448,14 @@ public class TurnoRotativoDAO extends BaseDAO{
     * 
     * @param _empresaId
     * @param _nombreTurno
+     * @param _estado
     * @param _jtStartIndex
     * @param _jtPageSize
     * @param _jtSorting
     * @return 
     */
     public List<TurnoRotativoVO> getTurnos(String _empresaId, 
-            String _nombreTurno,
+            String _nombreTurno, int _estado,
             int _jtStartIndex, 
             int _jtPageSize, 
             String _jtSorting){
@@ -490,12 +491,16 @@ public class TurnoRotativoDAO extends BaseDAO{
                 sql += " and upper(nombre_turno) like '%" + _nombreTurno.toUpperCase() + "%'";
             }
            
+            if (_estado != -1){        
+                sql += " and estado_turno = " + _estado;
+            }
+            
             sql += " order by " + _jtSorting; 
             if (_jtPageSize > 0){
                 sql += " limit "+_jtPageSize + " offset "+_jtStartIndex;
             }
             
-            System.out.println("[Gestion.TurnoRotativoDAO.getTurnos]sql: "+sql);
+            System.out.println(WEB_NAME+"[Gestion.TurnoRotativoDAO.getTurnos]sql: "+sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,"[TurnoRotativoDAO.getTurnos]");
             ps = dbConn.prepareStatement(sql);
@@ -762,12 +767,15 @@ public class TurnoRotativoDAO extends BaseDAO{
     }
     
     /**
-     * 
-     * @param _empresaId
-     * @param _nombreTurno
-     * @return 
-     */
-    public int getTurnosCount(String _empresaId,String _nombreTurno){
+    * 
+    * @param _empresaId
+    * @param _nombreTurno
+     * @param _estado
+    * @return 
+    */
+    public int getTurnosCount(String _empresaId,
+            String _nombreTurno, 
+            int _estado){
         int count=0;
         Statement statement = null;
         ResultSet rs        = null;
@@ -783,6 +791,10 @@ public class TurnoRotativoDAO extends BaseDAO{
             
             if (_nombreTurno != null && _nombreTurno.compareTo("") != 0){        
                 strSql += " and upper(nombre_turno) like '%" + _nombreTurno.toUpperCase() + "%'";
+            }
+            
+            if (_estado != -1){        
+                strSql += " and estado_turno = " + _estado;
             }
             
             rs = statement.executeQuery(strSql);		
@@ -1059,7 +1071,7 @@ public class TurnoRotativoDAO extends BaseDAO{
             sql += "order by fecha_hasta desc ";
             if (_limit > 0) sql += " limit " + _limit;
                         
-            System.out.println("[TurnoRotativoDAO."
+            System.out.println(WEB_NAME+"[TurnoRotativoDAO."
                 + "getAsignacionTurnosRotativosByRut]SQL: " + sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,"[TurnoRotativoDAO.getAsignacionTurnosRotativosByRut]");
@@ -1165,7 +1177,7 @@ public class TurnoRotativoDAO extends BaseDAO{
             
             sql += "order by fecha_hasta desc";
                         
-            System.out.println("[TurnoRotativoDAO."
+            System.out.println(WEB_NAME+"[TurnoRotativoDAO."
                 + "getAsignacionesConflicto]SQL: " + sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,"[TurnoRotativoDAO.getAsignacionesConflicto]");
@@ -1211,7 +1223,7 @@ public class TurnoRotativoDAO extends BaseDAO{
         try{
             dbConn = dbLocator.getConnection(m_dbpoolName,"[TurnoRotativoDAO.insertarAsignaciones]");
             int i = 0;
-            System.out.println("[TurnoRotativoDAO.insertarAsignaciones]"
+            System.out.println(WEB_NAME+"[TurnoRotativoDAO.insertarAsignaciones]"
                 + "items a insertar: "+_asignaciones.size());
             String sqlInsert = "INSERT INTO turno_rotativo_asignacion("
                 + "empresa_id, "
@@ -1234,7 +1246,7 @@ public class TurnoRotativoDAO extends BaseDAO{
             PreparedStatement statement = dbConn.prepareStatement(sqlInsert);
             
             for (AsignacionTurnoRotativoVO asignacion : _asignaciones) {
-                System.out.println("[TurnoRotativoDAO.insertarAsignaciones] "
+                System.out.println(WEB_NAME+"[TurnoRotativoDAO.insertarAsignaciones] "
                     + "Insert asignacion turno. "
                     + "EmpresaId= " + asignacion.getEmpresaId()    
                     + ",Rut= " + asignacion.getRutEmpleado()
@@ -1257,7 +1269,7 @@ public class TurnoRotativoDAO extends BaseDAO{
 
                 if (i % 50 == 0 || i == _asignaciones.size()) {
                     int[] rowsAffected = statement.executeBatch(); // Execute every 1000 items.
-                    System.out.println("[TurnoRotativoDAO."
+                    System.out.println(WEB_NAME+"[TurnoRotativoDAO."
                         + "insertarAsignaciones]"
                         + "filas afectadas= "+rowsAffected.length);
                 }
@@ -1289,7 +1301,7 @@ public class TurnoRotativoDAO extends BaseDAO{
         try{
             dbConn = dbLocator.getConnection(m_dbpoolName,"[TurnoRotativoDAO.eliminarAsignaciones]");
             int i = 0;
-            System.out.println("[TurnoRotativoDAO.eliminarAsignaciones]"
+            System.out.println(WEB_NAME+"[TurnoRotativoDAO.eliminarAsignaciones]"
                 + "items a eliminar: " + _asignaciones.size());
             String sqlDelete = "delete from turno_rotativo_asignacion "
                 + "where "
@@ -1299,7 +1311,7 @@ public class TurnoRotativoDAO extends BaseDAO{
             PreparedStatement statement = dbConn.prepareStatement(sqlDelete);
             
             for (AsignacionTurnoRotativoVO asignacion : _asignaciones) {
-                System.out.println("[TurnoRotativoDAO.eliminarAsignaciones] "
+                System.out.println(WEB_NAME+"[TurnoRotativoDAO.eliminarAsignaciones] "
                     + "Eliminar asignacion turno. "
                     + "EmpresaId= " + asignacion.getEmpresaId()    
                     + ",Rut= " + asignacion.getRutEmpleado()
@@ -1316,7 +1328,7 @@ public class TurnoRotativoDAO extends BaseDAO{
 
                 if (i % 50 == 0 || i == _asignaciones.size()) {
                     int[] rowsAffected = statement.executeBatch(); // Execute every 1000 items.
-                    System.out.println("[TurnoRotativoDAO."
+                    System.out.println(WEB_NAME+"[TurnoRotativoDAO."
                         + "eliminarAsignaciones]"
                         + "filas afectadas= "+rowsAffected.length);
                 }
@@ -1386,7 +1398,7 @@ public class TurnoRotativoDAO extends BaseDAO{
             
             int filasAfectadas = insert.executeUpdate();
             if (filasAfectadas == 1){
-                System.out.println("[TurnoRotativoDAO.insert turno_rotativo_asignacion]"
+                System.out.println(WEB_NAME+"[TurnoRotativoDAO.insert turno_rotativo_asignacion]"
                     + ", empresaId:" + _data.getEmpresaId()
                     + ", rutEmpleado:" + _data.getRutEmpleado()
                     + ", idTurno:" + _data.getIdTurno()
@@ -1458,7 +1470,7 @@ public class TurnoRotativoDAO extends BaseDAO{
             
             int filasAfectadas = insert.executeUpdate();
             if (filasAfectadas == 1){
-                System.out.println("[TurnoRotativoDAO.delete turno_rotativo_asignacion]"
+                System.out.println(WEB_NAME+"[TurnoRotativoDAO.delete turno_rotativo_asignacion]"
                     + ", empresaId:" + _data.getEmpresaId()
                     + ", rutEmpleado:" + _data.getRutEmpleado()
                     + ", idTurno:" + _data.getIdTurno()
@@ -1513,7 +1525,7 @@ public class TurnoRotativoDAO extends BaseDAO{
             + ", idDuracion [" + _updatedAsignacion.getIdDuracion() + "]"
             + ", fechaDesde [" + _updatedAsignacion.getFechaDesde() + "]"
             + ", fechaHasta [" + _updatedAsignacion.getFechaHasta() + "]";
-        System.out.println("[TurnoRotativoDAO.modifyAsignacion] turno_rotativo_asignacion. " + msgFinal);
+        System.out.println(WEB_NAME+"[TurnoRotativoDAO.modifyAsignacion] turno_rotativo_asignacion. " + msgFinal);
         
         objresultado.setMsg(msgFinal);
         PreparedStatement updatestmt    = null;
@@ -1533,7 +1545,7 @@ public class TurnoRotativoDAO extends BaseDAO{
                     + "and fecha_desde = '"+_currentAsignacion.getFechaDesde()+"' "
                     + "and fecha_hasta = '"+_currentAsignacion.getFechaHasta()+"' ";
 
-            System.out.println("[TurnoRotativoDAO.modifyAsignacion]"
+            System.out.println(WEB_NAME+"[TurnoRotativoDAO.modifyAsignacion]"
                 + "Sql= " + sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,"[TurnoRotativoDAO.modifyAsignacion]");
@@ -1548,10 +1560,10 @@ public class TurnoRotativoDAO extends BaseDAO{
             updatestmt.setInt(6,  _currentAsignacion.getIdDuracion());
             
             int filasAfectadas = updatestmt.executeUpdate();
-            System.out.println("[TurnoRotativoDAO.modifyAsignacion]"
+            System.out.println(WEB_NAME+"[TurnoRotativoDAO.modifyAsignacion]"
                 + "filas afectadas= "+filasAfectadas);
             if (filasAfectadas == 1){
-                System.out.println("[TurnoRotativoDAO.modifyAsignacion]"
+                System.out.println(WEB_NAME+"[TurnoRotativoDAO.modifyAsignacion]"
                     + "Turno_rotativo_asignacion. "
                     + ", empresaId:" + _currentAsignacion.getEmpresaId()
                     + ", rutEmpleado:" + _currentAsignacion.getRutEmpleado()
@@ -1561,7 +1573,7 @@ public class TurnoRotativoDAO extends BaseDAO{
                     + ", fechaHasta:" + _updatedAsignacion.getFechaHasta()    
                     +" actualizada OK!");
             }else{
-                System.out.println("[TurnoRotativoDAO.modifyAsignacion]"
+                System.out.println(WEB_NAME+"[TurnoRotativoDAO.modifyAsignacion]"
                     + "Insertar nueva asignacion");
                 objresultado = this.insertAsignacion(_updatedAsignacion);
             }
@@ -1607,7 +1619,7 @@ public class TurnoRotativoDAO extends BaseDAO{
                 + "get_turno_rotativo_by_fecha_json"
                     + "('" + _empresaId + "','" + _rutEmpleado + "','" + _fecha + "') strjson";
 
-            System.out.println("[TurnoRotativoDAO."
+            System.out.println(WEB_NAME+"[TurnoRotativoDAO."
                 + "getAsignacionTurnoByFechaJson]Sql: "+sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,"[TurnoRotativoDAO.getAsignacionTurnoByFechaJson]");
@@ -1671,7 +1683,7 @@ public class TurnoRotativoDAO extends BaseDAO{
                 + "and '" + _fecha + "' between asignacion.fecha_desde "
                 + "and asignacion.fecha_hasta";
                     
-            System.out.println("[TurnoRotativoDAO."
+            System.out.println(WEB_NAME+"[TurnoRotativoDAO."
                 + "getAsignacionTurnoByFecha]Sql: "+sql);
             dbConn = dbLocator.getConnection(m_dbpoolName,"[TurnoRotativoDAO.getAsignacionTurnoByFecha]");
             ps = dbConn.prepareStatement(sql);
@@ -1689,7 +1701,7 @@ public class TurnoRotativoDAO extends BaseDAO{
                 DiferenciaHorasVO diferenciaInicial = 
                     Utilidades.getTimeDifference(m_sdf.format(new Date()) + " " + data.getHoraEntrada(), 
                                           m_sdf.format(new Date())+" 23:59:59");
-                System.out.println("[TurnoRotativoDAO."
+                System.out.println(WEB_NAME+"[TurnoRotativoDAO."
                 + "getAsignacionTurnoByFecha]horaEntrada: " 
                     + data.getHoraEntrada()
                     +", diferencia en horas con las 23:59:59= " 
@@ -1698,9 +1710,9 @@ public class TurnoRotativoDAO extends BaseDAO{
                     //fecha salida = dia siguiente
                     dteSalida = Utilidades.sumaRestarFecha(new Date(), 1, "DAYS");
                 }
-                System.out.println("[TurnoRotativoDAO."
+                System.out.println(WEB_NAME+"[TurnoRotativoDAO."
                 + "getAsignacionTurnoByFecha]fechaSalida: " + dteSalida);
-                System.out.println("[TurnoRotativoDAO."
+                System.out.println(WEB_NAME+"[TurnoRotativoDAO."
                 + "getAsignacionTurnoByFecha]Resta entrada-salida turno rotativo."
                     + "fecha hora entrada: "+m_sdf.format(new Date()) + " " + data.getHoraEntrada()
                     + ",fecha hora salida: "+m_sdf.format(dteSalida)+" " + data.getHoraSalida());
@@ -1778,7 +1790,7 @@ public class TurnoRotativoDAO extends BaseDAO{
                     + " and cenco_id = " + _cencoId + " "
                     + ") "
                 + "order by nombre_turno";
-            System.out.println("[TurnoRotativoDAO."
+            System.out.println(WEB_NAME+"[TurnoRotativoDAO."
                 + "getTurnosAsignadosByCenco]sql: " + sql);
             dbConn = dbLocator.getConnection(m_dbpoolName,"[TurnoRotativoDAO.getTurnosAsignadosByCenco]");
             ps = dbConn.prepareStatement(sql);
@@ -1849,7 +1861,7 @@ public class TurnoRotativoDAO extends BaseDAO{
                     + "'S' rotativo "
                 + "from turno_rotativo turno "
                 + "where turno.empresa_id = '" + _empresaId + "' and turno.id_turno<>-1 "
-                    + "and turno.id_turno not in ("
+                    + "and turno.estado_turno = 1 and turno.id_turno not in ("
                     + "select id_turno "
                     + "from turno_rotativo_centrocosto "
                     + "where turno_rotativo_centrocosto.empresa_id = '" + _empresaId + "' "
@@ -1858,7 +1870,7 @@ public class TurnoRotativoDAO extends BaseDAO{
                     + ") "
                 + "order by turno.nombre_turno";
 
-            System.out.println("[TurnoRotativoDAO."
+            System.out.println(WEB_NAME+"[TurnoRotativoDAO."
                 + "getTurnosNoAsignadosByCenco]sql: "+ sql);
             dbConn = dbLocator.getConnection(m_dbpoolName,"[TurnoRotativoDAO.getTurnosNoAsignadosByCenco]");
             ps = dbConn.prepareStatement(sql);
@@ -1903,7 +1915,7 @@ public class TurnoRotativoDAO extends BaseDAO{
         try{
             dbConn = dbLocator.getConnection(m_dbpoolName,"[TurnoRotativoDAO.eliminarAsignacionesCencos]");
             int i = 0;
-            System.out.println("[TurnoRotativoDAO.eliminarAsignacionesCencos]"
+            System.out.println(WEB_NAME+"[TurnoRotativoDAO.eliminarAsignacionesCencos]"
                 + "items a eliminar: " + _asignaciones.size());
             String sqlDelete = "delete "
                     + "from turno_rotativo_centrocosto "
@@ -1914,7 +1926,7 @@ public class TurnoRotativoDAO extends BaseDAO{
             PreparedStatement statement = dbConn.prepareStatement(sqlDelete);
             
             for (TurnoCentroCostoVO asignacion : _asignaciones) {
-                System.out.println("[TurnoRotativoDAO.eliminarAsignacionesCencos] "
+                System.out.println(WEB_NAME+"[TurnoRotativoDAO.eliminarAsignacionesCencos] "
                     + "Eliminar asignacion turno. "
                     + "EmpresaId= " + asignacion.getEmpresaId()    
                     + ",deptoId= " + asignacion.getDeptoId()
@@ -1930,7 +1942,7 @@ public class TurnoRotativoDAO extends BaseDAO{
 
                 if (i % 50 == 0 || i == _asignaciones.size()) {
                     int[] rowsAffected = statement.executeBatch(); // Execute every 1000 items.
-                    System.out.println("[TurnoRotativoDAO."
+                    System.out.println(WEB_NAME+"[TurnoRotativoDAO."
                         + "eliminarAsignacionesCencos]"
                         + "filas afectadas= "+rowsAffected.length);
                 }
@@ -1963,7 +1975,7 @@ public class TurnoRotativoDAO extends BaseDAO{
         try{
             dbConn = dbLocator.getConnection(m_dbpoolName,"[TurnoRotativoDAO.insertarAsignacionesCencos]");
             int i = 0;
-            System.out.println("[TurnoRotativoDAO.insertarAsignacionesCencos]"
+            System.out.println(WEB_NAME+"[TurnoRotativoDAO.insertarAsignacionesCencos]"
                 + "items a insertar: "+_asignaciones.size());
             String sqlInsert = "INSERT INTO turno_rotativo_centrocosto("
                     + " empresa_id, id_turno, depto_id, cenco_id, fecha_asignacion) "
@@ -1971,7 +1983,7 @@ public class TurnoRotativoDAO extends BaseDAO{
             PreparedStatement statement = dbConn.prepareStatement(sqlInsert);
             
             for (TurnoCentroCostoVO asignacion : _asignaciones) {
-                System.out.println("[TurnoRotativoDAO.insertarAsignacionesCencos] "
+                System.out.println(WEB_NAME+"[TurnoRotativoDAO.insertarAsignacionesCencos] "
                     + "Insert turno_rotativo_centrocosto. "
                     + "EmpresaId= " + asignacion.getEmpresaId()    
                     + ",idTurno= " + asignacion.getTurnoId()
@@ -1989,7 +2001,7 @@ public class TurnoRotativoDAO extends BaseDAO{
 
                 if (i % 50 == 0 || i == _asignaciones.size()) {
                     int[] rowsAffected = statement.executeBatch(); // Execute every 1000 items.
-                    System.out.println("[TurnoRotativoDAO."
+                    System.out.println(WEB_NAME+"[TurnoRotativoDAO."
                         + "insertarAsignacionesCencos]"
                         + "filas afectadas= "+rowsAffected.length);
                 }

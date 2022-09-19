@@ -52,7 +52,7 @@ public class GraficosDAO extends BaseDAO{
                 + "where fecha_hora::date = '"+_fecha+"' "
                     + "and fecha_hora::time between '"+_startTime+"' and '"+_endTime+"' and cod_tipo_marca= " + _tipoMarca
                 + " group by fecha_hora::date";
-            //System.out.println("[GraficosDAO.getTotalMarcas]sql: " + sql);
+            //System.out.println(WEB_NAME+"[GraficosDAO.getTotalMarcas]sql: " + sql);
             
             ps = dbConn.prepareStatement(sql);
             rs = ps.executeQuery();
@@ -142,7 +142,7 @@ public class GraficosDAO extends BaseDAO{
                 + " and fecha_hora::date='" + _fecha + "' and m.cod_tipo_marca = 1 "
                 + " and DATE_PART('minute', m.fecha_hora::time - dt.hora_entrada::time) > 0 "
                 + "group by m.fecha_hora::date";
-            System.out.println("getAtrasoFecha: " + sql);
+            System.out.println(WEB_NAME+"getAtrasoFecha: " + sql);
             ps = dbConn.prepareStatement(sql);
             rs = ps.executeQuery();
 
@@ -185,7 +185,7 @@ public class GraficosDAO extends BaseDAO{
                 + " and DATE_PART('minute', m.fecha_hora::time - dt.hora_entrada::time) > 0 and m.cod_tipo_marca=1 "
                 + " and to_char(fecha_hora::date,'yyyy-MM') = '" + _anioMes + "' "
                 + "group by m.fecha_hora::date";
-            System.out.println("[getTotalHrsAtrasoMes]sql: "+sql);
+            System.out.println(WEB_NAME+"[getTotalHrsAtrasoMes]sql: "+sql);
             ps = dbConn.prepareStatement(sql);
             rs = ps.executeQuery();
 
@@ -227,7 +227,7 @@ public class GraficosDAO extends BaseDAO{
                     + "where to_char(detalle.fecha_inicio,'yyyy-MM') = '"+_anioMes+"' "
                     + "group by ausencia.ausencia_id "
                     + "order by justificaciones";
-            System.out.println("[getAusencias]sql: "+sql);
+            System.out.println(WEB_NAME+"[getAusencias]sql: "+sql);
             ps = dbConn.prepareStatement(sql);
             rs = ps.executeQuery();
 
@@ -252,7 +252,7 @@ public class GraficosDAO extends BaseDAO{
         try {
             dbLocator.freeConnection(dbConn);
         } catch (Exception ex) {
-            System.out.println("[Treeview.GraficosDAO."
+            System.out.println(WEB_NAME+"[Treeview.GraficosDAO."
                 + "closeConnection]Error al cerrar conecion"+ex.toString());
         }
     }

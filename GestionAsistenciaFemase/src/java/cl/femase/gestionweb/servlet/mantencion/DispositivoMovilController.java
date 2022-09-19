@@ -84,7 +84,7 @@ public class DispositivoMovilController extends BaseServlet {
         MaintenanceEventsDAO daoEventos = new MaintenanceEventsDAO(appProperties);
         
         if(request.getParameter("action") != null){
-            System.out.println("[DispositivoMovilController]"
+            System.out.println(WEB_NAME+"[DispositivoMovilController]"
                 + "action is: " + request.getParameter("action"));
             List<DispositivoMovilVO> devicesList = new ArrayList<DispositivoMovilVO>();
             String action=(String)request.getParameter("action");
@@ -154,14 +154,14 @@ public class DispositivoMovilController extends BaseServlet {
             }
             
             if (action.compareTo("list") == 0) {
-                System.out.println("[DispositivoMovilController]"
+                System.out.println(WEB_NAME+"[DispositivoMovilController]"
                     + "mostrando dispositivos moviles...");
                 String paramCencoID  = request.getParameter("cencoId");
                 String paramEmpresa = null;
                 String paramDepto   = null;
                 String cencoId      = "";
                 int intCencoId = -1;
-                System.out.println("[DispositivoMovilController]"
+                System.out.println(WEB_NAME+"[DispositivoMovilController]"
                     + "List-token param 'cencoID'= " + paramCencoID);
                 if (paramCencoID != null && paramCencoID.compareTo("-1") != 0){
                     StringTokenizer tokenCenco  = new StringTokenizer(paramCencoID, "|");
@@ -177,7 +177,7 @@ public class DispositivoMovilController extends BaseServlet {
                         }
                     }
                 }
-                System.out.println("[DispositivoMovilController]"
+                System.out.println(WEB_NAME+"[DispositivoMovilController]"
                     + "Listar dispositivos moviles. "
                     + "empresa: " + paramEmpresa
                     +", depto: " + paramDepto
@@ -221,7 +221,7 @@ public class DispositivoMovilController extends BaseServlet {
                     ex.printStackTrace();
                 }   
             }else if (action.compareTo("update") == 0) {  
-                    System.out.println("[DispositivoMovilController]"
+                    System.out.println(WEB_NAME+"[DispositivoMovilController]"
                         + "Modificar dispositivo movil. "
                         + "DeviceId: " + device.getId()
                         + ", correlativo: " + device.getCorrelativo()

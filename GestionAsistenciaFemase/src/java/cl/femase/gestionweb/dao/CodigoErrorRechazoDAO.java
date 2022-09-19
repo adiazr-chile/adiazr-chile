@@ -57,7 +57,7 @@ public class CodigoErrorRechazoDAO extends BaseDAO{
             
             int rowAffected = psupdate.executeUpdate();
             if (rowAffected == 1){
-                System.out.println("[CodigoErrorRechazoDAO.update]"
+                System.out.println(WEB_NAME+"[CodigoErrorRechazoDAO.update]"
                     + "cod_error_rechazo"
                     + ", codigo:" +_data.getCodigo()
                     + ", descripcion:" +_data.getDescripcion()
@@ -116,7 +116,7 @@ public class CodigoErrorRechazoDAO extends BaseDAO{
                         
             int filasAfectadas = insert.executeUpdate();
             if (filasAfectadas == 1){
-                System.out.println("[CodigoErrorRechazoDAO.insert]"
+                System.out.println(WEB_NAME+"[CodigoErrorRechazoDAO.insert]"
                     + "codigo:" +_data.getCodigo()
                     + ", descripcion:" +_data.getDescripcion()
                     +" insertado OK!");
@@ -230,7 +230,7 @@ public class CodigoErrorRechazoDAO extends BaseDAO{
                 sql += " limit "+_jtPageSize + " offset "+_jtStartIndex;
             }
             
-            System.out.println("[CodigoErrorRechazoDAO.getCodigos]"
+            System.out.println(WEB_NAME+"[CodigoErrorRechazoDAO.getCodigos]"
                 + "descripcion: " + _descripcion
                 + ", _jtStartIndex: "+_jtStartIndex
                 + ", _jtPageSize: "+_jtPageSize

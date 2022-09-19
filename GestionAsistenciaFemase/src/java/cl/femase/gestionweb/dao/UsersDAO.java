@@ -301,7 +301,7 @@ public class UsersDAO extends BaseDAO{
             String msgFinal = " Actualiza ultima conexion usuario:"
                 + "username [" + _data.getUsername() + "]";
             
-            System.out.println(msgFinal);
+            System.out.println(WEB_NAME + msgFinal);
             objresultado.setMsg(msgFinal);
             
             String sql = "UPDATE usuario "
@@ -334,7 +334,7 @@ public class UsersDAO extends BaseDAO{
                 if (psupdate!= null) psupdate.close();
                  //dbLocator.freeConnection(dbConn);
             } catch (SQLException ex) {
-                System.err.println("[UsersDAO."
+                System.err.println(WEB_NAME + "[UsersDAO."
                     + "setConnectionStatus]Error: "+ex.toString());
             }
         }
@@ -417,7 +417,7 @@ public class UsersDAO extends BaseDAO{
                 if (insert!= null) insert.close();
                  dbLocator.freeConnection(dbConn);
             } catch (SQLException ex) {
-                System.err.println("Error: "+ex.toString());
+                System.err.println(WEB_NAME + "Error: " + ex.toString());
             }
         }
 
@@ -499,7 +499,7 @@ public class UsersDAO extends BaseDAO{
                 if (insert!= null) insert.close();
                  dbLocator.freeConnection(dbConn);
             } catch (SQLException ex) {
-                System.err.println("Error: "+ex.toString());
+                System.err.println(WEB_NAME + "Error: "+ex.toString());
             }
         }
         
@@ -637,7 +637,7 @@ public class UsersDAO extends BaseDAO{
                 sql += " limit "+_jtPageSize + " offset "+_jtStartIndex;
             }
             
-            System.out.println("[UsersDAO.getUsuarios]sql: "+sql);
+            System.out.println(WEB_NAME+"[UsersDAO.getUsuarios]sql: "+sql);
             if (!m_usedGlobalDbConnection) dbConn = dbLocator.getConnection(m_dbpoolName,"[UsersDAO.getUsuarios]");
             ps = dbConn.prepareStatement(sql);
             rs = ps.executeQuery();
@@ -878,11 +878,11 @@ public class UsersDAO extends BaseDAO{
             sqlCencosUsuario += "order by cc.depto_id,"
                 + "cc.ccosto_nombre";
             
-            System.out.println("[UsersDAO.getCencosUsuario]"
+            System.out.println(WEB_NAME+"[UsersDAO.getCencosUsuario]"
                 + "El usuario: " + _usuario.getUsername()
                 + " es admin de empresa?(S/N): " + _usuario.getAdminEmpresa());
             if (_usuario.getAdminEmpresa().compareTo("S") == 0){
-                System.out.println("[UsersDAO.getCencosUsuario]"
+                System.out.println(WEB_NAME+"[UsersDAO.getCencosUsuario]"
                     + "El usuario: " + _usuario.getUsername()
                     + " administra todos los centros de "
                     + "costo de la empresa_id: " + _usuario.getEmpresaId());
@@ -907,7 +907,7 @@ public class UsersDAO extends BaseDAO{
                     listaCencosUsuario.add(uc);
                 }
             }else{
-                System.out.println("[UsersDAO.getCencosUsuario]"
+                System.out.println(WEB_NAME+"[UsersDAO.getCencosUsuario]"
                     + "El usuario: " + _usuario.getUsername()
                     + " NO ES admin de empresa. "
                     + "Mostrar solo los cencos asignados");
@@ -996,7 +996,7 @@ public class UsersDAO extends BaseDAO{
                         
             int rowAffected = psupdate.executeUpdate();
             if (rowAffected == 1){
-                System.out.println("[UsersDAO.setPassword]usuario"
+                System.out.println(WEB_NAME+"[UsersDAO.setPassword]usuario"
                     + ", username:" +_username
                     + " actualizado OK!");
             }
@@ -1022,7 +1022,7 @@ public class UsersDAO extends BaseDAO{
     public UsuarioVO getLogin(UsuarioVO _user){
         UsuarioVO user = new UsuarioVO();
         int idPerfil=0;
-        System.err.println("[UsersDAO.getLogin]validando usuario...");
+        System.err.println(WEB_NAME + "[UsersDAO.getLogin]validando usuario...");
         try {
             String sql = "SELECT "
                 + "usr_username,"
@@ -1060,7 +1060,7 @@ public class UsersDAO extends BaseDAO{
                 + " where usr_username = '" + _user.getUsername() + "' "
                 + " and usr_password = '" + _user.getPassword() + "' "
                 + "	and usuario.estado_id = 1";
-            System.out.println("[UsersDAO.getLogin]sql: " + sql);    
+            System.out.println(WEB_NAME+"[UsersDAO.getLogin]sql: " + sql);    
             PreparedStatement stmt = dbConn.prepareStatement(sql);
             
             try {
@@ -1068,7 +1068,7 @@ public class UsersDAO extends BaseDAO{
                try {
                     // do whatever it is you want to do
                     if (rs.next()){
-                        System.out.println("[getLogin]Usuario logeado OK...");
+                        System.out.println(WEB_NAME+"[getLogin]Usuario logeado OK...");
                         user.setUsername(_user.getUsername());
                         user.setPassword(_user.getPassword());
                         user.setEstado(rs.getInt("estado_id"));
@@ -1130,7 +1130,7 @@ public class UsersDAO extends BaseDAO{
                         user.setFechasMarcacionVirtual(fechasMarcacionVirtual);
                     }else{
                         user = null;
-                        System.err.println("[UsersDAO.getLogin]"
+                        System.err.println(WEB_NAME +"[UsersDAO.getLogin]"
                             + "Usuario No existe!");
                     }
                } finally {
@@ -1140,7 +1140,7 @@ public class UsersDAO extends BaseDAO{
                stmt.close();
             }
         }catch(SQLException error){
-            System.err.println("[UsersDAO.getLogin]Error: "+error.toString());
+            System.err.println(WEB_NAME +"[UsersDAO.getLogin]Error: "+error.toString());
         }finally {
 ////            try {
 ////                System.err.println("[UsersDAO.getLogin]Cerrar conexion a la BD...");
@@ -1236,7 +1236,7 @@ public class UsersDAO extends BaseDAO{
      * @return 
      */
     public LinkedHashMap<String, ModuloSistemaVO> getModulosSistemaByEstado(int _estadoid){
-        System.out.println("[UsersDAO.getModulosSistema]inicio");
+        System.out.println(WEB_NAME+"[UsersDAO.getModulosSistema]inicio");
         LinkedHashMap<String, ModuloSistemaVO> lista =
             new LinkedHashMap<>();
         PreparedStatement ps = null;
@@ -1291,7 +1291,7 @@ public class UsersDAO extends BaseDAO{
      * @return 
      */
     public LinkedHashMap<String, ModuloSistemaVO> getModulosSistemaByPerfilUsuario(int _idPerfil){
-//        System.out.println("[UsersDAO.getModulosSistemaByPerfilUsuario]inicio");
+//        System.out.println(WEB_NAME+"[UsersDAO.getModulosSistemaByPerfilUsuario]inicio");
         LinkedHashMap<String, ModuloSistemaVO> lista =
             new LinkedHashMap<>();
         PreparedStatement ps = null;
@@ -1352,10 +1352,10 @@ public class UsersDAO extends BaseDAO{
         ) {
             
             int i = 0;
-            System.out.println("[UsersDAO.saveListUsuarios]"
+            System.out.println(WEB_NAME+"[UsersDAO.saveListUsuarios]"
                 + "items a insertar: "+_usuarios.size());
             for (UsuarioVO entity : _usuarios) {
-                System.out.println("[UsersDAO.saveListUsuarios] "
+                System.out.println(WEB_NAME+"[UsersDAO.saveListUsuarios] "
                     + "Insert usuario. "
                     + "username= " + entity.getUsername()
                     + ", nombres= " + entity.getNombres()
@@ -1377,7 +1377,7 @@ public class UsersDAO extends BaseDAO{
 
                 if (i % 50 == 0 || i == _usuarios.size()) {
                     int[] rowsAffected = statement.executeBatch(); // Execute every 1000 items.
-                    System.out.println("[UsersDAO."
+                    System.out.println(WEB_NAME+"[UsersDAO."
                         + "saveListUsuarios]filas afectadas= "+rowsAffected.length);
                 }
             }
@@ -1395,10 +1395,10 @@ public class UsersDAO extends BaseDAO{
         ) {
            
             int i = 0;
-            System.out.println("[UsersDAO.saveListCencos]"
+            System.out.println(WEB_NAME+"[UsersDAO.saveListCencos]"
                 + "items a insertar: "+_centroscosto.size());
             for (UsuarioCentroCostoVO entity : _centroscosto) {
-                System.out.println("[UsersDAO.saveListCencos] "
+                System.out.println(WEB_NAME+"[UsersDAO.saveListCencos] "
                     + "Insert usuario. "
                     + "username= " + entity.getUsername()
                     + ", centrocosto= " + entity.getCcostoId());
@@ -1414,7 +1414,7 @@ public class UsersDAO extends BaseDAO{
 
                 if (i % 50 == 0 || i == _centroscosto.size()) {
                     int[] rowsAffected = statement.executeBatch(); // Execute every 1000 items.
-                    System.out.println("[UsersDAO."
+                    System.out.println(WEB_NAME+"[UsersDAO."
                         + "saveListCencos]filas afectadas= "+rowsAffected.length);
                 }
             }
@@ -1440,7 +1440,7 @@ public class UsersDAO extends BaseDAO{
                 + "where usr_email='" + _email + "' "
                     + "and usr_username != '" + _username + "' "
                     + "and empresa_id = '" + _empresaId + "' ";
-            System.out.println("[UsersDAO.existeEmail]SQL: "+sql);
+            System.out.println(WEB_NAME+"[UsersDAO.existeEmail]SQL: "+sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,"[UsersDAO.existeEmail]");
             ps = dbConn.prepareStatement(sql);
@@ -1470,7 +1470,7 @@ public class UsersDAO extends BaseDAO{
         try {
             m_usedGlobalDbConnection = true;
             dbConn = dbLocator.getConnection(m_dbpoolName,"[UsersDAO.openDbConnection]");
-            System.out.println("[UsersDAO.openDbConnection]Conexion a bd: "+dbConn);
+            System.out.println(WEB_NAME+"[UsersDAO.openDbConnection]Conexion a bd: "+dbConn);
         } catch (DatabaseException ex) {
             System.err.println("[UsersDAO.openDbConnection]"
                 + "Error: " + ex.toString());
@@ -1482,7 +1482,7 @@ public class UsersDAO extends BaseDAO{
     */
     public void closeDbConnection(){
         try {
-            System.out.println("[UsersDAO.closeDbConnection]Cerrando conexion a la BD...");
+            System.out.println(WEB_NAME+"[UsersDAO.closeDbConnection]Cerrando conexion a la BD...");
             m_usedGlobalDbConnection = false;
             dbLocator.freeConnection(dbConn);
         } catch (Exception ex) {

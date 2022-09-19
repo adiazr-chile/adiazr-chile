@@ -13,7 +13,7 @@
 <%@page import="java.util.List"%>
 <%
     List<EmpresaVO> empresas            = (List<EmpresaVO>)session.getAttribute("empresas");
-    //System.out.println("[asignacion_turno_rotativo.jsp]empresas.size= " + empresas.size());
+    //System.out.println("[GestionFemaseWeb]asignacion_turno_rotativo.jsp]empresas.size= " + empresas.size());
     String accion = "insertUpdate";
     EmpleadoVO objEmpleado = (EmpleadoVO)request.getAttribute("empleadoSelected");
     String anioMesSelected = (String)request.getAttribute("anioMesSelected");
@@ -24,7 +24,7 @@
     String strDiasLaborales = (String)request.getAttribute("strDiasLaborales");
     String strDiasLibres = (String)request.getAttribute("strDiasLibres");
                         
-    System.out.println("[modif_asig_turno_rotativoJSP]anioMesSelected: "+anioMesSelected);
+    System.out.println("[GestionFemaseWeb]modif_asig_turno_rotativoJSP]anioMesSelected: "+anioMesSelected);
     if (anioMesSelected == null) anioMesSelected="";
     String labelRut = "";
     String labelNombre = "";
@@ -56,7 +56,7 @@
         endday = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
         auxmes--;
         if (auxmes<0) auxanio--;
-        System.out.println("[turno_rotativo.jsp]"
+        System.out.println("[GestionFemaseWeb]turno_rotativo.jsp]"
             + "startDay "+startday + ", endDay: "+endday);
     }
 	

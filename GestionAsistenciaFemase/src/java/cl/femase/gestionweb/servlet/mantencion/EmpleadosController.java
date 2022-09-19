@@ -58,7 +58,7 @@ public class EmpleadosController extends BaseServlet {
         HttpSession session = request.getSession(true);
         if (session!=null) session.removeAttribute("mensaje");else session = request.getSession();
         UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
-        System.out.println("[EmpleadosController.doGet]"
+        System.out.println(WEB_NAME+"[EmpleadosController.doGet]"
             + "param action: "+request.getParameter("action"));
         if (userConnected != null){
             setResponseHeaders(response);processRequest(request, response);
@@ -77,7 +77,7 @@ public class EmpleadosController extends BaseServlet {
         HttpSession session = request.getSession(true);
         if (session!=null) session.removeAttribute("mensaje");else session = request.getSession();
         UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
-        System.out.println("[EmpleadosController.doPost]"
+        System.out.println(WEB_NAME+"[EmpleadosController.doPost]"
             + "userConnected.nombres: " + userConnected.getUsername());
         if (userConnected != null){
             setResponseHeaders(response);processRequest(request, response);
@@ -106,29 +106,29 @@ public class EmpleadosController extends BaseServlet {
         
         //lo primero...guardar foto
         /**Obtengo los valores desde el formulario*/
-        System.out.println("[EmpleadosController.processRequest] "
+        System.out.println(WEB_NAME+"[EmpleadosController.processRequest] "
             + "Empleados - Obteniendo datos desde "
             + "formulario y guardando foto...");
         auxdata = guardarFotoEmpleado(request, auxdata.getRut(),appProperties);
-        System.out.println("[EmpleadosController.processRequest]"
+        System.out.println(WEB_NAME+"[EmpleadosController.processRequest]"
             + "full object: "+auxdata.toString());
         
         EmpleadoVO auxdataRequest = getFormValues(request);
         
-        System.out.println("[EmpleadosController.processRequest]"
+        System.out.println(WEB_NAME+"[EmpleadosController.processRequest]"
             + "Full datos desde formulario(guarda foto): " + auxdata.toString());
-        System.out.println("[EmpleadosController.processRequest]"
+        System.out.println(WEB_NAME+"[EmpleadosController.processRequest]"
             + "Full datos desde formulario(parseo request): " + auxdataRequest.toString());
         String action = auxdata.getAction();
         
         if (action == null) action = auxdataRequest.getAction();
         if (auxdata.getAction2() != null) {
-            System.out.println("[EmpleadosController.processRequest]"
+            System.out.println(WEB_NAME+"[EmpleadosController.processRequest]"
                 + "auxdata.getAction2() = "+auxdata.getAction2());
             action = "update";
         }
         
-        System.out.println("[EmpleadosController.processRequest]"
+        System.out.println(WEB_NAME+"[EmpleadosController.processRequest]"
             + "param action is: "+action);
         if(action != null){
             List<EmpleadoVO> listaObjetos = new ArrayList<>();
@@ -179,13 +179,13 @@ public class EmpleadosController extends BaseServlet {
                 session.setAttribute("empresaId", request.getParameter("empresaId"));
             }
             
-            System.out.println("[EmpleadosController.processRequest]"
+            System.out.println(WEB_NAME+"[EmpleadosController.processRequest]"
                 + "jtSorting= " + jtSorting
                 +", startPageIndex: " + startPageIndex
                 +", numRecordsPerPage: " + numRecordsPerPage);
             
             if (action.compareTo("list")==0) {
-                System.out.println("[EmpleadosController.processRequest]"
+                System.out.println(WEB_NAME+"[EmpleadosController.processRequest]"
                     + "Mostrando empleados...");
                 
                 try{
@@ -194,7 +194,7 @@ public class EmpleadosController extends BaseServlet {
                     int cencoid=-1;
                     
                     String paramCencoID         = request.getParameter("cencoId");
-                    System.out.println("[EmpleadosController.processRequest]"
+                    System.out.println(WEB_NAME+"[EmpleadosController.processRequest]"
                         + "token param 'cencoID'= " + paramCencoID);
                     if (paramCencoID != null && paramCencoID.compareTo("-1") != 0){
                         StringTokenizer tokenCenco  = new StringTokenizer(paramCencoID, "|");
@@ -207,7 +207,7 @@ public class EmpleadosController extends BaseServlet {
                         }
                     }
                     
-                    System.out.println("[EmpleadosController.processRequest]Mostrar empleados. "
+                    System.out.println(WEB_NAME+"[EmpleadosController.processRequest]Mostrar empleados. "
                         + "Empresa: " + empresaid
                         + ", depto: " + deptoid
                         + ", cenco: " + cencoid
@@ -260,7 +260,7 @@ public class EmpleadosController extends BaseServlet {
                                 auxdataRequest.getApePaterno(), 
                                 auxdataRequest.getApeMaterno(),
                                 auxdataRequest.getEstado());
-                        System.out.println("[EmpleadosController.processRequest] num empleados: "+empleadosCount);
+                        System.out.println(WEB_NAME+"[EmpleadosController.processRequest] num empleados: "+empleadosCount);
                         
                         //agregar evento al log.
                         
@@ -290,7 +290,7 @@ public class EmpleadosController extends BaseServlet {
                     
                     session.setAttribute("empleados|"+userConnected.getUsername(), listaObjetos);
                     
-                    System.out.println("[EmpleadosController.processRequest]FIN LISTAR EMPLEADOS - Mantenedor - Empleados\n\n");
+                    System.out.println(WEB_NAME+"[EmpleadosController.processRequest]FIN LISTAR EMPLEADOS - Mantenedor - Empleados\n\n");
                     response.getWriter().print(listData);
                     
                     //request.getRequestDispatcher("/mantenedores/mantenedoresFrmSet.jsp").forward(request, response);
@@ -301,7 +301,7 @@ public class EmpleadosController extends BaseServlet {
                 }   
             }else if (action.compareTo("create") == 0) {
                     boolean rutValido = Utilidades.validarRut(auxdata.getRut());
-                    System.out.println("[EmpleadosController.processRequest]"
+                    System.out.println(WEB_NAME+"[EmpleadosController.processRequest]"
                         + "Insertar empleado, "
                         + "Rut= " + auxdata.getRut()
                         +", valido? "+rutValido);
@@ -310,7 +310,7 @@ public class EmpleadosController extends BaseServlet {
                     if (rutValido){
                         auxdata.setPathFoto(auxdata.getPathFoto());
                         //insertar empleado
-                        System.out.println("[EmpleadosController.processRequest]"
+                        System.out.println(WEB_NAME+"[EmpleadosController.processRequest]"
                             + "Insertar empleado. "
                             + "Rut valido, Insertar en base de datos. "
                             + "Empresa: " + auxdata.getEmpresa().getId()
@@ -332,7 +332,7 @@ public class EmpleadosController extends BaseServlet {
                         }
                         listaObjetos.add(auxdata);
                     }else{
-                        System.out.println("[EmpleadosController.processRequest]"
+                        System.out.println(WEB_NAME+"[EmpleadosController.processRequest]"
                             + "Insertar empleado, "
                             + "Rut no valido. NO INSERTAR");
                         strMsg = "Rut No valido...";
@@ -349,7 +349,7 @@ public class EmpleadosController extends BaseServlet {
                     session.setAttribute("empleados", 
                         empleadosBp.getEmpleados(null,null,-1,-1,null,null,null,null,0,0,"empl_rut"));
                     
-                    System.out.println("[EmpleadosController.processRequest]FIN CREAR EMPLEADO - Mensaje a mostrar: " + strMsg);
+                    System.out.println(WEB_NAME+"[EmpleadosController.processRequest]FIN CREAR EMPLEADO - Mensaje a mostrar: " + strMsg);
                     
                     if (strMsg.indexOf("duplicate key") > 0 || strMsg.indexOf("llave duplicada") > 0){
                         /**
@@ -377,14 +377,14 @@ public class EmpleadosController extends BaseServlet {
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                     String newFechaInicioContrato = sdf.format(auxdata.getFechaInicioContrato());
                     String oldFechaInicioContrato = sdf.format(currentEmpleado.getFechaInicioContrato());
-                    System.out.println("[GestionFemase.EmpleadosController]"
+                    System.out.println(WEB_NAME+"[GestionFemase.EmpleadosController]"
                         + "Actualizar Empleado. "
                         + "RUN (PK): " + auxdata.getRut()
                         + ", empresaId: " + currentEmpleado.getEmpresaId()   
                         + ", fechaInicioContratoNEW: " + newFechaInicioContrato
                         + ", fechaInicioContratoOLD: " + oldFechaInicioContrato);
                                         
-                    System.out.println("[GestionFemase.EmpleadosController]"
+                    System.out.println(WEB_NAME+"[GestionFemase.EmpleadosController]"
                         + "Actualizar Empleado. "
                         + "Num ficha: " + auxdata.getRut()
                         + ", rut: " + auxdata.getCodInterno()
@@ -417,13 +417,13 @@ public class EmpleadosController extends BaseServlet {
                             Date dteNewFechaInicioContrato = auxdata.getFechaInicioContrato();
                             Date dteOldFechaInicioContrato = currentEmpleado.getFechaInicioContrato();
                             
-                            System.out.println("[GestionFemase.EmpleadosController]"
+                            System.out.println(WEB_NAME+"[GestionFemase.EmpleadosController]"
                                 + "Se ha modificado la fecha de inicio de contrato. "
                                 + "Fecha inicio contrato actual: " + dteOldFechaInicioContrato
                                 + ", fecha inicio contrato nueva: " + dteNewFechaInicioContrato);
                             
                             if (dteNewFechaInicioContrato.after(dteOldFechaInicioContrato)){
-                                System.out.println("[GestionFemase.EmpleadosController]"
+                                System.out.println(WEB_NAME+"[GestionFemase.EmpleadosController]"
                                     + "Toda la historia del empleado "
                                     + "(desde la la nueva fecha de contrato hacia atrás)"
                                     + " sera movida a tablas historicas "
@@ -434,7 +434,7 @@ public class EmpleadosController extends BaseServlet {
                                         newFechaInicioContrato, auxdata.getCodInterno());
                                 strMsg += " Registros movidos a tablas historicas.";
                             }else{
-                                System.out.println("[GestionFemase.EmpleadosController]"
+                                System.out.println(WEB_NAME+"[GestionFemase.EmpleadosController]"
                                     + "No se ha modificado la fecha de inicio de contrato. "
                                     + "No hay traspaso a tablas historicas.");
                             }
@@ -443,7 +443,7 @@ public class EmpleadosController extends BaseServlet {
                         session.setAttribute("empresaSelected", auxdata.getEmpresa().getId());
                         session.setAttribute("deptoSelected", auxdata.getDepartamento().getId());
                         session.setAttribute("cencoSelected", ""+auxdata.getCentroCosto().getId());
-                        System.out.println("[EmpleadosController.processRequest]FIN Modificar EMPLEADO - Mensaje a mostrar: " + strMsg);
+                        System.out.println(WEB_NAME+"[EmpleadosController.processRequest]FIN Modificar EMPLEADO - Mensaje a mostrar: " + strMsg);
                     
                         RequestDispatcher view = 
                             request.getRequestDispatcher("/DestineServlet?mensaje="+strMsg);
@@ -456,7 +456,7 @@ public class EmpleadosController extends BaseServlet {
                         response.getWriter().print(error);
                     }
             }else if (action.compareTo("edit") == 0) {  
-                    System.out.println("[EmpleadosController.processRequest]"
+                    System.out.println(WEB_NAME+"[EmpleadosController.processRequest]"
                         + "Editar Data Empleado rut: "+auxdataRequest.getRut());
                     listaObjetos = 
                         empleadoBp.getEmpleados("-1", 
@@ -470,7 +470,7 @@ public class EmpleadosController extends BaseServlet {
                             0, 
                             10, 
                             "empl_rut ASC");
-                    System.out.println("[EmpleadosController.processRequest]"
+                    System.out.println(WEB_NAME+"[EmpleadosController.processRequest]"
                         + "Editar Data Empleado. Path images: "+appProperties.getImagesPath());
                     EmpleadoVO toedit = listaObjetos.get(0);
                     request.removeAttribute("empleado");
@@ -482,7 +482,7 @@ public class EmpleadosController extends BaseServlet {
             }
 //            else if (action.compareTo("delete") == 0) {  
 //                    //Delete record
-//                    System.out.println("Eliminando accion- "
+//                    System.out.println(WEB_NAME+"Eliminando accion- "
 //                            + "Id: " + auxdata.getId()
 //                            +", label: "+ auxdata.getLabel());
 //                    try{
@@ -506,7 +506,7 @@ public class EmpleadosController extends BaseServlet {
             String _runEmpleado){
         TraspasoHistoricoDAO historicosDao = new TraspasoHistoricoDAO();
         
-        System.out.println("[EmpleadosController.traspasoHistorico]"
+        System.out.println(WEB_NAME+"[EmpleadosController.traspasoHistorico]"
             + "EmpresaId: " + _empresaId 
             + ", fecha tope para realizar traspaso a historico: " + _fecha
             + ", run empleado: " + _runEmpleado);
@@ -517,10 +517,10 @@ public class EmpleadosController extends BaseServlet {
         
         MaintenanceVO resultado = historicosDao.insertMarcasHistoricas(_empresaId, _fecha, _runEmpleado);
         int affectedRows = resultado.getFilasAfectadas();
-        System.out.println("[EmpleadosController.traspasoHistorico]"
+        System.out.println(WEB_NAME+"[EmpleadosController.traspasoHistorico]"
             + "marcas traspasadas a historico: " + affectedRows);
         if (affectedRows > 0) {
-            System.out.println("[EmpleadosController.traspasoHistorico]"
+            System.out.println(WEB_NAME+"[EmpleadosController.traspasoHistorico]"
                 + "Eliminando marcas recien traspasadas a historico");
             historicosDao.deleteMarcas(_empresaId, _fecha, _runEmpleado);
             hashFilasAfectadas.put("Marcas", resultado);
@@ -528,10 +528,10 @@ public class EmpleadosController extends BaseServlet {
         
         resultado = historicosDao.insertMarcasRechazosHistoricas(_empresaId, _fecha, _runEmpleado);
         affectedRows = resultado.getFilasAfectadas();
-        System.out.println("[EmpleadosController.traspasoHistorico]"
+        System.out.println(WEB_NAME+"[EmpleadosController.traspasoHistorico]"
             + "marcas rechazadas traspasadas a historico: " + affectedRows);
         if (affectedRows > 0) {
-            System.out.println("[EmpleadosController.traspasoHistorico]"
+            System.out.println(WEB_NAME+"[EmpleadosController.traspasoHistorico]"
                 + "Eliminando marcas rechazadas recien traspasadas a historico");
             historicosDao.deleteMarcasRechazadas(_empresaId, _fecha, _runEmpleado);
             hashFilasAfectadas.put("Marcas Rechazadas", resultado);
@@ -539,10 +539,10 @@ public class EmpleadosController extends BaseServlet {
         
         resultado = historicosDao.insertAusenciasHistoricas(_empresaId, _fecha, _runEmpleado);
         affectedRows = resultado.getFilasAfectadas();
-        System.out.println("[EmpleadosController.traspasoHistorico]"
+        System.out.println(WEB_NAME+"[EmpleadosController.traspasoHistorico]"
             + "ausencias traspasadas a historico: " + affectedRows);
         if (affectedRows > 0) {
-            System.out.println("[EmpleadosController.traspasoHistorico]"
+            System.out.println(WEB_NAME+"[EmpleadosController.traspasoHistorico]"
                 + "Eliminando ausencias (detalle_ausencia) recien traspasadas a historico");
             historicosDao.deleteAusencias(_empresaId, _fecha, _runEmpleado);
             hashFilasAfectadas.put("Ausencias", resultado);
@@ -550,10 +550,10 @@ public class EmpleadosController extends BaseServlet {
         
         resultado = historicosDao.insertDetalleAsistenciaHistoricos(_empresaId, _fecha, _runEmpleado);
         affectedRows = resultado.getFilasAfectadas();
-        System.out.println("[EmpleadosController.traspasoHistorico]"
+        System.out.println(WEB_NAME+"[EmpleadosController.traspasoHistorico]"
             + "calculos de asistencia (detalle_asistencia) traspasados a historico: " + affectedRows);
         if (affectedRows > 0) {
-            System.out.println("[EmpleadosController.traspasoHistorico]"
+            System.out.println(WEB_NAME+"[EmpleadosController.traspasoHistorico]"
                 + "Eliminando calculos de asistencia recien traspasados a historico");
             historicosDao.deleteDetalleAsistencia(_empresaId, _fecha, _runEmpleado);
             hashFilasAfectadas.put("Calculos de Asistencia", resultado);
@@ -568,7 +568,7 @@ public class EmpleadosController extends BaseServlet {
     private EmpleadoVO getFormValues(HttpServletRequest _request){
         EmpleadoVO auxdata=new EmpleadoVO();
         
-        System.out.println("[EmpleadosController.getFormValues]"
+        System.out.println(WEB_NAME+"[EmpleadosController.getFormValues]"
             + "Obteniendo datos desde formulario "
             + "(getFormValues)...");
         /*-------------*/
@@ -579,14 +579,14 @@ public class EmpleadosController extends BaseServlet {
 //            String paramValue="";
 //            byte[] str;
             SimpleDateFormat fechaFormat = new SimpleDateFormat("dd-MM-yyyy");
-            System.out.println("[EmpleadosController.getFormValues]isMultipart?" + isMultipart);
-            System.out.println("Mantenedor - Empleados - "
+            System.out.println(WEB_NAME+"[EmpleadosController.getFormValues]isMultipart?" + isMultipart);
+            System.out.println(WEB_NAME+"Mantenedor - Empleados - "
                 + "getFormValues. "
                 + "Param action= "+_request.getParameter("action"));
             //if(!isMultipart){
-            System.out.println("[EmpleadosController.getFormValues]"
+            System.out.println(WEB_NAME+"[EmpleadosController.getFormValues]"
                 + "rescatar parametros desde formulario comun (usar getParameter)...");
-            System.out.println("[EmpleadosController.getFormValues]"
+            System.out.println(WEB_NAME+"[EmpleadosController.getFormValues]"
                 + "param action= " + _request.getParameter("action")
                 + ", param rutEmpleado= " + _request.getParameter("rutEmpleado")
                 + ", param nombres= " + _request.getParameter("nombres")
@@ -606,7 +606,7 @@ public class EmpleadosController extends BaseServlet {
                 auxdata.setNombres(_request.getParameter("nombres"));
             }
             if (_request.getParameter("turno") != null && _request.getParameter("turno").compareTo("-1") != 0){
-                System.out.println("[EmpleadosController."
+                System.out.println(WEB_NAME+"[EmpleadosController."
                     + "getFormValues] -1- seteo de turno: "+ _request.getParameter("turno"));
                 auxdata.setIdTurno(Integer.parseInt(_request.getParameter("turno")));
             }
@@ -638,7 +638,7 @@ public class EmpleadosController extends BaseServlet {
                 try{
                     auxcenco.setId(Integer.parseInt(_request.getParameter("cencoId")));
                 }catch(NumberFormatException nfex){
-                    System.out.println("[EmpleadosController."
+                    System.out.println(WEB_NAME+"[EmpleadosController."
                         + "getFormValues]set empresa,depto y cenco, "
                         + "usando combo unico CENCO");
                     StringTokenizer tokencenco=new StringTokenizer(_request.getParameter("cencoId"), "|");
@@ -657,7 +657,7 @@ public class EmpleadosController extends BaseServlet {
                 
             if (_request.getParameter("idTurno") != null 
                     && _request.getParameter("idTurno").compareTo("-1") != 0){
-                System.out.println("[EmpleadosController."
+                System.out.println(WEB_NAME+"[EmpleadosController."
                     + "getFormValues] -2- seteo de turno: "+ _request.getParameter("idTurno"));
                 auxdata.setIdTurno(Integer.parseInt(_request.getParameter("idTurno")));
             }
@@ -723,7 +723,7 @@ public class EmpleadosController extends BaseServlet {
                 auxdata.setContratoIndefinido(contratoIndefinido);
             }
                 
-            System.out.println("[EmpleadosController.getFormValues]"
+            System.out.println(WEB_NAME+"[EmpleadosController.getFormValues]"
                 + "contratoIndefinido?: " + auxdata.isContratoIndefinido()
                 + ",fechaFinContrato?: " + auxdata.getFechaTerminoContratoAsStr()    
             );
@@ -736,7 +736,7 @@ public class EmpleadosController extends BaseServlet {
                 auxdata.setModificarEmpresaDeptoCenco(modificarEmpresaDeptoCenco);
             }
                 
-            System.out.println("[EmpleadosController.getFormValues]"
+            System.out.println(WEB_NAME+"[EmpleadosController.getFormValues]"
                 + "parameter jtStartIndex= " + _request.getParameter("jtStartIndex")
                 + ",parameter jtPageSize= " + _request.getParameter("jtPageSize")
                 + ",parameter jtSorting= " + _request.getParameter("jtSorting"));
@@ -762,7 +762,7 @@ public class EmpleadosController extends BaseServlet {
 ////            byte[] str = new byte[_stream.available()];
 ////            _stream.read(str);
 ////            paramValue = new String(str,"UTF8");
-////            System.out.println("[EmpleadosController."
+////            System.out.println(WEB_NAME+"[EmpleadosController."
 ////                + "getValueFromMultipart]paramName= " + str 
 ////                + ", paramValue= "+paramValue);
 ////        }catch(IOException ioex){
@@ -791,7 +791,7 @@ public class EmpleadosController extends BaseServlet {
                     if (item.isFormField()) {
                         String fieldValue = item.getString("UTF-8"); // <-- HERE
                         if (fieldValue != null) fieldValue = fieldValue.trim();
-                        System.out.println("[EmpleadosController.guardarFotoEmpleado]"
+                        System.out.println(WEB_NAME+"[EmpleadosController.guardarFotoEmpleado]"
                             + "fieldName: " + fieldName
                             +", fieldValue: " + fieldValue);
                         switch (item.getFieldName()) {
@@ -958,7 +958,7 @@ public class EmpleadosController extends BaseServlet {
                         }        
                         //fin procesar campos normales    
                     }else{
-                        System.out.println("[EmpleadosController.guardarFotoEmpleado]procesar campo file."
+                        System.out.println(WEB_NAME+"[EmpleadosController.guardarFotoEmpleado]procesar campo file."
                             + "Guardar foto como archivo (upload)");
                         //String normalFieldName = item.getFieldName();
                         String fileName = item.getName();
@@ -967,9 +967,9 @@ public class EmpleadosController extends BaseServlet {
                         long sizeInBytes = item.getSize();
                         File uploadedFile = new File(pathUploadedFiles + File.separator + fileName);
                         item.write(uploadedFile);
-                        System.out.println("[EmpleadosController.guardarFotoEmpleado]File Size: " + sizeInBytes + " bytes");
-                        System.out.println("[EmpleadosController.guardarFotoEmpleado]File Path: " + uploadedFile.getPath());
-                        System.out.println("[EmpleadosController.guardarFotoEmpleado]fileName: " + fileName);
+                        System.out.println(WEB_NAME+"[EmpleadosController.guardarFotoEmpleado]File Size: " + sizeInBytes + " bytes");
+                        System.out.println(WEB_NAME+"[EmpleadosController.guardarFotoEmpleado]File Path: " + uploadedFile.getPath());
+                        System.out.println(WEB_NAME+"[EmpleadosController.guardarFotoEmpleado]fileName: " + fileName);
                         auxdata.setPathFoto(fileName);
                     }
                 }

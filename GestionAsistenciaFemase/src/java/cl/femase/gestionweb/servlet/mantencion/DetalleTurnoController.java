@@ -78,7 +78,7 @@ public class DetalleTurnoController extends BaseServlet {
         DetalleTurnosBp auxnegocio=new DetalleTurnosBp(appProperties);
 
         if(request.getParameter("action") != null){
-            System.out.println("[DetalleTurnoController]"
+            System.out.println(WEB_NAME+"[DetalleTurnoController]"
                 + "action is: " + request.getParameter("action"));
             List<DetalleTurnoVO> listaObjetos = new ArrayList<DetalleTurnoVO>();
             String action=(String)request.getParameter("action");
@@ -96,7 +96,7 @@ public class DetalleTurnoController extends BaseServlet {
             List<String> parameterNames = new ArrayList<>(request.getParameterMap().keySet());
             Iterator<String> paramsIterator = parameterNames.iterator();
             while (paramsIterator.hasNext()) {
-                System.out.println("----->Param Name: " + paramsIterator.next());
+                System.out.println(WEB_NAME+"----->Param Name: " + paramsIterator.next());
             }
             
             //Fetch Data from User Table
@@ -123,7 +123,7 @@ public class DetalleTurnoController extends BaseServlet {
                        
             //objeto usado para update/insert
             DetalleTurnoVO auxdata = new DetalleTurnoVO();
-            System.out.println("cl.femase.gestionweb.servlet."
+            System.out.println(WEB_NAME+"cl.femase.gestionweb.servlet."
                 + "mantencion.DetalleTurnoController."
                 + "processRequest()."
                 + "param idTurno= "+request.getParameter("idTurno")
@@ -152,7 +152,7 @@ public class DetalleTurnoController extends BaseServlet {
             }
             
             if (action.compareTo("list")==0) {
-                System.out.println("Mantenedor - Detalle Turno - "
+                System.out.println(WEB_NAME+"Mantenedor - Detalle Turno - "
                     + "mostrando detalle turno...");
                 try{
                     listaObjetos = auxnegocio.getDetalleTurno(filtroIdTurno, 
@@ -176,7 +176,7 @@ public class DetalleTurnoController extends BaseServlet {
                     listData="{\"Result\":\"OK\",\"Records\":" + 
                         listData+",\"TotalRecordCount\": " + 
                         objectsCount + "}";
-                    System.out.println("[DetalleTurnoController]json data: "+listData);
+                    System.out.println(WEB_NAME+"[DetalleTurnoController]json data: "+listData);
                     response.getWriter().print(listData);
                     //request.getRequestDispatcher("/mantenedores/mantenedoresFrmSet.jsp").forward(request, response);
                 }catch(Exception ex){
@@ -185,7 +185,7 @@ public class DetalleTurnoController extends BaseServlet {
                     ex.printStackTrace();
                 }   
             }else if (action.compareTo("create") == 0) {
-                    System.out.println("Mantenedor - DetalleTurnos - Insertar Detalle Turno...");
+                    System.out.println(WEB_NAME+"Mantenedor - DetalleTurnos - Insertar Detalle Turno...");
                     MaintenanceVO doCreate = auxnegocio.insert(auxdata, resultado);					
                     listaObjetos.add(auxdata);
 
@@ -195,7 +195,7 @@ public class DetalleTurnoController extends BaseServlet {
                     String listData="{\"Result\":\"OK\",\"Record\":"+json+"}";											
                     response.getWriter().print(listData);
             }else if (action.compareTo("update") == 0) {  
-                    System.out.println("Mantenedor - Turnos - Actualizar Detalle Turno...");
+                    System.out.println(WEB_NAME+"Mantenedor - Turnos - Actualizar Detalle Turno...");
                     try{
                         MaintenanceVO doUpdate = auxnegocio.update(auxdata, resultado);
                         listaObjetos.add(auxdata);
@@ -210,7 +210,7 @@ public class DetalleTurnoController extends BaseServlet {
                         response.getWriter().print(error);
                     }
             }else if (action.compareTo("delete") == 0) {  
-                    System.out.println("Mantenedor - Turnos - Elimina Detalle Turno. "
+                    System.out.println(WEB_NAME+"Mantenedor - Turnos - Elimina Detalle Turno. "
                         + "IdTurno: "+auxdata.getIdTurno()
                         + ". codDia: "+auxdata.getCodDia());
                     try{

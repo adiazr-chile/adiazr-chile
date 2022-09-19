@@ -60,7 +60,7 @@ public class AdmUsuarioServlet extends BaseServlet {
             
             String action=request.getParameter("action");
             
-            System.out.println("[gestionFemase."
+            System.out.println(WEB_NAME+"[gestionFemase."
                 + "AdmUsuarioServlet]"
                 + "Accion: " + action);
             //lista de perfiles
@@ -102,7 +102,7 @@ public class AdmUsuarioServlet extends BaseServlet {
             if (action != null && action.compareTo("startpage")==0){
                 //cargar info del usuario y lista de perfiles de usuario
                 if (username!=null){
-                    System.out.println("[gestionFemase."
+                    System.out.println(WEB_NAME+"[gestionFemase."
                         + "AdmUsuarioServlet]editar info "
                         + "para el usuario: "+username);
                     UsuarioVO userToEdit = usuarioBp.getUsuario(username);
@@ -114,23 +114,23 @@ public class AdmUsuarioServlet extends BaseServlet {
                     //seteo cencos usuario 
                     request.setAttribute("cencos_usuario", lstCencosUsuario);
                 }else{
-                    System.out.println("[gestionFemase."
+                    System.out.println(WEB_NAME+"[gestionFemase."
                         + "AdmUsuarioServlet]crear usuario...");
                 }
                 request.getRequestDispatcher("/mantencion/usuario_form.jsp").forward(request, response);//frameset
             }else if (action != null && action.compareTo("update") == 0){
-                    System.out.println("[gestionFemase."
+                    System.out.println(WEB_NAME+"[gestionFemase."
                         + "AdmUsuarioServlet]modificar datos del usuario");
                    
                     //actualizar info propia del usuario
                     MaintenanceVO result = usuarioBp.update(userdata, resultado);
                     if (result.isThereError()){
-                        System.out.println("[gestionFemase."
+                        System.out.println(WEB_NAME+"[gestionFemase."
                             + "AdmUsuarioServlet]Error al modificar usuario: "+result.getMsg());
                         request.setAttribute("mensaje", result.getMsg());
                         request.getRequestDispatcher("/mantencion/usuario_form.jsp").forward(request, response);//frameset
                     }else{
-                        System.out.println("[gestionFemase."
+                        System.out.println(WEB_NAME+"[gestionFemase."
                             + "AdmUsuarioServlet]delete cencos del usuario");
                         //eliminar cencos existentes antes de insertar los cencos al usuario
                         usuarioBp.deleteCencos(username);
@@ -144,7 +144,7 @@ public class AdmUsuarioServlet extends BaseServlet {
                         if (cencos != null){
                             for (int x = 0; x < cencos.length;x++){
                                 cencoKey = cencos[x];
-                                System.out.println("[gestionFemase."
+                                System.out.println(WEB_NAME+"[gestionFemase."
                                     + "AdmUsuarioServlet]insert. "
                                     + "cencoKey seleccionado["+x+"] = "+cencoKey);
                                 StringTokenizer tokenCenco = new StringTokenizer(cencoKey, "|");
@@ -163,29 +163,29 @@ public class AdmUsuarioServlet extends BaseServlet {
                                         auxDeptoId);
                                 usuarioBp.insertCenco(newUserCenco);
                             }     
-                        }else System.out.println("[gestionFemase."
+                        }else System.out.println(WEB_NAME+"[gestionFemase."
                                 + "AdmUsuarioServlet]Update."
                                 + "No hay cencos seleccionados");
 
-                        System.out.println("[gestionFemase.AdmUsuarioServlet]usuario modificado"
+                        System.out.println(WEB_NAME+"[gestionFemase.AdmUsuarioServlet]usuario modificado"
                             + "cargar lista de usuarios...");
 
                         response.sendRedirect(request.getContextPath()+"/mantencion/usuarios.jsp");
                         //request.getRequestDispatcher("/mantencion/usuarios.jsp").forward(request, response);//frameset
                     }
             }else if (action != null && action.compareTo("create") == 0){
-                    System.out.println("[gestionFemase."
+                    System.out.println(WEB_NAME+"[gestionFemase."
                         + "AdmUsuarioServlet]Crear nuevo usuario");
                    
                     //insertar info propia del usuario
                     MaintenanceVO result = usuarioBp.insert(userdata, resultado);
                     if (result.isThereError()){
-                        System.out.println("[gestionFemase.AdmUsuarioServlet]"
+                        System.out.println(WEB_NAME+"[gestionFemase.AdmUsuarioServlet]"
                             + "Error al crear usuario: "+result.getMsg());
                         request.setAttribute("mensaje", result.getMsg());
                         request.getRequestDispatcher("/mantencion/usuario_form.jsp").forward(request, response);//frameset
                     }else{
-                        System.out.println("[gestionFemase.AdmUsuarioServlet]"
+                        System.out.println(WEB_NAME+"[gestionFemase.AdmUsuarioServlet]"
                             + "delete cencos del usuario");
                         //eliminar cencos existentes antes de insertar los cencos al usuario
                         usuarioBp.deleteCencos(username);
@@ -199,7 +199,7 @@ public class AdmUsuarioServlet extends BaseServlet {
                         if (cencos != null){
                             for (int x = 0; x < cencos.length;x++){
                                 cencoKey = cencos[x];
-                                System.out.println("[gestionFemase.AdmUsuarioServlet]insert. "
+                                System.out.println(WEB_NAME+"[gestionFemase.AdmUsuarioServlet]insert. "
                                     + "cencoKey seleccionado["+x+"] = "+cencoKey);
                                 StringTokenizer tokenCenco = new StringTokenizer(cencoKey, "|");
                                 while (tokenCenco.hasMoreTokens()){
@@ -218,10 +218,10 @@ public class AdmUsuarioServlet extends BaseServlet {
                                 usuarioBp.insertCenco(newUserCenco);
                             }//fin iteracion de cencos     
                         }else {
-                            System.out.println("[gestionFemase.AdmUsuarioServlet]Insert."
+                            System.out.println(WEB_NAME+"[gestionFemase.AdmUsuarioServlet]Insert."
                                 + "No hay cencos seleccionados");
                         }
-                        System.out.println("[gestionFemase."
+                        System.out.println(WEB_NAME+"[gestionFemase."
                             + "AdmUsuarioServlet]usuario modificado"
                             + "cargar lista de usuarios...");
 

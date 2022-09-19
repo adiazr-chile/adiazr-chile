@@ -51,7 +51,7 @@ public class AsignacionTurnosCencosServlet extends BaseServlet {
         HttpSession session = request.getSession(true);
         if (session!=null) session.removeAttribute("mensaje");else session = request.getSession();
         UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
-        System.out.println("[AsignacionTurnosCencosServlet]doGet...");
+        System.out.println(WEB_NAME+"[AsignacionTurnosCencosServlet]doGet...");
         if (userConnected != null){
             setResponseHeaders(response);processRequest(request, response);
         }else{
@@ -69,7 +69,7 @@ public class AsignacionTurnosCencosServlet extends BaseServlet {
         HttpSession session = request.getSession(true);
         if (session!=null) session.removeAttribute("mensaje");else session = request.getSession();
         UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
-        System.out.println("[AsignacionTurnosCencosServlet]doPost...");
+        System.out.println(WEB_NAME+"[AsignacionTurnosCencosServlet]doPost...");
         if (userConnected != null){
             setResponseHeaders(response);processRequest(request, response);
         }else{
@@ -101,7 +101,7 @@ public class AsignacionTurnosCencosServlet extends BaseServlet {
  
         TurnosBp turnosBp      = new TurnosBp(appProperties);
         if(request.getParameter("action") != null){
-            System.out.println("[AsignacionTurnosCencosServlet]"
+            System.out.println(WEB_NAME+"[AsignacionTurnosCencosServlet]"
                 + "action is: " + request.getParameter("action"));
             String action=(String)request.getParameter("action");
             //Gson gson = new Gson();
@@ -119,7 +119,7 @@ public class AsignacionTurnosCencosServlet extends BaseServlet {
             String deptoId  = null;
             String cencoId  = "-1";
             String paramCencoID = request.getParameter("cencoId");
-            System.out.println("[AsignacionTurnosCencosServlet]"
+            System.out.println(WEB_NAME+"[AsignacionTurnosCencosServlet]"
                 + "token param 'cencoID'= " + paramCencoID);
             if (paramCencoID != null && paramCencoID.compareTo("-1") != 0){
                 StringTokenizer tokenCenco  = new StringTokenizer(paramCencoID, "--");
@@ -139,7 +139,7 @@ public class AsignacionTurnosCencosServlet extends BaseServlet {
                     CentroCostoVO infocenco = cencosBp.getCentroCostoByKey(deptoId, Integer.parseInt(cencoId));
                     labelCenco = infocenco.getNombre();
                 }
-                System.out.println("[AsignacionTurnosCencosServlet]"
+                System.out.println(WEB_NAME+"[AsignacionTurnosCencosServlet]"
                     + "mostrar turnos asignados a "
                     + "EmpresaId: " + empresaId
                     + ", deptoId: " + deptoId
@@ -176,7 +176,7 @@ public class AsignacionTurnosCencosServlet extends BaseServlet {
                     ex.printStackTrace();
                 }   
             }else if (action.compareTo("guardar_asignacion") == 0) {
-                    System.out.println("[AsignacionTurnosCencosServlet]"
+                    System.out.println(WEB_NAME+"[AsignacionTurnosCencosServlet]"
                         + "Guardar asignacion de turnos a centro de costo");
                     String[] turnosSelected = request.getParameterValues("list2");
                     String labelCenco = (String)session.getAttribute("labelCenco");
@@ -236,7 +236,7 @@ public class AsignacionTurnosCencosServlet extends BaseServlet {
                 filePath = appProperties.getPathExportedFiles()+
                     File.separator+
                     userConnected.getUsername()+"_asignacion_turnos.csv";
-                System.out.println("[AsignacionTurnosCencosServlet."
+                System.out.println(WEB_NAME+"[AsignacionTurnosCencosServlet."
                     + "exportResultadosToCSV]filePath:" + filePath);
                 FileWriter filewriter = new FileWriter(filePath);
                 outfile     = new PrintWriter(filewriter);

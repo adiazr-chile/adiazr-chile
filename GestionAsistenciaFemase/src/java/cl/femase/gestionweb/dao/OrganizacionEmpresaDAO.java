@@ -65,7 +65,7 @@ public class OrganizacionEmpresaDAO extends BaseDAO{
                     + "and centro_costo.estado_id=1 "
                     + "and organizacion_empresa.empresa_id='"+_empresaId+"'";
             
-            System.out.println("[OrganizacionempresaDAO.getDepartamentos]"
+            System.out.println(WEB_NAME+"[OrganizacionempresaDAO.getDepartamentos]"
                     + "empresa: "+_empresaId);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,"[OrganizacionEmpresaDAO.getDepartamentos]");
@@ -121,7 +121,7 @@ public class OrganizacionEmpresaDAO extends BaseDAO{
                     + "and organizacion_empresa.empresa_id='"+_empresaId+"' "
                     + "AND organizacion_empresa.depto_id='"+_deptoId+"'";
             
-            System.out.println("[OrganizacionempresaDAO.getCentrosCosto]"
+            System.out.println(WEB_NAME+"[OrganizacionempresaDAO.getCentrosCosto]"
                 + "empresa: "+_empresaId+", depto: "+_deptoId);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,"[OrganizacionEmpresaDAO.getCentrosCosto]");
@@ -196,7 +196,7 @@ public class OrganizacionEmpresaDAO extends BaseDAO{
             if (_jtPageSize > 0){
                 sql += " limit "+_jtPageSize + " offset "+_jtStartIndex;
             }
-            System.out.println("[OrganizacionempresaDAO.getOrganizacion]"
+            System.out.println(WEB_NAME+"[OrganizacionempresaDAO.getOrganizacion]"
                     + "empresa: "+_empresaId+", sql: "+sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,"[OrganizacionEmpresaDAO.getOrganizacion]");
@@ -301,7 +301,7 @@ public class OrganizacionEmpresaDAO extends BaseDAO{
                         
             int filasAfectadas = insert.executeUpdate();
             if (filasAfectadas == 1){
-                System.out.println("[insert organizacion_empresa]"
+                System.out.println(WEB_NAME+"[insert organizacion_empresa]"
                     + " id_empresa: "+_data.getEmpresaId()
                     + ", id_depto: "+_data.getDeptoId()
                     + ", id_cenco: "+_data.getCencoId()
@@ -358,7 +358,7 @@ public class OrganizacionEmpresaDAO extends BaseDAO{
                         
             int filasAfectadas = delete.executeUpdate();
             if (filasAfectadas == 1){
-                System.out.println("[delete organizacion_empresa]"
+                System.out.println(WEB_NAME+"[delete organizacion_empresa]"
                     + " id_empresa: "+_data.getEmpresaId()
                     + ", id_depto: "+_data.getDeptoId()
                     + ", id_cenco: "+_data.getCencoId()

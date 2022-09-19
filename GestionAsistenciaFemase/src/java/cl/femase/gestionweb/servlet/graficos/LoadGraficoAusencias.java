@@ -64,7 +64,7 @@ public class LoadGraficoAusencias extends BaseServlet {
             String paramAction = request.getParameter("action");
             String paramAnioMes = request.getParameter("aniomes");
             String paramCencoId = request.getParameter("cencoId");
-            System.out.println("[GestionWeb.LoadGraficoAusencias]"
+            System.out.println(WEB_NAME+"[GestionWeb.LoadGraficoAusencias]"
                 + "parametros. "
                 + "Action: " + paramAction
                 + ", anioMes: " + paramAnioMes
@@ -77,7 +77,7 @@ public class LoadGraficoAusencias extends BaseServlet {
                 if (intMesActual < 10) strMesActual = "0" + intMesActual;
                 String anioMes = calendarHoy.get(Calendar.YEAR) + "-" + strMesActual;
                 //String anioMes = "2018-07";
-                System.out.println("[GestionWeb.LoadGraficoAusencias]"
+                System.out.println(WEB_NAME+"[GestionWeb.LoadGraficoAusencias]"
                     + "anioMes a consultar: " + anioMes);
                 
                 List<GraficoAusenciaVO> ausenciasMes;
@@ -103,7 +103,7 @@ public class LoadGraficoAusencias extends BaseServlet {
             
             responseObj.put("empdetails", empdetails);
             
-            System.out.println("[GestionWeb.LoadGraficoAusencias]response string: "+ responseObj.toString());
+            System.out.println(WEB_NAME+"[GestionWeb.LoadGraficoAusencias]response string: "+ responseObj.toString());
                     
             out.print(responseObj.toString());
         } catch (JSONException ex) {
@@ -128,7 +128,7 @@ public class LoadGraficoAusencias extends BaseServlet {
         cal22.setTime(today);
         cal22.add(Calendar.DAY_OF_MONTH, -365);
         Date anioAtras = cal22.getTime();
-        System.out.println("[LoadGraficoAusencias."
+        System.out.println(WEB_NAME+"[LoadGraficoAusencias."
             + "getListaMeses]anioAtras: " + anioAtras 
             + ", hoy: " + today);
         
@@ -137,7 +137,7 @@ public class LoadGraficoAusencias extends BaseServlet {
         YearMonth anioMesEnd = YearMonth.parse(anioMesFormat.format(today), formatter);
 
         while(anioMesStart.isBefore(anioMesEnd) || anioMesStart.equals(anioMesEnd)) {
-            System.out.println("[LoadGraficoAusencias."
+            System.out.println(WEB_NAME+"[LoadGraficoAusencias."
                 + "getListaMeses]Itera aniomes: "+ anioMesStart.format(formatter));
             listaMeses.add(anioMesStart.format(formatter));
             anioMesStart = anioMesStart.plusMonths(1);
@@ -152,7 +152,7 @@ public class LoadGraficoAusencias extends BaseServlet {
         cal22.setTime(today1);
         cal22.add(Calendar.DAY_OF_MONTH, -30);
         Date today30 = cal22.getTime();
-        System.out.println("[LoadGraficoAusencias]"
+        System.out.println(WEB_NAME+"[LoadGraficoAusencias]"
             + "today: " + today1 + "today-30: " + today30);
         LocalDate startDate = today30.toInstant()
             .atZone(ZoneId.systemDefault())
@@ -164,7 +164,7 @@ public class LoadGraficoAusencias extends BaseServlet {
         List<LocalDate> listaFechas = getDatesBetween(startDate, endDate);
         //Iterator iterator = listaFechas.iterator();
 //        while(iterator.hasNext()) {
-//           System.out.println("fecha: " + iterator.next());
+//           System.out.println(WEB_NAME+"fecha: " + iterator.next());
 //        }
         return listaFechas;
     }

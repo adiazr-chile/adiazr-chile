@@ -78,7 +78,7 @@ public class ModulosSistemaController extends BaseServlet {
         ModulosSistemaBp modulosBp=new ModulosSistemaBp(appProperties);
 
         if(request.getParameter("action") != null){
-            System.out.println("---->action is: " + request.getParameter("action"));
+            System.out.println(WEB_NAME+"---->action is: " + request.getParameter("action"));
             List<ModuloSistemaVO> lstModulos = new ArrayList<ModuloSistemaVO>();
             String action=(String)request.getParameter("action");
             Gson gson = new Gson();
@@ -141,9 +141,9 @@ public class ModulosSistemaController extends BaseServlet {
             }
             
             if (action.compareTo("list")==0) {
-                    System.out.println("Mantenedor - Modulos - mostrando modulos sistema...");
+                    System.out.println(WEB_NAME+"Mantenedor - Modulos - mostrando modulos sistema...");
                     try{
-//                        System.out.println("Ordenar por columna "+jtSorting);
+//                        System.out.println(WEB_NAME+"Ordenar por columna "+jtSorting);
                         lstModulos = modulosBp.getModulosSistema(nombre, 
                                 startPageIndex, 
                                 numRecordsPerPage, 
@@ -171,7 +171,7 @@ public class ModulosSistemaController extends BaseServlet {
                         ex.printStackTrace();
                     }   
             }else if (action.compareTo("create") == 0) {
-                        System.out.println("Mantenedor - Modulos - Insertar modulo...");
+                        System.out.println(WEB_NAME+"Mantenedor - Modulos - Insertar modulo...");
                         MaintenanceVO doCreate = modulosBp.insert(moduloobj, resultado);					
                         lstModulos.add(moduloobj);
 
@@ -181,7 +181,7 @@ public class ModulosSistemaController extends BaseServlet {
                         String listData="{\"Result\":\"OK\",\"Record\":"+json+"}";											
                         response.getWriter().print(listData);
             }else if (action.compareTo("update") == 0) {  
-                    System.out.println("Mantenedor - Modulos - Actualizar modulo sistema...");
+                    System.out.println(WEB_NAME+"Mantenedor - Modulos - Actualizar modulo sistema...");
                     try{
                         MaintenanceVO doUpdate = modulosBp.update(moduloobj, resultado);
                         lstModulos.add(moduloobj);
@@ -199,7 +199,7 @@ public class ModulosSistemaController extends BaseServlet {
             }
             /*else if (action.compareTo("delete") == 0) {  
                     //Delete record
-                    System.out.println("Eliminando conversion de contrato- "
+                    System.out.println(WEB_NAME+"Eliminando conversion de contrato- "
                             + "symbol: " + contractRelation.getSymbol()
                             +", base: "+ contractRelation.getBase());
                     try{

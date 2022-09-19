@@ -566,7 +566,7 @@ public class TraspasoHistoricoDAO extends BaseDAO{
                     + "and empresa_cod='" + _empresaId + "' "
                     + "and (rut_empleado in (" + _cadenaRuts + ") )"; 
             
-            System.out.println("[GestionFemase."
+            System.out.println(WEB_NAME+"[GestionFemase."
                 + "TraspasoHistoricosFemaseJob.getCountMarcas]Sql: " + sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,
@@ -615,7 +615,7 @@ public class TraspasoHistoricoDAO extends BaseDAO{
                     + "and empresa_cod='" + _empresaId + "' "
                     + "and (rut_empleado in (" + _cadenaRuts + ") )"; 
             
-            System.out.println("[GestionFemase."
+            System.out.println(WEB_NAME+"[GestionFemase."
                 + "TraspasoHistoricosFemaseJob.getCountMarcasRechazadas]Sql: " + sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,
@@ -665,7 +665,7 @@ public class TraspasoHistoricoDAO extends BaseDAO{
                     + "and fecha_ingreso::date <= '" + _fecha + "' "
                     + "and (empleado.empl_rut in (" + _cadenaRuts + ") )"; 
             
-            System.out.println("[GestionFemase."
+            System.out.println(WEB_NAME+"[GestionFemase."
                 + "TraspasoHistoricosFemaseJob.getCountAusencias]Sql: " + sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,
@@ -714,7 +714,7 @@ public class TraspasoHistoricoDAO extends BaseDAO{
                     + "and empresa_id='" + _empresaId + "' "
                     + "and (rut_empleado in (" + _cadenaRuts + ") )";
             
-            System.out.println("[GestionFemase."
+            System.out.println(WEB_NAME+"[GestionFemase."
                 + "TraspasoHistoricosFemaseJob.getCountAsistencia]Sql: " + sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,
@@ -759,7 +759,7 @@ public class TraspasoHistoricoDAO extends BaseDAO{
                 + "where fecha_hora::date <= '" + _fecha + "' "
                     + "and empresa_id_source='" + _empresaId + "'"; 
             
-            System.out.println("[GestionFemase."
+            System.out.println(WEB_NAME+"[GestionFemase."
                 + "TraspasoHistoricosFemaseJob.getCountLogEventos]Sql: " + sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,
@@ -789,7 +789,7 @@ public class TraspasoHistoricoDAO extends BaseDAO{
         try {
             dbLocator.freeConnection(dbConn);
         } catch (Exception ex) {
-            System.out.println("[GestionFemase."
+            System.out.println(WEB_NAME+"[GestionFemase."
                 + "TraspasoHistoricoDAO."
                 + "closeConnection]Error al cerrar conexion: " + ex.toString());
         }
@@ -832,7 +832,7 @@ public class TraspasoHistoricoDAO extends BaseDAO{
                 + " where " + columnaEmpresa + " = '" + _empresaId + "' "
                 + "order by fecha_hora_traspaso desc limit 1";
             
-            System.out.println("[GestionFemase."
+            System.out.println(WEB_NAME+"[GestionFemase."
                 + "TraspasoHistoricosFemaseJob.getUltimoRegistroHistorico]Sql: " + sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,
@@ -917,7 +917,7 @@ public class TraspasoHistoricoDAO extends BaseDAO{
                     break;    
             }
 
-            System.out.println("[GestionFemase."
+            System.out.println(WEB_NAME+"[GestionFemase."
                 + "TraspasoHistoricosFemaseJob.getVistaPreviaTraspasoHistorico]Sql: " + strSql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,

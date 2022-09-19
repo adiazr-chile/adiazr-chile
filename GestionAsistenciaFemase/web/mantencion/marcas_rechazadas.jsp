@@ -15,12 +15,12 @@
     List<UsuarioCentroCostoVO> cencos   = (List<UsuarioCentroCostoVO>)session.getAttribute("cencos_empleado"); 
     String startDate = (String)session.getAttribute("startDate");
     String endDate = (String)session.getAttribute("endDate");
-    System.out.println("[marcas_rechazadas.jsp]"
+    System.out.println("[GestionFemaseWeb]marcas_rechazadas.jsp]"
         + "startDate= "+startDate
         + ",endDate= "+endDate);
     String paramEmpresa = (String)request.getAttribute("empresa");
     String paramRut     = (String)request.getAttribute("rut_empleado");
-    System.out.println("[marcas_rechazadas.jsp]"
+    System.out.println("[GestionFemaseWeb]marcas_rechazadas.jsp]"
         + "paramEmpresa= " + paramEmpresa
         + ",paramRut= " + paramRut);
 %>

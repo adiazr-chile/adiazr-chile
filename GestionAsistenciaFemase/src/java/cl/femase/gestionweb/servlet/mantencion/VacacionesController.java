@@ -89,7 +89,7 @@ public class VacacionesController extends BaseServlet {
         EmpleadosBp empleadosbp=new EmpleadosBp(appProperties);
         
         if(request.getParameter("action") != null){
-            System.out.println("[VacacionesController]"
+            System.out.println(WEB_NAME+"[VacacionesController]"
                 + "action is: " + request.getParameter("action")
                 + ", tipo: " + request.getParameter("tipo"));
             List<VacacionesVO> listaObjetos = new ArrayList<VacacionesVO>();
@@ -126,7 +126,7 @@ public class VacacionesController extends BaseServlet {
             //objeto usado para update/insert
             VacacionesVO infoVacacion = new VacacionesVO();
             
-            System.out.println("[VacacionesController]"
+            System.out.println(WEB_NAME+"[VacacionesController]"
                 + "empresaId: " + request.getParameter("empresaId")
                 + ", empresaKey: " + request.getParameter("empresaKey")
                 + ", rut empleado: " + request.getParameter("rutEmpleado"));
@@ -217,7 +217,7 @@ public class VacacionesController extends BaseServlet {
                     String paramEmpresa = null;
                     String paramDepto   = null;
                     String cencoId      = "";
-                    System.out.println("[VacacionesController]"
+                    System.out.println(WEB_NAME+"[VacacionesController]"
                         + "token param 'cencoID'= " + paramCencoID);
                     if (paramCencoID != null && paramCencoID.compareTo("-1") != 0){
                         StringTokenizer tokenCenco  = new StringTokenizer(paramCencoID, "|");
@@ -229,7 +229,7 @@ public class VacacionesController extends BaseServlet {
                             }
                         }
                     }
-                    System.out.println("[VacacionesController]"
+                    System.out.println(WEB_NAME+"[VacacionesController]"
                         + "Listar info vacaciones. "
                         + "empresa: " + paramEmpresa
                         +", depto: " + paramDepto
@@ -254,7 +254,7 @@ public class VacacionesController extends BaseServlet {
                                 request.getParameter("rutEmpleado"),
                                 Integer.parseInt(cencoId));
                         }else{
-                            System.out.println("[VacacionesController]"
+                            System.out.println(WEB_NAME+"[VacacionesController]"
                                 + "Listar info vacaciones para empleados desvinculados. "
                                 + "empresa: " + paramEmpresa
                                 +", depto: " + paramDepto
@@ -293,7 +293,7 @@ public class VacacionesController extends BaseServlet {
                     ex.printStackTrace();
                 }   
             }else if (action.compareTo("create") == 0) {
-                    System.out.println("[VacacionesController]"
+                    System.out.println(WEB_NAME+"[VacacionesController]"
                         + "Insertar nuevo registro info vacaciones...");
                     
                     EmpleadoVO infoEmpleado = empleadosbp.getEmpleado(infoVacacion.getEmpresaId(), 
@@ -323,7 +323,7 @@ public class VacacionesController extends BaseServlet {
                     resultado.setDeptoId(infoEmpleado.getDepartamento().getId());
                     resultado.setCencoId(infoEmpleado.getCentroCosto().getId());
                     
-                    System.out.println("[VacacionesController]"
+                    System.out.println(WEB_NAME+"[VacacionesController]"
                         + "Actualizar info vacaciones. "
                         + "empresa_id: " + infoVacacion.getEmpresaId()
                         + ", rutEmpleado: " + infoVacacion.getRutEmpleado());
@@ -352,7 +352,7 @@ public class VacacionesController extends BaseServlet {
                     resultado.setDeptoId(infoEmpleado.getDepartamento().getId());
                     resultado.setCencoId(infoEmpleado.getCentroCosto().getId());
                     
-                    System.out.println("[VacacionesController]"
+                    System.out.println(WEB_NAME+"[VacacionesController]"
                         + "Eliminar info vacaciones. "
                         + "empresa_id: " + infoVacacion.getEmpresaId()
                         + ", rutEmpleado: " + infoVacacion.getRutEmpleado());
@@ -374,7 +374,7 @@ public class VacacionesController extends BaseServlet {
                     String paramDeptoId = request.getParameter("depto_id");
                     String paramCencoId = request.getParameter("cenco_id");
                     String rutEmpleado = request.getParameter("rutEmpleado");
-                    System.out.println("[DetalleAusenciaController]"
+                    System.out.println(WEB_NAME+"[DetalleAusenciaController]"
                         + "Calcular saldo dias de vacaciones. "
                         + "empresa_id= " + paramEmpresa
                         + ", depto_id= " + paramDeptoId
@@ -384,13 +384,13 @@ public class VacacionesController extends BaseServlet {
                     if (paramCencoId.compareTo("") != 0)
                         intCencoId = Integer.parseInt(paramCencoId); 
                     
-                    System.out.println("[VacacionesController]"
+                    System.out.println(WEB_NAME+"[VacacionesController]"
                         + "Calcular saldo dias de vacaciones. "
                         + "empresa_id: " + paramEmpresa
                         + ", cencoId: " + paramCencoId     
                         + ", rutEmpleado: " + rutEmpleado);
                     if (rutEmpleado != null && rutEmpleado.compareTo("-1") != 0){
-                        System.out.println("[VacacionesController]"
+                        System.out.println(WEB_NAME+"[VacacionesController]"
                             + "Calcular saldo dias de vacaciones "
                             + "para un solo empleado.");
                         vacacionesBp.calculaDiasVacaciones(userConnected.getUsername(),
@@ -400,7 +400,7 @@ public class VacacionesController extends BaseServlet {
                         
                         DetalleAusenciaBp detAusenciaBp = new DetalleAusenciaBp(appProperties);
                         
-                        System.out.println("[VacacionesController]"
+                        System.out.println(WEB_NAME+"[VacacionesController]"
                             + "Actualizar saldos de vacaciones "
                             + "en tabla detalle_ausencia "
                             + "(usar nueva funcion setsaldodiasvacacionesasignadas). "
@@ -408,7 +408,7 @@ public class VacacionesController extends BaseServlet {
                         detAusenciaBp.actualizaSaldosVacaciones(rutEmpleado);
                         
                     }else{
-                        System.out.println("[VacacionesController]"
+                        System.out.println(WEB_NAME+"[VacacionesController]"
                             + "Calcular saldo dias de vacaciones "
                             + "para todos los empleados del centro de costo. "
                             + "empresa_id: " + paramEmpresa
@@ -428,7 +428,7 @@ public class VacacionesController extends BaseServlet {
                     String paramDeptoId = request.getParameter("depto_id");
                     String paramCencoId = request.getParameter("cenco_id");
                     String rutEmpleado = request.getParameter("rutEmpleado");
-                    System.out.println("[DetalleAusenciaController]"
+                    System.out.println(WEB_NAME+"[DetalleAusenciaController]"
                         + "Calcular vacaciones para empleados desvinculados. "
                         + "empresa_id= " + paramEmpresa
                         + ", depto_id= " + paramDeptoId
@@ -438,13 +438,13 @@ public class VacacionesController extends BaseServlet {
                     if (paramCencoId.compareTo("") != 0)
                         intCencoId = Integer.parseInt(paramCencoId); 
                     
-                    System.out.println("[VacacionesController]"
+                    System.out.println(WEB_NAME+"[VacacionesController]"
                         + "Calcular vacaciones (desvinculado). "
                         + "empresa_id: " + paramEmpresa
                         + ", cencoId: " + paramCencoId     
                         + ", rutEmpleado: " + rutEmpleado);
                     if (rutEmpleado != null && rutEmpleado.compareTo("-1") != 0){
-                        System.out.println("[VacacionesController]"
+                        System.out.println(WEB_NAME+"[VacacionesController]"
                             + "Calcular vacaciones "
                             + "para un solo empleado desvinculado.");
                         vacacionesBp.calculaDiasVacaciones(userConnected.getUsername(),
@@ -453,7 +453,7 @@ public class VacacionesController extends BaseServlet {
                             parametrosSistema);
                         DetalleAusenciaBp detAusenciaBp = new DetalleAusenciaBp(appProperties);
                         
-                        System.out.println("[VacacionesController]"
+                        System.out.println(WEB_NAME+"[VacacionesController]"
                             + "Actualizar saldos de vacaciones "
                             + "en tabla detalle_ausencia "
                             + "(usar nueva funcion setsaldodiasvacacionesasignadas). "
@@ -461,7 +461,7 @@ public class VacacionesController extends BaseServlet {
                         detAusenciaBp.actualizaSaldosVacaciones(rutEmpleado);
                         
                     }else{
-                        System.out.println("[VacacionesController]"
+                        System.out.println(WEB_NAME+"[VacacionesController]"
                             + "Calcular saldo dias de vacaciones "
                             + "para todos los empleados DESVINCULADOS del centro de costo. "
                             + "empresa_id: " + paramEmpresa

@@ -51,14 +51,14 @@ import org.simplejavamail.email.AttachmentResource;
  *  
  */
 
-public class ValidaMarcasEntradaFMCJob implements Job {
+public class ValidaMarcasEntradaFMCJob extends BaseJobs implements Job {
 
     GetPropertyValues m_properties = new GetPropertyValues();
     
     @Override
     public void execute(JobExecutionContext arg0) throws JobExecutionException {
         MarcasBp marcasBp = new MarcasBp(new PropertiesVO());
-        System.out.println("\n[GestionFemase."
+        System.out.println(WEB_NAME+"[GestionFemase."
             + "ValidaMarcasEntradaFMCJob]"
             + "Validando marcas de de entrada - " + new java.util.Date());
         Calendar mycal = Calendar.getInstance();
@@ -88,7 +88,7 @@ public class ValidaMarcasEntradaFMCJob implements Job {
         ejecucion.setProcesoId(38);
         ejecucion.setFechaHoraInicioEjecucion(sdf.format(start));
         
-        System.out.println("[GestionFemase." 
+        System.out.println(WEB_NAME+"[GestionFemase." 
             + "ValidaMarcasEntradaFMCJob]empresa:" + empresaId
             + ", cencos seleccionados: " + cencosSelected
             + ", notificarCencos: " + notifyCencos);
@@ -99,7 +99,7 @@ public class ValidaMarcasEntradaFMCJob implements Job {
             int intCencoId = Integer.parseInt(strCencoId);
             String empleadosCencoJsonMsg = 
                 marcasBp.getEmpleadosSinMarcaEntradaDiaJson(empresaId, diaSemana, "12:00:00", intCencoId);
-            System.out.println("[GestionFemase."
+            System.out.println(WEB_NAME+"[GestionFemase."
                 + "ValidaMarcasEntradaFMCJob]"
                 + "Json Empleados sin marca entrada cencoID ["+intCencoId +"]:"+ empleadosCencoJsonMsg);
             EmpleadoJsonVO[] empleadosSinEntradaDia = gson.fromJson(empleadosCencoJsonMsg, 
@@ -107,7 +107,7 @@ public class ValidaMarcasEntradaFMCJob implements Job {
             if (empleadosSinEntradaDia!=null && empleadosSinEntradaDia.length>0){
                 procesaEmpleadosCenco(empleadosSinEntradaDia, notifyCencos);
             }else{
-                System.out.println("[GestionFemase."
+                System.out.println(WEB_NAME+"[GestionFemase."
                 + "ValidaMarcasEntradaFMCJob]"
                 + "No hay Empleados sin marca entrada para el cencoID ["+intCencoId +"]");
             }
@@ -164,7 +164,7 @@ public class ValidaMarcasEntradaFMCJob implements Job {
                 String cencoEmail   = keytoken.nextToken();
                 ArrayList<EmpleadoJsonVO> empleados = entry.getValue();
                 String csvSinMarcasDia = outputPath + File.separator + "sinMarcaDia_"+cencoNombre + ".csv";
-                System.out.println("\n[GestionFemase."
+                System.out.println(WEB_NAME+"[GestionFemase."
                     + "ValidaMarcasEntradaFMCJob.procesaEmpleadosCenco]"
                     + "Csv Salida:" + csvSinMarcasDia);
                 createCsvFile(empleados, csvSinMarcasDia);
@@ -176,7 +176,7 @@ public class ValidaMarcasEntradaFMCJob implements Job {
                             MailSender.sendWithAttachment(csvSinMarcasDia, fromLabel, 
                                 fromMail, cencoEmail, 
                                 cencoNombre + " - Marcacion no efectuada", mailBody);
-                            System.out.println("[GestionFemase."
+                            System.out.println(WEB_NAME+"[GestionFemase."
                                 + "ValidaMarcasEntradaFMCJob]Correo enviado exitosamente...");
                         } catch (Exception ex) {
                             System.err.println("[GestionFemase."
@@ -201,14 +201,14 @@ public class ValidaMarcasEntradaFMCJob implements Job {
             }
             
             if (!attachList.isEmpty()){
-                System.out.println("[GestionFemase."
+                System.out.println(WEB_NAME+"[GestionFemase."
                     + "ValidaMarcasEntradaFMCJob]"
                     + "Enviando correo al admin, "
                     + "con todos los CSV, correo: " + m_properties.getKeyValue("mailAdmin"));
                 MailSender.send(attachList, fromLabel, 
                     fromMail, m_properties.getKeyValue("mailAdmin"), 
                     "Validacion Marcas (Control Interno)", mailBody);
-                System.out.println("[GestionFemase."
+                System.out.println(WEB_NAME+"[GestionFemase."
                     + "ValidaMarcasEntradaFMCJob]"
                     + "Correo enviado exitosamente...");
             }
@@ -228,7 +228,7 @@ public class ValidaMarcasEntradaFMCJob implements Job {
         ) {
             if (_empleados.size()>0) {
                 EmpleadoJsonVO aux1= _empleados.get(0);
-                System.out.println("\n[GsonExamples]Generar CSV para cenco " 
+                System.out.println(WEB_NAME+"[GsonExamples]Generar CSV para cenco " 
                     + aux1.getCenco_nombre());    
             }
             

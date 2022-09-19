@@ -95,7 +95,7 @@ public class MarcacionVirtualDAO extends BaseDAO{
 //            
 //            int filasAfectadas = insert.executeUpdate();
 //            if (filasAfectadas == 1){
-//                System.out.println("[insert]def marcacion_virtual"
+//                System.out.println(WEB_NAME+"[insert]def marcacion_virtual"
 //                    + ", empresaId:" + _data.getEmpresaId()
 //                    + ", rutEmpleado:" + _data.getRutEmpleado()    
 //                    + ", username:" + _data.getUsername()    
@@ -133,10 +133,10 @@ public class MarcacionVirtualDAO extends BaseDAO{
 //        ) {
 //            
 //            int i = 0;
-//            System.out.println("[MarcacionVirtualDAO.insertList]"
+//            System.out.println(WEB_NAME+"[MarcacionVirtualDAO.insertList]"
 //                + "items a insertar: " + _asignaciones.size());
 //            for (MarcacionVirtualVO entity : _asignaciones) {
-//                System.out.println("[MarcacionVirtualDAO.insertList] "
+//                System.out.println(WEB_NAME+"[MarcacionVirtualDAO.insertList] "
 //                    + "Insert asignacion marcacion virtual. "
 //                    + "EmpresaId= " + entity.getEmpresaId()
 //                    + ", rut empleado= " + entity.getRutEmpleado()
@@ -152,7 +152,7 @@ public class MarcacionVirtualDAO extends BaseDAO{
 //
 //                if (i % 50 == 0 || i == _asignaciones.size()) {
 //                    int[] rowsAffected = statement.executeBatch(); // Execute every 1000 items.
-//                    System.out.println("[MarcacionVirtualDAO.insertList]"
+//                    System.out.println(WEB_NAME+"[MarcacionVirtualDAO.insertList]"
 //                        + "filas afectadas= " + rowsAffected.length);
 //                }
 //            }
@@ -169,10 +169,10 @@ public class MarcacionVirtualDAO extends BaseDAO{
 //            PreparedStatement statement = dbConn.prepareStatement(SQL_DELETE_MARCACIONVIRTUAL);
 //        ) {
 //            int i = 0;
-//            System.out.println("[MarcacionVirtualDAO.deleteList]"
+//            System.out.println(WEB_NAME+"[MarcacionVirtualDAO.deleteList]"
 //                + "items a insertar: " + _asignaciones.size());
 //            for (MarcacionVirtualVO entity : _asignaciones) {
-//                System.out.println("[MarcacionVirtualDAO.deleteList] "
+//                System.out.println(WEB_NAME+"[MarcacionVirtualDAO.deleteList] "
 //                    + "Delete asignacion marcacion virtual. "
 //                    + "EmpresaId= " + entity.getEmpresaId()
 //                    + ", rut empleado= " + entity.getRutEmpleado());
@@ -186,7 +186,7 @@ public class MarcacionVirtualDAO extends BaseDAO{
 //
 //                if (i % 50 == 0 || i == _asignaciones.size()) {
 //                    int[] rowsAffected = statement.executeBatch(); // Execute every 1000 items.
-//                    System.out.println("[MarcacionVirtualDAO.deleteList]"
+//                    System.out.println(WEB_NAME+"[MarcacionVirtualDAO.deleteList]"
 //                        + "filas afectadas= " + rowsAffected.length);
 //                }
 //            }
@@ -452,7 +452,7 @@ public class MarcacionVirtualDAO extends BaseDAO{
                 sql += " limit "+_jtPageSize + " offset "+_jtStartIndex;
             }
             
-            System.out.println("[MarcacionVirtualDAO."
+            System.out.println(WEB_NAME+"[MarcacionVirtualDAO."
                 + "getRegistros]sql: "+sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,
@@ -579,11 +579,11 @@ public class MarcacionVirtualDAO extends BaseDAO{
                 "[MarcacionVirtualDAO.saveAsignacionList]");
             PreparedStatement statement = dbConn.prepareStatement(SQL_INSERT_ASIGNACION);
             int i = 0;
-            System.out.println("[MarcacionVirtualDAO.saveAsignacionList]"
+            System.out.println(WEB_NAME+"[MarcacionVirtualDAO.saveAsignacionList]"
                 + "items a insertar: " + _asignaciones.size());
             for (MarcacionVirtualVO asignacion : _asignaciones) {
                 if (asignacion.getRutEmpleado().compareTo("TODOS") != 0){    
-                    System.out.println("[MarcacionVirtualDAO.saveAsignacionList]"
+                    System.out.println(WEB_NAME+"[MarcacionVirtualDAO.saveAsignacionList]"
                         + "Inserta registro tabla marcacion_virtual:"
                         + "empresaId [" + asignacion.getEmpresaId() + "]" 
                         + ", rutEmpleado [" + asignacion.getRutEmpleado() + "]"
@@ -622,7 +622,7 @@ public class MarcacionVirtualDAO extends BaseDAO{
 
                     if (i % 50 == 0 || i == _asignaciones.size()) {
                         int[] rowsAffected = statement.executeBatch(); // Execute every 1000 items.
-                        System.out.println("[MarcacionVirtualDAO."
+                        System.out.println(WEB_NAME+"[MarcacionVirtualDAO."
                             + "saveAsignacionList]"
                             + "filas afectadas= "+rowsAffected.length);
                     }

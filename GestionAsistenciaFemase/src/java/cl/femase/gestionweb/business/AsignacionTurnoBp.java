@@ -13,7 +13,7 @@ import java.util.List;
  *
  * @author Alexander
  */
-public class AsignacionTurnoBp {
+public class AsignacionTurnoBp  extends BaseBp{
 
     /**
      *
@@ -152,7 +152,7 @@ public class AsignacionTurnoBp {
             int _idTurnoSeleccionado, 
             String _userName){
         
-        System.out.println("[AsignacionTurnoBp."
+        System.out.println(WEB_NAME+"[AsignacionTurnoBp."
             + "validaTurnoEmpleado]"
             + "empresaId: " + _empresaId
             + ", rutEmpleado: " + _rutEmpleado
@@ -162,7 +162,7 @@ public class AsignacionTurnoBp {
         asignacion.setUsername(_userName);
         
         int idTurnoActual = asignacionDao.getTurnoActual(_empresaId, _rutEmpleado);
-        System.out.println("[AsignacionTurnoBp."
+        System.out.println(WEB_NAME+"[AsignacionTurnoBp."
             + "validaTurnoEmpleado]"
             + "empresaId: " + _empresaId
             + ", rutEmpleado: " + _rutEmpleado
@@ -171,7 +171,7 @@ public class AsignacionTurnoBp {
         
         if (idTurnoActual == -99){
             //No hay turno asignado. Insertar
-            System.out.println("[AsignacionTurnoBp."
+            System.out.println(WEB_NAME+"[AsignacionTurnoBp."
                 + "validaTurnoEmpleado]No hay turno asignado. Insertar nueva asignacion");
             asignacion.setEmpresaId(_empresaId);
             asignacion.setRutEmpleado(_rutEmpleado);
@@ -188,7 +188,7 @@ public class AsignacionTurnoBp {
             */
             if (_idTurnoSeleccionado != idTurnoActual){
                 //a- Setear 'turno_asignacion'.'fecha_hasta' = fecha de modificacion del empleado (vencer turno actual)
-                System.out.println("[AsignacionTurnoBp."
+                System.out.println(WEB_NAME+"[AsignacionTurnoBp."
                     + "validaTurnoEmpleado]"
                     + "Setear 'turno_asignacion'.'fecha_hasta' = fecha_hora_actual (vencer turno actual)");
                 asignacion.setEmpresaId(_empresaId);
@@ -196,7 +196,7 @@ public class AsignacionTurnoBp {
                 asignacion.setIdTurno(idTurnoActual);
                 asignacionDao.venceTurno(asignacion);
                 
-                System.out.println("[AsignacionTurnoBp."
+                System.out.println(WEB_NAME+"[AsignacionTurnoBp."
                     + "validaTurnoEmpleado]"
                     + "insertar el nuevo turno asignado en tabla 'turno_asignacion'.");
                 //b- Se debe insertar el nuevo turno en turno_asignacion. 

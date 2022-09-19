@@ -15,7 +15,7 @@
     List<UsuarioCentroCostoVO> cencos   = (List<UsuarioCentroCostoVO>)session.getAttribute("cencos_empleado"); 
     String startDate = (String)session.getAttribute("startDate");
     String endDate = (String)session.getAttribute("endDate");
-    System.out.println("[detalle_asistencia_hist.jsp]"
+    System.out.println("[GestionFemaseWeb]detalle_asistencia_hist.jsp]"
             + "startDate= " + startDate + 
             ", endDate= " + endDate);
     

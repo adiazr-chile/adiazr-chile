@@ -18,7 +18,7 @@ import java.util.List;
  *
  * @author Alexander
  */
-public class MarcacionVirtualBp {
+public class MarcacionVirtualBp  extends BaseBp{
 
     public PropertiesVO props;
     /** para guardar los eventos de mantencion de informacion*/
@@ -114,7 +114,7 @@ public class MarcacionVirtualBp {
 
         for (MarcacionVirtualVO asignacion : _asignaciones) {
             if (asignacion.getRutEmpleado().compareTo("TODOS") != 0){
-                System.out.println("[MarcacionVirtualDAO.saveAsignacionList]"
+                System.out.println(WEB_NAME+"[MarcacionVirtualDAO.saveAsignacionList]"
                     + "Inserta registro tabla marcacion_virtual:"
                     + "empresaId [" + asignacion.getEmpresaId() + "]" 
                     + ", rutEmpleado [" + asignacion.getRutEmpleado() + "]");

@@ -17,7 +17,7 @@
         = (List<UsuarioCentroCostoVO>)session.getAttribute("cencos_empleado");
     String msgError = (String)request.getAttribute("msgerror");	
 	String cencoId = (String)request.getAttribute("cencoId");
-	System.out.println("[crear_detalle_ausencia]cencoId attribute: " + cencoId);	
+	System.out.println("[GestionFemaseWeb]crear_detalle_ausencia]cencoId attribute: " + cencoId);	
 %>
 <!DOCTYPE html>
 <html lang="en">

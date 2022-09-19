@@ -15,7 +15,7 @@ import java.util.List;
  *
  * @author Alexander
  */
-public class TipoDispositivoBp {
+public class TipoDispositivoBp  extends BaseBp{
 
     public PropertiesVO props;
     /** para guardar los eventos de mantencion de informacion*/

@@ -26,7 +26,10 @@ import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
-public class CalculaAsistenciaFemaseJob implements Job {
+/**
+* 
+*/
+public class CalculaAsistenciaFemaseJob extends BaseJobs implements Job {
 
     @Override
     public void execute(JobExecutionContext arg0) throws JobExecutionException {
@@ -43,7 +46,7 @@ public class CalculaAsistenciaFemaseJob implements Job {
         
         String startDate    = sdf.format(dteEndDate);
         String endDate      = sdf.format(mycal.getTime());
-        System.out.println("\n[GestionFemase."
+        System.out.println(WEB_NAME+"[GestionFemase."
             + "CalculaAsistenciaFemaseJob]"
             + "INICIO - Calculo de asistencia para "
             + "todos los centros de costo. "
@@ -54,7 +57,7 @@ public class CalculaAsistenciaFemaseJob implements Job {
 //        startDate ="2018-05-01";
 //        endDate ="2018-05-31";
         
-        System.out.println("[GestionFemase."
+        System.out.println(WEB_NAME+"[GestionFemase."
             + "CalculaAsistenciaFemaseJob]"
             + "Obteniendo lista de deptos para la empresaId: " + empresaId);
         
@@ -66,7 +69,7 @@ public class CalculaAsistenciaFemaseJob implements Job {
             deptosBp.getDepartamentosEmpresa(auxUser, empresaId);
         for (int i = 0; i < departamentos.size(); i++) {
             DepartamentoVO itDepto= departamentos.get(i);
-            System.out.println("[GestionFemase."
+            System.out.println(WEB_NAME+"[GestionFemase."
                 + "CalculaAsistenciaFemaseJob]Depto: " + itDepto.getId()
                 + ", nombre: " + itDepto.getNombre());
             
@@ -78,7 +81,7 @@ public class CalculaAsistenciaFemaseJob implements Job {
 
                     MaintenanceVO resultadoCalculo = new MaintenanceVO();
                     if (itCenco.getId() != -1){
-                        System.out.println("[GestionFemase."
+                        System.out.println(WEB_NAME+"[GestionFemase."
                             + "CalculaAsistenciaFemaseJob]INICIO Calculo para Cenco: " + itCenco.getId()
                             +", nombre: " + itCenco.getNombre()
                             +". startDate: " + startDate
@@ -97,7 +100,7 @@ public class CalculaAsistenciaFemaseJob implements Job {
                             itCenco.getId(), 
                             empleadosCalculo, 
                             startDate, endDate);
-                        System.out.println("[GestionFemase."
+                        System.out.println(WEB_NAME+"[GestionFemase."
                             + "CalculaAsistenciaFemaseJob]******FIN Calculo para Cenco: " + itCenco.getId()
                             +", nombre: " + itCenco.getNombre()
                             +". startDate: " + startDate
@@ -107,7 +110,7 @@ public class CalculaAsistenciaFemaseJob implements Job {
             }
         }//fin iteracion de departamentos de la empresa
         
-        System.out.println("\n[GestionFemase."
+        System.out.println(WEB_NAME+"[GestionFemase."
             + "CalculaAsistenciaFemaseJob]"
             + "FIN - Calculo de asistencia para "
             + "todos los centros de costo- " + new java.util.Date());
@@ -126,7 +129,7 @@ public class CalculaAsistenciaFemaseJob implements Job {
             String _deptoId, 
             int _cencoId){
     
-        System.out.println("[GestionFemase."
+        System.out.println(WEB_NAME+"[GestionFemase."
             + "CalculaAsistenciaFemaseJob]empresa: "+_empresaId
             +", depto: "+_deptoId
             +", cenco: "+_cencoId);

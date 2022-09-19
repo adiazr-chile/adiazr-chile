@@ -80,7 +80,7 @@ public class MarcasEventosController extends BaseServlet {
         MarcasEventosBp auxnegocio=new MarcasEventosBp(appProperties);
 
         if(request.getParameter("action") != null){
-            System.out.println("[MarcasEventosController]"
+            System.out.println(WEB_NAME+"[MarcasEventosController]"
                 + "action is: " + request.getParameter("action"));
             List<MarcasEventosVO> listaMarcas = new ArrayList<>();
             String action=(String)request.getParameter("action");
@@ -101,7 +101,7 @@ public class MarcasEventosController extends BaseServlet {
             String deptoId  = null;
             String cencoId  = "-1";
             String paramCencoID         = request.getParameter("cencoId");
-            System.out.println("[MarcasEventosController]"
+            System.out.println(WEB_NAME+"[MarcasEventosController]"
                 + "token param 'cencoID'= " + paramCencoID);
             if (paramCencoID != null && paramCencoID.compareTo("-1") != 0){
                 StringTokenizer tokenCenco  = new StringTokenizer(paramCencoID, "|");
@@ -126,7 +126,7 @@ public class MarcasEventosController extends BaseServlet {
                 numRecordsPerPage   = Integer.parseInt(request.getParameter("jtPageSize"));
             if (request.getParameter("jtSorting") != null) 
                 jtSorting   = request.getParameter("jtSorting");
-            System.out.println("MarcasEventosController." +
+            System.out.println(WEB_NAME+"MarcasEventosController." +
                 " jtSorting: " + request.getParameter("jtSorting"));
             
             if (jtSorting.contains("fechaHoraModificacion")) 
@@ -150,7 +150,7 @@ public class MarcasEventosController extends BaseServlet {
             }
             
             if (action.compareTo("list") == 0){
-                System.out.println("[MarcasEventosController]"
+                System.out.println(WEB_NAME+"[MarcasEventosController]"
                     + "mostrando marcas modificadas."+
                     "CencoId= " +cencoId
                     +", rutEmpleado= " +request.getParameter("rutEmpleado")

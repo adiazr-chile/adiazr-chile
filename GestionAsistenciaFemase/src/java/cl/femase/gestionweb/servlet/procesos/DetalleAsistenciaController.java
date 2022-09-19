@@ -120,7 +120,7 @@ public class DetalleAsistenciaController extends BaseServlet {
         resultado.setEmpresaIdSource(userConnected.getEmpresaId());
             
         if (request.getParameter("action") != null){
-            System.out.println("[DetalleAsistenciaController]"
+            System.out.println(WEB_NAME+"[DetalleAsistenciaController]"
                 + "action is: " + request.getParameter("action"));
             
             Gson gson = new Gson();
@@ -150,7 +150,7 @@ public class DetalleAsistenciaController extends BaseServlet {
             else if (jtSorting.contains("cencoId")) jtSorting = jtSorting.replaceFirst("cencoId","ccosto_nombre");
                         
             String paramCencoID         = request.getParameter("cencoId");
-            System.out.println("[DetalleAsistenciaController]"
+            System.out.println(WEB_NAME+"[DetalleAsistenciaController]"
                 + "token param 'cencoID'= " + paramCencoID);
             
             try{
@@ -181,7 +181,7 @@ public class DetalleAsistenciaController extends BaseServlet {
             session.setAttribute("startDate", startDate);
             session.setAttribute("endDate", endDate);
             
-            System.out.println("cl.femase.gestionweb.servlet."
+            System.out.println(WEB_NAME+"cl.femase.gestionweb.servlet."
                 + "procesos.DetalleAsistenciaController."
                 + "processRequest()."
                 + " Parametros. "
@@ -198,11 +198,11 @@ public class DetalleAsistenciaController extends BaseServlet {
               if (filtroEmpresa.compareTo("-1") != 0 
                         && filtroDepto.compareTo("-1") != 0
                         && filtroCenco != -1){
-                    System.out.println("[GestionFemase."
+                    System.out.println(WEB_NAME+"[GestionFemase."
                         + "DetalleAsistenciaController]"
                         + "Calcular asistencia");
                     
-                    System.out.println("[GestionFemase."
+                    System.out.println(WEB_NAME+"[GestionFemase."
                         + "DetalleAsistenciaController]"
                         + "Ejecutar Calculo de asistencia previo para "
                         + "empresa: " + filtroEmpresa
@@ -210,7 +210,7 @@ public class DetalleAsistenciaController extends BaseServlet {
                         + ", cenco: " + filtroCenco);
   
                     Date start = new Date();
-                    System.out.println("[GestionFemase."
+                    System.out.println(WEB_NAME+"[GestionFemase."
                         + "DetalleAsistenciaController]"
                         + "Ejecutar Calculo de asistencia...");
                         
@@ -223,11 +223,11 @@ public class DetalleAsistenciaController extends BaseServlet {
                             if (paramName.compareTo("rut[]") == 0){
                                 String[] paramValues = request.getParameterValues(paramName);
                                 listaStrEmpleados.addAll(Arrays.asList(paramValues));
-                                System.out.println("[GestionFemase."
+                                System.out.println(WEB_NAME+"[GestionFemase."
                                     + "DetalleAsistenciaController]"
                                     + "Calcular asistencia para los empleados seleccionados");
                                 for (String aux: listaStrEmpleados) {
-                                    System.out.println("[GestionFemase."
+                                    System.out.println(WEB_NAME+"[GestionFemase."
                                         + "DetalleAsistenciaController]"
                                         + "rut seleccionado: "+aux);
                                 }
@@ -236,7 +236,7 @@ public class DetalleAsistenciaController extends BaseServlet {
                         }
                         if (listaStrEmpleados.contains("todos")){
                             listaStrEmpleados = new ArrayList<>();
-                            System.out.println("[GestionFemase."
+                            System.out.println(WEB_NAME+"[GestionFemase."
                                 + "DetalleAsistenciaController]"
                                 + "Calcular asistencia. Todos (json)...");
                             List<EmpleadoVO> listaEmpleados = 
@@ -264,12 +264,12 @@ public class DetalleAsistenciaController extends BaseServlet {
                     * El calculo de asistencia es iniciado para cada uno de los empleados.
                     */
                     CalculoAsistenciaRunnable.setHebras(empleados);
-                    System.out.println("[GestionFemase."
+                    System.out.println(WEB_NAME+"[GestionFemase."
                         + "DetalleAsistenciaController]"
                         + "FIN CALCULO ASISTENCIA...");
 
                     CalculoAsistenciaRunnable.listaCalculosEmpleado.clear();
-                    System.out.println("[GestionFemase."
+                    System.out.println(WEB_NAME+"[GestionFemase."
                         + "DetalleAsistenciaController]"
                         + "Elimina estado ejecucion. "
                         + "Empresa: " + filtroEmpresa
@@ -281,7 +281,7 @@ public class DetalleAsistenciaController extends BaseServlet {
                     /**
                     * 
                     */
-                    System.out.println("[GestionFemase."
+                    System.out.println(WEB_NAME+"[GestionFemase."
                         + "DetalleAsistenciaController]"
                         + "Inserta registro en tabla itinerario "
                         + "ejecucion proceso. ");
@@ -306,7 +306,7 @@ public class DetalleAsistenciaController extends BaseServlet {
                         try{
                             //Get Total Record Count for Pagination
                             int objectsCount = empleados.size();
-                            System.out.println("[GestionFemase."
+                            System.out.println(WEB_NAME+"[GestionFemase."
                                 + "DetalleAsistenciaController]"
                                 + "Calcular asistencia. Size empleados: "+objectsCount);
                             //Convert Java Object to Json
@@ -319,7 +319,7 @@ public class DetalleAsistenciaController extends BaseServlet {
                             listData="{\"Result\":\"OK\",\"Records\":" + 
                                 listData+",\"TotalRecordCount\": " + 
                                 objectsCount + "}";
-                            //System.out.println("[CalHrasTrabajadasController]json data: "+listData);
+                            //System.out.println(WEB_NAME+"[CalHrasTrabajadasController]json data: "+listData);
                             response.getWriter().print(listData);
                                 //request.getRequestDispatcher("/mantenedores/mantenedoresFrmSet.jsp").forward(request, response);
                         }catch(IOException ex){
@@ -343,7 +343,7 @@ public class DetalleAsistenciaController extends BaseServlet {
                     try{
                         //Get Total Record Count for Pagination
                         int objectsCount = empleados.size();
-                        System.out.println("[GestionFemase."
+                        System.out.println(WEB_NAME+"[GestionFemase."
                             + "DetalleAsistenciaController]"
                             + "Calcular asistencia. Size empleados: "+objectsCount);
                         //Convert Java Object to Json
@@ -356,7 +356,7 @@ public class DetalleAsistenciaController extends BaseServlet {
                         listData="{\"Result\":\"OK\",\"Records\":" + 
                             listData+",\"TotalRecordCount\": " + 
                             objectsCount + "}";
-                        //System.out.println("[CalHrasTrabajadasController]json data: "+listData);
+                        //System.out.println(WEB_NAME+"[CalHrasTrabajadasController]json data: "+listData);
                         response.getWriter().print(listData);
                         //request.getRequestDispatcher("/mantenedores/mantenedoresFrmSet.jsp").forward(request, response);
                     }catch(IOException ex){
@@ -382,7 +382,7 @@ public class DetalleAsistenciaController extends BaseServlet {
                 session.setAttribute("startDate", startDateParam);
                 session.setAttribute("endDate", endDateParam);
             
-                System.out.println("cl.femase.gestionweb.servlet."
+                System.out.println(WEB_NAME+"cl.femase.gestionweb.servlet."
                     + "procesos.DetalleAsistenciaController."
                     + "processRequest(). Listar detalle_asistencia."
                     + " startDateParam= " + startDateParam
@@ -412,7 +412,7 @@ public class DetalleAsistenciaController extends BaseServlet {
                     listData="{\"Result\":\"OK\",\"Records\":" + 
                         listData+",\"TotalRecordCount\": " + 
                         objectsCount + "}";
-                    //System.out.println("[CalHrasTrabajadasController]json data: "+listData);
+                    //System.out.println(WEB_NAME+"[CalHrasTrabajadasController]json data: "+listData);
                     response.getWriter().print(listData);
                     
                     if (startDate != null && startDate.compareTo("") != 0){
@@ -452,7 +452,7 @@ public class DetalleAsistenciaController extends BaseServlet {
                     if (intMins < 10) minutosExtras = "0" + intMins;
                     String hhmmExtrasAutorizadas = 
                         horasExtras + ":" + minutosExtras;
-                    System.out.println("[cl.femase.gestionweb."
+                    System.out.println(WEB_NAME+"[cl.femase.gestionweb."
                         + "servlet.procesos."
                         + "DetalleAsistenciaController.processRequest]"
                         + "Actualizar detalle_asistencia. "
@@ -469,7 +469,7 @@ public class DetalleAsistenciaController extends BaseServlet {
                     String auxHEAutorizadas = sdf.format(mycal.getTime())+ " " +hhmmExtrasAutorizadas+":00";
                     int comparaHras = Utilidades.comparaHoras(auxHETope, auxHEAutorizadas);
                     if (comparaHras==1){
-                        System.out.println("---->Hrs extras autorizadas "
+                        System.out.println(WEB_NAME+"---->Hrs extras autorizadas "
                             + "superan el tope de hrs extras<----");
                         String error="{\"Result\":\"ERROR\",\"Message\":Hrs extras autorizadas superan el tope de hrs extras."+"}";
                         //listData = "{\"Result\":\"ERROR\",\"Message\":"+"Horas de inicio/fin no validas"+"}";

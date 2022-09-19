@@ -77,7 +77,7 @@ public class MarcasRechazadasHistController extends BaseServlet {
         MarcasRechazosBp auxnegocio=new MarcasRechazosBp(appProperties);
 
         if(request.getParameter("action") != null){
-            System.out.println("[MarcasRechazadasHistController]"
+            System.out.println(WEB_NAME+"[MarcasRechazadasHistController]"
                 + "action is: " + request.getParameter("action"));
             List<MarcaRechazoVO> listaObjetos = new ArrayList<>();
             String action=(String)request.getParameter("action");
@@ -111,7 +111,7 @@ public class MarcasRechazadasHistController extends BaseServlet {
             else if (jtSorting.contains("fechaHoraStr")) jtSorting = jtSorting.replaceFirst("fechaHoraStr","fecha_hora");
             //else if (jtSorting.contains("fechaHoraActualizacion")) jtSorting = jtSorting.replaceFirst("fechaHoraActualizacion","fecha_hora_actualizacion");
             
-            System.out.println("[MarcasRechazadasHistController."
+            System.out.println(WEB_NAME+"[MarcasRechazadasHistController."
                 + "processRequest()]."
                 + " jtSorting: " + jtSorting);
        
@@ -122,7 +122,7 @@ public class MarcasRechazadasHistController extends BaseServlet {
             String deptoId  = "-1";
             String cencoId  = "-1";
             String paramCencoID         = request.getParameter("cencoId");
-            System.out.println("[MarcasRechazadasHistController]"
+            System.out.println(WEB_NAME+"[MarcasRechazadasHistController]"
                 + "token param 'cencoID'= " + paramCencoID);
             if (paramCencoID != null && paramCencoID.compareTo("-1") != 0){
                 StringTokenizer tokenCenco  = new StringTokenizer(paramCencoID, "|");
@@ -134,7 +134,7 @@ public class MarcasRechazadasHistController extends BaseServlet {
                     }
                 }
             }
-            System.out.println("[MarcasRechazadasHistController]"
+            System.out.println(WEB_NAME+"[MarcasRechazadasHistController]"
                 + "empresaId: " + empresaId
                 +", dispositivoId= "  + request.getParameter("dispositivo")
                 + ",cencoId: " + cencoId
@@ -162,7 +162,7 @@ public class MarcasRechazadasHistController extends BaseServlet {
 //            }
             
             if (action.compareTo("list") == 0){
-                System.out.println("[MarcasRechazadasHistController]"
+                System.out.println(WEB_NAME+"[MarcasRechazadasHistController]"
                     + "mostrando marcas rechazadas historicas..."+
                         "empresaId= " + empresaId
                         +", dispositivoId= "  + request.getParameter("dispositivo")

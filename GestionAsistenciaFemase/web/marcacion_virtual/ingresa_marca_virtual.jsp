@@ -27,7 +27,7 @@
         (LinkedHashMap<String,MarcaVO>)session.getAttribute("marcasUsuario");
     Calendar calHoy = Calendar.getInstance(new Locale("es","CL"));
     Date fechaActual = calHoy.getTime();
-    System.out.println("[ShowClock]"
+    System.out.println("[GestionFemaseWeb]ShowClock]"
         + "fechaHoraActual: " + fechaActual);
     SimpleDateFormat weekdayFormat = new SimpleDateFormat("EEEEE");
     SimpleDateFormat dayFormat = new SimpleDateFormat("dd");

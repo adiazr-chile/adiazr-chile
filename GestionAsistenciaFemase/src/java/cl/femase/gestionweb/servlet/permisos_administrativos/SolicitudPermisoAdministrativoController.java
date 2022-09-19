@@ -2,10 +2,12 @@ package cl.femase.gestionweb.servlet.permisos_administrativos;
 
 import cl.femase.gestionweb.business.CentroCostoBp;
 import cl.femase.gestionweb.business.DetalleAusenciaBp;
+import cl.femase.gestionweb.business.DetalleTurnosBp;
 import cl.femase.gestionweb.servlet.BaseServlet;
 import cl.femase.gestionweb.business.EmpleadosBp;
 import cl.femase.gestionweb.business.NotificacionBp;
 import cl.femase.gestionweb.business.SolicitudPermisoAdministrativoBp;
+import cl.femase.gestionweb.business.TurnoRotativoBp;
 import cl.femase.gestionweb.common.ClientInfo;
 import cl.femase.gestionweb.common.Constantes;
 import cl.femase.gestionweb.common.Utilidades;
@@ -13,6 +15,7 @@ import cl.femase.gestionweb.dao.PermisosAdministrativosDAO;
 import cl.femase.gestionweb.dao.SolicitudPermisoAdministrativoDAO;
 import cl.femase.gestionweb.vo.DestinatarioSolicitudVO;
 import cl.femase.gestionweb.vo.DetalleAusenciaVO;
+import cl.femase.gestionweb.vo.DetalleTurnoVO;
 import cl.femase.gestionweb.vo.EmpleadoVO;
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
 import cl.femase.gestionweb.vo.MaintenanceVO;
@@ -110,7 +113,7 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
         HashMap<String, Double> parametrosSistema = appProperties.getParametrosSistema();//HashMap<String, Double>)session.getAttribute("parametros_sistema");
         
         if(request.getParameter("action") != null){
-            System.out.println("[SolicitudPermisoAdministrativoController]"
+            System.out.println(WEB_NAME+"[SolicitudPermisoAdministrativoController]"
                 + "action is: " + request.getParameter("action"));
             List<SolicitudPermisoAdministrativoVO> listaSolicitudes = new ArrayList<>();
             String action=(String)request.getParameter("action");
@@ -162,7 +165,7 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
             String paramDepto   = null;
             String cencoId      = "";
             
-            System.out.println("[SolicitudPermisoAdministrativoController]"
+            System.out.println(WEB_NAME+"[SolicitudPermisoAdministrativoController]"
                 + "token param 'cencoID'= " + paramCencoID);
             if (paramCencoID != null && paramCencoID.compareTo("-1") != 0){
                 StringTokenizer tokenCenco  = new StringTokenizer(paramCencoID, "|");
@@ -175,7 +178,7 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
                 }
             }
             
-            System.out.println("[SolicitudPermisoAdministrativoController]"
+            System.out.println(WEB_NAME+"[SolicitudPermisoAdministrativoController]"
                 + "empresaId: " + paramEmpresa
                 + ", run empleado: " + request.getParameter("rutEmpleado"));
             if(request.getParameter("id") != null){
@@ -200,7 +203,7 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
             }
             
             String runEmpleado = userConnected.getUsername();
-            System.out.println("[SolicitudPermisoAdministrativoController]"
+            System.out.println(WEB_NAME+"[SolicitudPermisoAdministrativoController]"
                 + "userConnected.getUsername(): " + userConnected.getUsername());
             if (userConnected.getIdPerfil() == Constantes.ID_PERFIL_DIRECTOR 
                 || userConnected.getIdPerfil() == Constantes.ID_PERFIL_DIRECTOR_TR
@@ -208,13 +211,13 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
                     runEmpleado = null;//userConnected.getRunEmpleado();
             }
             solicitud.setRunEmpleado(runEmpleado);
-            System.out.println("[SolicitudPermisoAdministrativoController]"
+            System.out.println(WEB_NAME+"[SolicitudPermisoAdministrativoController]"
                 + "action: " + action 
                 + ", set RunEmpleado: " + solicitud.getRunEmpleado());
                     
             if (action.compareTo("listPropias") == 0) {//**********************************************************************************
                 try{
-                    System.out.println("[SolicitudPermisoAdministrativoController]"
+                    System.out.println(WEB_NAME+"[SolicitudPermisoAdministrativoController]"
                         + "Mostrar lista de solicitudes propias del usuario. "
                         + "empresa: " + paramEmpresa
                         + ", usuario: " + userConnected.getUsername()
@@ -277,7 +280,7 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
                     
                     int intCencoId=-1;
                     if (cencoId.compareTo("") != 0) intCencoId = Integer.parseInt(cencoId); 
-                    System.out.println("[SolicitudPermisoAdministrativoController]"
+                    System.out.println(WEB_NAME+"[SolicitudPermisoAdministrativoController]"
                         + "Mostrar " + action + " - lista de solicitudes. "
                         + "empresa: " + paramEmpresa
                         + ", cencoId: " + intCencoId
@@ -354,7 +357,7 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
                     Calendar cal = Calendar.getInstance(new Locale("es","CL"));
                     Date fechaActual = cal.getTime();    
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", new Locale("es","CL"));
-                    
+                    int semestreActual = Utilidades.getSemestre(fechaActual);
                     String strFechaHoraActual = sdf.format(fechaActual);
                     String reqDesde = request.getParameter("fechaDesde");
                     String reqHasta = request.getParameter("fechaHasta");
@@ -376,7 +379,7 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
                     
                     String strFechaDesde = sdf1.format(dteDesde);
                     String strFechaHasta = sdf1.format(dteHasta);
-                    System.out.println("[SolicitudPermisoAdministrativoController]"
+                    System.out.println(WEB_NAME+"[SolicitudPermisoAdministrativoController]"
                         + "strFechaDesde: " + strFechaDesde
                         + ", strFechaHasta: " + strFechaHasta);
                     solicitud.setFechaInicioPA(strFechaDesde);
@@ -391,8 +394,12 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
                     solicitud.setFechaFinPA(reqHasta);
                     solicitud.setJornada(jornada);
                     solicitud.setAnio(cal.get(Calendar.YEAR));
+                    solicitud.setSemestre(semestreActual);
                     
-                    System.out.println("[SolicitudPermisoAdministrativoController]"
+                    ArrayList<MensajeUsuarioVO> mensajes = new ArrayList<>();
+                    Utilidades.IntervaloVO intervalo = null;
+                    
+                    System.out.println(WEB_NAME+"[SolicitudPermisoAdministrativoController]"
                         + "Vista previa antes de Insertar solicitud de Permiso Administrativo. "
                         + "Username: " + userConnected.getUsername()
                         + ", empresaId: " + solicitud.getEmpresaId()
@@ -405,7 +412,7 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
                         solicitud.getRunEmpleado());
                     
                     //VacacionesBp vacacionesBp = new VacacionesBp(null);
-                    if (solicitud.getJornada().compareTo("TODO_EL_DIA") == 0){
+                    if (solicitud.getJornada().compareTo(Constantes.JORNADA_PERMISO_ADMINISTRATIVO_TODO_EL_DIA) == 0){
                         int diasEfectivosSolicitados = 
                             permisoAdminDao.getDiasEfectivos(solicitud.getFechaInicioPA(), 
                                 solicitud.getFechaFinPA(), 
@@ -414,6 +421,64 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
                         solicitud.setDiasSolicitados(diasEfectivosSolicitados);
                     }else{
                         solicitud.setDiasSolicitados(0.5);
+                       
+                        /**
+                         * Rescatar info del turno del empleado: hora inicio y fin...
+                         */
+                        TurnoRotativoBp turnoRotBp = new TurnoRotativoBp(appProperties);
+                        String jsonOutput = turnoRotBp.getAsignacionTurnoByFechaJson(
+                            solicitud.getEmpresaId(), 
+                            solicitud.getRunEmpleado(), 
+                            solicitud.getFechaInicioPA());
+                        
+                        DetalleTurnoVO asignacionTurnoRotativo = new Gson().fromJson(jsonOutput, 
+                            DetalleTurnoVO.class);
+                        if (asignacionTurnoRotativo != null){
+                            System.out.println(WEB_NAME+"[SolicitudPermisoAdministrativoController]"
+                                + "EmpresaId: " + solicitud.getEmpresaId() 
+                                + ", runEmpleado" + runEmpleado
+                                + ". Tiene turno rotativo."
+                                + ", Fecha: " + solicitud.getFechaInicioPA()
+                                + ", idTurnoRotativo: " + asignacionTurnoRotativo.getIdTurno()
+                                + ", hora entrada: " + asignacionTurnoRotativo.getHoraEntrada()
+                                + ", hora salida: " + asignacionTurnoRotativo.getHoraSalida()    
+                            );
+                        }else{
+                            System.out.println(WEB_NAME+"[SolicitudPermisoAdministrativoController]"
+                                + "EmpresaId: " + solicitud.getEmpresaId() 
+                                + ", runEmpleado: " + runEmpleado
+                                + ", turnoID: " + infoEmpleado.getIdTurno()
+                                + ", turnoNombre: " + infoEmpleado.getNombreTurno()    
+                                + ". Tiene turno Normal."
+                                + ", Fecha: " + solicitud.getFechaInicioPA()    
+                            );
+                            DetalleTurnosBp detalleTurnoBp=new DetalleTurnosBp(appProperties);
+                            StringTokenizer tokenfecha1=new StringTokenizer(solicitud.getFechaInicioPA(), "-");
+                            String strAnio = tokenfecha1.nextToken();
+                            String strMes = tokenfecha1.nextToken();
+                            String strDia = tokenfecha1.nextToken();
+                            int codDia = 
+                                Utilidades.getDiaSemana(Integer.parseInt(strAnio), 
+                                    Integer.parseInt(strMes), 
+                                    Integer.parseInt(strDia));
+                            DetalleTurnoVO turnoDetalle = detalleTurnoBp.getDetalleTurno(solicitud.getEmpresaId(), infoEmpleado.getIdTurno(), codDia);
+                            System.out.println(WEB_NAME+"[SolicitudPermisoAdministrativoController]"
+                                + "EmpresaId: " + solicitud.getEmpresaId() 
+                                + ", runEmpleado: " + runEmpleado
+                                + ", turnoID: " + infoEmpleado.getIdTurno()
+                                + ", turnoNombre: " + infoEmpleado.getNombreTurno()    
+                                + ". Hora entrada turno: " + turnoDetalle.getHoraEntrada()
+                                + ". Hora salida turno: " + turnoDetalle.getHoraSalida());
+                            
+                            HashMap<Integer,Utilidades.IntervaloVO> 
+                                intervalos = 
+                                    Utilidades.getIntervalos(turnoDetalle.getHoraEntrada(), 
+                                        turnoDetalle.getHoraSalida(), 2);
+                            
+                            if (solicitud.getJornada().compareTo(Constantes.JORNADA_PERMISO_ADMINISTRATIVO_AM) == 0){
+                                intervalo = intervalos.get(1);
+                            }else intervalo = intervalos.get(2);
+                        }
                     }
                                         
                     Calendar mycal = Calendar.getInstance(new Locale("es","CL"));
@@ -425,11 +490,13 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
                             solicitud.getRunEmpleado(),anioActual, -1, -1, -1, "pa.run_empleado");
                     if (!infoPA.isEmpty()){
                         PermisoAdministrativoVO saldoPA = infoPA.get(0);
-                        doubleSaldoPADisponible = saldoPA.getDiasDisponibles();
+                        
+                        doubleSaldoPADisponible = saldoPA.getDiasDisponiblesSemestre1();
+                        if (semestreActual == 2) doubleSaldoPADisponible = saldoPA.getDiasDisponiblesSemestre2();
                     }
                     
                     double saldoPostPA = doubleSaldoPADisponible - solicitud.getDiasSolicitados();
-                    System.out.println("[SolicitudPermisoAdministrativoController]"
+                    System.out.println(WEB_NAME+"[SolicitudPermisoAdministrativoController]"
                         + "[precreate]empresaId: : " + solicitud.getEmpresaId()    
                         + ", run_empleado: : " + solicitud.getRunEmpleado()
                         + ", saldo_PA_disponible: : " + doubleSaldoPADisponible
@@ -445,12 +512,10 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
                             + "[" + destinatario.getEmail() + "],"
                             + "[" + destinatario.getCargo() + "],";
                         
-                        System.out.println("[SolicitudPermisoAdministrativoController]"
+                        System.out.println(WEB_NAME+"[SolicitudPermisoAdministrativoController]"
                             + "strDestinatarios: " + strDestinatarios);
                     }
                     if (!destinatarios.isEmpty()) strDestinatarios = strDestinatarios.substring(0, strDestinatarios.length()-1);
-                    
-                    ArrayList<MensajeUsuarioVO> mensajes = new ArrayList<>();
                     
                     mensajes.add(new MensajeUsuarioVO("RUN trabajador", infoEmpleado.getCodInterno()));
                     mensajes.add(new MensajeUsuarioVO("Nombre trabajador", infoEmpleado.getNombreCompleto()));
@@ -462,7 +527,16 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
                     mensajes.add(new MensajeUsuarioVO("Termino Permiso Administrativo", solicitud.getFechaFinPA()));
                     mensajes.add(new MensajeUsuarioVO("Jornada", jornada));
                     mensajes.add(new MensajeUsuarioVO("Año", "" + solicitud.getAnio()));
+                    mensajes.add(new MensajeUsuarioVO("Semestre", "" + solicitud.getSemestre()));
                     mensajes.add(new MensajeUsuarioVO("Dias solicitados", "" + solicitud.getDiasSolicitados()));
+                    
+                    if (intervalo != null){
+                        mensajes.add(new MensajeUsuarioVO("Hora inicio PA", intervalo.getHoraInicio()));
+                        mensajes.add(new MensajeUsuarioVO("Hora fin PA", intervalo.getHoraFin()));
+
+                        request.setAttribute("hora_inicio", intervalo.getHoraInicio());
+                        request.setAttribute("hora_fin", intervalo.getHoraFin());
+                    }
                     
                     if (solicitud.getDiasSolicitados() > doubleSaldoPADisponible){
                         MensajeUsuarioVO msgError = new MensajeUsuarioVO("Observación", 
@@ -476,12 +550,6 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
                         mensajes.add(new MensajeUsuarioVO("Saldo Dias Post Permiso Administrativo", "" + saldoPostPA));
                     }
                     
-//                    DetalleAusenciaVO newAusencia = new DetalleAusenciaVO();
-//                    newAusencia.setEmpresaId(solicitud.getEmpresaId());
-//                    newAusencia.setRutEmpleado(solicitud.getRunEmpleado());
-//                    newAusencia.setDiasSolicitados(Double.parseDouble(String.valueOf(diasEfectivosSolicitados)));
-//                    newAusencia.setSaldoPostPA(saldoPostPA);
-
                     mensajes.add(new MensajeUsuarioVO("Destinatario(s)", strDestinatarios));
                     request.setAttribute("fechaDesde", reqDesde);
                     request.setAttribute("fechaHasta", reqHasta);
@@ -495,12 +563,17 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
             }
             else if (action.compareTo("create") == 0) {//**********************************************************************************  
                     Calendar cal = Calendar.getInstance(new Locale("es","CL"));
-                    Date fechaActual = cal.getTime();    
+                    Date fechaActual = cal.getTime();  
+                    int semestreActual = Utilidades.getSemestre(fechaActual);
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", new Locale("es","CL"));
                     String strFechaHoraActual = sdf.format(fechaActual);
                     String reqDesde = request.getParameter("fechaDesde");
                     String reqHasta = request.getParameter("fechaHasta");
                     String jornada  = request.getParameter("jornada");
+                    
+                    //en caso de permiso administrativo por mediodia
+                    String horaInicio  = request.getParameter("hora_inicio");
+                    String horaFin  = request.getParameter("hora_fin");
                     
                     String diasEfectivosSolicitados = request.getParameter("diasEfectivosSolicitados");
                     String saldoPostPA = request.getParameter("saldoPostPA");
@@ -514,9 +587,13 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
                     solicitud.setFechaFinPA(reqHasta);
                     solicitud.setJornada(jornada);
                     solicitud.setAnio(cal.get(Calendar.YEAR));
+                    solicitud.setSemestre(semestreActual);
                     solicitud.setDiasSolicitados(Double.parseDouble(diasEfectivosSolicitados));
-                    
-                    System.out.println("[SolicitudPermisoAdministrativoController]"
+                    if (horaInicio != null){
+                        solicitud.setHoraInicioPA_AMPM(horaInicio);
+                        solicitud.setHoraFinPA_AMPM(horaFin);
+                    }
+                    System.out.println(WEB_NAME+"[SolicitudPermisoAdministrativoController]"
                         + "Insertar solicitud de Permiso Administrativo. "
                         + "Username: " + userConnected.getUsername()
                         + ", empresaId: " + solicitud.getEmpresaId()    
@@ -525,7 +602,8 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
                         + ", fin_permiso administrativo: " + solicitud.getFechaFinPA()
                         + ", dias solicitados: " + solicitud.getDiasSolicitados()    
                         + ", jornada: " + solicitud.getJornada()
-                        + ", anio: " + solicitud.getAnio());
+                        + ", anio: " + solicitud.getAnio()
+                        + ", semestre: " + solicitud.getSemestre());
                     EmpleadoVO infoEmpleado = empleadosbp.getEmpleado(solicitud.getEmpresaId(), 
                         solicitud.getRunEmpleado());
                     resultado.setEmpresaId(infoEmpleado.getEmpresa().getId());
@@ -533,7 +611,7 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
                     resultado.setCencoId(infoEmpleado.getCentroCosto().getId());
                     
                     //***************************************************************
-                    System.out.println("[SolicitudPermisoAdministrativoController]"
+                    System.out.println(WEB_NAME+"[SolicitudPermisoAdministrativoController]"
                         + "Insertar registro en tabla notificaciones, "
                         + "para enviar mail");
                     NotificacionSolicitudPermisoAdministrativoVO evento = notificaEventoSolicitud("INGRESO_SOLICITUD",
@@ -555,7 +633,7 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
                         strDestinatarios += destinatario.getNombre() 
                             + "[" + destinatario.getEmail() + "],"
                             + "[" + destinatario.getCargo() + "],";
-                        System.out.println("[SolicitudPermisoAdministrativoController]"
+                        System.out.println(WEB_NAME+"[SolicitudPermisoAdministrativoController]"
                             + "strDestinatarios: " + strDestinatarios);
                     }
                     if (!destinatarios.isEmpty()) strDestinatarios = strDestinatarios.substring(0, strDestinatarios.length()-1);
@@ -570,28 +648,20 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
                     mensajes.add(new MensajeUsuarioVO("Fecha/Hora solicitud", sdf.format(fechaActual)));
                     mensajes.add(new MensajeUsuarioVO("Inicio Permiso Administrativo", solicitud.getFechaInicioPA()));
                     mensajes.add(new MensajeUsuarioVO("Termino Permiso Administrativo", solicitud.getFechaFinPA()));
+                    mensajes.add(new MensajeUsuarioVO("Dias solicitados", "" + solicitud.getDiasSolicitados()));
                     mensajes.add(new MensajeUsuarioVO("Jornada", solicitud.getJornada()));
                     mensajes.add(new MensajeUsuarioVO("Año", "" + cal.get(Calendar.YEAR)));
-                                                
-                    //mensajes.add(new MensajeUsuarioVO("Dias solicitados", "" + diasEfectivosSolicitados));
-                    
-                    DetalleAusenciaVO newAusencia = new DetalleAusenciaVO();
-                    newAusencia.setEmpresaId(solicitud.getEmpresaId());
-                    newAusencia.setRutEmpleado(solicitud.getRunEmpleado());
-                    newAusencia.setDiasSolicitados(Double.parseDouble(diasEfectivosSolicitados));
-                    
-//                    VacacionesBp vacaciones = new VacacionesBp(appProperties);
-//                    DiasEfectivosVacacionesVO objDE = vacaciones.getDesgloseDiasVacaciones(newAusencia);
-//                    mensajes.add(new MensajeUsuarioVO("Dias efectivos VBA", "" + objDE.getDiasEfectivosVBA()));
-//                    mensajes.add(new MensajeUsuarioVO("Dias efectivos VP", "" + objDE.getDiasEfectivosVP()));
-//                    mensajes.add(new MensajeUsuarioVO("Saldo VBA Pre Vacaciones", "" + objDE.getSaldoVBAPreVacaciones()));
-//                    mensajes.add(new MensajeUsuarioVO("Saldo VP Pre Vacaciones", "" + objDE.getSaldoVPPreVacaciones()));
-//                    mensajes.add(new MensajeUsuarioVO("Saldo VBA Post Vacaciones", "" + objDE.getSaldoVBAPostVacaciones()));
-//                    mensajes.add(new MensajeUsuarioVO("Saldo VP Post Vacaciones", "" + objDE.getSaldoVPPostVacaciones()));
-                    
-                    //mensajes.add(new MensajeUsuarioVO("Saldo post vacaciones", "" + saldoPostVacaciones));
-                    
+                    mensajes.add(new MensajeUsuarioVO("Semestre", "" + solicitud.getSemestre()));
+                               
+                    if (solicitud.getJornada().compareTo(Constantes.JORNADA_PERMISO_ADMINISTRATIVO_AM) == 0 || 
+                            solicitud.getJornada().compareTo(Constantes.JORNADA_PERMISO_ADMINISTRATIVO_PM) == 0){
+                                mensajes.add(new MensajeUsuarioVO("Hora inicio PA", solicitud.getHoraInicioPA_AMPM()));
+                                mensajes.add(new MensajeUsuarioVO("Hora fin PA", solicitud.getHoraFinPA_AMPM()));
+                                request.setAttribute("hora_inicio", solicitud.getHoraInicioPA_AMPM());
+                                request.setAttribute("hora_fin", solicitud.getHoraFinPA_AMPM());
+                    }
                     mensajes.add(new MensajeUsuarioVO("Destinatario(s)", strDestinatarios));
+                    
                     request.setAttribute("mensajes", mensajes);
                     request.getRequestDispatcher("/permisos_administrativos/solicitud_confirmada.jsp").forward(request, response);
             }else if (action.compareTo("updatePropias") == 0) {//**********************************************************************************  
@@ -600,7 +670,7 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", new Locale("es","CL"));
                     String strFechaHoraActual = sdf.format(fechaActual);
                     String strAccion = request.getParameter("Accion");
-                    System.out.println("[SolicitudPermisoAdministrativoController]"
+                    System.out.println(WEB_NAME+"[SolicitudPermisoAdministrativoController]"
                         + "Modificar estado de solicitud de Permiso Administrativo. "
                         + "Id solicitud: : " + solicitud.getId()    
                         + ", username: : " + userConnected.getUsername()
@@ -641,20 +711,23 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
                     String strAccion            = request.getParameter("Accion");
                     String permiteHora          = "N";
                     boolean ausenciaPorHora = false;
-                    System.out.println("[SolicitudPermisoAdministrativoController]"
+                    System.out.println(WEB_NAME+"[SolicitudPermisoAdministrativoController]"
                         + "Aprobar/Rechazar solicitud de permiso administrativo. "
                         + "Id solicitud: : " + solicitud.getId());
                     
                     SolicitudPermisoAdministrativoVO solicitudFromBd = 
                         solicitudesDao.getSolicitudByKey(solicitud.getId());
                     
-                    System.out.println("[SolicitudPermisoAdministrativoController]"
+                    System.out.println(WEB_NAME+"[SolicitudPermisoAdministrativoController]"
                         + "Aprobar/Rechazar solicitud de permiso administrativo. "
                         + "Id solicitud: : " + solicitud.getId()
                         + ", inicio permiso administrativo: " + solicitudFromBd.getFechaInicioPA()
                         + ", fin permiso administrativo: " + solicitudFromBd.getFechaFinPA()
                         + ", dias Solicitados: " + solicitudFromBd.getDiasSolicitados()
-                        + ", jornada: " + solicitudFromBd.getJornada()    
+                        + ", jornada: " + solicitudFromBd.getJornada()
+                        + ", semestre: " + solicitudFromBd.getSemestre()    
+                        + ", hora inicio PA: " + solicitudFromBd.getHoraInicioPA_AMPM()
+                        + ", hora fin PA: " + solicitudFromBd.getHoraFinPA_AMPM()    
                         + ", username: : " + userConnected.getUsername()
                         + ", empresaId: : " + solicitudFromBd.getEmpresaId()    
                         + ", run_empleado: : " + solicitudFromBd.getRunEmpleado()
@@ -663,8 +736,8 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
 
                     if (solicitudFromBd.getJornada().compareTo(Constantes.JORNADA_PERMISO_ADMINISTRATIVO_AM) == 0
                             || solicitudFromBd.getJornada().compareTo(Constantes.JORNADA_PERMISO_ADMINISTRATIVO_PM) == 0){
-                        System.out.println("[SolicitudPermisoAdministrativoController]"
-                        + "Setear PA x mediodia---Ausencia x hora");
+                        System.out.println(WEB_NAME+"[SolicitudPermisoAdministrativoController]"
+                            + "Setear PA x mediodia---Ausencia x hora");
                         permiteHora     = "S";
                         ausenciaPorHora = true;
                     }
@@ -692,7 +765,7 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
                             null, 
                             null);
                         if (ausenciasConflicto.isEmpty()){
-                            System.out.println("[SolicitudPermisoAdministrativoController]"
+                            System.out.println(WEB_NAME+"[SolicitudPermisoAdministrativoController]"
                                 + "No hay conflicto. "
                                 + "Se procede a Aprobar solicitud "
                                 + "y a Insertar permiso administrativo...");
@@ -715,7 +788,7 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
                                 solicitudFromBd.getDiasSolicitados());
                             
                             //*********************************************************
-                            System.out.println("[SolicitudPermisoAdministrativoController]"
+                            System.out.println(WEB_NAME+"[SolicitudPermisoAdministrativoController]"
                                 + "Aprobar solicitud. Insertar permiso administrativo."
                                 + " Usuario.username: " + userConnected.getUsername()
                                 + " Usuario.Run: " + userConnected.getRunEmpleado());
@@ -734,6 +807,12 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
                             newAusencia.setRutAutorizador(userConnected.getRunEmpleado());
                             newAusencia.setAusenciaAutorizada("S");
                             newAusencia.setPermiteHora(permiteHora);
+                            
+                            if (permiteHora.compareTo("S") == 0){
+                                newAusencia.setHoraInicioFullAsStr(auxSolicitud.getHoraInicioPA_AMPM());
+                                newAusencia.setHoraFinFullAsStr(auxSolicitud.getHoraFinPA_AMPM());
+                            }
+                            
                             newAusencia.setDiasSolicitados(solicitud.getDiasSolicitados());
                             MaintenanceVO insertResult = new MaintenanceVO();
                             insertResult = 
@@ -762,7 +841,7 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
                                     resultado);
                             solicitud.setEstadoId(Constantes.ESTADO_SOLICITUD_RECHAZADA);
                             solicitud.setEstadoLabel(Constantes.ESTADO_SOLICITUD_RECHAZADA_LABEL);
-                            System.out.println("[SolicitudPermisoAdministrativoController]"
+                            System.out.println(WEB_NAME+"[SolicitudPermisoAdministrativoController]"
                                 + "Rechazar solicitud de Permiso Administrativo. "
                                 + "Dias solicitados: " + solicitud.getDiasSolicitados());
                             notificaEventoSolicitud("SOLICITUD_RECHAZADA",
@@ -781,7 +860,7 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
                                 resultado);
                         solicitud.setEstadoId(Constantes.ESTADO_SOLICITUD_RECHAZADA);
                         solicitud.setEstadoLabel(Constantes.ESTADO_SOLICITUD_RECHAZADA_LABEL);
-                        System.out.println("[SolicitudPermisoAdministrativoController]"
+                        System.out.println(WEB_NAME+"[SolicitudPermisoAdministrativoController]"
                             + "Rechazar solicitud de Permiso Administrativo. "
                             + "Dias solicitados: " + solicitud.getDiasSolicitados());
                         notificaEventoSolicitud("SOLICITUD_RECHAZADA",
@@ -806,7 +885,9 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
     }
     
     /**
+    * 
     * Insertar ausencia del tipo 'Permiso administrativo'
+    * 
     */
     private MaintenanceVO insertarPermisoAdministrativo(HttpServletRequest _request,
             PropertiesVO _appProperties,
@@ -816,13 +897,16 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
        
         Calendar mycal = Calendar.getInstance(new Locale("es","CL"));
         int anioActual = mycal.get(Calendar.YEAR);
+        Date currentDate = mycal.getTime();
+        int semestreActual = Utilidades.getSemestre(currentDate);
         
-        System.out.println("[SolicitudPermisoAdministrativoController."
+        System.out.println(WEB_NAME+"[SolicitudPermisoAdministrativoController."
             + "insertarPermisoAdministrativo]"
             + "Insertar detalle ausencia (PERMISO ADMINISTRATIVO). "
             + "EmpresaId: " + _ausencia.getEmpresaId()
             + ", Run empleado: " + _ausencia.getRutEmpleado()
-            + ", Anio: " + anioActual);
+            + ", Anio: " + anioActual
+            + ", Semestre actual: " + semestreActual);
         PermisosAdministrativosDAO permisosDao = new PermisosAdministrativosDAO(_appProperties);
         double doubleSaldoPADisponible = 0;
         double doubleSaldoPAUtilizados = 0;
@@ -831,11 +915,32 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
                 _ausencia.getRutEmpleado(),anioActual, -1, -1, -1, "pa.run_empleado");
         if (!infoPA.isEmpty()){
             PermisoAdministrativoVO saldoPA = infoPA.get(0);
-            doubleSaldoPADisponible = saldoPA.getDiasDisponibles();
-            doubleSaldoPAUtilizados = saldoPA.getDiasUtilizados();
+            doubleSaldoPADisponible = saldoPA.getDiasDisponiblesSemestre1();
+            doubleSaldoPAUtilizados = saldoPA.getDiasUtilizadosSemestre1();
+            if (semestreActual == 2){
+                doubleSaldoPADisponible = saldoPA.getDiasDisponiblesSemestre2();
+                doubleSaldoPAUtilizados = saldoPA.getDiasUtilizadosSemestre2();
+            }
         }
+        
+        System.out.println(WEB_NAME+"[SolicitudPermisoAdministrativoController."
+            + "insertarPermisoAdministrativo]"
+            + "Semestre actual: " + semestreActual
+            + ", saldoPA disponible: " + doubleSaldoPADisponible
+            + ", saldoPA utilizados: " + doubleSaldoPAUtilizados
+            + ", ausencia.dias_solicitados: " + _ausencia.getDiasSolicitados()    
+        );
+        
         double saldoDiasUtilizadosPostPA = doubleSaldoPAUtilizados + _ausencia.getDiasSolicitados();            
         double saldoDisponiblePostPA = doubleSaldoPADisponible - _ausencia.getDiasSolicitados();
+        
+        System.out.println(WEB_NAME+"[SolicitudPermisoAdministrativoController."
+            + "insertarPermisoAdministrativo]"
+            + "Semestre actual: " + semestreActual
+            + ", saldoDiasUtilizadosPostPA: " + saldoDiasUtilizadosPostPA
+            + ", saldoDisponiblePostPA: " + saldoDisponiblePostPA    
+        );
+        
         _ausencia.setSaldoPostPA(saldoDisponiblePostPA);
         
         String mensajeFinal = null;
@@ -849,7 +954,7 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
         resultado.setEmpresaIdSource(_userConnected.getEmpresaId());
                                         
         resultado.setRutEmpleado(_ausencia.getRutEmpleado());
-        System.out.println("[SolicitudPermisoAdministrativoController.insertarPermisoAdministrativo]"
+        System.out.println(WEB_NAME+"[SolicitudPermisoAdministrativoController.insertarPermisoAdministrativo]"
             + "Insertar detalle ausencia (PERMISO ADMINISTRATIVO)");
         MaintenanceVO doCreate = ausenciasBp.insertaPermisoAdministrativo(_ausencia, resultado);
         
@@ -857,25 +962,28 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
             mensajeFinal= "Error al insertar Permiso administrativo: " + doCreate.getMsgError();
             doCreate.setMsg(mensajeFinal);
         }else{
-             System.out.println("[SolicitudPermisoAdministrativoController."
+            System.out.println(WEB_NAME+"[SolicitudPermisoAdministrativoController."
                 + "insertarPermisoAdministrativo]"
-                + "Actualizar resumen de Permisos Administrativos");
-             /*
-             permisosDao.getResumenPermisosAdministrativos(_ausencia.getEmpresaId(), 
-                _ausencia.getRutEmpleado(),anioActual
-             */
-             PermisoAdministrativoVO objPA = new PermisoAdministrativoVO();
-             objPA.setEmpresaId(_ausencia.getEmpresaId());
-             objPA.setRunEmpleado(_ausencia.getRutEmpleado());
-             objPA.setAnio(anioActual);
-             objPA.setDiasDisponibles(saldoDisponiblePostPA);
-             objPA.setDiasUtilizados(saldoDiasUtilizadosPostPA);
-             MaintenanceVO resultadoUpdate = permisosDao.updateResumenPA(objPA);
-             
+                + "Actualizar resumen de Permisos Administrativos, "
+                + "Anio-Semestre= ["+ anioActual + "-" + semestreActual +"]");
+            PermisoAdministrativoVO objPA = new PermisoAdministrativoVO();
+            objPA.setEmpresaId(_ausencia.getEmpresaId());
+            objPA.setRunEmpleado(_ausencia.getRutEmpleado());
+            objPA.setAnio(anioActual);
+            
+            if (semestreActual == 1){
+                objPA.setDiasDisponiblesSemestre1(saldoDisponiblePostPA);
+                objPA.setDiasUtilizadosSemestre1(saldoDiasUtilizadosPostPA);
+            }else{
+                objPA.setDiasDisponiblesSemestre2(saldoDisponiblePostPA);
+                objPA.setDiasUtilizadosSemestre2(saldoDiasUtilizadosPostPA);
+            }
+            
+            MaintenanceVO resultadoUpdate = permisosDao.updateResumenPA(objPA);
              
         }
         
-        System.out.println("[SolicitudPermisoAdministrativoController."
+        System.out.println(WEB_NAME+"[SolicitudPermisoAdministrativoController."
             + "insertarPermisoAdministrativo]"
             + "Saliendo del metodo OK.");
         return doCreate;
@@ -902,10 +1010,11 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
         CentroCostoBp cencosbp      = new CentroCostoBp(null);
         PermisosAdministrativosDAO permisoAdminDao   = new PermisosAdministrativosDAO(null);
         
-        System.out.println("[SolicitudPermisoAdministrativoController."
+        System.out.println(WEB_NAME+"[SolicitudPermisoAdministrativoController."
             + "notificaEventoSolicitud]Invocar getEmpleado. "
             + "EmpresaId: " + _solicitud.getEmpresaId()
-            + ", rutEmpleado: " + _solicitud.getRunEmpleado());
+            + ", rutEmpleado: " + _solicitud.getRunEmpleado()
+            + ", dias_solicitados: " + _diasSolicitados);
                 
         EmpleadoVO empleado = 
             empleadobp.getEmpleado(_solicitud.getEmpresaId(), 
@@ -917,7 +1026,7 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
         String fromMail         = m_properties.getKeyValue("mailFrom");
         String asuntoMail       = "Sistema de Gestion-" + _evento;
         String mailTo           = empleado.getEmail();
-        System.out.println("[SolicitudPermisoAdministrativoController."
+        System.out.println(WEB_NAME+"[SolicitudPermisoAdministrativoController."
             + "notificaEventoSolicitud]"
             + "Email por defecto: " + mailTo);
         String notaObservacion = _request.getParameter("notaObservacion");
@@ -934,7 +1043,7 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
         
         if (_tipoEvento.compareTo("INGRESO_SOLICITUD") == 0){
             String cadenaEmails = "";
-            System.out.println("[SolicitudPermisoAdministrativoController."
+            System.out.println(WEB_NAME+"[SolicitudPermisoAdministrativoController."
                 + "notificaEventoSolicitud]"
                 + "Cargo empleado: " + empleado.getIdCargo()
                 + ", empresaId: " + empleado.getEmpresaId()
@@ -957,7 +1066,7 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
                     mailTo      = cadenaEmails;
                     cadenaNombres = cadenaNombres.substring(0, cadenaNombres.length() - 1);
                 }else{
-                    System.out.println("[SolicitudPermisoAdministrativoController."
+                    System.out.println(WEB_NAME+"[SolicitudPermisoAdministrativoController."
                         + "notificaEventoSolicitud]No se encontraron "
                         + "empleados con Cargo 'DIRECTOR' para "
                         + "[empresa, depto, cencoId] = "
@@ -970,7 +1079,7 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
                 }
             }else{
                 //Usuario con cargo Director, debe enviar solicitud a Gerencia en Admin Central (Cargo Jefe Técnico Nacional, ID 69 )
-                System.out.println("[SolicitudPermisoAdministrativoController."
+                System.out.println(WEB_NAME+"[SolicitudPermisoAdministrativoController."
                     + "notificaEventoSolicitud]Empleado con cargo Director, "
                     + "debe enviar solicitud a Gerencia en Admin Central (Cargo Jefe Técnico Nacional, ID 69 )");
                 EmpleadoVO filtroEmpleado = new EmpleadoVO();
@@ -983,7 +1092,7 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
                 List<EmpleadoVO> listaJefesTecnicosNacional = 
                     empleadobp.getEmpleadosByFiltro(filtroEmpleado);
                 if (!listaJefesTecnicosNacional.isEmpty()){
-                    System.out.println("[SolicitudPermisoAdministrativoController."
+                    System.out.println(WEB_NAME+"[SolicitudPermisoAdministrativoController."
                         + "notificaEventoSolicitud]Rescatar emails del Jefe Tecnico Nacional");
                     for(EmpleadoVO itJefazos : listaJefesTecnicosNacional){
                         cadenaEmails += itJefazos.getEmail() + ",";
@@ -991,15 +1100,15 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
                         if (itJefazos.getApePaterno() != null) cadenaNombres += " " + itJefazos.getApePaterno();
                         if (itJefazos.getApeMaterno() != null) cadenaNombres += " " + itJefazos.getApeMaterno();
                     }
-                    System.out.println("[SolicitudPermisoAdministrativoController."
+                    System.out.println(WEB_NAME+"[SolicitudPermisoAdministrativoController."
                         + "notificaEventoSolicitud]Emails Jefe Tecnico Nacional: " + cadenaEmails);
-                    System.out.println("[SolicitudPermisoAdministrativoController."
+                    System.out.println(WEB_NAME+"[SolicitudPermisoAdministrativoController."
                         + "notificaEventoSolicitud]Nombres Jefe Tecnico Nacional: " + cadenaNombres);
                     
                     cadenaEmails = cadenaEmails.substring(0, cadenaEmails.length() - 1);
                     mailTo      = cadenaEmails;
                 }else{
-                    System.out.println("[SolicitudPermisoAdministrativoController."
+                    System.out.println(WEB_NAME+"[SolicitudPermisoAdministrativoController."
                         + "notificaEventoSolicitud]No se encontraron "
                         + "empleados con Cargo 'JEFE TECNICO NACIONAL' ");
                     hayJefeNacional = false;
@@ -1007,12 +1116,8 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
             }
         }
         
-        //VacacionesBp vacacionesBp = new VacacionesBp(null);
-        //int diasSolicitados = _solicitud.getDiasEfectivosVacacionesSolicitadas();
-        
-//        int diasSolicitados = vacacionesBp.getDiasEfectivos(_solicitud.getInicioVacaciones(), 
-//            _solicitud.getFinVacaciones(), "N");
-        
+        System.out.println(WEB_NAME+"[SolicitudPermisoAdministrativoController."
+            + "notificaEventoSolicitud]Dias solicitados: " + _solicitud.getDiasSolicitados());
         if (_solicitud.getDiasSolicitados() == 0){
             diasSolicitados = 
                 permisoAdminDao.getDiasEfectivos(_solicitud.getFechaInicioPA(), 
@@ -1029,7 +1134,13 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
             + "<br>Fecha/Hora solicitud: " + sdf.format(fechaActual)
             + "<br>Inicio Permiso Administrativo: " + _solicitud.getFechaInicioPA()
             + "<br>Termino Permiso Administrativo: " + _solicitud.getFechaFinPA()
-            + "<br>Dias solicitados: " + diasSolicitados;
+            + "<br>Dias solicitados: " + _solicitud.getDiasSolicitados();
+        
+        if (_solicitud.getJornada().compareTo(Constantes.JORNADA_PERMISO_ADMINISTRATIVO_AM) == 0 
+                || _solicitud.getJornada().compareTo(Constantes.JORNADA_PERMISO_ADMINISTRATIVO_PM) == 0){
+                mensaje += "<br>Hora Inicio: " + _solicitud.getHoraInicioPA_AMPM();
+                mensaje += "<br>Hora Fin: " + _solicitud.getHoraFinPA_AMPM();
+        }
         
         String mailBody = "Evento:" + _evento
             + "<br>RUN trabajador: " + empleado.getCodInterno()
@@ -1040,8 +1151,14 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
             + "<br>Fecha/Hora solicitud: " + sdf.format(fechaActual)
             + "<br>Inicio Permiso Administrativo: " + _solicitud.getFechaInicioPA()
             + "<br>Termino Permiso Administrativo: " + _solicitud.getFechaFinPA()
-            + "<br>Dias solicitados: " + diasSolicitados
+            + "<br>Dias solicitados: " + _solicitud.getDiasSolicitados()
+            + "<br>Semestre: " + _solicitud.getSemestre()
             + "<br>Nota/Observacion: " + notaObservacion;
+        if (_solicitud.getJornada().compareTo(Constantes.JORNADA_PERMISO_ADMINISTRATIVO_AM) == 0 
+                || _solicitud.getJornada().compareTo(Constantes.JORNADA_PERMISO_ADMINISTRATIVO_PM) == 0){
+                mailBody += "<br>Hora Inicio: " + _solicitud.getHoraInicioPA_AMPM();
+                mailBody += "<br>Hora Fin: " + _solicitud.getHoraFinPA_AMPM();
+        }
         
         evento.setTipoEvento(_tipoEvento);
         evento.setMensajeFinal(mensaje);
@@ -1052,7 +1169,13 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
         evento.setFechaHoraSolicitud(sdf.format(fechaActual));
         evento.setInicioPermisoAdministrativo(_solicitud.getFechaInicioPA());
         evento.setTerminoPermisoAdministrativo(_solicitud.getFechaFinPA());
-        evento.setDiasSolicitados(diasSolicitados);
+        evento.setDiasSolicitados(_solicitud.getDiasSolicitados());
+        
+        if (_solicitud.getJornada().compareTo(Constantes.JORNADA_PERMISO_ADMINISTRATIVO_AM) == 0 
+                || _solicitud.getJornada().compareTo(Constantes.JORNADA_PERMISO_ADMINISTRATIVO_PM) == 0){
+            evento.setHoraInicio(_solicitud.getHoraInicioPA_AMPM());
+            evento.setHoraFin(_solicitud.getHoraFinPA_AMPM());
+        }
         
         MaintenanceEventVO resultado=new MaintenanceEventVO();
         resultado.setUsername(_userConnected.getUsername());
@@ -1065,7 +1188,7 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
         resultado.setCencoId(empleado.getCencoId());
         resultado.setRutEmpleado(empleado.getRut());
         
-        System.out.println("[SolicitudPermisoAdministrativoController."
+        System.out.println(WEB_NAME+"[SolicitudPermisoAdministrativoController."
             + "notificaEventoSolicitud]"
             + "EmpresaId: " + resultado.getEmpresaId()
             + ", deptoId: " + resultado.getDeptoId()
@@ -1120,7 +1243,7 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
         boolean hayJefeNacional     = true;
         boolean hayJefeDirecto      = true;
         
-        System.out.println("[SolicitudPermisoAdministrativoController."
+        System.out.println(WEB_NAME+"[SolicitudPermisoAdministrativoController."
             + "getDestinatarioSolicitud]"
             + "Cargo empleado: " + empleado.getIdCargo()
             + ", empresaId: " + empleado.getEmpresaId()
@@ -1137,7 +1260,7 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
                 strCargo    = itDirectores.getNombreCargo();
                 if (itDirectores.getApePaterno() != null) strNombre += " " + itDirectores.getApePaterno();
                 if (itDirectores.getApeMaterno() != null) strNombre += " " + itDirectores.getApeMaterno();
-                System.out.println("[SolicitudPermisoAdministrativoController."
+                System.out.println(WEB_NAME+"[SolicitudPermisoAdministrativoController."
                     + "getDestinatarioSolicitud]add destinatario. "
                     + "strNombre: " + strNombre
                     + ", strEmail: " + strEmail
@@ -1148,7 +1271,7 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
                 destinatarios.add(destinatario);
             }
             if (directoresCenco.isEmpty()){
-                System.out.println("[SolicitudPermisoAdministrativoController."
+                System.out.println(WEB_NAME+"[SolicitudPermisoAdministrativoController."
                     + "getDestinatarioSolicitud]No se encontraron "
                     + "empleados con Cargo 'DIRECTOR' para "
                     + "[empresa, depto, cencoId] = "
@@ -1161,7 +1284,7 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
             }
         }else{
             //Usuario con cargo Director, debe enviar solicitud a Gerencia en Admin Central (Cargo Jefe Técnico Nacional, ID 69 )
-            System.out.println("[SolicitudPermisoAdministrativoController."
+            System.out.println(WEB_NAME+"[SolicitudPermisoAdministrativoController."
                 + "getDestinatarioSolicitud]Usuario con cargo Director, "
                 + "debe enviar solicitud a Gerencia en Admin Central "
                 + "(Cargo Jefe Técnico Nacional, ID 69 )");
@@ -1185,7 +1308,7 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
                     destinatarios.add(destinatario);
                 }
             }else{
-                System.out.println("[SolicitudPermisoAdministrativoController."
+                System.out.println(WEB_NAME+"[SolicitudPermisoAdministrativoController."
                     + "getDestinatarioSolicitud]No se encontraron "
                     + "empleados con Cargo 'JEFE TECNICO NACIONAL' ");
                 hayJefeNacional = false;

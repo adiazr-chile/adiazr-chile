@@ -98,7 +98,7 @@ public class ModulosSistemaDAO extends BaseDAO{
             
             int rowAffected = psupdate.executeUpdate();
             if (rowAffected == 1){
-                System.out.println("[ModuloSistemaDAO.update]modulo sistema"
+                System.out.println(WEB_NAME+"[ModuloSistemaDAO.update]modulo sistema"
                     + ", id:" +_data.getEstado_id()
                     + ", nombre:" +_data.getModulo_nombre()
                     +" actualizado OK!");
@@ -172,7 +172,7 @@ public class ModulosSistemaDAO extends BaseDAO{
                         
             int filasAfectadas = insert.executeUpdate();
             if (filasAfectadas == 1){
-                System.out.println("[ModuloSistemaDAO.insert]"
+                System.out.println(WEB_NAME+"[ModuloSistemaDAO.insert]"
                     + ", nombre:" +_data.getModulo_nombre()
                     + ", estado:" +_data.getEstado_id()
                     + ", orden despliegue:" +_data.getOrden_despliegue()
@@ -289,7 +289,7 @@ public class ModulosSistemaDAO extends BaseDAO{
                 sql += " limit "+_jtPageSize + " offset "+_jtStartIndex;
             }
             
-            System.out.println("[ModulosSistemaDAO.getModulosSistema]"
+            System.out.println(WEB_NAME+"[ModulosSistemaDAO.getModulosSistema]"
                 + "nombre: "+_nombre
                 + ", _jtStartIndex: "+_jtStartIndex
                 + ", _jtPageSize: "+_jtPageSize

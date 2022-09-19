@@ -106,7 +106,7 @@ public class ReporteHorasExtras extends BaseServlet {
             && paramTurno.compareTo("-1") != 0){
                 intTurno = Integer.parseInt(paramTurno);
         }
-        System.out.println("[servlet.ReporteHorasExtras]"
+        System.out.println(WEB_NAME+"[servlet.ReporteHorasExtras]"
             + "token param 'cencoID'= " + paramCencoID
             +", turnoId: "+ paramTurno
             +", turnoRotativoId: "+ paramTurnoRotativo);
@@ -122,7 +122,7 @@ public class ReporteHorasExtras extends BaseServlet {
                 }
             }
         }
-        System.out.println("[servlet.ReporteHorasExtras]"
+        System.out.println(WEB_NAME+"[servlet.ReporteHorasExtras]"
             + "empresa: " + paramEmpresa
             + ", depto: " + paramDepto
             + ", cenco: " + intCencoId);
@@ -130,13 +130,13 @@ public class ReporteHorasExtras extends BaseServlet {
         String[] empleadosSelected = request.getParameterValues("rutEmpleado");
         if (empleadosSelected != null){
             for (int x = 0; x < empleadosSelected.length; x++){
-                System.out.println("[servlet.ReporteHorasExtras]"
+                System.out.println(WEB_NAME+"[servlet.ReporteHorasExtras]"
                     + "rut seleccionado[" + x + "] = " + empleadosSelected[x]);
                 EmpleadoVO auxEmpleado=new EmpleadoVO();
                 auxEmpleado.setRut(empleadosSelected[x]);
                 listaEmpleados.add(auxEmpleado);
             }     
-        }else System.out.println("[servlet.ReporteHorasExtras]"
+        }else System.out.println(WEB_NAME+"[servlet.ReporteHorasExtras]"
             + "No hay empleados seleccionados");
                     
         //generar link para download del archivo csvString fileName = userConnected.getUsername()+REPORT_NAME_CSV;
@@ -166,7 +166,7 @@ public class ReporteHorasExtras extends BaseServlet {
         
         FileGeneratedVO fileGenerated = new FileGeneratedVO(fileName,fullFilePath);
         if (fileGenerated != null){
-            System.out.println("[servlet.ReporteHorasExtras]"
+            System.out.println(WEB_NAME+"[servlet.ReporteHorasExtras]"
                 + "Add archivo generado: " + fileGenerated.getFileName());
             showFileToDownload(fileGenerated, response);
             File auxpdf=new File(fileGenerated.getFilePath());
@@ -218,7 +218,7 @@ public class ReporteHorasExtras extends BaseServlet {
             PropertiesVO appProperties=(PropertiesVO)application.getAttribute("appProperties");
             HttpSession session = _request.getSession(true);
             UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
-            System.out.println("[servlet.ReporteHorasExtras.setInfoToCSV]"
+            System.out.println(WEB_NAME+"[servlet.ReporteHorasExtras.setInfoToCSV]"
                 + "empresaId: " + _empresaId
                 + ", deptoId: " + _deptoId
                 + ", cencoId: " + _cencoId
@@ -280,7 +280,7 @@ public class ReporteHorasExtras extends BaseServlet {
             if (listaDetalles != null && !listaDetalles.isEmpty()){
                 Set<String> keys = listaDetalles.keySet();
                 for(String k:keys){
-                    System.out.println("[servlet.ReporteHorasExtras.setInfoToCSV]"
+                    System.out.println(WEB_NAME+"[servlet.ReporteHorasExtras.setInfoToCSV]"
                         + "key empleado: " + k);
                     if (k != null && k.compareTo("")!=0){    
                         filas = 0;
@@ -290,7 +290,7 @@ public class ReporteHorasExtras extends BaseServlet {
 //                                empleadoBp.getEmpleado(_empresaId, detail.getRut());
                             String labelTurno="";
                             if (idTurnoRotativo == infoEmpleado.getIdTurno()){
-                                System.out.println("[servlet."
+                                System.out.println(WEB_NAME+"[servlet."
                                     + "ReporteHorasExtras.setInfoToCSV]"
                                     + "Empleado.rut: " + infoEmpleado.getRut()
                                     + ", nombres: " + infoEmpleado.getNombres()
@@ -381,7 +381,7 @@ public class ReporteHorasExtras extends BaseServlet {
             PropertiesVO appProperties=(PropertiesVO)application.getAttribute("appProperties");
             HttpSession session = _request.getSession(true);
             UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
-            System.out.println("[servlet.ReporteHorasExtras.writeXLSFile]"
+            System.out.println(WEB_NAME+"[servlet.ReporteHorasExtras.writeXLSFile]"
                 + "empresaId: " + _empresaId
                 + ", deptoId: " + _deptoId
                 + ", cencoId: " + _cencoId
@@ -456,14 +456,14 @@ public class ReporteHorasExtras extends BaseServlet {
             if (listaDetalles != null && !listaDetalles.isEmpty()){
                 Set<String> keys = listaDetalles.keySet();
                 for(String k:keys){
-                    System.out.println("[servlet.ReporteHorasExtras.writeXLSFile]"
+                    System.out.println(WEB_NAME+"[servlet.ReporteHorasExtras.writeXLSFile]"
                         + "key empleado: " + k);
                     if (k != null && k.compareTo("")!=0){    
                         List<DetalleAsistenciaVO> details = listaDetalles.get(k);
                         for (DetalleAsistenciaVO detail: details) {
                             String labelTurno="";
                             if (idTurnoRotativo == infoEmpleado.getIdTurno()){
-                                System.out.println("[servlet."
+                                System.out.println(WEB_NAME+"[servlet."
                                     + "ReporteHorasExtras.writeXLSFile]"
                                     + "Empleado.rut: " + infoEmpleado.getRut()
                                     + ", nombres: " + infoEmpleado.getNombres()
@@ -490,7 +490,7 @@ public class ReporteHorasExtras extends BaseServlet {
                     }
                 }
             }else{
-                System.out.println("[servlet."
+                System.out.println(WEB_NAME+"[servlet."
                     + "ReporteHorasExtras.writeXLSFile]"
                     + Constantes.NO_HAY_INFO_ASISTENCIA);
                 ReportDetailVO detailReport = new ReportDetailVO();
@@ -547,7 +547,7 @@ public class ReporteHorasExtras extends BaseServlet {
             PropertiesVO appProperties=(PropertiesVO)application.getAttribute("appProperties");
             HttpSession session = _request.getSession(true);
             UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
-            System.out.println("[servlet.ReporteHorasExtras.writeXMLFile]"
+            System.out.println(WEB_NAME+"[servlet.ReporteHorasExtras.writeXMLFile]"
                 + "empresaId: " + _empresaId
                 + ", deptoId: " + _deptoId
                 + ", cencoId: " + _cencoId
@@ -606,14 +606,14 @@ public class ReporteHorasExtras extends BaseServlet {
             if (listaDetalles != null && !listaDetalles.isEmpty()){
                 Set<String> keys = listaDetalles.keySet();
                 for(String k:keys){
-                    System.out.println("[servlet.ReporteHorasExtras.writeXMLFile]"
+                    System.out.println(WEB_NAME+"[servlet.ReporteHorasExtras.writeXMLFile]"
                         + "key empleado: " + k);
                     if (k != null && k.compareTo("")!=0){    
                         List<DetalleAsistenciaVO> details = listaDetalles.get(k);
                         for (DetalleAsistenciaVO detailAsistencia: details) {
                             String labelTurno="";
                             if (idTurnoRotativo == infoEmpleado.getIdTurno()){
-                                System.out.println("[servlet."
+                                System.out.println(WEB_NAME+"[servlet."
                                     + "ReporteHorasExtras.writeXMLFile]"
                                     + "Empleado.rut: " + infoEmpleado.getRut()
                                     + ", nombres: " + infoEmpleado.getNombres()
@@ -642,7 +642,7 @@ public class ReporteHorasExtras extends BaseServlet {
                     }
                 }
             }else{
-                System.out.println("[servlet."
+                System.out.println(WEB_NAME+"[servlet."
                     + "ReporteHorasExtras.writeXMLFile]"
                     + Constantes.NO_HAY_INFO_ASISTENCIA);
                 Element detail = document.createElement("detail");
@@ -669,7 +669,7 @@ public class ReporteHorasExtras extends BaseServlet {
             // You can use that for debugging 
  
             transformer.transform(domSource, streamResult);
-            System.out.println("[servlet."
+            System.out.println(WEB_NAME+"[servlet."
                 + "ReporteHorasExtras.writeXMLFile]"
                 + "Done creating XML File");
             

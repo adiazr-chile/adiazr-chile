@@ -107,7 +107,7 @@ public class ReporteDiasFestivosTrabajados extends BaseServlet {
                 intTurno = Integer.parseInt(paramTurno);
         }
         
-        System.out.println("[servlet.ReporteDiasFestivosTrabajados]"
+        System.out.println(WEB_NAME+"[servlet.ReporteDiasFestivosTrabajados]"
             + "token param 'cencoID'= " + paramCencoID
             +", turnoId: " + paramTurno
             +", turnoRotativoId: " + paramTurnoRotativo);
@@ -122,7 +122,7 @@ public class ReporteDiasFestivosTrabajados extends BaseServlet {
                 }
             }
         }
-        System.out.println("[servlet.ReporteDiasFestivosTrabajados]"
+        System.out.println(WEB_NAME+"[servlet.ReporteDiasFestivosTrabajados]"
             + "empresa: " + paramEmpresa
             + ", depto: " + paramDepto
             + ", cenco: " + intCencoId);
@@ -130,13 +130,13 @@ public class ReporteDiasFestivosTrabajados extends BaseServlet {
         String[] empleadosSelected = request.getParameterValues("rutEmpleado");
         if (empleadosSelected != null){
             for (int x = 0; x < empleadosSelected.length; x++){
-                System.out.println("[servlet.ReporteDiasFestivosTrabajados]"
+                System.out.println(WEB_NAME+"[servlet.ReporteDiasFestivosTrabajados]"
                     + "rut seleccionado[" + x + "] = " + empleadosSelected[x]);
                 EmpleadoVO auxEmpleado=new EmpleadoVO();
                 auxEmpleado.setRut(empleadosSelected[x]);
                 listaEmpleados.add(auxEmpleado);
             }     
-        }else System.out.println("[servlet.ReporteDiasFestivosTrabajados]"
+        }else System.out.println(WEB_NAME+"[servlet.ReporteDiasFestivosTrabajados]"
             + "No hay empleados seleccionados");
                     
         //mostrar CSV 
@@ -168,7 +168,7 @@ public class ReporteDiasFestivosTrabajados extends BaseServlet {
         
         FileGeneratedVO fileGenerated = new FileGeneratedVO(fileName,fullFilePath);
         if (fileGenerated != null){
-            System.out.println("[servlet.ReporteDiasFestivosTrabajados]"
+            System.out.println(WEB_NAME+"[servlet.ReporteDiasFestivosTrabajados]"
                 + "Add archivo generado: " + fileGenerated.getFileName());
             showFileToDownload(fileGenerated, response);
             File auxpdf=new File(fileGenerated.getFilePath());
@@ -220,7 +220,7 @@ public class ReporteDiasFestivosTrabajados extends BaseServlet {
             PropertiesVO appProperties=(PropertiesVO)application.getAttribute("appProperties");
             HttpSession session = _request.getSession(true);
             UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
-            System.out.println("[servlet."
+            System.out.println(WEB_NAME+"[servlet."
                 + "ReporteDiasFestivosTrabajados.writeCSVFile]"
                 + "empresaId: " + _empresaId
                 + ", deptoId: " + _deptoId
@@ -278,25 +278,25 @@ public class ReporteDiasFestivosTrabajados extends BaseServlet {
                 + "Observacion");
             
             if (listaDetalles != null && !listaDetalles.isEmpty()){
-                System.out.println("[servlet."
+                System.out.println(WEB_NAME+"[servlet."
                     + "ReporteDiasFestivosTrabajados.writeCSVFile]"
                     + "lista size= " + listaDetalles.size());
                 Set<String> keys = listaDetalles.keySet();
                 for(String k:keys){
-                    System.out.println("[servlet."
+                    System.out.println(WEB_NAME+"[servlet."
                         + "ReporteDiasFestivosTrabajados.writeCSVFile]"
                         + "key empleado: " + k);
                     if (k != null && k.compareTo("") != 0){    
-                        System.out.println("[servlet.Reporte"
+                        System.out.println(WEB_NAME+"[servlet.Reporte"
                             + "DiasFestivosTrabajados.writeCSVFile]"
                             + "Paso 1");
                         filas = 0;
                         List<DetalleAsistenciaVO> details = listaDetalles.get(k);
-                        System.out.println("[servlet.Reporte"
+                        System.out.println(WEB_NAME+"[servlet.Reporte"
                             + "DiasFestivosTrabajados.writeCSVFile]"
                             + "Details.size: " + details.size());
                         for (DetalleAsistenciaVO detail: details) {
-                            System.out.println("[servlet.Reporte"
+                            System.out.println(WEB_NAME+"[servlet.Reporte"
                                 + "DiasFestivosTrabajados.writeCSVFile]"
                                 + "Fecha: " + detail.getLabelFechaEntradaMarca()
                                 + ", es feriado: " + detail.isEsFeriado()
@@ -310,7 +310,7 @@ public class ReporteDiasFestivosTrabajados extends BaseServlet {
 //                            }
                             if (detail.isEsFeriado()){// && !tieneTurno){    
                                 //escribir lineas en el archivo
-                                System.out.println("[servlet.ReporteDiasFestivosTrabajados.writeCSVFile]"
+                                System.out.println(WEB_NAME+"[servlet.ReporteDiasFestivosTrabajados.writeCSVFile]"
                                     + "Itera fecha: " + detail.getLabelFechaEntradaMarca()
                                     + ", hora entrada: " + detail.getHoraEntrada());
                                 outfile.print(detail.getLabelFechaEntradaMarca());
@@ -383,7 +383,7 @@ public class ReporteDiasFestivosTrabajados extends BaseServlet {
             PropertiesVO appProperties=(PropertiesVO)application.getAttribute("appProperties");
             HttpSession session = _request.getSession(true);
             UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
-            System.out.println("[servlet.ReporteDiasFestivosTrabajados.writeXLSFile]"
+            System.out.println(WEB_NAME+"[servlet.ReporteDiasFestivosTrabajados.writeXLSFile]"
                 + "empresaId: " + _empresaId
                 + ", deptoId: " + _deptoId
                 + ", cencoId: " + _cencoId
@@ -456,14 +456,14 @@ public class ReporteDiasFestivosTrabajados extends BaseServlet {
             if (listaDetalles != null && !listaDetalles.isEmpty()){
                 Set<String> keys = listaDetalles.keySet();
                 for(String k:keys){
-                    System.out.println("[servlet.ReporteDiasFestivosTrabajados.writeXLSFile]"
+                    System.out.println(WEB_NAME+"[servlet.ReporteDiasFestivosTrabajados.writeXLSFile]"
                         + "key empleado: " + k);
                     if (k != null && k.compareTo("")!=0){    
                         List<DetalleAsistenciaVO> details = listaDetalles.get(k);
                         for (DetalleAsistenciaVO detail: details) {
 //                            String labelTurno="";
 //                            if (idTurnoRotativo == infoEmpleado.getIdTurno()){
-//                                System.out.println("[servlet."
+//                                System.out.println(WEB_NAME+"[servlet."
 //                                    + "ReporteDiasFestivosTrabajados.writeXLSFile]"
 //                                    + "Empleado.rut: " + infoEmpleado.getRut()
 //                                    + ", nombres: " + infoEmpleado.getNombres()
@@ -492,7 +492,7 @@ public class ReporteDiasFestivosTrabajados extends BaseServlet {
                     }
                 }
             }else{
-                System.out.println("[servlet."
+                System.out.println(WEB_NAME+"[servlet."
                     + "ReporteDiasFestivosTrabajados.writeXLSFile]"
                     + "No hay informacion de asistencia");
                 ReportDetailVO detailReport = new ReportDetailVO();
@@ -549,7 +549,7 @@ public class ReporteDiasFestivosTrabajados extends BaseServlet {
             PropertiesVO appProperties=(PropertiesVO)application.getAttribute("appProperties");
             HttpSession session = _request.getSession(true);
             UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
-            System.out.println("[servlet.ReporteDiasFestivosTrabajados.writeXMLFile]"
+            System.out.println(WEB_NAME+"[servlet.ReporteDiasFestivosTrabajados.writeXMLFile]"
                 + "empresaId: " + _empresaId
                 + ", deptoId: " + _deptoId
                 + ", cencoId: " + _cencoId
@@ -608,14 +608,14 @@ public class ReporteDiasFestivosTrabajados extends BaseServlet {
             if (listaDetalles != null && !listaDetalles.isEmpty()){
                 Set<String> keys = listaDetalles.keySet();
                 for(String k:keys){
-                    System.out.println("[servlet.ReporteDiasFestivosTrabajados.writeXMLFile]"
+                    System.out.println(WEB_NAME+"[servlet.ReporteDiasFestivosTrabajados.writeXMLFile]"
                         + "key empleado: " + k);
                     if (k != null && k.compareTo("")!=0){    
                         List<DetalleAsistenciaVO> details = listaDetalles.get(k);
                         for (DetalleAsistenciaVO detailAsistencia: details) {
 //                            String labelTurno="";
 //                            if (idTurnoRotativo == infoEmpleado.getIdTurno()){
-//                                System.out.println("[servlet."
+//                                System.out.println(WEB_NAME+"[servlet."
 //                                    + "ReporteDiasFestivosTrabajados.writeXMLFile]"
 //                                    + "Empleado.rut: " + infoEmpleado.getRut()
 //                                    + ", nombres: " + infoEmpleado.getNombres()
@@ -643,7 +643,7 @@ public class ReporteDiasFestivosTrabajados extends BaseServlet {
                     }
                 }
             }else{
-                System.out.println("[servlet."
+                System.out.println(WEB_NAME+"[servlet."
                     + "ReporteDiasFestivosTrabajados.writeXMLFile]"
                     + Constantes.NO_HAY_INFO_ASISTENCIA);
                 Element detail = document.createElement("detail");
@@ -667,7 +667,7 @@ public class ReporteDiasFestivosTrabajados extends BaseServlet {
             // You can use that for debugging 
  
             transformer.transform(domSource, streamResult);
-            System.out.println("[servlet."
+            System.out.println(WEB_NAME+"[servlet."
                 + "ReporteDiasFestivosTrabajados.writeXMLFile]"
                 + "Done creating XML File");
             

@@ -20,14 +20,54 @@ public class PermisoAdministrativoVO implements Serializable{
     private String runEmpleado;
     private String nombreEmpleado;
     private int anio;
-    private double diasDisponibles;
-    private double diasUtilizados;
+////    //despues eliminar este attr
+////    private double diasDisponibles;
+////    //eliminar este attr
+////    private double diasUtilizados;
     private String lastUpdate;
     private String deptoId;
     private String deptoNombre;
     private int cencoId;
     private String cencoNombre;
 
+    
+    private double diasDisponiblesSemestre1;
+    private double diasUtilizadosSemestre1;
+    private double diasDisponiblesSemestre2;
+    private double diasUtilizadosSemestre2;
+
+    public double getDiasDisponiblesSemestre1() {
+        return diasDisponiblesSemestre1;
+    }
+
+    public void setDiasDisponiblesSemestre1(double diasDisponiblesSemestre1) {
+        this.diasDisponiblesSemestre1 = diasDisponiblesSemestre1;
+    }
+
+    public double getDiasUtilizadosSemestre1() {
+        return diasUtilizadosSemestre1;
+    }
+
+    public void setDiasUtilizadosSemestre1(double diasUtilizadosSemestre1) {
+        this.diasUtilizadosSemestre1 = diasUtilizadosSemestre1;
+    }
+
+    public double getDiasDisponiblesSemestre2() {
+        return diasDisponiblesSemestre2;
+    }
+
+    public void setDiasDisponiblesSemestre2(double diasDisponiblesSemestre2) {
+        this.diasDisponiblesSemestre2 = diasDisponiblesSemestre2;
+    }
+
+    public double getDiasUtilizadosSemestre2() {
+        return diasUtilizadosSemestre2;
+    }
+
+    public void setDiasUtilizadosSemestre2(double diasUtilizadosSemestre2) {
+        this.diasUtilizadosSemestre2 = diasUtilizadosSemestre2;
+    }
+    
     public String getRowKey() {
         return rowKey;
     }
@@ -99,22 +139,6 @@ public class PermisoAdministrativoVO implements Serializable{
 
     public void setAnio(int anio) {
         this.anio = anio;
-    }
-
-    public double getDiasDisponibles() {
-        return diasDisponibles;
-    }
-
-    public void setDiasDisponibles(double diasDisponibles) {
-        this.diasDisponibles = diasDisponibles;
-    }
-
-    public double getDiasUtilizados() {
-        return diasUtilizados;
-    }
-
-    public void setDiasUtilizados(double diasUtilizados) {
-        this.diasUtilizados = diasUtilizados;
     }
 
     public String getLastUpdate() {

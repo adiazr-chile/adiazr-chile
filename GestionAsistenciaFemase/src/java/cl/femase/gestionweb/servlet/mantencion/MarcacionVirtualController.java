@@ -87,7 +87,7 @@ public class MarcacionVirtualController extends BaseServlet {
         EmpleadosBp empleadosbp=new EmpleadosBp(appProperties);
         
         if(request.getParameter("action") != null){
-            System.out.println("[MarcacionVirtualController]"
+            System.out.println(WEB_NAME+"[MarcacionVirtualController]"
                 + "action is: " + request.getParameter("action"));
             List<MarcacionVirtualVO> listaRegistros = new ArrayList<MarcacionVirtualVO>();
             String action=(String)request.getParameter("action");
@@ -129,7 +129,7 @@ public class MarcacionVirtualController extends BaseServlet {
             //objeto usado para update/insert
             MarcacionVirtualVO asignacion = new MarcacionVirtualVO();
             
-            System.out.println("[MarcacionVirtualController]"
+            System.out.println(WEB_NAME+"[MarcacionVirtualController]"
                 + "empresaId: " + request.getParameter("empresaId")
                 + ", rut empleado: " + request.getParameter("rutEmpleado"));
             
@@ -190,7 +190,7 @@ public class MarcacionVirtualController extends BaseServlet {
             Date fechaActual = calHoy.getTime();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String fechaHoraAsignacion = sdf.format(fechaActual);
-            System.out.println("[MarcacionVirtualController]List- "
+            System.out.println(WEB_NAME+"[MarcacionVirtualController]List- "
                 + "fecha_hora asignacion= " + fechaHoraAsignacion);
             if (action.compareTo("list") == 0) {
                 try{
@@ -198,7 +198,7 @@ public class MarcacionVirtualController extends BaseServlet {
                     String paramEmpresa = null;
                     String paramDepto   = null;
                     String cencoId      = "";
-                    System.out.println("[MarcacionVirtualController]List- "
+                    System.out.println(WEB_NAME+"[MarcacionVirtualController]List- "
                         + "token param 'cencoID'= " + paramCencoID);
                     if (paramCencoID != null && paramCencoID.compareTo("-1") != 0){
                         StringTokenizer tokenCenco  = new StringTokenizer(paramCencoID, "|");
@@ -210,7 +210,7 @@ public class MarcacionVirtualController extends BaseServlet {
                             }
                         }
                     }
-                    System.out.println("[MarcacionVirtualController]"
+                    System.out.println(WEB_NAME+"[MarcacionVirtualController]"
                         + "Listar asignacion marcacion virtual. "
                         + "empresa: " + paramEmpresa
                         +", depto: " + paramDepto
@@ -278,7 +278,7 @@ public class MarcacionVirtualController extends BaseServlet {
                     StringTokenizer keytoken = new StringTokenizer(rowKey, "|");
                     asignacion.setEmpresaId(keytoken.nextToken());
                     asignacion.setRutEmpleado(keytoken.nextToken());
-                    System.out.println("[MarcacionVirtualController]"
+                    System.out.println(WEB_NAME+"[MarcacionVirtualController]"
                         + "Modificar datos de marcacion virtual, "
                         + "rut: : " + asignacion.getRutEmpleado());
                     if (asignacion.getRutEmpleado().compareTo("TODOS") != 0){
@@ -287,19 +287,19 @@ public class MarcacionVirtualController extends BaseServlet {
                         resultado.setEmpresaId(infoEmpleado.getEmpresa().getId());
                         resultado.setDeptoId(infoEmpleado.getDepartamento().getId());
                         resultado.setCencoId(infoEmpleado.getCentroCosto().getId());
-                        System.out.println("[MarcacionVirtualController]"
+                        System.out.println(WEB_NAME+"[MarcacionVirtualController]"
                             + "Modificar datos para el rut:" + asignacion.getRutEmpleado());
                         //boolean insertar = true;
-                        System.out.println("[MarcacionVirtualController]"
+                        System.out.println(WEB_NAME+"[MarcacionVirtualController]"
                             + "Admite marca virtual: " + asignacion.getAdmiteMarcaVirtual());
                         //if (asignacion.getAdmiteMarcaVirtual().compareTo("N") == 0) insertar = false;
-                        //System.out.println("[MarcacionVirtualController]"
+                        //System.out.println(WEB_NAME+"[MarcacionVirtualController]"
                         //    + "Insertar:" + insertar);    
                         try{
                             MaintenanceVO evento;
                             resultado.setRutEmpleado(asignacion.getRutEmpleado());
                             //if (insertar){
-                                System.out.println("[MarcacionVirtualController]"
+                                System.out.println(WEB_NAME+"[MarcacionVirtualController]"
                                     + "Delete e Insert asignacion "
                                     + "marcacion virtual, "
                                     + "empresa_id: " + asignacion.getEmpresaId()
@@ -309,14 +309,14 @@ public class MarcacionVirtualController extends BaseServlet {
                                 
                                 asignacion.setFechaAsignacion(fechaHoraAsignacion);
                                 
-                                System.out.println("[MarcacionVirtualController]"
+                                System.out.println(WEB_NAME+"[MarcacionVirtualController]"
                                     + "Datos a insertar: " + asignacion.toString());
                                 
                                 evento = negocio.insert(asignacion, resultado);
                             //}
                             /*
                             else{
-                                System.out.println("[MarcacionVirtualController]"
+                                System.out.println(WEB_NAME+"[MarcacionVirtualController]"
                                     + "Eliminar asignacion "
                                     + "marcacion virtual, "
                                     + "empresa_id: " + asignacion.getEmpresaId()
@@ -335,7 +335,7 @@ public class MarcacionVirtualController extends BaseServlet {
                                 asignacion.setMarcaMovil("");
                                 
                             }*/
-                            System.out.println("[MarcacionVirtualController]"
+                            System.out.println(WEB_NAME+"[MarcacionVirtualController]"
                                 + "Datos actualizados, "
                                 + "empresa_id: " + asignacion.getEmpresaId()
                                 + ", rut_empleado: " + asignacion.getRutEmpleado()
@@ -347,7 +347,7 @@ public class MarcacionVirtualController extends BaseServlet {
                             listaRegistros.add(asignacion);
                             //Convert Java Object to Json
                             String json=gson.toJson(asignacion);
-                            System.out.println("[MarcacionVirtualController]"
+                            System.out.println(WEB_NAME+"[MarcacionVirtualController]"
                                 + "Json string: "+json);
                             //Return Json in the format required by jTable plugin
                             String listData="{\"Result\":\"OK\",\"Record\":"+json+"}";											
@@ -359,7 +359,7 @@ public class MarcacionVirtualController extends BaseServlet {
                             response.getWriter().print(error);
                         }
                     }else{
-                        System.out.println("[MarcacionVirtualController]"
+                        System.out.println(WEB_NAME+"[MarcacionVirtualController]"
                             + "Asignar marcacion virtual "
                             + "para todos los empleados del "
                             + "cenco_id: " + asignacion.getCencoId() 
@@ -402,7 +402,7 @@ public class MarcacionVirtualController extends BaseServlet {
                             it_asignacion.setFecha5(f5);
                             it_asignacion.setFecha6(f6);
                             it_asignacion.setFecha7(f7);
-                            System.out.println("[MarcacionVirtualController]-TODOS-"
+                            System.out.println(WEB_NAME+"[MarcacionVirtualController]-TODOS-"
                                 + "Asignar marcacion virtual rut: " 
                                 + it_asignacion.getRutEmpleado());
                             negocio.delete(it_asignacion, resultado);    

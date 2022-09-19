@@ -264,7 +264,7 @@ public class ParametroDAO extends BaseDAO{
                                                
             int filasAfectadas = insert.executeUpdate();
             if (filasAfectadas == 1){
-                System.out.println("[ParametroDAO.insert parametro]"
+                System.out.println(WEB_NAME+"[ParametroDAO.insert parametro]"
                     + ", empresa:" + _data.getEmpresaId()
                     + ", code:" + _data.getParamCode()
                     + ", label:" + _data.getParamLabel()
@@ -332,7 +332,7 @@ public class ParametroDAO extends BaseDAO{
             
             int rowAffected = psupdate.executeUpdate();
             if (rowAffected == 1){
-                System.out.println("[ParametroDAO.update]"
+                System.out.println(WEB_NAME+"[ParametroDAO.update]"
                     + ", empresa_id:" +_data.getEmpresaId()
                     + ", code:" +_data.getParamCode()
                     + ", label:" +_data.getParamLabel()

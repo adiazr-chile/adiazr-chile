@@ -30,7 +30,7 @@ public class DbConnectionPool {
             + m_properties.getKeyValue("gestionfemase.port")
             +"/"
             +db;
-        //System.out.println("[DbConnectionPool]urldatabase: "+url);
+        //System.out.println(WEB_NAME+"[DbConnectionPool]urldatabase: "+url);
         user = m_properties.getKeyValue("gestionfemase.user");
         pass = m_properties.getKeyValue("gestionfemase.password");
         inicializaDataSource();

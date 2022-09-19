@@ -20,7 +20,7 @@ import java.util.Set;
  *
  * @author Alexander
  */
-public class VisorMarcasBp {
+public class VisorMarcasBp  extends BaseBp{
 
     public PropertiesVO props;
     private final cl.femase.gestionweb.dao.MarcasDAO marcasDao;
@@ -102,9 +102,9 @@ public class VisorMarcasBp {
                 _regionIdEmpleado, 
                 _comunaIdEmpleado, 
                 _infoCenco);
-        System.out.println("[VisorMarcasBp.setMarcasTurnoNormal]"
+        System.out.println(WEB_NAME+"[VisorMarcasBp.setMarcasTurnoNormal]"
             + "*********************************************");
-        System.out.println("[VisorMarcasBp.setMarcasTurnoNormal]"
+        System.out.println(WEB_NAME+"[VisorMarcasBp.setMarcasTurnoNormal]"
             + "SET INICIAL MARCAS TURNO NORMAL. "
             + "Empresa_id= " + _empresaId
             + ", rut_empleado: " + _rutEmpleado
@@ -135,7 +135,7 @@ public class VisorMarcasBp {
                     + registro.getHoraInicioAusencia() 
                     + " a " 
                     + registro.getHoraFinAusencia());
-                System.out.println("[VisorMarcasBp.setMarcasTurnoNormal]"
+                System.out.println(WEB_NAME+"[VisorMarcasBp.setMarcasTurnoNormal]"
                     + "seteo de ausencia por hora.NEW: "+registro.getMasInfo());
             }
             
@@ -148,7 +148,7 @@ public class VisorMarcasBp {
                         faltaMarca = "Entrada.";
                         tipoEvento = FALTA_MARCA_ENTRADA;
                     }
-                    System.out.println("[VisorMarcasBp.setMarcasTurnoNormal]Fecha = " + DIAS_SEMANA.get(codDiaAnterior) + " " + fechaAnterior 
+                    System.out.println(WEB_NAME+"[VisorMarcasBp.setMarcasTurnoNormal]Fecha = " + DIAS_SEMANA.get(codDiaAnterior) + " " + fechaAnterior 
                         + " ---> Falta marca de "+faltaMarca);
                     String fieldFechaAnt = DIAS_SEMANA.get(codDiaAnterior) + " " + fechaLabelAnterior;
                     String fieldEventoAnt = "Falta marca de " + faltaMarca;
@@ -191,7 +191,7 @@ public class VisorMarcasBp {
                 int tipoEvento = FALTAN_AMBAS_MARCAS;
                 
                 if (registro.getLabelCalendario() != null){
-                    System.out.println("[VisorMarcasBp.setMarcasTurnoNormal]Fecha = " + DIAS_SEMANA.get(registro.getCodDia()) + " " + registro.getFechaLabel() 
+                    System.out.println(WEB_NAME+"[VisorMarcasBp.setMarcasTurnoNormal]Fecha = " + DIAS_SEMANA.get(registro.getCodDia()) + " " + registro.getFechaLabel() 
                         + " ---> Feriado(" + registro.getLabelCalendario() + ")");
                     aux = "Feriado(" + registro.getLabelCalendario() + ")";
                     tipoEvento = FERIADO;
@@ -216,7 +216,7 @@ public class VisorMarcasBp {
                 
                 hashMarcasFinal.put(registro.getFieldFecha() + "|" 
                     + registro.getFieldEvento(), registro);
-                System.out.println("[VisorMarcasBp.setMarcasTurnoNormal]"
+                System.out.println(WEB_NAME+"[VisorMarcasBp.setMarcasTurnoNormal]"
                     + "Fecha = " + DIAS_SEMANA.get(registro.getCodDia()) + " " + registro.getFechaLabel() 
                     + " --->"+ aux 
                     +". num marcas= " + numMarcas
@@ -234,7 +234,7 @@ public class VisorMarcasBp {
                     registro.setFieldFecha(DIAS_SEMANA.get(registro.getCodDia()) + " " + registro.getFechaLabel());
                     registro.setLabelTurno("Sin turno");
                     if (registro.getLabelCalendario()==null){
-                        System.out.println("[VisorMarcasBp.setMarcasTurnoNormal]"
+                        System.out.println(WEB_NAME+"[VisorMarcasBp.setMarcasTurnoNormal]"
                             + "Fecha = " + DIAS_SEMANA.get(registro.getCodDia()) + " " + registro.getFechaLabel() 
                             + " ---> Libre");
                         registro.setTipoEvento(LIBRE);    
@@ -242,7 +242,7 @@ public class VisorMarcasBp {
                         registro.setMasInfo(registro.getFieldEvento());
                         registro.setTipoMarca(LIBRE);
                     }else{
-                        System.out.println("[VisorMarcasBp.setMarcasTurnoNormal]"
+                        System.out.println(WEB_NAME+"[VisorMarcasBp.setMarcasTurnoNormal]"
                             + "Fecha = " + DIAS_SEMANA.get(registro.getCodDia()) + " " + registro.getFechaLabel() 
                             + " ---> Feriado(" + registro.getLabelCalendario() + ")");
                         registro.setTipoEvento(FERIADO);
@@ -264,7 +264,7 @@ public class VisorMarcasBp {
                     
                     hashMarcasFinal.put(registro.getFieldFecha() + "|" 
                         + registro.getFieldEvento(), registro);
-                    System.out.println("[VisorMarcasBp.setMarcasTurnoNormal]"
+                    System.out.println(WEB_NAME+"[VisorMarcasBp.setMarcasTurnoNormal]"
                         + "Fecha = " + DIAS_SEMANA.get(registro.getCodDia()) + " " + registro.getFecha() 
                         + " --->Datos de marca existente."
                         + " IdTurnoAsignado = " + registro.getIdTurnoAsignado()
@@ -317,9 +317,9 @@ public class VisorMarcasBp {
                 _regionIdEmpleado, 
                 _comunaIdEmpleado, 
                 _infoCenco);
-        System.out.println("[VisorMarcasBp.setMarcasTurnoRotativo]"
+        System.out.println(WEB_NAME+"[VisorMarcasBp.setMarcasTurnoRotativo]"
             + "*********************************************");
-        System.out.println("[VisorMarcasBp.setMarcasTurnoRotativo]"
+        System.out.println(WEB_NAME+"[VisorMarcasBp.setMarcasTurnoRotativo]"
             + "SET INICIAL MARCAS TURNO ROTATIVO. "
             + "Empresa_id= " + _empresaId
             + ", rut_empleado: " + _rutEmpleado
@@ -350,12 +350,12 @@ public class VisorMarcasBp {
                     + registro.getHoraInicioAusencia() 
                     + " a " 
                     + registro.getHoraFinAusencia());
-                System.out.println("[VisorMarcasBp.setMarcasTurnoRotativo]"
+                System.out.println(WEB_NAME+"[VisorMarcasBp.setMarcasTurnoRotativo]"
                     + "seteo de ausencia por hora.NEW: "+registro.getMasInfo());
             }
             if (fechaAnterior.compareTo(registro.getFecha()) != 0){//nueva fecha
                     //if (numMarcas == 1 || tipoMarcaDuplicadoAnterior){
-                    System.out.println("[VisorMarcasBp.setMarcasTurnoRotativo]"
+                    System.out.println(WEB_NAME+"[VisorMarcasBp.setMarcasTurnoRotativo]"
                         + "PASO 1");
                     if (numMarcas == 1){
                         String faltaMarca = "Salida.";
@@ -365,7 +365,7 @@ public class VisorMarcasBp {
                             tipoEvento = FALTA_MARCA_ENTRADA;
                         }
                             
-                        System.out.println("[VisorMarcasBp.setMarcasTurnoRotativo]"
+                        System.out.println(WEB_NAME+"[VisorMarcasBp.setMarcasTurnoRotativo]"
                             + "Fecha = " + DIAS_SEMANA.get(codDiaAnterior) + " " + fechaLabelAnterior 
                             + " ---> Falta marca de "+faltaMarca);
 
@@ -398,7 +398,7 @@ public class VisorMarcasBp {
                     } 
                     numMarcas = 0;
             }else{
-                System.out.println("[VisorMarcasBp.setMarcasTurnoRotativo]"
+                System.out.println(WEB_NAME+"[VisorMarcasBp.setMarcasTurnoRotativo]"
                     + "PASO 2");
                 if (registro.getTipoMarca() == tipoMarcaAnterior){
                     registro.setTipoMarcaDuplicado(true);
@@ -408,7 +408,7 @@ public class VisorMarcasBp {
             
             if (registro.getTipoMarca() == -1 
                     && registro.getIdTurnoAsignado() != -1){
-                System.out.println("[VisorMarcasBp.setMarcasTurnoRotativo]"
+                System.out.println(WEB_NAME+"[VisorMarcasBp.setMarcasTurnoRotativo]"
                     + "PASO 3");
                 String aux = TIPO_EVENTO.get(FALTAN_AMBAS_MARCAS);
                 int tipoEvento = FALTAN_AMBAS_MARCAS;
@@ -428,7 +428,7 @@ public class VisorMarcasBp {
                     + " a " + registro.getHoraSalidaTurno() );
                 hashMarcasFinal.put(registro.getFieldFecha() + "|" 
                     + registro.getFieldEvento(), registro);
-                System.out.println("[VisorMarcasBp.setMarcasTurnoRotativo]"
+                System.out.println(WEB_NAME+"[VisorMarcasBp.setMarcasTurnoRotativo]"
                     + "Fecha = " + DIAS_SEMANA.get(registro.getCodDia()) + " " + registro.getFechaLabel() 
                     + " --->fieldEvento(aux): " + aux 
                     +". num marcas= " + numMarcas
@@ -437,7 +437,7 @@ public class VisorMarcasBp {
                     + ", salidaTeorica = " + registro.getHoraSalidaTurno());
             }else if (registro.getIdTurnoAsignado() == -1){
                     String aux = "";
-                    System.out.println("[VisorMarcasBp.setMarcasTurnoRotativo]"
+                    System.out.println(WEB_NAME+"[VisorMarcasBp.setMarcasTurnoRotativo]"
                         + "PASO 4");
                     if (registro.getFechaHoraMarca()!=null){
                         aux = ". " + registro.getLabelTipoMarca()
@@ -452,12 +452,12 @@ public class VisorMarcasBp {
                             registro.setMasInfo(registro.getAusenciaNombre());
                         }
                     }else {
-                        System.out.println("[VisorMarcasBp.setMarcasTurnoRotativo]"
+                        System.out.println(WEB_NAME+"[VisorMarcasBp.setMarcasTurnoRotativo]"
                             + "PASO 5");
                         if (registro.getLabelCalendario()==null){
-                            System.out.println("[VisorMarcasBp.setMarcasTurnoRotativo]"
+                            System.out.println(WEB_NAME+"[VisorMarcasBp.setMarcasTurnoRotativo]"
                                 + "PASO 6");
-                            System.out.println("[VisorMarcasBp.setMarcasTurnoRotativo]"
+                            System.out.println(WEB_NAME+"[VisorMarcasBp.setMarcasTurnoRotativo]"
                                 + "Fecha = " + DIAS_SEMANA.get(registro.getCodDia()) + " " + registro.getFechaLabel() 
                                 + " ---> Libre");
                             registro.setFieldEvento(TIPO_EVENTO.get(LIBRE) + aux);
@@ -465,9 +465,9 @@ public class VisorMarcasBp {
                             registro.setTipoEvento(LIBRE);
                             registro.setTipoMarca(LIBRE);
                         }else{
-                            System.out.println("[VisorMarcasBp.setMarcasTurnoRotativo]"
+                            System.out.println(WEB_NAME+"[VisorMarcasBp.setMarcasTurnoRotativo]"
                                 + "PASO 7");
-                            System.out.println("[VisorMarcasBp.setMarcasTurnoRotativo]Fecha = " + DIAS_SEMANA.get(registro.getCodDia()) + " " + registro.getFechaLabel() 
+                            System.out.println(WEB_NAME+"[VisorMarcasBp.setMarcasTurnoRotativo]Fecha = " + DIAS_SEMANA.get(registro.getCodDia()) + " " + registro.getFechaLabel() 
                                 + " ---> Feriado(" + registro.getLabelCalendario() + ")");
                             registro.setTipoEvento(FERIADO);
                             registro.setFieldEvento("Feriado (" + registro.getLabelCalendario() + ")"+aux);
@@ -480,7 +480,7 @@ public class VisorMarcasBp {
                     hashMarcasFinal.put(registro.getFieldFecha() + "|" 
                         + registro.getFieldEvento(), registro);
             } else{//hay registro de marca
-                    System.out.println("[VisorMarcasBp.setMarcasTurnoRotativo]"
+                    System.out.println(WEB_NAME+"[VisorMarcasBp.setMarcasTurnoRotativo]"
                         + "PASO 8");
                     registro.setFieldFecha(DIAS_SEMANA.get(registro.getCodDia()) + " " + registro.getFechaLabel());
                     registro.setTipoEvento(HAY_MARCA);
@@ -491,7 +491,7 @@ public class VisorMarcasBp {
                         + " a " + registro.getHoraSalidaTurno() );
                     hashMarcasFinal.put(registro.getFieldFecha() + "|" 
                         + registro.getFieldEvento(), registro);
-                    System.out.println("[VisorMarcasBp.setMarcasTurnoRotativo]Fecha = " + DIAS_SEMANA.get(registro.getCodDia()) + " " + registro.getFechaLabel() 
+                    System.out.println(WEB_NAME+"[VisorMarcasBp.setMarcasTurnoRotativo]Fecha = " + DIAS_SEMANA.get(registro.getCodDia()) + " " + registro.getFechaLabel() 
                         + " --->Datos de marca existente."
                         + " IdTurnoAsignado = " + registro.getIdTurnoAsignado()
                         + ", fechaHoraMarca = " + registro.getFechaHoraMarca()

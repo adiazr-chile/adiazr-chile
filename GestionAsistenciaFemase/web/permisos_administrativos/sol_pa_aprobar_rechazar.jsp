@@ -28,7 +28,7 @@
     List<AusenciaVO> ausencias = 
         (List<AusenciaVO>)session.getAttribute("ausencias");
     boolean readOnly = false;
-    System.out.println("[sol_pa_aprobar_rechazar.jsp]perfil de usuario= " + theUser.getIdPerfil());
+    System.out.println("[GestionFemaseWeb]sol_pa_aprobar_rechazar.jsp]perfil de usuario= " + theUser.getIdPerfil());
     //perfil empleado y fiscalizador solo pueden ver
     if (theUser.getIdPerfil() == Constantes.ID_PERFIL_FISCALIZADOR || theUser.getIdPerfil() == Constantes.ID_PERFIL_EMPLEADO){
         readOnly = true;
@@ -348,6 +348,14 @@
                 },
                 jornada: {
                     title:'Jornada',
+                    width: '10%',
+                    list: true,
+                    create:false,
+                    edit:false,
+                    sorting: false
+                },
+                semestre: {
+                    title:'Semestre',
                     width: '10%',
                     list: true,
                     create:false,

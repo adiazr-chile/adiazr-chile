@@ -78,7 +78,7 @@ public class EmpresasController extends BaseServlet {
         EmpresaBp auxnegocio=new EmpresaBp(appProperties);
 
         if(request.getParameter("action") != null){
-            System.out.println("---->action is: " + request.getParameter("action"));
+            System.out.println(WEB_NAME+"---->action is: " + request.getParameter("action"));
             List<EmpresaVO> listaObjetos = new ArrayList<EmpresaVO>();
             String action=(String)request.getParameter("action");
             Gson gson = new Gson();
@@ -136,7 +136,7 @@ public class EmpresasController extends BaseServlet {
             }
             
             if (action.compareTo("list") == 0) {
-                System.out.println("Mantenedor - Empresas - "
+                System.out.println(WEB_NAME+"Mantenedor - Empresas - "
                     + "mostrando empresas...");
                 try{
                     listaObjetos = auxnegocio.getEmpresas(userConnected, 
@@ -167,7 +167,7 @@ public class EmpresasController extends BaseServlet {
                     ex.printStackTrace();
                 }   
             }else if (action.compareTo("create") == 0) {
-                    System.out.println("Mantenedor - Empresas - Insertar...");
+                    System.out.println(WEB_NAME+"Mantenedor - Empresas - Insertar...");
                     MaintenanceVO doCreate = auxnegocio.insert(auxdata, resultado);					
                     listaObjetos.add(auxdata);
 
@@ -177,7 +177,7 @@ public class EmpresasController extends BaseServlet {
                     String listData="{\"Result\":\"OK\",\"Record\":"+json+"}";											
                     response.getWriter().print(listData);
             }else if (action.compareTo("update") == 0) {  
-                    System.out.println("Mantenedor - Empresas - Actualizar...");
+                    System.out.println(WEB_NAME+"Mantenedor - Empresas - Actualizar...");
                     try{
                         MaintenanceVO doUpdate = auxnegocio.update(auxdata, resultado);
                         listaObjetos.add(auxdata);

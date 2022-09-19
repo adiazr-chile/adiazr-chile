@@ -81,7 +81,7 @@ public class MarcasVirtualesView extends BaseServlet {
         MarcasBp auxnegocio=new MarcasBp(appProperties);
 
         if(request.getParameter("action") != null){
-            System.out.println("[MarcasEventosController]"
+            System.out.println(WEB_NAME+"[MarcasEventosController]"
                 + "action is: " + request.getParameter("action"));
             List<MarcaVO> listaMarcas = new ArrayList<>();
             String action=(String)request.getParameter("action");
@@ -102,7 +102,7 @@ public class MarcasVirtualesView extends BaseServlet {
             String deptoId  = null;
             String cencoId  = "-1";
             String paramCencoID         = request.getParameter("cencoId");
-            System.out.println("[MarcasVirtualesView]"
+            System.out.println(WEB_NAME+"[MarcasVirtualesView]"
                 + "token param 'cencoID'= " + paramCencoID);
             if (paramCencoID != null && paramCencoID.compareTo("-1") != 0){
                 StringTokenizer tokenCenco  = new StringTokenizer(paramCencoID, "|");
@@ -127,7 +127,7 @@ public class MarcasVirtualesView extends BaseServlet {
                 numRecordsPerPage   = Integer.parseInt(request.getParameter("jtPageSize"));
             if (request.getParameter("jtSorting") != null) 
                 jtSorting   = request.getParameter("jtSorting");
-            System.out.println("MarcasVirtualesView." +
+            System.out.println(WEB_NAME+"MarcasVirtualesView." +
                 " jtSorting: " + request.getParameter("jtSorting"));
             
             if (jtSorting.contains("fechaHoraModificacion")) 
@@ -149,7 +149,7 @@ public class MarcasVirtualesView extends BaseServlet {
             }
             
             if (action.compareTo("list") == 0){
-                System.out.println("[MarcasVirtualesView]"
+                System.out.println(WEB_NAME+"[MarcasVirtualesView]"
                     + "mostrando marcas virtuales."+
                     "CencoId= " +cencoId
                     +", rutEmpleado= " +request.getParameter("rutEmpleado")

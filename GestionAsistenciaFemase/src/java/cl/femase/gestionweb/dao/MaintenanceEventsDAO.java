@@ -173,7 +173,7 @@ public class MaintenanceEventsDAO extends BaseDAO{
             + "," + _eventdata.getType()+","
             + _eventdata.getDescription()+"]";     
         
-        System.out.println("[MaintenanceEventsDAO.addEvent]"
+        System.out.println(WEB_NAME+"[MaintenanceEventsDAO.addEvent]"
             + "tipo_evento = " + _eventdata.getType()
             + ", descripcion: " + _eventdata.getDescription()
             + ", deptoId: " + _eventdata.getDeptoId());
@@ -224,7 +224,7 @@ public class MaintenanceEventsDAO extends BaseDAO{
             dbLocator.freeConnection(dbConn);
             
         }catch(SQLException|DatabaseException sqle){
-            System.out.println("[MaintenanceEventsDAO.addEvent]Error: "+sqle.toString());
+            System.out.println(WEB_NAME+"[MaintenanceEventsDAO.addEvent]Error: "+sqle.toString());
             objresultado.setThereError(true);
             objresultado.setCodError(result);
             objresultado.setMsgError(headerError + datosEvento+" :" + sqle.toString());
@@ -255,7 +255,7 @@ public class MaintenanceEventsDAO extends BaseDAO{
             + "," + _eventdata.getType()+","
             + _eventdata.getDescription()+"]";     
         
-        System.out.println("[MaintenanceEventsDAO.addLogAuditoria]"
+        System.out.println(WEB_NAME+"[MaintenanceEventsDAO.addLogAuditoria]"
             + "tipo_evento = " + _eventdata.getType()
             + ", descripcion: " + _eventdata.getDescription()
             + ", deptoId: " + _eventdata.getDeptoId());
@@ -304,7 +304,7 @@ public class MaintenanceEventsDAO extends BaseDAO{
             dbLocator.freeConnection(dbConn);
             
         }catch(SQLException|DatabaseException sqle){
-            System.out.println("[MaintenanceEventsDAO.addLogAuditoria]"
+            System.out.println(WEB_NAME+"[MaintenanceEventsDAO.addLogAuditoria]"
                 + "Error: "+sqle.toString());
             objresultado.setThereError(true);
             objresultado.setCodError(result);

@@ -23,7 +23,7 @@ import java.util.List;
  *
  * @author Alexander
  */
-public class TurnoRotativoBp {
+public class TurnoRotativoBp  extends BaseBp{
 
     public PropertiesVO props;
     /** para guardar los eventos de mantencion de informacion*/
@@ -36,13 +36,16 @@ public class TurnoRotativoBp {
         turnosRotativosDao = new cl.femase.gestionweb.dao.TurnoRotativoDAO(this.props);
     }
 
-    public List<TurnoRotativoVO> getTurnos(String _empresaId, String _nombreTurno,
+    public List<TurnoRotativoVO> getTurnos(String _empresaId, 
+            String _nombreTurno,
+            int _estado,
             int _jtStartIndex, 
             int _jtPageSize, 
             String _jtSorting){
         
         List<TurnoRotativoVO> lista = 
-            turnosRotativosDao.getTurnos(_empresaId, _nombreTurno, _jtStartIndex, 
+            turnosRotativosDao.getTurnos(_empresaId, _nombreTurno, 
+                _estado, _jtStartIndex, 
                 _jtPageSize, _jtSorting);
 
         return lista;
@@ -189,8 +192,18 @@ public class TurnoRotativoBp {
         return updatedValues;
     }
         
-    public int getTurnosCount(String _empresaId,String _nombreTurno){
-        return turnosRotativosDao.getTurnosCount(_empresaId, _nombreTurno);
+    /**
+    * 
+    * @param _empresaId
+    * @param _nombreTurno
+    * @param _estado
+    * @return 
+    */
+    public int getTurnosCount(String _empresaId,
+            String _nombreTurno, int _estado){
+        return turnosRotativosDao.getTurnosCount(_empresaId, 
+            _nombreTurno, 
+            _estado);
     }
 
     public List<TurnoRotativoVO> getTurnosConDetalle(String _empresaId){

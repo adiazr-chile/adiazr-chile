@@ -13,7 +13,7 @@
     List<CargoVO> cargos                = (List<CargoVO>)session.getAttribute("cargos");    
     String startDate = (String)session.getAttribute("startDate");
     String endDate = (String)session.getAttribute("endDate");
-    System.out.println("[calculoHorasHist.jsp]"
+    System.out.println("[GestionFemaseWeb]calculoHorasHist.jsp]"
         + "startDate= "+startDate
         + ",endDate= "+endDate);
 %>

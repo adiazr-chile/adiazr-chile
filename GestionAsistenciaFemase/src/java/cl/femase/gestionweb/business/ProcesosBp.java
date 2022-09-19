@@ -36,7 +36,7 @@ import org.quartz.impl.StdSchedulerFactory;
  *
  * @author Alexander
  */
-public class ProcesosBp {
+public class ProcesosBp  extends BaseBp{
 
     public PropertiesVO props;
     /** para guardar los eventos de mantencion de informacion*/
@@ -56,7 +56,7 @@ public class ProcesosBp {
         
         List<ProcesoVO> lista;
         
-        System.out.println("[ProcesosBp.getProcesos]"
+        System.out.println(WEB_NAME+"[ProcesosBp.getProcesos]"
             + "empresaId: "+_empresaId
             +", nombre: "+_nombre);
         lista = procesosService.getProcesos(_empresaId, _nombre, _jtStartIndex, 
@@ -168,7 +168,7 @@ public class ProcesosBp {
             Locale localeCl = new Locale("es", "CL");
             Calendar fechaActual=Calendar.getInstance(localeCl);
             int codDia = fechaActual.get(Calendar.DAY_OF_WEEK);
-            System.out.println("[GestionFemase.ProcesosBp.scheduleJobs]Cod_dia hoy= "+codDia);
+            System.out.println(WEB_NAME+"[GestionFemase.ProcesosBp.scheduleJobs]Cod_dia hoy= "+codDia);
             codDia--;
             if (codDia==0) codDia=7;
             Date currentDate = fechaActual.getTime();
@@ -191,7 +191,7 @@ public class ProcesosBp {
             
             for (int i = 0; i < listaProcesos.size(); i++) {
                 ProcesoProgramacionVO auxProceso = listaProcesos.get(i);
-                System.out.println("[GestionFemase.ProcesosBp.scheduleJobs]"
+                System.out.println(WEB_NAME+"[GestionFemase.ProcesosBp.scheduleJobs]"
                     + "empresaId:" + auxProceso.getEmpresaId()
                     + ",idProceso:" + auxProceso.getProcesoId()
                     + ",horas_ejecucion:" + auxProceso.getHorasEjecucion()
@@ -203,7 +203,7 @@ public class ProcesosBp {
                     int correlativo = 1;
                     while (tokenHorasEjecucion.hasMoreTokens()){
                         String horaEjecucion = tokenHorasEjecucion.nextToken();
-                        System.out.println("[GestionFemase.ProcesosBp.scheduleJobs]"
+                        System.out.println(WEB_NAME+"[GestionFemase.ProcesosBp.scheduleJobs]"
                             + "Hora ejecucion: " + horaEjecucion);
                         String fechaHora = fechaFmt.format(fechaActual.getTime())+" "+horaEjecucion;
                         Class jobClass=null;
@@ -217,7 +217,7 @@ public class ProcesosBp {
                             System.err.println("[GestionFemase.ProcesosBp.scheduleJobs]"
                                 + "Error al referenciar clase Job: "+ex.getMessage());
                         }
-                        System.out.println("[GestionFemase.ProcesosBp.scheduleJobs]"
+                        System.out.println(WEB_NAME+"[GestionFemase.ProcesosBp.scheduleJobs]"
                             + "fechaHora ejecucion: " + fechaHora);
                         Date startDateTime=null;
                         if (fechaHora!=null && fechaHora.compareTo("")!=0){
@@ -248,7 +248,7 @@ public class ProcesosBp {
                                         filtroValue = fechaFmt.format(currentDate);
                                     }
                                     
-                                    System.out.println("[ProcesosController."
+                                    System.out.println(WEB_NAME+"[ProcesosController."
                                         + "ejecutar]filtro: "+filtro.getCode()
                                         + ", value: " + filtroValue);
 
@@ -256,7 +256,7 @@ public class ProcesosBp {
 
                                 }//fin iteracion de filtros
                                 
-                                System.out.println("[GestionFemase.ProcesosBp.scheduleJobs]"
+                                System.out.println(WEB_NAME+"[GestionFemase.ProcesosBp.scheduleJobs]"
                                     + "Programando Job at: "+startDateTime);
                                 //ver pq está ejecutando el job...
                                 SimpleTrigger trigger = (SimpleTrigger)newTrigger()
@@ -279,7 +279,7 @@ public class ProcesosBp {
             }//fin iteracion programacion de ejecucion procesos
             
             // Set response content type
-            System.out.println("[GestionFemase.ProcesosBp.scheduleJobs]Procesos Quartz programados exitosamente...");
+            System.out.println(WEB_NAME+"[GestionFemase.ProcesosBp.scheduleJobs]Procesos Quartz programados exitosamente...");
         }catch ( SchedulerException de) {
             System.err.println("[GestionFemase.ProcesosBp.scheduleJobs]Error 1 al schedular procesos: "+de.toString());
             //throw new IOException(de.getMessage());

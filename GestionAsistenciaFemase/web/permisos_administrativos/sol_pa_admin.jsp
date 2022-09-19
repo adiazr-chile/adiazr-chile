@@ -390,6 +390,14 @@
                     sorting: false,
                     edit:false
                 },
+                semestre: {
+                    title:'Semestre',
+                    width: '6%',
+                    list: true,
+                    create:false,
+                    sorting: false,
+                    edit:false
+                },
                 diasSolicitados: {
                     title:'Dias solicitados',
                     width: '6%',

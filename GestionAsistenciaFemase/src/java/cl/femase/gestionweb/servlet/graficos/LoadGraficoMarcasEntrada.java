@@ -52,7 +52,7 @@ public class LoadGraficoMarcasEntrada extends BaseServlet {
             GraficosDAO graficosdao = new GraficosDAO();
             //Obtener fecha maxima donde hay marcas
             String fecha = graficosdao.getMaximaFechaConMarcas();
-            System.out.println("[GestionWeb.LoadGraficoMarcasEntrada]"
+            System.out.println(WEB_NAME+"[GestionWeb.LoadGraficoMarcasEntrada]"
                 + "FECHA: " + fecha);
                     
             StringTokenizer tokenFecha = new StringTokenizer(fecha, "-");
@@ -91,7 +91,7 @@ public class LoadGraficoMarcasEntrada extends BaseServlet {
                     System.err.println("[GestionWeb.LoadGraficoMarcasEntrada]error 1: "+ex1.getMessage());
                     ex1.printStackTrace();
                 }
-                System.out.println("[GestionWeb.LoadGraficoMarcasEntrada]"
+                System.out.println(WEB_NAME+"[GestionWeb.LoadGraficoMarcasEntrada]"
                     + "time desde: " + calendarDesde.getTime()
                     + ", conFormato: "+startTime
                     + ", time hasta: " + calendarHasta.getTime()
@@ -106,7 +106,7 @@ public class LoadGraficoMarcasEntrada extends BaseServlet {
             
             responseObj.put("empdetails", empdetails);
             
-            System.out.println("[GestionWeb.LoadGraficoMarcasEntrada]response string: "+ responseObj.toString());
+            System.out.println(WEB_NAME+"[GestionWeb.LoadGraficoMarcasEntrada]response string: "+ responseObj.toString());
                     
             out.print(responseObj.toString());
         } catch (JSONException ex) {

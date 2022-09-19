@@ -114,7 +114,7 @@ public class DetalleAusenciaDAO extends BaseDAO{
             
             int rowAffected = psupdate.executeUpdate();
             if (rowAffected == 1){
-                System.out.println("[update]detalle_ausencia"
+                System.out.println(WEB_NAME+"[update]detalle_ausencia"
                     + ", rutEmpleado:" +_data.getRutEmpleado()
                     + ", fechaIngreso:" +_data.getFechaIngresoAsStr()
                     + ", ausenciaId:" +_data.getIdAusencia()    
@@ -179,7 +179,7 @@ public class DetalleAusenciaDAO extends BaseDAO{
             
             int rowAffected = psupdate.executeUpdate();
             if (rowAffected == 1){
-                System.out.println("[DetalleAusenciaDAO."
+                System.out.println(WEB_NAME+"[DetalleAusenciaDAO."
                     + "updateDiasEfectivosVacaciones]"
                     + "detalle_ausencia"
                     + ", empresaId: " +_data.getEmpresaId()    
@@ -245,7 +245,7 @@ public class DetalleAusenciaDAO extends BaseDAO{
             
             int rowAffected = psupdate.executeUpdate();
             if (rowAffected == 1){
-                System.out.println("[update dias efectivos vacaciones]detalle_ausencia"
+                System.out.println(WEB_NAME+"[update dias efectivos vacaciones]detalle_ausencia"
                     + ", correlativo:" + _correlativo
                     + ", dias_efectivos:" + _diasEfectivos    
                     +" actualizada OK!");
@@ -319,7 +319,7 @@ public class DetalleAusenciaDAO extends BaseDAO{
             
             int rowAffected = psupdate.executeUpdate();
             if (rowAffected == 1){
-                System.out.println("[delete]detalle_ausencia"
+                System.out.println(WEB_NAME+"[delete]detalle_ausencia"
                     + " Correlativo:" +_data.getCorrelativo()   
                     +" eliminada OK!");
             }
@@ -375,7 +375,7 @@ public class DetalleAusenciaDAO extends BaseDAO{
             String sql = "SELECT setsaldodiasvacacionesasignadas"
                     + "('" + _runEmpleado + "') strjson";
 
-            System.out.println("[DetalleAusenciaDAO."
+            System.out.println(WEB_NAME+"[DetalleAusenciaDAO."
                 + "actualizaSaldosVacaciones]Sql: "+sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,"[DetalleAusenciaDAO."
@@ -448,7 +448,7 @@ public class DetalleAusenciaDAO extends BaseDAO{
             String sql = "SELECT setsaldodiasvacacionesasignadas_vba"
                     + "('" + _runEmpleado + "') strjson";
 
-            System.out.println("[DetalleAusenciaDAO."
+            System.out.println(WEB_NAME+"[DetalleAusenciaDAO."
                 + "actualizaSaldosVacacionesVBA]Sql: "+sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,"[DetalleAusenciaDAO."
@@ -559,7 +559,7 @@ public class DetalleAusenciaDAO extends BaseDAO{
             }
             sql += ")";
 
-            System.out.println("[DetalleAusenciaDAO.insert]sql: "+sql);
+            System.out.println(WEB_NAME+"[DetalleAusenciaDAO.insert]sql: "+sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,"[DetalleAusenciaDAO.insert]");
             insert = dbConn.prepareStatement(sql);
@@ -571,7 +571,7 @@ public class DetalleAusenciaDAO extends BaseDAO{
             
             int filasAfectadas = insert.executeUpdate();
             if (filasAfectadas == 1){
-                System.out.println("[insert]detalle_ausencia"
+                System.out.println(WEB_NAME+"[insert]detalle_ausencia"
                     + ", rutEmpleado:" +_data.getRutEmpleado()
                     + ", fechaIngreso:" +_data.getFechaIngresoAsStr()
                     + ", ausenciaId:" +_data.getIdAusencia()    
@@ -662,7 +662,7 @@ public class DetalleAusenciaDAO extends BaseDAO{
             sql += ","+_data.getDiasEfectivosVacaciones();
             sql += ", ?, ?, ?, ?, ?, ?)";
 
-            System.out.println("[DetalleAusenciaDAO.insertaVacacion]sql: "+sql);
+            System.out.println(WEB_NAME+"[DetalleAusenciaDAO.insertaVacacion]sql: "+sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,"[DetalleAusenciaDAO.insertaVacacion]");
             insert = dbConn.prepareStatement(sql);
@@ -681,7 +681,7 @@ public class DetalleAusenciaDAO extends BaseDAO{
             
             int filasAfectadas = insert.executeUpdate();
             if (filasAfectadas == 1){
-                System.out.println("[insertaVacacion]detalle_ausencia"
+                System.out.println(WEB_NAME+"[insertaVacacion]detalle_ausencia"
                     + ", rutEmpleado:" +_data.getRutEmpleado()
                     + ", fechaIngreso:" +_data.getFechaIngresoAsStr()
                     + ", ausenciaId:" +_data.getIdAusencia()    
@@ -752,7 +752,7 @@ public class DetalleAusenciaDAO extends BaseDAO{
             + ", ausenciaAutorizada [" + _data.getAusenciaAutorizada() + "]"
             + ", dias solicitados [" + _data.getDiasSolicitados() + "]";
         
-        System.out.println("[DetalleAusenciaDAO."
+        System.out.println(WEB_NAME+"[DetalleAusenciaDAO."
             + "insertaPermisoAdministrativo]" + msgFinal);
         
         objresultado.setMsg(msgFinal);
@@ -772,21 +772,32 @@ public class DetalleAusenciaDAO extends BaseDAO{
                 + "allow_hour,"
                 + "dias_solicitados, "
                 + "saldo_post_pa";
+            if (_data.getPermiteHora().compareTo("S") == 0){
+                sql += ",hora_inicio,hora_fin";
+            }
+            
             sql += ")"
                 + " VALUES (" + newId + ", "    //correlativo
                     + "?, "                     //rut_empleado
                     + "current_date, "          //fecha_ingreso
                     + "?,"                      //ausencia_id
-                    + " '"+_data.getFechaInicioAsStr()+"', "//fecha inicio
-                    + "'"+_data.getFechaFinAsStr()+"', "    //fecha_fin
+                    + " '" + _data.getFechaInicioAsStr() + "', "//fecha inicio
+                    + " '" + _data.getFechaFinAsStr() + "', "    //fecha_fin
                     + "?, "                                 //rut_autoriza_ausencia
                     + "?, "                                 //ausencia_autorizada
                     + "current_timestamp, "                 //fecha_actualizacion
                     + "? ";                                 //allow_hour
             sql += ","+_data.getDiasSolicitados();          //dias_solicitados
-            sql += ",?)";//saldo post PA
+            sql += ",?"; //saldo post PA
+            
+            if (_data.getPermiteHora().compareTo("S") == 0){
+                sql+=",'" + _data.getHoraInicioFullAsStr() + "', "
+                    + "'" + _data.getHoraFinFullAsStr() + "' ";
+            }
+            
+            sql += ")";    
 
-            System.out.println("[DetalleAusenciaDAO.insertaPermisoAdministrativo]sql: "+sql);
+            System.out.println(WEB_NAME+"[DetalleAusenciaDAO.insertaPermisoAdministrativo]sql: "+sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,"[DetalleAusenciaDAO.insertaPermisoAdministrativo]");
             insert = dbConn.prepareStatement(sql);
@@ -799,7 +810,7 @@ public class DetalleAusenciaDAO extends BaseDAO{
             
             int filasAfectadas = insert.executeUpdate();
             if (filasAfectadas == 1){
-                System.out.println("[DetalleAusenciaDAO.insertaPermisoAdministrativo]detalle_ausencia"
+                System.out.println(WEB_NAME+"[DetalleAusenciaDAO.insertaPermisoAdministrativo]detalle_ausencia"
                     + ", rutEmpleado:" +_data.getRutEmpleado()
                     + ", fechaIngreso:" +_data.getFechaIngresoAsStr()
                     + ", ausenciaId:" +_data.getIdAusencia()    
@@ -933,7 +944,7 @@ public class DetalleAusenciaDAO extends BaseDAO{
                 sql += " limit "+_jtPageSize + " offset "+_jtStartIndex;
             }
             
-            System.out.println("[DetalleAusenciaDAO."
+            System.out.println(WEB_NAME+"[DetalleAusenciaDAO."
                 + "getDetallesAusencias]SQL: " + sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,
@@ -1017,7 +1028,7 @@ public class DetalleAusenciaDAO extends BaseDAO{
                         strMinsFin = strMinsFin.substring(strMinsFin.length()-1);
                     }
                 }
-                System.out.println("[DetalleAusenciaDAO.getDetallesAusencias]"
+                System.out.println(WEB_NAME+"[DetalleAusenciaDAO.getDetallesAusencias]"
                     + "soloHoraInicio: " +strHoraInicio
                     + ",soloMinsInicio: " +strMinsInicio    
                     + ",soloHoraFin: " +strHoraFin
@@ -1161,7 +1172,7 @@ public class DetalleAusenciaDAO extends BaseDAO{
                 sql += " limit "+_jtPageSize + " offset "+_jtStartIndex;
             }
             
-            System.out.println("[DetalleAusenciaDAO."
+            System.out.println(WEB_NAME+"[DetalleAusenciaDAO."
                 + "getPermisosAdministrativos]SQL: " + sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,
@@ -1196,7 +1207,7 @@ public class DetalleAusenciaDAO extends BaseDAO{
                 data.setFechaHoraActualizacion(rs.getString("fecha_actualizacion_str"));
                 data.setPermiteHora(rs.getString("allow_hour"));                
                 
-                System.out.println("[DetalleAusenciaDAO."
+                System.out.println(WEB_NAME+"[DetalleAusenciaDAO."
                     + "getPermisosAdministrativos]"
                     + "Correlativo ausencia: " + data.getCorrelativo()
                     + ", rutAutorizador: " + data.getRutAutorizador());
@@ -1250,7 +1261,7 @@ public class DetalleAusenciaDAO extends BaseDAO{
                         strMinsFin = strMinsFin.substring(strMinsFin.length()-1);
                     }
                 }
-                System.out.println("[DetalleAusenciaDAO.getPermisosAdministrativos]"
+                System.out.println(WEB_NAME+"[DetalleAusenciaDAO.getPermisosAdministrativos]"
                     + "soloHoraInicio: " +strHoraInicio
                     + ",soloMinsInicio: " +strMinsInicio    
                     + ",soloHoraFin: " +strHoraFin
@@ -1313,7 +1324,7 @@ public class DetalleAusenciaDAO extends BaseDAO{
                 + " and to_char(da.fecha_inicio,'yyyy-MM') = '" + _anioMesInicio + "' "
                 + " order by da.fecha_inicio"; 
             
-            System.out.println("[DetalleAusenciaDAO."
+            System.out.println(WEB_NAME+"[DetalleAusenciaDAO."
                 + "getDetallesAusencias]SQL: " + sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,
@@ -1382,7 +1393,7 @@ public class DetalleAusenciaDAO extends BaseDAO{
                 + " and to_char(da.fecha_inicio,'yyyy-MM') = '" + _anioMesInicio + "' "
                 + " order by da.fecha_inicio"; 
             
-            System.out.println("[DetalleAusenciaDAO."
+            System.out.println(WEB_NAME+"[DetalleAusenciaDAO."
                 + "getPermisosAdministrativosByAnioMesInicio]SQL: " + sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,
@@ -1490,7 +1501,7 @@ public class DetalleAusenciaDAO extends BaseDAO{
             
             sql += " order by da.fecha_inicio desc limit " + _rowLimit;
             
-            System.out.println("gestionweb."
+            System.out.println(WEB_NAME+"gestionweb."
                 + "service.DetalleAusenciaDAO."
                 + "getUltimasAusencias(). SQL: "+sql);
             
@@ -1624,7 +1635,7 @@ public class DetalleAusenciaDAO extends BaseDAO{
                 sql += " limit "+_jtPageSize + " offset "+_jtStartIndex;
             }
             
-            System.out.println("cl.femase.gestionweb."
+            System.out.println(WEB_NAME+"cl.femase.gestionweb."
                 + "service.DetalleAusenciaDAO."
                 + "getDetallesAusencias(). SQL: "+sql);
             
@@ -1708,7 +1719,7 @@ public class DetalleAusenciaDAO extends BaseDAO{
                         strMinsFin = strMinsFin.substring(strMinsFin.length()-1);
                     }
                 }
-                System.out.println("[DetalleAusenciaDAO.getDetallesAusencias]"
+                System.out.println(WEB_NAME+"[DetalleAusenciaDAO.getDetallesAusencias]"
                     + "soloHoraInicio: " +strHoraInicio
                     + ",soloMinsInicio: " +strMinsInicio    
                     + ",soloHoraFin: " +strHoraFin
@@ -1757,7 +1768,7 @@ public class DetalleAusenciaDAO extends BaseDAO{
                 + "get_ausencias_json"
                     + "('" + _rut + "','" + _fecha + "') strjson";
 
-            System.out.println("[DetalleAusenciaDAO."
+            System.out.println(WEB_NAME+"[DetalleAusenciaDAO."
                 + "getAusenciasJson]Sql: "+sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,"[DetalleAusenciaDAO.getAusenciasJson]");
@@ -1806,7 +1817,7 @@ public class DetalleAusenciaDAO extends BaseDAO{
                 + "get_ausencias_hist_json"
                     + "('" + _rut + "','" + _fecha + "') strjson";
 
-            System.out.println("[DetalleAusenciaDAO."
+            System.out.println(WEB_NAME+"[DetalleAusenciaDAO."
                 + "getAusenciasHistJson]Sql: "+sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,"[DetalleAusenciaDAO.getAusenciasHistJson]");
@@ -2136,7 +2147,7 @@ public class DetalleAusenciaDAO extends BaseDAO{
             dbConn = dbLocator.getConnection(m_dbpoolName,
                 "[DetalleAusenciaDAO.getAutorizadoresDisponibles]");
             
-            System.out.println("[DetalleAusenciaDAO."
+            System.out.println(WEB_NAME+"[DetalleAusenciaDAO."
                 + "getAutorizadoresDisponibles]sql: " + sql);
             ps = dbConn.prepareStatement(sql);
             rs = ps.executeQuery();
@@ -2216,7 +2227,7 @@ public class DetalleAusenciaDAO extends BaseDAO{
                     sql += " and detalle_ausencia.ausencia_id != " + Constantes.ID_AUSENCIA_VACACIONES;
                 }
                 
-                System.out.println("[DetalleAusenciaDAO."
+                System.out.println(WEB_NAME+"[DetalleAusenciaDAO."
                     + "getDetallesAusenciasCount]SQL: " + sql);
                 
                 rs = statement.executeQuery(sql);
@@ -2278,7 +2289,7 @@ public class DetalleAusenciaDAO extends BaseDAO{
                 
                 sql += " and detalle_ausencia.ausencia_id = " + Constantes.ID_AUSENCIA_PERMISO_ADMINISTRATIVO;
                 
-                System.out.println("[DetalleAusenciaDAO."
+                System.out.println(WEB_NAME+"[DetalleAusenciaDAO."
                     + "getPermisosAdministrativosCount]SQL: " + sql);
                 
                 rs = statement.executeQuery(sql);
@@ -2342,7 +2353,7 @@ public class DetalleAusenciaDAO extends BaseDAO{
                     sql += " and detalle_ausencia.ausencia_id = " + _ausenciaId;
                 }   
                 
-                System.out.println("cl.femase.gestionweb."
+                System.out.println(WEB_NAME+"cl.femase.gestionweb."
                     + "service.DetalleAusenciaDAO."
                     + "getDetallesAusenciasCount(). SQL: "+sql);
                 
@@ -2401,7 +2412,7 @@ public class DetalleAusenciaDAO extends BaseDAO{
             
             sql += " and ausencia_autorizada='S' ";
             
-            System.out.println("[DetalleAusenciaDAO."
+            System.out.println(WEB_NAME+"[DetalleAusenciaDAO."
                 + "getAusenciasDiaConflicto]Sql: "+sql);
                                 
             dbConn = dbLocator.getConnection(m_dbpoolName,
@@ -2481,7 +2492,7 @@ public class DetalleAusenciaDAO extends BaseDAO{
              }
              sql += " and ausencia_autorizada = 'S' ";
             
-            System.out.println("[DetalleAusenciaDAO."
+            System.out.println(WEB_NAME+"[DetalleAusenciaDAO."
                 + "getAusenciasHoraConflicto]Sql: "+sql);
                                 
             dbConn = dbLocator.getConnection(m_dbpoolName,

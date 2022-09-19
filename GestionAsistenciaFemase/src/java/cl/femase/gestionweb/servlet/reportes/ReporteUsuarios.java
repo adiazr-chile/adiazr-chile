@@ -54,7 +54,7 @@ public class ReporteUsuarios extends BaseServlet {
         
         String formato      = request.getParameter("formato");
                 
-        System.out.println("cl.femase.gestionweb."
+        System.out.println(WEB_NAME+"cl.femase.gestionweb."
             + "servlet.reportes."
             + "ReporteUsuario."
             + "processRequest(). "
@@ -96,7 +96,7 @@ public class ReporteUsuarios extends BaseServlet {
     ////            "Trimestral",
     ////            "Periodo:" + strstartdate +" al "+ strenddate, 
     ////            nemotecnico,"TRIMESTRE");
-    ////        System.out.println("--->PATH FINAL: "+fullPDFXLSfilename);        
+    ////        System.out.println(WEB_NAME+"--->PATH FINAL: "+fullPDFXLSfilename);        
     ////        pointToFile = new File(fullPDFXLSfilename);
     ////
             ByteArrayInputStream byteArrayInputStream = 
@@ -142,12 +142,12 @@ public class ReporteUsuarios extends BaseServlet {
     throws ServletException, IOException {
         HttpSession session = request.getSession(true);
         UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
-        System.out.println("cl.femase.gestionweb.servlet."
+        System.out.println(WEB_NAME+"cl.femase.gestionweb.servlet."
                 + "reportes.ReporteUsuario.doGet(). Formato: "+request.getParameter("formato"));
         if (request.getParameter("formato")!=null && 
             request.getParameter("formato").compareTo("csv")==0){
             
-            System.out.println("[GestionFemase.ReporteUsuario]"
+            System.out.println(WEB_NAME+"[GestionFemase.ReporteUsuario]"
                 + "userConnected: " + userConnected);
                            
             ServletContext application = this.getServletContext();
@@ -245,10 +245,10 @@ public class ReporteUsuarios extends BaseServlet {
 ////                new InstrumentosManager(appProperties);
 ////        strpriceformat =  nemosManager.getFormatoPrecio(_symbol, true);
 ////        
-////        System.out.println("[Certificados]Formato precio instrumento "
+////        System.out.println(WEB_NAME+"[Certificados]Formato precio instrumento "
 ////                +strpriceformat);
 ////        
-////        System.out.println("[Certificados]Excel de salida: "
+////        System.out.println(WEB_NAME+"[Certificados]Excel de salida: "
 ////                +_outputfilename);
 ////        
 ////        SitrelFormatter sformat = new SitrelFormatter(strpriceformat);

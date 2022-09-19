@@ -39,7 +39,8 @@ import org.json.JSONObject;
  *
  * @author Alexander
  */
-public class CalculoAsistenciaRunnable implements Runnable{
+public class CalculoAsistenciaRunnable extends BaseBp implements Runnable{
+    
     private EmpleadoVO empleado;
     private CalculoAsistenciaNew calculadorAsistencia;
     public static LinkedHashMap<String, ArrayList<DetalleAsistenciaVO>> listaCalculosEmpleado = 
@@ -139,7 +140,7 @@ public class CalculoAsistenciaRunnable implements Runnable{
         setAusenciasHist(_listaStrEmpleados);
         setMarcasHist(_empresaId, _listaStrEmpleados);
         setAsignacionTurnoRotativo(_empresaId, _listaStrEmpleados);
-        System.out.println("[GestionFemase.CalculoAsistenciaRunnable."
+        System.out.println(WEB_NAME+"[GestionFemase.CalculoAsistenciaRunnable."
             + "setDataHist]seteo flag de calculo historico");
         
         isHistorico = true;
@@ -178,7 +179,7 @@ public class CalculoAsistenciaRunnable implements Runnable{
                 calculador1.m_fechasCalendarioFeriados = m_fechasCalendarioFeriados;
                 
                 Runnable proceso = new CalculoAsistenciaRunnable(empleado, calculador1);
-                System.out.println("[GestionFemase.CalculoAsistenciaRunnable."
+                System.out.println(WEB_NAME+"[GestionFemase.CalculoAsistenciaRunnable."
                     + "setHebras]add hebra para rut--> "+empleado.getRut());
                 executor.execute(proceso);
                 i++;
@@ -189,11 +190,11 @@ public class CalculoAsistenciaRunnable implements Runnable{
         while (!executor.isTerminated()) {
              //Espero a que terminen de ejecutarse todos los procesos 
              //para pasar a las siguientes instrucciones
-//            System.out.println("[GestionFemase.CalculoAsistenciaRunnable."
+//            System.out.println(WEB_NAME+"[GestionFemase.CalculoAsistenciaRunnable."
 //                + "Aun no termina la ejecucion de las Hebras...");
         }
         
-        System.out.println("[GestionFemase.CalculoAsistenciaRunnable."
+        System.out.println(WEB_NAME+"[GestionFemase.CalculoAsistenciaRunnable."
             + "Ha finalizado la ejecucion de las Hebras...");
         
         DetalleAsistenciaBp calculoBp = new DetalleAsistenciaBp(new PropertiesVO()); 
@@ -204,13 +205,13 @@ public class CalculoAsistenciaRunnable implements Runnable{
                  * Guardar en BD el resultado de los calculos
                  * de asistencia 
                  */
-                System.out.println("[GestionFemase.CalculoAsistenciaRunnable.setHebras] "
+                System.out.println(WEB_NAME+"[GestionFemase.CalculoAsistenciaRunnable.setHebras] "
                     + "Inicio guardar calculos en BD...");
 
                 //***inicio llenar datos para los insert
                 //Guardar en Base de datos los calculos realizados...
                 //Iterar listaFinalCalculos
-                System.out.println("[GestionFemase.CalculoAsistenciaRunnable.setHebras]."
+                System.out.println(WEB_NAME+"[GestionFemase.CalculoAsistenciaRunnable.setHebras]."
                     + "Lista Calculos empleado.size= " + listaCalculosEmpleado.size() );
                 Iterator<ArrayList<DetalleAsistenciaVO>> itFechas 
                     = listaCalculosEmpleado.values().iterator();
@@ -221,7 +222,7 @@ public class CalculoAsistenciaRunnable implements Runnable{
                     while (itDetails.hasNext())//while 9
                     {   
                         DetalleAsistenciaVO calculosFecha = itDetails.next();
-                        System.out.println("[GestionFemase.CalculoAsistenciaRunnable.setHebras]."
+                        System.out.println(WEB_NAME+"[GestionFemase.CalculoAsistenciaRunnable.setHebras]."
                             + "Agregar calculos para el insert de calculos asistencia. "
                             + "Rut= " + calculosFecha.getRutEmpleado()
                             + ", fechaEntrada= " + calculosFecha.getFechaEntradaMarca()
@@ -232,7 +233,7 @@ public class CalculoAsistenciaRunnable implements Runnable{
                             );
 
                         if (calculosFecha.getFechaEntradaMarca()!=null){
-                            System.out.println("[GestionFemase.CalculoAsistenciaRunnable.setHebras]."
+                            System.out.println(WEB_NAME+"[GestionFemase.CalculoAsistenciaRunnable.setHebras]."
                                 + " add To Insert: "+calculosFecha.toString());
                             
                             /**
@@ -243,13 +244,13 @@ public class CalculoAsistenciaRunnable implements Runnable{
                                 
                                 if (calculosFecha.getHhmmAtraso() != null 
                                     && calculosFecha.getHhmmAtraso().compareTo("") != 0){
-                                        System.out.println("[CalculoAsistenciaRunnable]"
+                                        System.out.println(WEB_NAME+"[CalculoAsistenciaRunnable]"
                                             + "Verificar si atraso supera minutos de holgura. "
                                             + "hhmmAtraso= " + calculosFecha.getHhmmAtraso()
                                             + ", minsHolgura= " + calculosFecha.getHolguraMinutos());
                                         String atrasoReal = 
                                             getAtrasoReal(calculosFecha.getHhmmAtraso(),calculosFecha.getHolguraMinutos());    
-                                        System.out.println("[CalculoAsistenciaRunnable]"
+                                        System.out.println(WEB_NAME+"[CalculoAsistenciaRunnable]"
                                             + "Atraso ajustado = " + atrasoReal);
                                         calculosFecha.setHhmmAtraso(atrasoReal);
                                 }
@@ -262,7 +263,7 @@ public class CalculoAsistenciaRunnable implements Runnable{
                 }//fin while 9
 
                 if (listaAsistencia.size() > 0){
-                    System.out.println("[GestionFemase.CalculoAsistenciaRunnable.setHebras]. "
+                    System.out.println(WEB_NAME+"[GestionFemase.CalculoAsistenciaRunnable.setHebras]. "
                         + "Num Empleados "
                         + "a actualizar detalle asistencia= "+listaAsistencia.size());
                     //Abrir conexion a BD
@@ -273,14 +274,14 @@ public class CalculoAsistenciaRunnable implements Runnable{
                      //cerrar conexion a BD
                     calculoBp.closeDbConnection();
                 }
-                System.out.println("[GestionFemase.CalculoAsistenciaRunnable.setHebras]."
+                System.out.println(WEB_NAME+"[GestionFemase.CalculoAsistenciaRunnable.setHebras]."
                     + "Fin guardar calculos en BD");
             //}
     }
     
     @Override
     public void run() {
-        System.out.println("[GestionFemase."
+        System.out.println(WEB_NAME+"[GestionFemase."
             + "CalculoAsistenciaRunnable.run]invocar metodo calculaAsistencia"
             + " para empleado "
             + "rut: "+empleado.getRut()+", iteracion: "+empleado.getIteracion()
@@ -288,7 +289,7 @@ public class CalculoAsistenciaRunnable implements Runnable{
         ArrayList<DetalleAsistenciaVO> dataFechasRut 
             = this.calculadorAsistencia.calculaAsistencia(empleado, 
             empleado.getIteracion(), isHistorico);
-        System.out.println("[GestionFemase."
+        System.out.println(WEB_NAME+"[GestionFemase."
             + "CalculoAsistenciaRunnable.run]add calculos rut: "+empleado.getRut());
         listaCalculosEmpleado.put(empleado.getRut()+"|"+empleado.getIteracion(), dataFechasRut);
     }
@@ -299,13 +300,13 @@ public class CalculoAsistenciaRunnable implements Runnable{
     private static void setParameters(String _empresaId, 
             String _startDate, 
             String _endDate){
-        System.out.println("[GestionFemase."
+        System.out.println(WEB_NAME+"[GestionFemase."
             + "CalculoAsistenciaRunnable.setParameters()]INICIO "
             + ". StartDate: " + _startDate+", endDate: "+_endDate);
         
         m_fechasCalculo = Utilidades.getFechas(_startDate, _endDate);
             m_hashTiposHE = m_tiempoExtraBp.getTiposHrasExtras();
-        System.out.println("[GestionFemase."
+        System.out.println(WEB_NAME+"[GestionFemase."
             + "CalculoAsistenciaRunnable.setParameters()]INICIO "
             + ". getFeriados para el rango de fechas seleccionado");
         //m_hashFeriados = m_feriadosBp.getHashFeriados(_startDate, _endDate);
@@ -314,11 +315,11 @@ public class CalculoAsistenciaRunnable implements Runnable{
         m_endDate   = _endDate;
         m_empresaId = _empresaId;
         
-        m_listaTurnos = m_turnosBp.getTurnos(_empresaId, null, 0, 0, "id_turno");
+        m_listaTurnos = m_turnosBp.getTurnos(_empresaId, null,-1, 0, 0, "id_turno");
         List<TurnoVO> listaTurnos = 
-            m_turnosBp.getTurnos(_empresaId, null, 0, 0, "id_turno");
+            m_turnosBp.getTurnos(_empresaId, null, -1, 0, 0, "id_turno");
         for (TurnoVO turno : listaTurnos) {
-            System.out.println("[GestionFemase."
+            System.out.println(WEB_NAME+"[GestionFemase."
                 + "CalculoAsistenciaRunnable."
                 + "setParameters()]"
                 + "turno.empresa_id: "+turno.getEmpresaId()
@@ -346,13 +347,13 @@ public class CalculoAsistenciaRunnable implements Runnable{
             m_hashFechas.put(itFecha, codDia);
         }
         
-        System.out.println("[GestionFemase."
+        System.out.println(WEB_NAME+"[GestionFemase."
             + "CalculoAsistenciaRunnable.setParameters()]FIN "
             + ". StartDate: " + _startDate+", endDate: "+_endDate);
     }
                 
     private static void setAusencias(List<String> _rutsEmpleados){
-        System.out.println("[GestionFemase."
+        System.out.println(WEB_NAME+"[GestionFemase."
             + "CalculoAsistenciaRunnable.setAusencias()]INICIO "
             + "set lista de ausencias para todos los ruts "
             + "y fechas en el rango (usa get_ausencias_json)...");
@@ -366,12 +367,12 @@ public class CalculoAsistenciaRunnable implements Runnable{
                     String jsonOutput = 
                         m_detalleAusenciaBp.getAusenciasJson(rutEmpleado, 
                          m_fechasCalculo[i]);
-                    System.out.println("[GestionFemase."
+                    System.out.println(WEB_NAME+"[GestionFemase."
                         + "CalculoAsistenciaRunnable."
                         + "setAusencias]jsonOutput: "+jsonOutput);
                     Type listType = new TypeToken<ArrayList<DetalleAusenciaJsonVO>>() {}.getType();
                     ArrayList<DetalleAusenciaJsonVO> ausencias = new Gson().fromJson(jsonOutput, listType);                
-                    System.out.println("[GestionFemase."
+                    System.out.println(WEB_NAME+"[GestionFemase."
                         + "CalculoAsistenciaRunnable."
                         + "setAusencias]add rut empleado "+rutEmpleado
                         +", fecha: "+itFecha);
@@ -380,14 +381,14 @@ public class CalculoAsistenciaRunnable implements Runnable{
                 
             }
         }
-        System.out.println("[GestionFemase."
+        System.out.println(WEB_NAME+"[GestionFemase."
             + "CalculoAsistenciaRunnable.setAusencias()]FIN "
             + "set lista de ausencias para todos los ruts "
             + "y fechas en el rango...");
     }
     
     private static void setAusenciasHist(List<String> _rutsEmpleados){
-        System.out.println("[GestionFemase."
+        System.out.println(WEB_NAME+"[GestionFemase."
             + "CalculoAsistenciaRunnable.setAusenciasHist()]INICIO "
             + "set lista de ausencias para todos los ruts "
             + "y fechas en el rango (usa get_ausencias_json)...");
@@ -401,12 +402,12 @@ public class CalculoAsistenciaRunnable implements Runnable{
                     String jsonOutput = 
                         m_detalleAusenciaBp.getAusenciasHistJson(rutEmpleado, 
                          m_fechasCalculo[i]);
-                    System.out.println("[GestionFemase."
+                    System.out.println(WEB_NAME+"[GestionFemase."
                         + "CalculoAsistenciaRunnable."
                         + "setAusenciasHist]jsonOutput: "+jsonOutput);
                     Type listType = new TypeToken<ArrayList<DetalleAusenciaJsonVO>>() {}.getType();
                     ArrayList<DetalleAusenciaJsonVO> ausencias = new Gson().fromJson(jsonOutput, listType);                
-                    System.out.println("[GestionFemase."
+                    System.out.println(WEB_NAME+"[GestionFemase."
                         + "CalculoAsistenciaRunnable."
                         + "setAusenciasHist]add rut empleado "+rutEmpleado
                         +", fecha: "+itFecha);
@@ -415,7 +416,7 @@ public class CalculoAsistenciaRunnable implements Runnable{
                 
             }
         }
-        System.out.println("[GestionFemase."
+        System.out.println(WEB_NAME+"[GestionFemase."
             + "CalculoAsistenciaRunnable.setAusenciasHist()]FIN "
             + "set lista de ausencias para todos los ruts "
             + "y fechas en el rango...");
@@ -427,7 +428,7 @@ public class CalculoAsistenciaRunnable implements Runnable{
     * @param _rutsEmpleados
     */
     private static void setMarcas(String _empresaId, List<String> _rutsEmpleados){
-        System.out.println("[GestionFemase."
+        System.out.println(WEB_NAME+"[GestionFemase."
             + "CalculoAsistenciaRunnable.setMarcas()]INICIO "
             + "set lista de marcas para todos los ruts "
             + "y fechas en el rango (usa get_marcas_json)...");
@@ -443,7 +444,7 @@ public class CalculoAsistenciaRunnable implements Runnable{
                     String jsonOutput = 
                         auxMarcasBp.getMarcasJson(_empresaId,rutEmpleado, 
                          m_fechasCalculo[i],m_fechasCalculo[i]);
-                    System.out.println("[GestionFemase."
+                    System.out.println(WEB_NAME+"[GestionFemase."
                         + "CalculoAsistenciaRunnable.setMarcas]"
                         + "getMarcasJson jsonOutput: " + jsonOutput);
                                         
@@ -454,7 +455,7 @@ public class CalculoAsistenciaRunnable implements Runnable{
                     if (marcas != null){
                         for(int x=0; x < marcas.size(); x++) {
                             MarcaJsonVO itmarca = marcas.get(x); 
-                            System.out.println("[GestionFemase."
+                            System.out.println(WEB_NAME+"[GestionFemase."
                             + "CalculoAsistenciaRunnable.setMarcas]"
                                 + "iteracion: "
                                 + "rut:" + itmarca.getRutempleado()
@@ -485,7 +486,7 @@ public class CalculoAsistenciaRunnable implements Runnable{
                 }
             }
         }
-        System.out.println("[GestionFemase."
+        System.out.println(WEB_NAME+"[GestionFemase."
             + "CalculoAsistenciaRunnable.setMarcas()]FIN "
             + "set lista de marcas para todos los ruts "
             + "y fechas en el rango...");
@@ -498,7 +499,7 @@ public class CalculoAsistenciaRunnable implements Runnable{
      * @param _rutsEmpleados
      */
     private static void setMarcasHist(String _empresaId, List<String> _rutsEmpleados){
-        System.out.println("[GestionFemase."
+        System.out.println(WEB_NAME+"[GestionFemase."
             + "CalculoAsistenciaRunnable.setMarcasHist()]INICIO "
             + "set lista de marcas para todos los ruts "
             + "y fechas en el rango (usa get_marcas_json)...");
@@ -514,7 +515,7 @@ public class CalculoAsistenciaRunnable implements Runnable{
                     String jsonOutput = 
                         auxMarcasBp.getMarcasHistJson(_empresaId,rutEmpleado, 
                          m_fechasCalculo[i],m_fechasCalculo[i]);
-                    System.out.println("[GestionFemase."
+                    System.out.println(WEB_NAME+"[GestionFemase."
                         + "CalculoAsistenciaRunnable.setMarcasHist]"
                         + "getMarcasJson jsonOutput: " + jsonOutput);
                                         
@@ -525,7 +526,7 @@ public class CalculoAsistenciaRunnable implements Runnable{
                     if (marcas != null){
                         for(int x=0; x < marcas.size(); x++) {
                             MarcaJsonVO itmarca = marcas.get(x); 
-                            System.out.println("[GestionFemase."
+                            System.out.println(WEB_NAME+"[GestionFemase."
                             + "CalculoAsistenciaRunnable.setMarcasHist]"
                                 + "iteracion: "
                                 + "rut:" + itmarca.getRutempleado()
@@ -555,14 +556,14 @@ public class CalculoAsistenciaRunnable implements Runnable{
                 }
             }
         }
-        System.out.println("[GestionFemase."
+        System.out.println(WEB_NAME+"[GestionFemase."
             + "CalculoAsistenciaRunnable.setMarcasHist()]FIN "
             + "set lista de marcas para todos los ruts "
             + "y fechas en el rango...");
     }
     
     private static void setAsignacionTurnoRotativo(String _empresaId, List<String> _rutsEmpleados){
-        System.out.println("[GestionFemase."
+        System.out.println(WEB_NAME+"[GestionFemase."
             + "CalculoAsistenciaRunnable.setAsignacionTurnoRotativo()]INICIO "
             + "set lista de asignacion turnos rotativos para todos los ruts "
             + "y fechas en el rango (get_turno_rotativo_by_fecha_json)");
@@ -593,7 +594,7 @@ public class CalculoAsistenciaRunnable implements Runnable{
                     DetalleTurnoVO.class);
                     
                     if (asignacionTurnoRotativo!=null){
-                        System.out.println("[GestionFemase."
+                        System.out.println(WEB_NAME+"[GestionFemase."
                             + "CalculoAsistenciaRunnable.setAsignacionTurnoRotativo()]rut: " + rutEmpleado
                             + ", itemKey: " + itemKey
                             + ", itFecha: " + itFecha
@@ -608,7 +609,7 @@ public class CalculoAsistenciaRunnable implements Runnable{
                 }
             }
         }
-        System.out.println("[GestionFemase."
+        System.out.println(WEB_NAME+"[GestionFemase."
             + "CalculoAsistenciaRunnable.setAsignacionTurnoRotativo()]FIN "
             + "set lista de asignacion turnos rotativos para todos los ruts "
             + "y fechas en el rango...");
@@ -621,7 +622,7 @@ public class CalculoAsistenciaRunnable implements Runnable{
          try{   
            StackTraceElement[] threadStacktrace=monitorMe.getStackTrace();
            
-           System.out.println("[GestionFemase."
+           System.out.println(WEB_NAME+"[GestionFemase."
                 + "CalculoAsistenciaRunnable."
                 + "monitorThread] "+monitorMe.getName() +" is Alive and it's state ="+monitorMe.getState()
                    +" ||  Execution is in method : ("+threadStacktrace[0].getClassName()
@@ -646,7 +647,7 @@ public class CalculoAsistenciaRunnable implements Runnable{
            }
                 /* since threadStacktrace may be empty upon reference since Thread A may be terminated after the monitorMe.getStackTrace(); call*/
          }
-        System.out.println("[GestionFemase."
+        System.out.println(WEB_NAME+"[GestionFemase."
                 + "CalculoAsistenciaRunnable."
                 + "monitorThread] " + monitorMe.getName()+" is dead and its state ="+monitorMe.getState());
     }
@@ -663,7 +664,7 @@ public class CalculoAsistenciaRunnable implements Runnable{
             String atrasoReal = Utilidades.restarMinsHora(_hhmmAtraso, 
                 _minsHolgura); 
             atrasoReal = atrasoReal.substring(0, atrasoReal.length()-3);
-            System.out.println("atrasoReal: "+atrasoReal);
+            System.out.println(WEB_NAME+"atrasoReal: "+atrasoReal);
             _hhmmAtraso = atrasoReal;
         }else _hhmmAtraso = "00:00";
         

@@ -17,7 +17,7 @@ import java.util.List;
  *
  * @author Alexander
  */
-public class SolicitudVacacionesBp {
+public class SolicitudVacacionesBp  extends BaseBp{
 
     /**
      *

@@ -25,6 +25,35 @@ public class NotificacionSolicitudPermisoAdministrativoVO implements Serializabl
     private String inicioPermisoAdministrativo;
     private String terminoPermisoAdministrativo;
     private double diasSolicitados;
+    private String horaInicio;
+    private String horaFin;
+    private int semestre;
+
+    public int getSemestre() {
+        return semestre;
+    }
+
+    public void setSemestre(int semestre) {
+        this.semestre = semestre;
+    }
+    
+    
+    
+    public String getHoraInicio() {
+        return horaInicio;
+    }
+
+    public void setHoraInicio(String horaInicio) {
+        this.horaInicio = horaInicio;
+    }
+
+    public String getHoraFin() {
+        return horaFin;
+    }
+
+    public void setHoraFin(String horaFin) {
+        this.horaFin = horaFin;
+    }
 
     public String getTipoEvento() {
         return tipoEvento;

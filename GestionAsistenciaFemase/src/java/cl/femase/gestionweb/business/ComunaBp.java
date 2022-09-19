@@ -15,7 +15,7 @@ import java.util.List;
  *
  * @author Alexander
  */
-public class ComunaBp {
+public class ComunaBp  extends BaseBp{
 
     /**
      *

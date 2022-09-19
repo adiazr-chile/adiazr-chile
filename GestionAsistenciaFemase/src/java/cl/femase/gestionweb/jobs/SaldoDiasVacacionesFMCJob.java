@@ -67,14 +67,14 @@ import org.simplejavamail.email.AttachmentResource;
 * 
 */
 
-public class SaldoDiasVacacionesFMCJob implements Job {
+public class SaldoDiasVacacionesFMCJob extends BaseJobs implements Job {
 
     GetPropertyValues m_properties = new GetPropertyValues();
     
     @Override
     public void execute(JobExecutionContext arg0) throws JobExecutionException {
         DetalleAusenciaBp ausenciasBp = new DetalleAusenciaBp(new PropertiesVO());
-        System.out.println("\n[GestionFemase."
+        System.out.println(WEB_NAME+"[GestionFemase."
             + "SaldoDiasVacacionesFMCJob]"
             + "INICIO - CalculandoDiasVacaciones " + new java.util.Date());
         String outputPath = m_properties.getKeyValue("pathExportedFiles");
@@ -96,7 +96,7 @@ public class SaldoDiasVacacionesFMCJob implements Job {
         ejecucion.setProcesoId(39);
         ejecucion.setFechaHoraInicioEjecucion(sdf.format(start));
         
-        System.out.println("[GestionFemase."
+        System.out.println(WEB_NAME+"[GestionFemase."
             + "SaldoDiasVacacionesFMCJob]Ejecutar."
             + "Empresa:" + empresaId
             + ", startDate:" + startDate
@@ -105,7 +105,7 @@ public class SaldoDiasVacacionesFMCJob implements Job {
 //        String jsonMsg = ausenciasBp.getAusencias(empresaId, 
 //            startDate);
         String jsonMsg = "";
-        System.out.println("[GestionFemase."
+        System.out.println(WEB_NAME+"[GestionFemase."
             + "SaldoDiasVacacionesFMCJob]Json "
             + "Empleados con marcas rechazadas dia-str: " + jsonMsg);
         if (jsonMsg != null && jsonMsg.compareTo("null") != 0){
@@ -141,10 +141,10 @@ public class SaldoDiasVacacionesFMCJob implements Job {
                 String emailCencoAnterior = "";
                 String cencoIteracion = "";
                 ArrayList<EmpleadoMarcaRechazoVO> auxEmpleados = new ArrayList<>();
-                System.out.println("\n1.- Iterar empleados con marcas rechazadas...");
+                System.out.println(WEB_NAME+"1.- Iterar empleados con marcas rechazadas...");
                 for(EmpleadoMarcaRechazoVO empleado : empleadosMarcasRechazos) {
                     cencoIteracion = empleado.getCenco_nombre();
-    //                System.out.println("--->Cenco Anterior: "+ cencoAnterior
+    //                System.out.println(WEB_NAME+"--->Cenco Anterior: "+ cencoAnterior
     //                    +", cencoIteracion: "+cencoIteracion);
                     if (cencoAnterior.compareTo("") != 0 && cencoAnterior.compareTo(cencoIteracion) != 0){
                         empleadosCenco.put(cencoAnterior + "|" + emailCencoAnterior, auxEmpleados);
@@ -168,12 +168,12 @@ public class SaldoDiasVacacionesFMCJob implements Job {
                     String asuntoMail=cencoNombre+" - Rechazos Marcas";
                     if (notifyCencos.compareTo("S")==0){
                         if (cencoEmail!=null && cencoEmail.compareTo("-1") != 0 && cencoEmail.compareTo("") != 0){
-                            System.out.println("[GestionFemase."
+                            System.out.println(WEB_NAME+"[GestionFemase."
                                 + "SaldoDiasVacacionesFMCJob]Enviando correo a cenco.mail: " + cencoEmail);
                             MailSender.sendWithAttachment(csvRechazos, fromLabel, 
                                 fromMail, cencoEmail, 
                                 asuntoMail, mailBody);
-                            System.out.println("[GestionFemase."
+                            System.out.println(WEB_NAME+"[GestionFemase."
                                 + "SaldoDiasVacacionesFMCJob]Correo enviado exitosamente...");
                         }
                     }else{
@@ -188,24 +188,24 @@ public class SaldoDiasVacacionesFMCJob implements Job {
                         AttachmentResource attachresource1 = new AttachmentResource(initialFile1.getName(), new ByteArrayDataSource(targetStream1, "text/plain"));
                         attachList.add(attachresource1);    
                             
-                        System.out.println("[GestionFemase."
+                        System.out.println(WEB_NAME+"[GestionFemase."
                             + "SaldoDiasVacacionesFMCJob]Enviando correo al admin.mail: " + cencoEmail);
                     }
                     
                 }
                 if (!attachList.isEmpty()){
-                    System.out.println("[GestionFemase."
+                    System.out.println(WEB_NAME+"[GestionFemase."
                         + "SaldoDiasVacacionesFMCJob]"
                         + "Enviando correo al admin, "
                         + "con todos los CSV, correo: " + m_properties.getKeyValue("mailAdmin"));
                     MailSender.send(attachList, fromLabel, 
                         fromMail, m_properties.getKeyValue("mailAdmin"), 
                         "Marcas rechazadas (Control Interno)", mailBody);
-                    System.out.println("[GestionFemase."
+                    System.out.println(WEB_NAME+"[GestionFemase."
                         + "SaldoDiasVacacionesFMCJob]"
                         + "Correo enviado exitosamente...");
                 }
-                System.out.println("\n[GestionFemase."
+                System.out.println(WEB_NAME+"[GestionFemase."
                     + "SaldoDiasVacacionesFMCJob]"
                     + "FIN - Informando marcas rechazadas - " + new java.util.Date());
                 
@@ -239,7 +239,7 @@ public class SaldoDiasVacacionesFMCJob implements Job {
         ) {
             if (_empleados.size()>0) {
                 EmpleadoMarcaRechazoVO aux1= _empleados.get(0);
-                System.out.println("[GestionFemase."
+                System.out.println(WEB_NAME+"[GestionFemase."
                     + "SaldoDiasVacacionesFMCJob]Generar CSV para cenco " 
                     + aux1.getCenco_nombre());    
             }

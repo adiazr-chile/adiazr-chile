@@ -24,7 +24,7 @@ public class ScheduleJobs extends BaseServlet {
 
     @Override
     public void init() {
-	System.out.println("[GestionFemase.ScheduleJobs."
+	System.out.println(WEB_NAME+"[GestionFemase.ScheduleJobs."
             + "init]Programando procesos...");
         try {
             ServletContext application = this.getServletContext();

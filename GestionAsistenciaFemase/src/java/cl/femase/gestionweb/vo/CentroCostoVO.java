@@ -44,7 +44,7 @@ public class CentroCostoVO implements Serializable{
 //            DispositivoVO aux1 = this.dispositivos.get(key);
 //            dispositivosAsString += aux1.getId() + "," + aux1.getNombreTipo();
 //        }
-//        System.out.println("cl.femase.gestionweb.vo.CentroCostoVO.getDispositivosAsString(): dispositivosAsString= "+dispositivosAsString);
+//        System.out.println(WEB_NAME+"cl.femase.gestionweb.vo.CentroCostoVO.getDispositivosAsString(): dispositivosAsString= "+dispositivosAsString);
 //        this.dispositivosAsString = dispositivosAsString;
 //    }
 

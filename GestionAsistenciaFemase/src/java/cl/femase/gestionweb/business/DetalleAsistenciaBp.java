@@ -26,7 +26,7 @@ import org.json.JSONObject;
 *
 * @author Alexander
 */
-public class DetalleAsistenciaBp {
+public class DetalleAsistenciaBp  extends BaseBp{
 
     public PropertiesVO props;
     /** para guardar los eventos de mantencion de informacion*/

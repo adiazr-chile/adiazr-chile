@@ -23,13 +23,13 @@ import org.quartz.JobExecutionException;
 * 
 */
 
-public class CargaVacacionesFMCJob implements Job {
+public class CargaVacacionesFMCJob extends BaseJobs implements Job {
 
     //GetPropertyValues m_properties = new GetPropertyValues();
     
     @Override
     public void execute(JobExecutionContext arg0) throws JobExecutionException {
-        System.out.println("\n[GestionFemase."
+        System.out.println(WEB_NAME+"[GestionFemase."
             + "CargaVacacionesFMCJob]"
             + "INICIO " + new java.util.Date());
         //String outputPath = m_utilconfig.geyKeyValue("pathExportedFiles");
@@ -51,7 +51,7 @@ public class CargaVacacionesFMCJob implements Job {
         ejecucion.setProcesoId(procesoId);
         ejecucion.setFechaHoraInicioEjecucion(sdf.format(start));
         
-        System.out.println("[GestionFemase."
+        System.out.println(WEB_NAME+"[GestionFemase."
             + "CargaVacacionesFMCJob]Inicia carga de registros faltantes en tabla vacaciones."
             + "Empresa:" + empresaId+", id_proceso= " + procesoId);
        
@@ -60,7 +60,7 @@ public class CargaVacacionesFMCJob implements Job {
         String result="Carga de registros faltantes de vacaciones= OK. " + resultado.getMsg();
         if (resultado.isThereError()) result="Error al Carga de registros faltantes de vacaciones";
         
-        System.out.println("[GestionFemase."
+        System.out.println(WEB_NAME+"[GestionFemase."
             + "CargaVacacionesFMCJob]Finaliza carga de registros faltantes en tabla vacaciones."
             + "Empresa:" + empresaId 
             + ", id_proceso= " + procesoId
@@ -87,7 +87,7 @@ public class CargaVacacionesFMCJob implements Job {
 ////        ) {
 ////            if (_empleados.size()>0) {
 ////                EmpleadoMarcaRechazoVO aux1= _empleados.get(0);
-////                System.out.println("[GestionFemase."
+////                System.out.println(WEB_NAME+"[GestionFemase."
 ////                    + "CargaVacacionesFMCJob]Generar CSV para cenco " 
 ////                    + aux1.getCenco_nombre());    
 ////            }

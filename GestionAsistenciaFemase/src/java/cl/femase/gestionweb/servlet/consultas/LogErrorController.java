@@ -82,7 +82,7 @@ public class LogErrorController extends BaseServlet {
         UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
         LogErrorDAO daoLog = new LogErrorDAO();
         if(request.getParameter("action") != null){
-            System.out.println("[LogErrorController]"
+            System.out.println(WEB_NAME+"[LogErrorController]"
                 + "action is: " + request.getParameter("action"));
             List<LogErrorVO> lista = new ArrayList<>();
             String action=(String)request.getParameter("action");
@@ -114,13 +114,13 @@ public class LogErrorController extends BaseServlet {
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                     
                     if (startDate == null || startDate.compareTo("") == 0 || startDate.compareTo("null") == 0) {
-                        System.out.println("[LogErrorController]"
+                        System.out.println(WEB_NAME+"[LogErrorController]"
                             + "seteo fecha actual");
                         startDate = sdf.format(nowCal.getTime());
                         endDate = startDate;
                     }
                                         
-                    System.out.println("[LogErrorController]"
+                    System.out.println(WEB_NAME+"[LogErrorController]"
                         + "mostrando registros."
                         + ", startDate: "+startDate
                         + ", endDate: "+endDate);

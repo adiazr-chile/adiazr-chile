@@ -89,7 +89,7 @@ public class DetalleAusenciaHistController extends BaseServlet {
         MaintenanceEventsBp eventosBp = new MaintenanceEventsBp(appProperties);
         
         if(request.getParameter("action") != null){
-            System.out.println("[DetalleAusenciaHistController]"
+            System.out.println(WEB_NAME+"[DetalleAusenciaHistController]"
                 + "action is: " + request.getParameter("action"));
             List<DetalleAusenciaVO> listaObjetos = new ArrayList<>();
             String action=(String)request.getParameter("action");
@@ -203,7 +203,7 @@ public class DetalleAusenciaHistController extends BaseServlet {
                 auxdata.setCorrelativo(Integer.parseInt(request.getParameter("correlativo")));
             }
           
-            System.out.println("gestionwebfemase."
+            System.out.println(WEB_NAME+"gestionwebfemase."
                 + "DetalleAusenciaHistController. "
                 + "Filtros de busqueda:"
                 + "Empresa: " + request.getParameter("empresaId")
@@ -235,7 +235,7 @@ public class DetalleAusenciaHistController extends BaseServlet {
                 if (intHour < 10) strHour = "0" + intHour;
                 if (intMins < 10) strMins = "0" + intMins;
                 fullHoraFin = strHour + ":" + strMins;
-                System.out.println("[DetalleAusenciaHistController]"
+                System.out.println(WEB_NAME+"[DetalleAusenciaHistController]"
                     + "fullHoraInicio: " + fullHoraInicio
                     + ",fullHoraFin: " + fullHoraFin);
                 auxdata.setHoraInicioFullAsStr(fullHoraInicio);
@@ -263,7 +263,7 @@ public class DetalleAusenciaHistController extends BaseServlet {
 //////                    detalleTurnoBp.getHashDetalleTurno(infoEmpleado.getIdTurno());
 //////                DetalleTurnoVO auxDetalleTurno = detallesTurno.get(codDiaInicio);
 //////                //detalleturno = auxListDetalleTurno.get(codDia);
-//////                System.out.println("[DetalleAusenciaHistController]"
+//////                System.out.println(WEB_NAME+"[DetalleAusenciaHistController]"
 //////                    + " Turno id= " + infoEmpleado.getIdTurno()
 //////                    + ", codDia= " + codDiaInicio
 //////                    + ", horaEntrada= " + auxDetalleTurno.getHoraEntrada()
@@ -280,7 +280,7 @@ public class DetalleAusenciaHistController extends BaseServlet {
 //////                String h2 = auxdata.getFechaInicioAsStr()+" " +auxDetalleTurno.getHoraEntrada();
 //////                int aux2 = Utilidades.comparaHoras(h2,h1);
 //////                if (aux2 == -1){
-//////                    System.out.println("Hora inicio ausencia es "
+//////                    System.out.println(WEB_NAME+"Hora inicio ausencia es "
 //////                        + "anterior a la hora entrada del turno");
 //////                    horasOk = false;
 //////                }
@@ -289,14 +289,14 @@ public class DetalleAusenciaHistController extends BaseServlet {
 //////                h2 = auxdata.getFechaInicioAsStr()+" " +auxDetalleTurno.getHoraSalida();
 //////                aux2 = Utilidades.comparaHoras(h2,h1);
 //////                if (aux2 == 1){
-//////                    System.out.println("Hora fin ausencia es "
+//////                    System.out.println(WEB_NAME+"Hora fin ausencia es "
 //////                        + "posterior a la hora salida del turno");
 //////                    horasOk = false;
 //////                }
             }
             
             if (action.compareTo("list") == 0) {
-                System.out.println("[DetalleAusenciaHistController]"
+                System.out.println(WEB_NAME+"[DetalleAusenciaHistController]"
                     + " mostrando detalles ausencias...");
                 String paramEmpresa=request.getParameter("empresaId");
                 String paramDepto=request.getParameter("deptoId");
@@ -304,7 +304,7 @@ public class DetalleAusenciaHistController extends BaseServlet {
                 int intCenco = -1;
                 
                 String paramCencoID         = request.getParameter("cencoId");
-                System.out.println("[DetalleAusenciaHistController]"
+                System.out.println(WEB_NAME+"[DetalleAusenciaHistController]"
                     + "token param 'cencoID'= " + paramCencoID);
                 if (paramCencoID != null && paramCencoID.compareTo("-1") != 0){
                     StringTokenizer tokenCenco  = new StringTokenizer(paramCencoID, "|");
@@ -316,7 +316,7 @@ public class DetalleAusenciaHistController extends BaseServlet {
                         }
                     }
                 }
-                System.out.println("[DetalleAusenciaHistController]"
+                System.out.println(WEB_NAME+"[DetalleAusenciaHistController]"
                     + "empresa: " + paramEmpresa
                     +", depto: " + paramDepto
                     +", cenco: " + cencoId);
@@ -389,7 +389,7 @@ public class DetalleAusenciaHistController extends BaseServlet {
                             =new ArrayList<>();
                         if (auxdata.getPermiteHora()!=null && 
                             auxdata.getPermiteHora().compareTo("N") == 0){
-                            System.out.println("Mantenedor - "
+                            System.out.println(WEB_NAME+"Mantenedor - "
                                 + "Detalle Ausencias - "
                                 + "Crear detalle ausencia. "
                                 + "Validar ausencias conflicto.");
@@ -399,14 +399,14 @@ public class DetalleAusenciaHistController extends BaseServlet {
                                     auxdata.getFechaInicioAsStr(),
                                     auxdata.getFechaFinAsStr());
                         }else if (auxdata.getPermiteHora().compareTo("S")==0){
-                                    System.out.println("Mantenedor - "
+                                    System.out.println(WEB_NAME+"Mantenedor - "
                                         + "Detalle Ausencias - "
                                         + "Crear detalle ausencia. "
                                         + "NO Validar ausencias conflicto.");
                         }
                         
                         if (ausenciasConflicto.isEmpty()){
-                            System.out.println("Mantenedor - "
+                            System.out.println(WEB_NAME+"Mantenedor - "
                                 + "Detalle Ausencias - "
                                 + "Insertar detalle ausencia...");
                             resultado.setRutEmpleado(auxdata.getRutEmpleado());
@@ -436,7 +436,7 @@ public class DetalleAusenciaHistController extends BaseServlet {
                                 =new ArrayList<>();
                             if (auxdata.getPermiteHora()!=null && 
                                 auxdata.getPermiteHora().compareTo("N") == 0){
-                                System.out.println("Mantenedor - "
+                                System.out.println(WEB_NAME+"Mantenedor - "
                                     + "Detalle Ausencias - "
                                     + "Actualizar detalle ausencia. "
                                     + "Validar ausencias conflicto.");
@@ -446,14 +446,14 @@ public class DetalleAusenciaHistController extends BaseServlet {
                                         auxdata.getFechaInicioAsStr(),
                                         auxdata.getFechaFinAsStr());
                             }else if (auxdata.getPermiteHora().compareTo("S")==0){
-                                        System.out.println("Mantenedor - "
+                                        System.out.println(WEB_NAME+"Mantenedor - "
                                             + "Detalle Ausencias - "
                                             + "Acualizar detalle ausencia. "
                                             + "NO Validar ausencias conflicto.");
                             }
                         
                             if (ausenciasConflicto.isEmpty()){
-                                System.out.println("Mantenedor - Detalle "
+                                System.out.println(WEB_NAME+"Mantenedor - Detalle "
                                     + "Ausencias - Actualizar "
                                     + "detalle ausencia, "
                                     + "correlativo: " + auxdata.getCorrelativo()
@@ -480,7 +480,7 @@ public class DetalleAusenciaHistController extends BaseServlet {
                         if (!horasOk){
                             listData = "{\"Result\":\"ERROR\",\"Message\":"+"Horas de inicio/fin no validas"+"}";
                         }else{ 
-                            System.out.println("Mantenedor - Detalle "
+                            System.out.println(WEB_NAME+"Mantenedor - Detalle "
                                 + "Ausencias - Eliminar "
                                 + "detalle ausencia, correlativo: " + auxdata.getCorrelativo());
                                 

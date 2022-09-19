@@ -63,7 +63,7 @@ public class ProveedorCorreoDAO extends BaseDAO{
             psupdate.setString(3,  _data.getCode());
             int rowAffected = psupdate.executeUpdate();
             if (rowAffected == 1){
-                System.out.println("[ProveedorCorreoDAO.update]"
+                System.out.println(WEB_NAME+"[ProveedorCorreoDAO.update]"
                     + "proveedor correo"
                     + ". Code:" + _data.getCode()
                     + ", name:" + _data.getName()
@@ -126,7 +126,7 @@ public class ProveedorCorreoDAO extends BaseDAO{
                         
             int filasAfectadas = insert.executeUpdate();
             if (filasAfectadas == 1){
-                System.out.println("[ProveedorCorreoDAO.insert]"
+                System.out.println(WEB_NAME+"[ProveedorCorreoDAO.insert]"
                     + "Code:" +_data.getCode()
                     + ", name:" +_data.getName()
                     + ", domain:" +_data.getDomain()
@@ -178,10 +178,10 @@ public class ProveedorCorreoDAO extends BaseDAO{
             insert.setString(1,  _code);
                         
             int filasAfectadas = insert.executeUpdate();
-            System.out.println("[ProveedorCorreoDAO.delete]"
+            System.out.println(WEB_NAME+"[ProveedorCorreoDAO.delete]"
                 + "filasAfectadas: " + filasAfectadas);
             if (filasAfectadas == 1){
-                System.out.println("[delete proveedor de correo]"
+                System.out.println(WEB_NAME+"[delete proveedor de correo]"
                     + "Code:" + _code
                     +" eliminado OK!");
             }
@@ -239,7 +239,7 @@ public class ProveedorCorreoDAO extends BaseDAO{
                 sql += " limit " + _jtPageSize + " offset " + _jtStartIndex;
             }
             
-            System.out.println("[ProveedorCorreoDAO.getProveedores]"
+            System.out.println(WEB_NAME+"[ProveedorCorreoDAO.getProveedores]"
                 + "Name: " + _name
                 + ", _jtStartIndex: " + _jtStartIndex
                 + ", _jtPageSize: " + _jtPageSize

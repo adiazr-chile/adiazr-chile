@@ -159,7 +159,7 @@ public class RegionDAO extends BaseDAO{
                                                
             int filasAfectadas = insert.executeUpdate();
             if (filasAfectadas == 1){
-                System.out.println("[insert region]"
+                System.out.println(WEB_NAME+"[insert region]"
                     + ", nombre:" +_data.getNombre()
                     + ", nombre_corto:" +_data.getNombreCorto()
                     +" insertado OK!");
@@ -221,7 +221,7 @@ public class RegionDAO extends BaseDAO{
             
             int rowAffected = psupdate.executeUpdate();
             if (rowAffected == 1){
-                System.out.println("[update]Region"
+                System.out.println(WEB_NAME+"[update]Region"
                     + ", id:" +_data.getRegionId()
                     + ", nombre:" +_data.getNombre()
                     + ", nombreCorto:" +_data.getNombreCorto()

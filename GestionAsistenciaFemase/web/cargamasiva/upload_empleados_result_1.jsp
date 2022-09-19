@@ -17,13 +17,13 @@
     ArrayList<ResultadoCargaEmpleadoCsvVO> empleadosCargados = (ArrayList<ResultadoCargaEmpleadoCsvVO>)request.getAttribute("empleadosCargados");
             
     if (empleadosInsertadosOk != null){
-        System.out.println("[upload_empleados_result.jsp]num empleados insertados ok= "+ empleadosInsertadosOk.size());
+        System.out.println("[GestionFemaseWeb]upload_empleados_result.jsp]num empleados insertados ok= "+ empleadosInsertadosOk.size());
     }
     if (empleadosActualizadosOk != null){
-        System.out.println("[upload_empleados_result.jsp]num empleados actualizados ok= "+ empleadosActualizadosOk.size());
+        System.out.println("[GestionFemaseWeb]upload_empleados_result.jsp]num empleados actualizados ok= "+ empleadosActualizadosOk.size());
     }
     if (empleadosError != null){
-        System.out.println("[upload_empleados_result.jsp]num empleados error= "+ empleadosError.size());
+        System.out.println("[GestionFemaseWeb]upload_empleados_result.jsp]num empleados error= "+ empleadosError.size());
     }
 %>
 <html xmlns="http://www.w3.org/1999/xhtml">

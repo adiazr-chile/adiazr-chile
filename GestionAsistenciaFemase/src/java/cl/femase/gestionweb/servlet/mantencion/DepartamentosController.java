@@ -95,7 +95,7 @@ public class DepartamentosController extends BaseServlet {
         DepartamentoBp auxnegocio=new DepartamentoBp(appProperties);
 
         if(request.getParameter("action") != null){
-            System.out.println("---->action is: " + request.getParameter("action"));
+            System.out.println(WEB_NAME+"---->action is: " + request.getParameter("action"));
             List<DepartamentoVO> listaObjetos = new ArrayList<DepartamentoVO>();
             String action=(String)request.getParameter("action");
             Gson gson = new Gson();
@@ -152,7 +152,7 @@ public class DepartamentosController extends BaseServlet {
             }
                         
             if (action.compareTo("list")==0) {
-                System.out.println("Mantenedor - Departamentos - "
+                System.out.println(WEB_NAME+"Mantenedor - Departamentos - "
                     + "mostrando departamentos...");
                 try{
                     int objectsCount = 0;
@@ -187,7 +187,7 @@ public class DepartamentosController extends BaseServlet {
                     ex.printStackTrace();
                 }   
             }else if (action.compareTo("create") == 0) {
-                    System.out.println("Mantenedor - Departamentos - Insertar Depto...");
+                    System.out.println(WEB_NAME+"Mantenedor - Departamentos - Insertar Depto...");
                     MaintenanceVO doCreate = auxnegocio.insert(auxdata, resultado);					
                     listaObjetos.add(auxdata);
 
@@ -197,7 +197,7 @@ public class DepartamentosController extends BaseServlet {
                     String listData="{\"Result\":\"OK\",\"Record\":"+json+"}";											
                     response.getWriter().print(listData);
             }else if (action.compareTo("update") == 0) {  
-                    System.out.println("Mantenedor - Departamentos - Actualizar Depto...");
+                    System.out.println(WEB_NAME+"Mantenedor - Departamentos - Actualizar Depto...");
                     try{
                         MaintenanceVO doUpdate = auxnegocio.update(auxdata, resultado);
                         listaObjetos.add(auxdata);
@@ -215,7 +215,7 @@ public class DepartamentosController extends BaseServlet {
             }
             else if (action.compareTo("delete") == 0) {  
                     //Delete record
-                    System.out.println("Eliminando Depto- "
+                    System.out.println(WEB_NAME+"Eliminando Depto- "
                         + "Id: " + auxdata.getId()
                         +", nombre: "+ auxdata.getNombre());
                     try{

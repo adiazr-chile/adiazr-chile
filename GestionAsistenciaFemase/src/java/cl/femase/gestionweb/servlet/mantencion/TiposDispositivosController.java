@@ -78,7 +78,7 @@ public class TiposDispositivosController extends BaseServlet {
         TipoDispositivoBp auxnegocio=new TipoDispositivoBp(appProperties);
 
         if(request.getParameter("action") != null){
-            System.out.println("\n\n[TiposDispositivosController]"
+            System.out.println(WEB_NAME+"\n[TiposDispositivosController]"
                 + "action is: " + request.getParameter("action"));
             List<TipoDispositivoVO> listaObjetos = new ArrayList<TipoDispositivoVO>();
             String action=(String)request.getParameter("action");
@@ -128,7 +128,7 @@ public class TiposDispositivosController extends BaseServlet {
             }
             
             if (action.compareTo("list")==0) {
-                System.out.println("[TiposDispositivosController]"
+                System.out.println(WEB_NAME+"[TiposDispositivosController]"
                     + "Mantenedor - Tipos Dispositivos - "
                     + "mostrando registros...");
                 try{
@@ -159,7 +159,7 @@ public class TiposDispositivosController extends BaseServlet {
                     ex.printStackTrace();
                 }   
             }else if (action.compareTo("create") == 0) {
-                    System.out.println("[TiposDispositivosController]"
+                    System.out.println(WEB_NAME+"[TiposDispositivosController]"
                         + "Mantenedor - Tipos Dispositivos - Insertar...");
                     MaintenanceVO doCreate = auxnegocio.insert(auxdata, resultado);					
                     listaObjetos.add(auxdata);
@@ -170,7 +170,7 @@ public class TiposDispositivosController extends BaseServlet {
                     String listData="{\"Result\":\"OK\",\"Record\":"+json+"}";											
                     response.getWriter().print(listData);
             }else if (action.compareTo("update") == 0) {  
-                    System.out.println("[TiposDispositivosController]"
+                    System.out.println(WEB_NAME+"[TiposDispositivosController]"
                         + "Mantenedor - Tipos Dispositivos - Actualizar...");
                     try{
                         MaintenanceVO doUpdate = auxnegocio.update(auxdata, resultado);
@@ -186,7 +186,7 @@ public class TiposDispositivosController extends BaseServlet {
                         response.getWriter().print(error);
                     }
             }else if (action.compareTo("delete") == 0) {  
-                    System.out.println("[TiposDispositivosController]"
+                    System.out.println(WEB_NAME+"[TiposDispositivosController]"
                         + "Mantenedor - Tipos Dispositivos - "
                         + "Eliminar tipo ID= "+auxdata.getId());
                     

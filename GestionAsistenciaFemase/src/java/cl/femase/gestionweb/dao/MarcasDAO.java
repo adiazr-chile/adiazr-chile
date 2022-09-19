@@ -145,7 +145,7 @@ public class MarcasDAO extends BaseDAO{
     
             sql += " order by cod_tipo_marca ";// + _jtSorting; 
 
-            System.out.println("[MarcasDAO."
+            System.out.println(WEB_NAME+"[MarcasDAO."
                 + "getMarcasEmpleado]Sql: "+sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,"[MarcasDAO.getMarcasEmpleado]");
@@ -208,7 +208,7 @@ public class MarcasDAO extends BaseDAO{
                 + "get_empleados_sin_marca_entrada_dia_json"
                     + "('" + _empresaId + "'," + _codDia + ",'" + _horaLimite + "'," + _cencoId + ") infoempleado";
 
-            System.out.println("[MarcasDAO."
+            System.out.println(WEB_NAME+"[MarcasDAO."
                 + "getEmpleadosSinMarcaEntradaDiaJson]Sql: "+sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,"[MarcasDAO.getEmpleadosSinMarcaEntradaDiaJson]");
@@ -259,7 +259,7 @@ public class MarcasDAO extends BaseDAO{
                 + "get_marcas_json"
                     + "('" + _empresaId + "','" + _rut + "','" + _startDate + "','" + _endDate + "') strjson";
 
-            System.out.println("[MarcasDAO."
+            System.out.println(WEB_NAME+"[MarcasDAO."
                 + "getMarcasJson]Sql: "+sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,"[MarcasDAO.getMarcasJson]");
@@ -310,7 +310,7 @@ public class MarcasDAO extends BaseDAO{
                 + "get_all_marcas_json"
                     + "('" + _empresaId + "','" + _rut + "','" + _startDate + "','" + _endDate + "') strjson";
 
-            System.out.println("[MarcasDAO."
+            System.out.println(WEB_NAME+"[MarcasDAO."
                 + "getAllMarcasJson]Sql: "+sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,"[MarcasDAO.getAllMarcasJson]");
@@ -360,7 +360,7 @@ public class MarcasDAO extends BaseDAO{
                 + "get_all_marcas_hist_json"
                     + "('" + _empresaId + "','" + _rut + "','" + _startDate + "','" + _endDate + "') strjson";
 
-            System.out.println("[MarcasDAO."
+            System.out.println(WEB_NAME+"[MarcasDAO."
                 + "getAllMarcasHistJson]Sql: "+sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,"[MarcasDAO."
@@ -412,7 +412,7 @@ public class MarcasDAO extends BaseDAO{
                 + "get_marcas_hist_json"
                     + "('" + _empresaId + "','" + _rut + "','" + _startDate + "','" + _endDate + "') strjson";
 
-            System.out.println("[MarcasDAO."
+            System.out.println(WEB_NAME+"[MarcasDAO."
                 + "getMarcasHistJson]Sql: "+sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,"[MarcasDAO.getMarcasHistJson]");
@@ -487,7 +487,7 @@ public class MarcasDAO extends BaseDAO{
                     + " ('" + _empresaId + "','" + _rutEmpleado + "','" + _startDate + "','" + _endDate + "',"+_tipoMarca+") strjson";
             }
             
-            System.out.println("[MarcasDAO."
+            System.out.println(WEB_NAME+"[MarcasDAO."
                 + "getMarcaByTipoJson]Sql: "+sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,"[MarcasDAO.getMarcaByTipoJson]");
@@ -559,7 +559,7 @@ public class MarcasDAO extends BaseDAO{
                 + "'" + _endDate + "',"
                 + _tipoMarca + ") strjson";
             
-            System.out.println("[MarcasDAO."
+            System.out.println(WEB_NAME+"[MarcasDAO."
                 + "getMarcaByTipoAndFechaJson]Sql: "+sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,
@@ -612,7 +612,7 @@ public class MarcasDAO extends BaseDAO{
                 + "get_empleados_con_marcas_rechazadas_fecha_json"
                     + "('" + _empresaId + "','" + _fecha + "') infoempleado";
 
-            System.out.println("[MarcasDAO."
+            System.out.println(WEB_NAME+"[MarcasDAO."
                 + "getEmpleadosConMarcasRechadasFechaJson]Sql: "+sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,"[MarcasDAO.getEmpleadosConMarcasRechadasFechaJson]");
@@ -705,7 +705,7 @@ public class MarcasDAO extends BaseDAO{
     
             sql += " order by cod_tipo_marca ";// + _jtSorting; 
 
-            System.out.println("[MarcasDAO."
+            System.out.println(WEB_NAME+"[MarcasDAO."
                 + "getMarcaByTipo]Sql: "+sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,"[MarcasDAO.getMarcaByTipo]");
@@ -815,7 +815,7 @@ public class MarcasDAO extends BaseDAO{
                 sql+=  "and marca.fecha_hora::date = '"+_fechaHora+"'";
             }
             if (dbConn==null || (dbConn!=null && dbConn.isClosed())) dbConn = dbLocator.getConnection(m_dbpoolName,"[MarcasDAO.getMarcaByKey]");
-            System.out.println("[MarcasDAO.getMarcaByKey]sql: " + sql);
+            System.out.println(WEB_NAME+"[MarcasDAO.getMarcaByKey]sql: " + sql);
             ps = dbConn.prepareStatement(sql);
             rs = ps.executeQuery();
 
@@ -948,7 +948,7 @@ public class MarcasDAO extends BaseDAO{
             }
             if (dbConn==null || (dbConn!=null && dbConn.isClosed())) 
                 dbConn = dbLocator.getConnection(m_dbpoolName,"[MarcasDAO.getMarcasByKey]");
-            System.out.println("[MarcasDAO.getMarcasByKey]sql: " + sql);
+            System.out.println(WEB_NAME+"[MarcasDAO.getMarcasByKey]sql: " + sql);
             ps = dbConn.prepareStatement(sql);
             rs = ps.executeQuery();
 
@@ -1059,7 +1059,7 @@ public class MarcasDAO extends BaseDAO{
 ////                sql += " limit "+_jtPageSize + " offset "+_jtStartIndex;
 ////            }
 //            
-//            System.out.println("cl.femase.gestionweb."
+//            System.out.println(WEB_NAME+"cl.femase.gestionweb."
 //                + "service.MarcasDAO.getMarcasEmpleado. SQL: "+sql);
 //
 //            dbConn = dbLocator.getConnection(m_dbpoolName);
@@ -1187,7 +1187,7 @@ public class MarcasDAO extends BaseDAO{
                 sql += " limit "+_jtPageSize + " offset "+_jtStartIndex;
             }
             
-            System.out.println("[MarcasDAO]getMarcas()- sql: " + sql);
+            System.out.println(WEB_NAME+"[MarcasDAO]getMarcas()- sql: " + sql);
                         
             dbConn = dbLocator.getConnection(m_dbpoolName,"[MarcasDAO.getMarcas]");
             ps = dbConn.prepareStatement(sql);
@@ -1222,7 +1222,7 @@ public class MarcasDAO extends BaseDAO{
                     + "|" + data.getFechaHora()
                     + "|" + data.getTipoMarca());
                 
-//                System.out.println("[MarcasDAO]getMarcas(). "
+//                System.out.println(WEB_NAME+"[MarcasDAO]getMarcas(). "
 //                    + "add marca. "
 //                    + "rowKey= " + data.getRowKey()
 //                    + ", code= " + data.getCodTipoMarcaManual()
@@ -1237,7 +1237,7 @@ public class MarcasDAO extends BaseDAO{
 ////                            data.getRutEmpleado(),
 ////                            data.getFecha(),2, false);
 ////                    if (marcaFaltante == null){
-////                       // System.out.println("[MarcasDAO]getMarcas(). Falta marca de salida, fecha: "+data.getFecha());
+////                       // System.out.println(WEB_NAME+"[MarcasDAO]getMarcas(). Falta marca de salida, fecha: "+data.getFecha());
 ////                        //marcaFaltante = data;
 ////                        marcaFaltante = new MarcaVO();
 ////                        marcaFaltante.setTipoMarca(200);//FALTA MARCA DE SALIDA
@@ -1248,7 +1248,7 @@ public class MarcasDAO extends BaseDAO{
 ////                            data.getRutEmpleado(),
 ////                            data.getFecha(),1,false);
 ////                    if (marcaFaltante == null){
-////                        //System.out.println("[MarcasDAO]getMarcas(). Falta marca de entrada, fecha: "+data.getFecha());
+////                        //System.out.println(WEB_NAME+"[MarcasDAO]getMarcas(). Falta marca de entrada, fecha: "+data.getFecha());
 ////                        //marcaFaltante = data;
 ////                        marcaFaltante = new MarcaVO();
 ////                        marcaFaltante.setTipoMarca(100);//FALTA MARCA DE ENTRADA
@@ -1272,7 +1272,7 @@ public class MarcasDAO extends BaseDAO{
 ////                        + "|" + data.getRutEmpleado()
 ////                        + "|" + data.getFecha()
 ////                        + "|" + marcaFaltante.getTipoMarca());
-//////                    System.out.println("[MarcasDAO]getMarcas(). "
+//////                    System.out.println(WEB_NAME+"[MarcasDAO]getMarcas(). "
 //////                        + "add marca faltante. rowKey= "+marcaFaltante.getRowKey());
 ////
 ////                    lista.add(marcaFaltante);
@@ -1369,7 +1369,7 @@ public class MarcasDAO extends BaseDAO{
                 sql += " limit "+_jtPageSize + " offset "+_jtStartIndex;
             }
             
-            System.out.println("[MarcasDAO.getMarcasVirtuales]sql: " + sql);
+            System.out.println(WEB_NAME+"[MarcasDAO.getMarcasVirtuales]sql: " + sql);
                         
             dbConn = dbLocator.getConnection(m_dbpoolName,"[MarcasDAO.getMarcasVirtuales]");
             ps = dbConn.prepareStatement(sql);
@@ -1533,7 +1533,7 @@ public class MarcasDAO extends BaseDAO{
                 sql += " limit "+_jtPageSize + " offset "+_jtStartIndex;
             }
             
-            System.out.println("[MarcasDAO]getHashMarcas()- sql: " + sql);
+            System.out.println(WEB_NAME+"[MarcasDAO]getHashMarcas()- sql: " + sql);
                         
             dbConn = dbLocator.getConnection(m_dbpoolName,"[MarcasDAO.getHashMarcas]");
             ps = dbConn.prepareStatement(sql);
@@ -1568,7 +1568,7 @@ public class MarcasDAO extends BaseDAO{
                     + "|" + data.getFechaHora()
                     + "|" + data.getTipoMarca());
                 
-//                System.out.println("[MarcasDAO]getMarcas(). "
+//                System.out.println(WEB_NAME+"[MarcasDAO]getMarcas(). "
 //                    + "add marca. "
 //                    + "rowKey= " + data.getRowKey()
 //                    + ", code= " + data.getCodTipoMarcaManual()
@@ -1583,7 +1583,7 @@ public class MarcasDAO extends BaseDAO{
 ////                            data.getRutEmpleado(),
 ////                            data.getFecha(),2, false);
 ////                    if (marcaFaltante == null){
-////                       // System.out.println("[MarcasDAO]getMarcas(). Falta marca de salida, fecha: "+data.getFecha());
+////                       // System.out.println(WEB_NAME+"[MarcasDAO]getMarcas(). Falta marca de salida, fecha: "+data.getFecha());
 ////                        //marcaFaltante = data;
 ////                        marcaFaltante = new MarcaVO();
 ////                        marcaFaltante.setTipoMarca(200);//FALTA MARCA DE SALIDA
@@ -1594,7 +1594,7 @@ public class MarcasDAO extends BaseDAO{
 ////                            data.getRutEmpleado(),
 ////                            data.getFecha(),1,false);
 ////                    if (marcaFaltante == null){
-////                        //System.out.println("[MarcasDAO]getMarcas(). Falta marca de entrada, fecha: "+data.getFecha());
+////                        //System.out.println(WEB_NAME+"[MarcasDAO]getMarcas(). Falta marca de entrada, fecha: "+data.getFecha());
 ////                        //marcaFaltante = data;
 ////                        marcaFaltante = new MarcaVO();
 ////                        marcaFaltante.setTipoMarca(100);//FALTA MARCA DE ENTRADA
@@ -1618,7 +1618,7 @@ public class MarcasDAO extends BaseDAO{
 ////                        + "|" + data.getRutEmpleado()
 ////                        + "|" + data.getFecha()
 ////                        + "|" + marcaFaltante.getTipoMarca());
-//////                    System.out.println("[MarcasDAO]getMarcas(). "
+//////                    System.out.println(WEB_NAME+"[MarcasDAO]getMarcas(). "
 //////                        + "add marca faltante. rowKey= "+marcaFaltante.getRowKey());
 ////
 ////                    lista.add(marcaFaltante);
@@ -1744,7 +1744,7 @@ public class MarcasDAO extends BaseDAO{
                 sql += " limit "+_jtPageSize + " offset "+_jtStartIndex;
             }
             
-            System.out.println("cl.femase.gestionweb."
+            System.out.println(WEB_NAME+"cl.femase.gestionweb."
                 + "service.MarcasDAO.getMarcasHist()- sql: "+sql);
                         
             dbConn = dbLocator.getConnection(m_dbpoolName,"[MarcasDAO.getMarcasHist]");
@@ -1783,7 +1783,7 @@ public class MarcasDAO extends BaseDAO{
                             data.getRutEmpleado(),
                             data.getFecha(),2,true);
                     if (marcaFaltante == null){
-                       // System.out.println("[MarcasDAO]getMarcas(). Falta marca de salida, fecha: "+data.getFecha());
+                       // System.out.println(WEB_NAME+"[MarcasDAO]getMarcas(). Falta marca de salida, fecha: "+data.getFecha());
                         //marcaFaltante = data;
                         marcaFaltante = new MarcaVO();
                         marcaFaltante.setTipoMarca(200);//FALTA MARCA DE SALIDA
@@ -1794,7 +1794,7 @@ public class MarcasDAO extends BaseDAO{
                             data.getRutEmpleado(),
                             data.getFecha(),1,true);
                     if (marcaFaltante == null){
-                        //System.out.println("[MarcasDAO]getMarcas(). Falta marca de entrada, fecha: "+data.getFecha());
+                        //System.out.println(WEB_NAME+"[MarcasDAO]getMarcas(). Falta marca de entrada, fecha: "+data.getFecha());
                         //marcaFaltante = data;
                         marcaFaltante = new MarcaVO();
                         marcaFaltante.setTipoMarca(100);//FALTA MARCA DE ENTRADA
@@ -1818,7 +1818,7 @@ public class MarcasDAO extends BaseDAO{
                         + "|" + data.getRutEmpleado()
                         + "|" + data.getFecha()
                         + "|" + marcaFaltante.getTipoMarca());
-                    System.out.println("[MarcasDAO]getMarcasHist(). "
+                    System.out.println(WEB_NAME+"[MarcasDAO]getMarcasHist(). "
                         + "add marca faltante. rowKey= "+marcaFaltante.getRowKey());
 
                     lista.add(marcaFaltante);
@@ -1908,7 +1908,7 @@ public class MarcasDAO extends BaseDAO{
             
             int filasAfectadas = insert.executeUpdate();
             if (filasAfectadas == 1){
-                System.out.println("[insertDirecto marca]"
+                System.out.println(WEB_NAME+"[insertDirecto marca]"
                     +" insertada OK!");
             }
             
@@ -2004,7 +2004,7 @@ public class MarcasDAO extends BaseDAO{
                     + _marca.getCodTipoMarcaManual()+ ") strjson";
 
             if (marcaVirtual){
-                System.out.println("[MarcasDAO."
+                System.out.println(WEB_NAME+"[MarcasDAO."
                     + "insertaMarcaManual]Insertar marca virtual con geolocalizacion.");
                 sql = "SELECT "
                     + "inserta_marca_virtual"
@@ -2022,7 +2022,7 @@ public class MarcasDAO extends BaseDAO{
                     + "'" + _marca.getLongitud()+ "') strjson";
             }
             
-            System.out.println("[MarcasDAO."
+            System.out.println(WEB_NAME+"[MarcasDAO."
                 + "insertaMarcaManual]Sql: "+sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,"[MarcasDAO.insertaMarcaManual]");
@@ -2083,7 +2083,7 @@ public class MarcasDAO extends BaseDAO{
             + ", tipoMarca [" + _marcaModificada.getTipoMarca() + "]"
             + ", comentario [" + _marcaModificada.getComentario() + "]";
         
-        System.out.println("cl.femase.gestionweb."
+        System.out.println(WEB_NAME+"cl.femase.gestionweb."
             + "service.MarcasDAO."
             + "update(). "+msgFinal);
        
@@ -2113,7 +2113,7 @@ public class MarcasDAO extends BaseDAO{
                                                 
             int filasAfectadas = insert.executeUpdate();
             if (filasAfectadas == 1){
-                System.out.println("[update marca]"
+                System.out.println(WEB_NAME+"[update marca]"
                     + "RutEmpleado: " + _marcaModificada.getRutEmpleado()
                     + ",fechaHora: " + _marcaModificada.getFechaHora()
                     +" actualizada OK!");
@@ -2159,7 +2159,7 @@ public class MarcasDAO extends BaseDAO{
             + ", tipoMarca [" + _data.getTipoMarca() + "]"
             + ", comentario [" + _data.getComentario() + "]";
         
-        System.out.println("cl.femase.gestionweb."
+        System.out.println(WEB_NAME+"cl.femase.gestionweb."
             + "service.MarcasDAO."
             + "delete(). "+msgFinal);
        
@@ -2177,7 +2177,7 @@ public class MarcasDAO extends BaseDAO{
                                                 
             int filasAfectadas = insert.executeUpdate();
             if (filasAfectadas == 1){
-                System.out.println("[delete marca]"
+                System.out.println(WEB_NAME+"[delete marca]"
                     + "RutEmpleado: "+_data.getRutEmpleado()
                     + ",fechaHora: "+_data.getFechaHora()
                     +" marca eliminada OK!");
@@ -2520,7 +2520,7 @@ public class MarcasDAO extends BaseDAO{
                     + " where (fecha_it::date >= empleado.fecha_inicio_contrato) "
                     + "order by fecha_it::date,marca.cod_tipo_marca,fecha_hora"; 
             
-            System.out.println("[MarcasDAO.getHashMarcasTurnoRotativo]sql: " + sql);
+            System.out.println(WEB_NAME+"[MarcasDAO.getHashMarcasTurnoRotativo]sql: " + sql);
                         
             dbConn = dbLocator.getConnection(m_dbpoolName,
                 "[MarcasDAO.getHashMarcasTurnoRotativo]");
@@ -2536,7 +2536,7 @@ public class MarcasDAO extends BaseDAO{
                 int regionIdEmpleado = rs.getInt("empleado_region_id");
                 int comunaIdEmpleado = rs.getInt("empleado_comuna_id");
                 String labelCalendario = rs.getString("label_calendario");
-                System.out.println("[MarcasDAO.getHashMarcasTurnoNormal]"
+                System.out.println(WEB_NAME+"[MarcasDAO.getHashMarcasTurnoNormal]"
                     + "fecha= " + fecha
                     + ", regionIdFeriado= " + regionIdFeriado
                     + ", comunaIdFeriado= " + comunaIdFeriado
@@ -2720,7 +2720,7 @@ public class MarcasDAO extends BaseDAO{
                     + " where (fecha_it::date >= empleado.fecha_inicio_contrato) "
                     + " order by fecha_it::date,marca.cod_tipo_marca,fecha_hora";
             
-            System.out.println("[MarcasDAO."
+            System.out.println(WEB_NAME+"[MarcasDAO."
                 + "getHashMarcasTurnoNormal]sql: " + sql);
                         
             dbConn = dbLocator.getConnection(m_dbpoolName,"[MarcasDAO.getHashMarcasTurnoNormal]");
@@ -2735,7 +2735,7 @@ public class MarcasDAO extends BaseDAO{
                 int regionIdEmpleado = rs.getInt("empleado_region_id");
                 int comunaIdEmpleado = rs.getInt("empleado_comuna_id");
                 String labelCalendario = rs.getString("label_calendario");
-                System.out.println("[MarcasDAO.getHashMarcasTurnoNormal]"
+                System.out.println(WEB_NAME+"[MarcasDAO.getHashMarcasTurnoNormal]"
                     + "fecha= " + fecha
                     + ", regionIdFeriado= " + regionIdFeriado
                     + ", comunaIdFeriado= " + comunaIdFeriado
@@ -2757,12 +2757,12 @@ public class MarcasDAO extends BaseDAO{
                 */
 
                 if (regionIdFeriado > 0 && regionIdFeriado != _infoCenco.getRegionId()){
-                    System.out.println("[MarcasDAO.getHashMarcasTurnoNormal]"
+                    System.out.println(WEB_NAME+"[MarcasDAO.getHashMarcasTurnoNormal]"
                         + "set label calendario NULL (1)");
                     labelCalendario = null;
                 }
                 if (comunaIdFeriado > 0 && comunaIdFeriado != _infoCenco.getComunaId()){
-                    System.out.println("[MarcasDAO.getHashMarcasTurnoNormal]"
+                    System.out.println(WEB_NAME+"[MarcasDAO.getHashMarcasTurnoNormal]"
                         + "set label calendario NULL (2)");
                     labelCalendario = null;
                 }

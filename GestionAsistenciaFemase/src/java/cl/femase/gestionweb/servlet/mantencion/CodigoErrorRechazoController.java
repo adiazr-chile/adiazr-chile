@@ -78,7 +78,7 @@ public class CodigoErrorRechazoController extends BaseServlet {
         CodigoErrorRechazoBp auxnegocio=new CodigoErrorRechazoBp(appProperties);
 
         if(request.getParameter("action") != null){
-            System.out.println("[CodigoErrorRechazoController]"
+            System.out.println(WEB_NAME+"[CodigoErrorRechazoController]"
                 + "action is: " + request.getParameter("action"));
             List<CodigoErrorRechazoVO> listaObjetos = new ArrayList<>();
             String action=(String)request.getParameter("action");
@@ -105,7 +105,7 @@ public class CodigoErrorRechazoController extends BaseServlet {
                 numRecordsPerPage   = Integer.parseInt(request.getParameter("jtPageSize"));
             if (request.getParameter("jtSorting") != null) 
                 jtSorting   = request.getParameter("jtSorting");
-            System.out.println("[jtSorting]jtSorting: "+jtSorting); 
+            System.out.println(WEB_NAME+"[jtSorting]jtSorting: "+jtSorting); 
             if (jtSorting.contains("codigo")) jtSorting = jtSorting.replaceFirst("codigo","cod_error_rechazo");
             else if (jtSorting.contains("descripcion")) jtSorting = jtSorting.replaceFirst("descripcion","descripcion_codigo_rechazo");
             
@@ -122,7 +122,7 @@ public class CodigoErrorRechazoController extends BaseServlet {
                 auxdata.setDescripcion(request.getParameter("descripcion"));
             }
             if (action.compareTo("list") == 0) {
-                System.out.println("[CodigoErrorRechazoController]"
+                System.out.println(WEB_NAME+"[CodigoErrorRechazoController]"
                     + "mostrando cod error rechazos...");
                 try{
                     listaObjetos = auxnegocio.getCodigos(paramDescripcion, 
@@ -151,7 +151,7 @@ public class CodigoErrorRechazoController extends BaseServlet {
                     ex.printStackTrace();
                 }   
             }else if (action.compareTo("create") == 0) {
-                    System.out.println("[CodigoErrorRechazoController]"
+                    System.out.println(WEB_NAME+"[CodigoErrorRechazoController]"
                         + "Insertar cod_error_rechazo...");
                     MaintenanceVO doCreate = auxnegocio.insert(auxdata, resultado);					
                     listaObjetos.add(auxdata);
@@ -159,7 +159,7 @@ public class CodigoErrorRechazoController extends BaseServlet {
                     //Convert Java Object to Json
                     String jsonOkMessage = gson.toJson(auxdata);	
                                         
-                    System.out.println("[CodigoErrorRechazoController]"
+                    System.out.println(WEB_NAME+"[CodigoErrorRechazoController]"
                         + "Hay error: "+doCreate.isThereError());
                     
                     //Return Json in the format required by jTable plugin
@@ -168,7 +168,7 @@ public class CodigoErrorRechazoController extends BaseServlet {
                         //        + "\"Result\":\"ERROR\"" 
                         //        + ",\"Message\" : \"El codigo ingresado ya existe.\""
                         //    + "}";
-                        //System.out.println("[CodigoErrorRechazoController]"
+                        //System.out.println(WEB_NAME+"[CodigoErrorRechazoController]"
                         //    + "Error msg: "+auxError);
                         String errorMsg="{\"Result\":\"ERROR\",\"Message\":\"El codigo ingresado ya existe\"}";
                         response.getWriter().print(errorMsg);
@@ -179,7 +179,7 @@ public class CodigoErrorRechazoController extends BaseServlet {
 //                    String listData="{\"Result\":\"OK\",\"Record\":"+json+"}";											
 //                    response.getWriter().print(listData);
             }else if (action.compareTo("update") == 0) {  
-                    System.out.println("[CodigoErrorRechazoController]"
+                    System.out.println(WEB_NAME+"[CodigoErrorRechazoController]"
                         + "Actualizar cod_error_rechazo...");
                     try{
                         MaintenanceVO doUpdate = auxnegocio.update(auxdata, resultado);
@@ -197,7 +197,7 @@ public class CodigoErrorRechazoController extends BaseServlet {
             }
             else if (action.compareTo("delete") == 0) {  
                     //Delete record
-                    System.out.println("[CodigoErrorRechazoController]"
+                    System.out.println(WEB_NAME+"[CodigoErrorRechazoController]"
                         + "Eliminar cod_error_rechazo...");
                     try{
                         auxnegocio.delete(auxdata, resultado);

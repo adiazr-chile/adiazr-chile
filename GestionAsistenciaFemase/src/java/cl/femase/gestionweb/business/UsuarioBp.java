@@ -20,7 +20,7 @@ import java.util.List;
  *
  * @author Alexander
  */
-public class UsuarioBp {
+public class UsuarioBp  extends BaseBp{
 
     public PropertiesVO props;
     private cl.femase.gestionweb.dao.UsersDAO userDao;
@@ -123,7 +123,7 @@ public class UsuarioBp {
 //            _userToInsert.getEmail(), _userToInsert.getEmpresaId());
         MaintenanceVO insValues = new MaintenanceVO();
         
-        System.out.println("[UsuarioBp.insert]Insertar usuario, inicio...");
+        System.out.println(WEB_NAME+"[UsuarioBp.insert]Insertar usuario, inicio...");
         String msgFinal = insValues.getMsg();
         if (existeEmail){
             insValues.setThereError(true);
@@ -133,14 +133,14 @@ public class UsuarioBp {
             insValues.setMsg("Error al crear usuario '" + _userToInsert.getUsername()
                 + "'. El email " + _userToInsert.getEmail()
                 +" ya existe en el Sistema.");
-            System.out.println("[UsuarioBp.insert]Error: " + insValues.getMsg());
+            System.out.println(WEB_NAME+"[UsuarioBp.insert]Error: " + insValues.getMsg());
             msgFinal = insValues.getMsg();
             insValues.setMsg(msgFinal);
             _eventdata.setDescription(msgFinal);
             //insertar evento 
             eventsDao.addEvent(_eventdata); 
         }else{
-            System.out.println("[UsuarioBp.insert]Insertar usuario, realizar insert.");
+            System.out.println(WEB_NAME+"[UsuarioBp.insert]Insertar usuario, realizar insert.");
             insValues = userDao.insert(_userToInsert);
             msgFinal = insValues.getMsg();
         }
@@ -148,7 +148,7 @@ public class UsuarioBp {
         if (!insValues.isThereError()){
             insValues.setMsg(msgFinal);
             _eventdata.setDescription(msgFinal);
-            System.out.println("[UsuarioBp.insert]"
+            System.out.println(WEB_NAME+"[UsuarioBp.insert]"
                 + "Insertar evento de insercion de usuario. "
                 + "Descripcion: "+msgFinal);
             //insertar evento 
@@ -237,7 +237,7 @@ public class UsuarioBp {
     }
     
     public void openDbConnection(){
-        System.out.println("[UsuarioBp.openDbConnection]"
+        System.out.println(WEB_NAME+"[UsuarioBp.openDbConnection]"
             + "Abriendo conexion a la BD...");
         userDao.openDbConnection();
     }
@@ -246,7 +246,7 @@ public class UsuarioBp {
     * 
     */
     public void closeDbConnection(){
-        System.out.println("[UsuarioBp.closeDbConnection]"
+        System.out.println(WEB_NAME+"[UsuarioBp.closeDbConnection]"
             + "Cerrando conexion a la BD...");
         userDao.closeDbConnection();
     }

@@ -242,7 +242,7 @@ public class SearchFilterVO implements Serializable{
      public String getInstrumentoEscaped() {
         String aux=instrumento;
         this.instrumentoEscaped = aux.replace("'", "\\'");
-        //System.out.println("[getMnemonicEscaped]mnemonic: "+aux+
+        //System.out.println(WEB_NAME+"[getMnemonicEscaped]mnemonic: "+aux+
         //        ", escaped: "+mnemonicEscaped);
         return this.instrumentoEscaped;
     }

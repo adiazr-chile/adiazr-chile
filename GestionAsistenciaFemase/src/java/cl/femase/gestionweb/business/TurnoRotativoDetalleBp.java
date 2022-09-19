@@ -16,7 +16,7 @@ import java.util.ArrayList;
  *
  * @author Alexander
  */
-public class TurnoRotativoDetalleBp {
+public class TurnoRotativoDetalleBp  extends BaseBp{
 
     public PropertiesVO props;
     /** para guardar los eventos de mantencion de informacion*/

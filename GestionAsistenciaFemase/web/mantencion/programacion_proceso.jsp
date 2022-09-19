@@ -21,7 +21,7 @@
     if (request.getAttribute("diaSelected")==null) diaSelected=0;
     if (listaHoras == null) listaHoras=new ArrayList();
 	
-    System.out.println("[programar_proceso.jsp]"
+    System.out.println("[GestionFemaseWeb]programar_proceso.jsp]"
         + "empresaSelected= " + empresaProcesoSelected
         + ", procesoSelected= " + procesoSelected
 		+ ", diaSelected= " + diaSelected);

@@ -1,6 +1,6 @@
 <%
 	String mensaje = (String) session.getAttribute("mensaje");
-        System.out.println("[index.jsp]mensaje: " + mensaje);
+        System.out.println("[GestionFemaseWeb]index.jsp]mensaje: " + mensaje);
         session.removeAttribute("mensaje");
 %>
 <!DOCTYPE html>

@@ -16,7 +16,7 @@ import java.util.List;
  *
  * @author Alexander
  */
-public class PerfilUsuarioBp {
+public class PerfilUsuarioBp  extends BaseBp{
 
     public PropertiesVO props;
     /** para guardar los eventos de mantencion de informacion*/

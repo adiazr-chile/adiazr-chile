@@ -84,7 +84,7 @@ public class DispositivosController extends BaseServlet {
         AsignacionDispositivoBp asignacionBp = new AsignacionDispositivoBp(appProperties);
         
         if(request.getParameter("action") != null){
-            System.out.println("\n\n[DispositivosController]"
+            System.out.println(WEB_NAME+"\n[DispositivosController]"
                 + "action is: " + request.getParameter("action"));
             List<DispositivoVO> listaObjetos = new ArrayList<>();
             String action=(String)request.getParameter("action");
@@ -117,7 +117,7 @@ public class DispositivosController extends BaseServlet {
             if (request.getParameter("jtSorting") != null) 
                 jtSorting   = request.getParameter("jtSorting");
   
-            System.out.println("cl.femase.gestionweb.servlet."
+            System.out.println(WEB_NAME+"cl.femase.gestionweb.servlet."
                 + "mantencion.DispositivosController."
                 + "processRequest(). jtSorting antes: "+jtSorting);
             
@@ -143,7 +143,7 @@ public class DispositivosController extends BaseServlet {
             //else if (jtSorting.contains("idCenco")) jtSorting = jtSorting.replaceFirst("idCenco","id_cenco");
             //else if (jtSorting.contains("fechaIngresoAsStr")) jtSorting = jtSorting.replaceFirst("fechaIngresoAsStr","fecha_ingreso");
             
-            System.out.println("cl.femase.gestionweb.servlet."
+            System.out.println(WEB_NAME+"cl.femase.gestionweb.servlet."
                 + "mantencion.DispositivosController."
                 + "processRequest(). jtSorting despues: "+jtSorting);
             
@@ -226,7 +226,7 @@ public class DispositivosController extends BaseServlet {
             }
             
             if (action.compareTo("list")==0) {
-                System.out.println("[DispositivosController]"
+                System.out.println(WEB_NAME+"[DispositivosController]"
                     + "Mantenedor - Dispositivos - "
                     + "mostrando registros...");
                 try{
@@ -264,7 +264,7 @@ public class DispositivosController extends BaseServlet {
                     ex.printStackTrace();
                 }   
             }else if (action.compareTo("create") == 0) {
-                    System.out.println("[DispositivosController]"
+                    System.out.println(WEB_NAME+"[DispositivosController]"
                         + "Mantenedor - Dispositivos - Insertar...");
                     MaintenanceVO doCreate = auxnegocio.insert(auxdata, resultado);					
                     listaObjetos.add(auxdata);
@@ -275,7 +275,7 @@ public class DispositivosController extends BaseServlet {
                     String listData="{\"Result\":\"OK\",\"Record\":"+json+"}";											
                     response.getWriter().print(listData);
             }else if (action.compareTo("update") == 0) {  
-                    System.out.println("[DispositivosController]"
+                    System.out.println(WEB_NAME+"[DispositivosController]"
                         + "Mantenedor - Dispositivos - Actualizar...");
                     try{
                         MaintenanceVO doUpdate = auxnegocio.update(auxdata, resultado);
@@ -291,7 +291,7 @@ public class DispositivosController extends BaseServlet {
                         response.getWriter().print(error);
                     }
             }else if (action.compareTo("asignacion_start") == 0) {  
-                    System.out.println("Mantenedor - Dispositivos"
+                    System.out.println(WEB_NAME+"Mantenedor - Dispositivos"
                             + "- Mostrar Formulario Asignacion Dispositivos");
                     listaObjetos = 
                         auxnegocio.getDispositivos(null,
@@ -305,7 +305,7 @@ public class DispositivosController extends BaseServlet {
                     session.setAttribute("all_dispositivos", listaObjetos);
                     request.getRequestDispatcher("/mantencion/asignacion_dispositivos.jsp").forward(request, response);        
             }else if (action.compareTo("load_asignacion") == 0) {  
-                    System.out.println("\n\nMantenedor - Dispositivos"
+                    System.out.println(WEB_NAME+"\nMantenedor - Dispositivos"
                         + "- Mostrar Asignacion "
                         + "para el Dispositivo: " + 
                             request.getParameter("device_id"));
@@ -332,7 +332,7 @@ public class DispositivosController extends BaseServlet {
 //                            0, 
 //                            "dispositivo.device_id");
                     
-                    System.out.println("\n\n[Mantenedor - "
+                    System.out.println(WEB_NAME+"\n[Mantenedor - "
                         + "Dispositivos]- "
                         + "Guardar Asignacion "
                         + "de departamentos "
@@ -347,16 +347,16 @@ public class DispositivosController extends BaseServlet {
                     String[] deptos = request.getParameterValues("deptos_selected");
                     if (deptos!=null){
                         for (int x=0;x<deptos.length;x++){
-                            System.out.println("depto seleccionado["+x+"] = "+deptos[x]);
+                            System.out.println(WEB_NAME+"depto seleccionado["+x+"] = "+deptos[x]);
                             DispositivoDepartamentoVO newDepto = new DispositivoDepartamentoVO(deviceId,deptos[x]);
                             asignacionBp.insertAsignacionDepartamento(newDepto, resultado);
                         }     
-                    }else System.out.println("\n\n[Mantenedor - Dispositivos"
+                    }else System.out.println(WEB_NAME+"\n[Mantenedor - Dispositivos"
                         + "]- No hay departamentos asignados para el Dispositivo: " + 
                             deviceId);
                     
                     
-                    System.out.println("\n\n[Mantenedor - "
+                    System.out.println(WEB_NAME+"\n[Mantenedor - "
                         + "Dispositivos]- "
                         + "Guardar Asignacion "
                         + "de centros costo "
@@ -371,11 +371,11 @@ public class DispositivosController extends BaseServlet {
                     String[] cencos = request.getParameterValues("cencos_selected");
                     if (cencos!=null){
                         for (int x = 0; x < cencos.length; x++){
-                            System.out.println("Cenco seleccionado["+x+"] = "+cencos[x]);
+                            System.out.println(WEB_NAME+"Cenco seleccionado["+x+"] = "+cencos[x]);
                             DispositivoCentroCostoVO newCenco = new DispositivoCentroCostoVO(deviceId,Integer.parseInt(cencos[x]));
                             asignacionBp.insertAsignacionCentroCosto(newCenco, resultado);
                         }     
-                    }else System.out.println("\n\n[Mantenedor - Dispositivos"
+                    }else System.out.println(WEB_NAME+"\n[Mantenedor - Dispositivos"
                         + "]- No hay centros de costo asignados para el Dispositivo: " + 
                             deviceId);
                     
@@ -389,11 +389,11 @@ public class DispositivosController extends BaseServlet {
                     String[] empresas = request.getParameterValues("empresas_selected");
                     if (empresas != null){
                         for (int x = 0; x < empresas.length; x++){
-                            System.out.println("Empresa seleccionada["+x+"] = "+empresas[x]);
+                            System.out.println(WEB_NAME+"Empresa seleccionada["+x+"] = "+empresas[x]);
                             DispositivoEmpresaVO newEmpresa = new DispositivoEmpresaVO(deviceId,empresas[x]);
                             asignacionBp.insertAsignacionEmpresa(newEmpresa, resultado);
                         }     
-                    }else System.out.println("\n\n[Mantenedor - Dispositivos"
+                    }else System.out.println(WEB_NAME+"\n[Mantenedor - Dispositivos"
                         + "]- No hay Empresas asignadas para el Dispositivo: " + 
                             deviceId);
                     

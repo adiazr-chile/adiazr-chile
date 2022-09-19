@@ -85,7 +85,7 @@ public class EmpleadosCaducadosController extends BaseServlet {
         MaintenanceEventsBp eventosBp   = new MaintenanceEventsBp(appProperties);
         
         if(request.getParameter("action") != null){
-            System.out.println("[EmpleadosCaducadosController]action is: " + request.getParameter("action"));
+            System.out.println(WEB_NAME+"[EmpleadosCaducadosController]action is: " + request.getParameter("action"));
             List<EmpleadoVO> listaEmpleados = new ArrayList<>();
             String action=(String)request.getParameter("action");
             Gson gson = new Gson();
@@ -151,7 +151,7 @@ public class EmpleadosCaducadosController extends BaseServlet {
             }
             
             if (action.compareTo("list")==0) {
-                System.out.println("[EmpleadosCaducadosController."
+                System.out.println(WEB_NAME+"[EmpleadosCaducadosController."
                     + "processRequest]"
                     + "Mostrando empleados...");
                 try{
@@ -160,7 +160,7 @@ public class EmpleadosCaducadosController extends BaseServlet {
                     int cencoid=-1;
                     
                     String paramCencoID         = request.getParameter("cencoId");
-                    System.out.println("[EmpleadosCaducadosController.processRequest]"
+                    System.out.println(WEB_NAME+"[EmpleadosCaducadosController.processRequest]"
                         + "token param 'cencoID'= " + paramCencoID);
                     if (paramCencoID != null && paramCencoID.compareTo("-1") != 0){
                         StringTokenizer tokenCenco  = new StringTokenizer(paramCencoID, "|");
@@ -173,7 +173,7 @@ public class EmpleadosCaducadosController extends BaseServlet {
                         }
                     }
                     
-                    System.out.println("[EmpleadosCaducadosController."
+                    System.out.println(WEB_NAME+"[EmpleadosCaducadosController."
                         + "processRequest]Mostrar empleados. "
                         + "Empresa: " + empresaid
                         + ", depto: " + deptoid
@@ -189,12 +189,12 @@ public class EmpleadosCaducadosController extends BaseServlet {
                                 strcencos += cencosIt.next().getCcostoId()+",";
                             }
                             strcencos = strcencos.substring(0, strcencos.length()-1);
-                            System.out.println("[EmpleadosCaducadosController."
+                            System.out.println(WEB_NAME+"[EmpleadosCaducadosController."
                                 + "processRequest]"
                                 + "Mostrar empleados "
                                 + "para los cencos seleccionados: " + strcencos);
                         }else{
-                            System.out.println("[EmpleadosCaducadosController."
+                            System.out.println(WEB_NAME+"[EmpleadosCaducadosController."
                                 + "processRequest]"
                                 + "No hay cencos vigentes para el usuario conectado");
                         }
@@ -247,7 +247,7 @@ public class EmpleadosCaducadosController extends BaseServlet {
                                 null,
                                 -1,
                                 strcencos);
-                        System.out.println("[EmpleadosCaducadosController."
+                        System.out.println(WEB_NAME+"[EmpleadosCaducadosController."
                             + "processRequest]num empleados: " + empleadosCount);
                         
                         //agregar evento al log.
@@ -278,7 +278,7 @@ public class EmpleadosCaducadosController extends BaseServlet {
                     session.setAttribute("empleadoscaducados|"
                         + userConnected.getUsername(), listaEmpleados);
                     
-                    System.out.println("[EmpleadosCaducadosController."
+                    System.out.println(WEB_NAME+"[EmpleadosCaducadosController."
                         + "processRequest]"
                         + "FIN LISTAR EMPLEADOS");
                     response.getWriter().print(listData);
@@ -291,7 +291,7 @@ public class EmpleadosCaducadosController extends BaseServlet {
                 }   
             }else if (action.compareTo("update") == 0) {  
                     try{
-                        System.out.println("[EmpleadosCaducadosController."
+                        System.out.println(WEB_NAME+"[EmpleadosCaducadosController."
                             + "processRequest]"
                             + "Modificar empleado. "
                             + "Rut: " + empleado.getRut()

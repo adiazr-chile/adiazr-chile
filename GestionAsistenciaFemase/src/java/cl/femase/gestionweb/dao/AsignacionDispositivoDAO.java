@@ -70,7 +70,7 @@ public class AsignacionDispositivoDAO extends BaseDAO{
 //            
 //            int rowAffected = psupdate.executeUpdate();
 //            if (rowAffected == 1){
-//                System.out.println("[update]dispositivo"
+//                System.out.println(WEB_NAME+"[update]dispositivo"
 //                    + ", id:" +_data.getId()
 //                    + ", tipo:" +_data.getIdTipo()
 //                    +" actualizado OK!");
@@ -129,7 +129,7 @@ public class AsignacionDispositivoDAO extends BaseDAO{
             
             int filasAfectadas = insert.executeUpdate();
             if (filasAfectadas == 1){
-                System.out.println("[insert dispositivo_empresa]"
+                System.out.println(WEB_NAME+"[insert dispositivo_empresa]"
                     + ", deviceId:" +_data.getDeviceId()
                     + ", empresaId:" +_data.getEmpresaId()
                     +" insertado OK!");
@@ -188,7 +188,7 @@ public class AsignacionDispositivoDAO extends BaseDAO{
             
             int filasAfectadas = insert.executeUpdate();
             if (filasAfectadas == 1){
-                System.out.println("[insert dispositivo_departamento]"
+                System.out.println(WEB_NAME+"[insert dispositivo_departamento]"
                     + ", deviceId:" +_data.getDeviceId()
                     + ", departamentoId:" +_data.getDeptoId()
                     +" insertado OK!");
@@ -239,7 +239,7 @@ public class AsignacionDispositivoDAO extends BaseDAO{
            
             int filasAfectadas = insert.executeUpdate();
             if (filasAfectadas == 1){
-                System.out.println("[delete dispositivo_departamento]"
+                System.out.println(WEB_NAME+"[delete dispositivo_departamento]"
                     + ", deviceId:" +_deviceId
                     +" insertado OK!");
             }
@@ -288,7 +288,7 @@ public class AsignacionDispositivoDAO extends BaseDAO{
            
             int filasAfectadas = insert.executeUpdate();
             if (filasAfectadas == 1){
-                System.out.println("[delete dispositivo_centrocosto]"
+                System.out.println(WEB_NAME+"[delete dispositivo_centrocosto]"
                     + ", deviceId:" +_deviceId
                     +" insertado OK!");
             }
@@ -337,7 +337,7 @@ public class AsignacionDispositivoDAO extends BaseDAO{
            
             int filasAfectadas = insert.executeUpdate();
             if (filasAfectadas == 1){
-                System.out.println("[delete dispositivo_empresa]"
+                System.out.println(WEB_NAME+"[delete dispositivo_empresa]"
                     + ", deviceId:" +_deviceId
                     +" insertado OK!");
             }
@@ -395,7 +395,7 @@ public class AsignacionDispositivoDAO extends BaseDAO{
             
             int filasAfectadas = insert.executeUpdate();
             if (filasAfectadas == 1){
-                System.out.println("[insert dispositivo_centro costo]"
+                System.out.println(WEB_NAME+"[insert dispositivo_centro costo]"
                     + ", deviceId:" +_data.getDeviceId()
                     + ", centro costoId:" +_data.getCencoId()
                     +" insertado OK!");
@@ -478,7 +478,7 @@ public class AsignacionDispositivoDAO extends BaseDAO{
 //                sql += " limit "+_jtPageSize + " offset "+_jtStartIndex;
 //            }
 //            
-//            System.out.println("cl.femase.gestionweb.service."
+//            System.out.println(WEB_NAME+"cl.femase.gestionweb.service."
 //                + "DispositivoDAO.getDispositivos() "
 //                    + "SQL: "+sql);
 //            dbConn = dbLocator.getConnection(m_dbpoolName);

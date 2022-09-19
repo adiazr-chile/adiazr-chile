@@ -113,7 +113,7 @@ public class AsignacionCiclicaServlet extends BaseServlet {
         TurnosBp turnosBp                 = new TurnosBp(appProperties);
                 
         if(request.getParameter("action") != null){
-            System.out.println("[AsignacionCiclicaServlet]"
+            System.out.println(WEB_NAME+"[AsignacionCiclicaServlet]"
                 + "action is: " + request.getParameter("action"));
             String action=(String)request.getParameter("action");
             Gson gson = new Gson();
@@ -131,7 +131,7 @@ public class AsignacionCiclicaServlet extends BaseServlet {
             String deptoId  = null;
             String cencoId  = "-1";
             String paramCencoID = request.getParameter("cencoId");
-            System.out.println("[AsignacionCiclicaServlet]"
+            System.out.println(WEB_NAME+"[AsignacionCiclicaServlet]"
                 + "token param 'cencoID'= " + paramCencoID);
             if (paramCencoID != null && paramCencoID.compareTo("-1") != 0){
                 StringTokenizer tokenCenco  = new StringTokenizer(paramCencoID, "|");
@@ -147,7 +147,7 @@ public class AsignacionCiclicaServlet extends BaseServlet {
                 
             if (action.compareTo("list_empleados") == 0) {
                 String labelCenco = request.getParameter("labelCenco");
-                System.out.println("[AsignacionCiclicaServlet]"
+                System.out.println(WEB_NAME+"[AsignacionCiclicaServlet]"
                     + "mostrando empleados, "
                     + "num ciclos(semanas) y duracion (anios). "
                     + "EmpresaId: " + empresaId
@@ -188,7 +188,7 @@ public class AsignacionCiclicaServlet extends BaseServlet {
                     ex.printStackTrace();
                 }   
             }else if (action.compareTo("mostrar_ciclo") == 0) {  
-                    System.out.println("[AsignacionCiclicaServlet]Mostrar ciclo "
+                    System.out.println(WEB_NAME+"[AsignacionCiclicaServlet]Mostrar ciclo "
                         + "para asignacion de turno para cada dia");
                     String[] empleadosSelected = request.getParameterValues("list2");
                     String paramFechaInicio = request.getParameter("fecha_inicio");
@@ -211,11 +211,11 @@ public class AsignacionCiclicaServlet extends BaseServlet {
                         calendarInicio.get(Calendar.MONTH) + 1 ,
                         calendarInicio.get(Calendar.DATE) );
                     LocalDate ultimoDiaSemana = start.plusDays(intDiasCiclo-1);
-                    System.out.println("[AsignacionCiclicaServlet.mostrar ciclos]"
+                    System.out.println(WEB_NAME+"[AsignacionCiclicaServlet.mostrar ciclos]"
                         + "1er dia semana: " + start.toString()
                         +", ultimo dia semana: " + ultimoDiaSemana.toString());
 
-                    System.out.println("[AsignacionCiclicaServlet."
+                    System.out.println(WEB_NAME+"[AsignacionCiclicaServlet."
                         + "mostrar ciclos]Asignar turnos para el ciclo");
 
                     List<LocalDate> dates = 
@@ -248,7 +248,7 @@ public class AsignacionCiclicaServlet extends BaseServlet {
                             
                             listaEmpleados.add(auxEmpleados.get(0));
                         }
-                        System.out.println("[AsignacionCiclicaServlet]-1-Set empleados asignados en sesion...");
+                        System.out.println(WEB_NAME+"[AsignacionCiclicaServlet]-1-Set empleados asignados en sesion...");
                         session.setAttribute("empleados_seleccionados", listaEmpleados);
                     }
                     
@@ -261,11 +261,11 @@ public class AsignacionCiclicaServlet extends BaseServlet {
                     //session.setAttribute("asignados_turno", listaEmpleadosAsignados);
                     request.getRequestDispatcher("/mantencion/turnos/asignacion_ciclica.jsp").forward(request, response);
             }else if (action.compareTo("preview_asignacion_ciclo") == 0) {
-                    System.out.println("[AsignacionCiclicaServlet]Generar vista previa de los turnos "
+                    System.out.println(WEB_NAME+"[AsignacionCiclicaServlet]Generar vista previa de los turnos "
                         + "asignados.");
                     ArrayList<AsignacionCiclicaTurnoVO> turnosDelCiclo=new ArrayList<>();
                     String[] empleadosSelected = request.getParameterValues("list2");
-                    System.out.println("[AsignacionCiclicaServlet]Empleados seleccionados: "+empleadosSelected);
+                    System.out.println(WEB_NAME+"[AsignacionCiclicaServlet]Empleados seleccionados: "+empleadosSelected);
                     //parametros para setear los turnos
                     String fechaInicio = (String)session.getAttribute("fecha_inicio");
                     String strDuracion = (String)session.getAttribute("duracion");
@@ -283,7 +283,7 @@ public class AsignacionCiclicaServlet extends BaseServlet {
                             
                             int diaSemana = date.getDayOfWeek().getValue();
                             int idTurno = Integer.parseInt(request.getParameter("turno_" + fechas[x]));
-                            System.out.println("[AsignacionCiclicaServlet]"
+                            System.out.println(WEB_NAME+"[AsignacionCiclicaServlet]"
                                 + "fecha[" + x +"] = " + fechas[x]
                                 + ", turno: " + request.getParameter("turno_" + fechas[x]));
                             
@@ -315,7 +315,7 @@ public class AsignacionCiclicaServlet extends BaseServlet {
                     
                     Collections.sort(asignacionTurnos);
                     
-                    System.out.println("[AsignacionCiclicaServlet]"
+                    System.out.println(WEB_NAME+"[AsignacionCiclicaServlet]"
                         + "fecha maxima de asignacion= " + m_strMaxFecha);
                     
                     /**
@@ -338,7 +338,7 @@ public class AsignacionCiclicaServlet extends BaseServlet {
                             
                             listaEmpleados.add(auxEmpleados.get(0));
                         }
-                        System.out.println("[AsignacionCiclicaServlet]-2-Set empleados asignados en sesion...");
+                        System.out.println(WEB_NAME+"[AsignacionCiclicaServlet]-2-Set empleados asignados en sesion...");
                         session.setAttribute("empleados_asignados", listaEmpleados);
                     }
                     
@@ -347,7 +347,7 @@ public class AsignacionCiclicaServlet extends BaseServlet {
                     
                     request.getRequestDispatcher("/mantencion/turnos/asignacion_ciclica_preview.jsp").forward(request, response);
             }else if (action.compareTo("guardar_asignacion_ciclo") == 0){
-                        System.out.println("[AsignacionCiclicaServlet]Guardar asignacion de turnos para el ciclo");
+                        System.out.println(WEB_NAME+"[AsignacionCiclicaServlet]Guardar asignacion de turnos para el ciclo");
                         List<AsignacionCiclicaTurnoVO> listaAsignacion 
                             = (List<AsignacionCiclicaTurnoVO>)session.getAttribute("asignacion_turnos"+ "|" + userConnected.getUsername());
                         List<EmpleadoVO> listaEmpleados = (List<EmpleadoVO>)session.getAttribute("empleados_asignados");
@@ -373,7 +373,7 @@ public class AsignacionCiclicaServlet extends BaseServlet {
                         Iterator<EmpleadoVO> iteraEmpleados = listaEmpleados.iterator();
                         while(iteraEmpleados.hasNext() ) {
                             EmpleadoVO empleado = iteraEmpleados.next();
-                            System.out.println("[AsignacionCiclicaServlet]Inicio Guardar asignacion ciclica de turnos "
+                            System.out.println(WEB_NAME+"[AsignacionCiclicaServlet]Inicio Guardar asignacion ciclica de turnos "
                                 + "rut empleado= " + empleado.getRut());
                             //iterar asignacion de turnos....
                             Iterator<AsignacionCiclicaTurnoVO> iteraAsignacion = listaAsignacion.iterator();
@@ -386,7 +386,7 @@ public class AsignacionCiclicaServlet extends BaseServlet {
                                 String labelDiaSemana=
                                     asignacion.getFecha().getDayOfWeek().getDisplayName(TextStyle.FULL, m_localeCl)
                                         + " " + formattedString;
-                                System.out.println("[AsignacionCiclicaServlet]"
+                                System.out.println(WEB_NAME+"[AsignacionCiclicaServlet]"
                                     + "Fecha1= " + formattedString
                                     + ", fechaKey= " + fechaKey
                                     + ", turnoId= " + asignacion.getIdTurno());
@@ -405,7 +405,7 @@ public class AsignacionCiclicaServlet extends BaseServlet {
                                     diasSinAsignacion.add(newAsignacion);
                                 }
                             } 
-                            System.out.println("[AsignacionCiclicaServlet]Fin Guardar asignacion ciclica de turnos "
+                            System.out.println(WEB_NAME+"[AsignacionCiclicaServlet]Fin Guardar asignacion ciclica de turnos "
                                 + "rut empleado= " + empleado.getRut());
                         }
                         
@@ -461,7 +461,7 @@ public class AsignacionCiclicaServlet extends BaseServlet {
         java.util.Iterator<AsignacionCiclicaTurnoVO> itAsignacion = _asignacionCiclos.iterator();
         while(itAsignacion.hasNext()){
             AsignacionCiclicaTurnoVO asignacion = itAsignacion.next();
-            System.out.println("\n[AsignacionCiclicaServlet.setTurnosCiclicos]"
+            System.out.println(WEB_NAME+"[AsignacionCiclicaServlet.setTurnosCiclicos]"
                 + "Replicando turno del dia: " + asignacion.getFecha().toString() 
                 +", turno: " + asignacion.getIdTurno());
             TurnoRotativoVO infoTurno = new TurnoRotativoVO(-1, "Sin Turno Asignado");
@@ -483,7 +483,7 @@ public class AsignacionCiclicaServlet extends BaseServlet {
             LocalDate diaSgte = asignacion.getFecha().plusDays(_numDiasCiclo);
             
             while(diaSgte.isBefore(ultimoDiaAsignacion) ||  diaSgte.isEqual(ultimoDiaAsignacion)){
-                System.out.println("[AsignacionCiclicaServlet.setTurnosCiclicos]"
+                System.out.println(WEB_NAME+"[AsignacionCiclicaServlet.setTurnosCiclicos]"
                     + "FECHA FUTURA: " + diaSgte.toString()
                     + ", dia de la semana: " + diaSgte.getDayOfWeek().getDisplayName(TextStyle.FULL, m_localeCl)
                     + ", turno: " + asignacion.getIdTurno());
@@ -505,7 +505,7 @@ public class AsignacionCiclicaServlet extends BaseServlet {
                 m_strMaxFecha = diaSgte.toString();
                 diaSgte = diaSgte.plusDays(_numDiasCiclo);
             }
-            System.out.println("[AsignacionCiclicaServlet.setTurnosCiclicos]"
+            System.out.println(WEB_NAME+"[AsignacionCiclicaServlet.setTurnosCiclicos]"
                 + "Fin ciclo...");
         }
         
@@ -532,7 +532,7 @@ public class AsignacionCiclicaServlet extends BaseServlet {
                 filePath = appProperties.getPathExportedFiles()+
                     File.separator+
                     userConnected.getUsername()+"_asignacion_turnos.csv";
-                System.out.println("[AsignacionCiclicaServlet."
+                System.out.println(WEB_NAME+"[AsignacionCiclicaServlet."
                     + "exportResultadosToCSV]filePath:" + filePath);
                 FileWriter filewriter = new FileWriter(filePath);
                 outfile     = new PrintWriter(filewriter);

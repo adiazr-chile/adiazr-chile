@@ -87,7 +87,7 @@ public class VacacionesLogDAO extends BaseDAO{
             + ", comentario [" + _data.getComentario() + "]"
             + ", num cotizaciones segun certif [" + _data.getNumCotizaciones() + "]";
        
-        System.out.println("[VacacionesLogDAO.insert]" + msgFinal);
+        System.out.println(WEB_NAME+"[VacacionesLogDAO.insert]" + msgFinal);
         
         objresultado.setMsg(msgFinal);
         PreparedStatement insert = null;
@@ -175,7 +175,7 @@ public class VacacionesLogDAO extends BaseDAO{
             
             int filasAfectadas = insert.executeUpdate();
             if (filasAfectadas == 1){
-                System.out.println("[VacacionesLogDAO.insert]vacaciones"
+                System.out.println(WEB_NAME+"[VacacionesLogDAO.insert]vacaciones"
                     + ". username:" + _data.getUsername()
                     + ", empresaId:" + _data.getEmpresaId()
                     + ", rutEmpleado:" + _data.getRutEmpleado()    
@@ -291,7 +291,7 @@ public class VacacionesLogDAO extends BaseDAO{
                 sql += " limit "+_jtPageSize + " offset "+_jtStartIndex;
             }
             
-            System.out.println("[VacacionesLogDAO."
+            System.out.println(WEB_NAME+"[VacacionesLogDAO."
                 + "getInfoVacacionesLog]sql: "+sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,

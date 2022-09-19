@@ -99,7 +99,7 @@ public class MarcasRechazosDAO extends BaseDAO{
             if (_jtPageSize > 0){
                 sql += " limit "+_jtPageSize + " offset "+_jtStartIndex;
             }
-            System.out.println("[MarcasRechazosDAO.getMarcasRechazadas]Sql: "+sql);
+            System.out.println(WEB_NAME+"[MarcasRechazosDAO.getMarcasRechazadas]Sql: "+sql);
             dbConn = dbLocator.getConnection(m_dbpoolName,"[MarcasRechazosDAO.getMarcasRechazadas]");
             ps = dbConn.prepareStatement(sql);
             rs = ps.executeQuery();
@@ -198,7 +198,7 @@ public class MarcasRechazosDAO extends BaseDAO{
             if (_jtPageSize > 0){
                 sql += " limit "+_jtPageSize + " offset "+_jtStartIndex;
             }
-            System.out.println("[MarcasRechazosDAO.getMarcasRechazadasHist]Sql: "+sql);
+            System.out.println(WEB_NAME+"[MarcasRechazosDAO.getMarcasRechazadasHist]Sql: "+sql);
             dbConn = dbLocator.getConnection(m_dbpoolName,"[MarcasRechazosDAO.getMarcasRechazadasHist]");
             ps = dbConn.prepareStatement(sql);
             rs = ps.executeQuery();

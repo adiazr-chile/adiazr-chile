@@ -76,7 +76,7 @@ public class ShowPdfServlet extends HttpServlet {
 //
 //                // if you want to use a relative path to context root:
 //                String relativePath = getServletContext().getRealPath("");
-//                System.out.println("[ShowPdfServlet.processRequest]"
+//                System.out.println(WEB_NAME+"[ShowPdfServlet.processRequest]"
 //                    + "relativePath = " + relativePath);
 //
 //                // obtains ServletContext
@@ -88,7 +88,7 @@ public class ShowPdfServlet extends HttpServlet {
 //                    // set to binary type if MIME mapping not found
 //                    mimeType = "application/octet-stream";
 //                }
-//                System.out.println("[ShowPdfServlet.processRequest]"
+//                System.out.println(WEB_NAME+"[ShowPdfServlet.processRequest]"
 //                    + "MIME type: " + mimeType);
 //
 //                // modifies response
@@ -113,7 +113,7 @@ public class ShowPdfServlet extends HttpServlet {
 //                inStream.close();
 //                outStream.close();     
 //
-//                System.out.println("[ShowPdfServlet.processRequest]"
+//                System.out.println(WEB_NAME+"[ShowPdfServlet.processRequest]"
 //                    + "Mostrando PDF");
 //            }catch(Exception ex){
 //

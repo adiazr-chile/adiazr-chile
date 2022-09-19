@@ -87,7 +87,7 @@ public class ParametrosController extends BaseServlet {
         ParametroBp parametrosbp = new ParametroBp(appProperties);
 
         if(request.getParameter("action") != null){
-            System.out.println("[ParametrosController]"
+            System.out.println(WEB_NAME+"[ParametrosController]"
                 + "action is: " + request.getParameter("action"));
             List<ParametroVO> listaObjetos = new ArrayList<ParametroVO>();
             String action=(String)request.getParameter("action");
@@ -116,7 +116,7 @@ public class ParametrosController extends BaseServlet {
                 jtSorting   = request.getParameter("jtSorting");
             
             //if (jtSorting.contains("code")) jtSorting = jtSorting.replaceFirst("code","param_code");
-            System.out.println("[ParametrosController]"
+            System.out.println(WEB_NAME+"[ParametrosController]"
                 + "param busqueda "
                 + "empresa_id: " + request.getParameter("paraEmpresaId")
                 + ", empresa_id en objeto: " + request.getParameter("empresaId"));
@@ -139,7 +139,7 @@ public class ParametrosController extends BaseServlet {
             }
             
             if (action.compareTo("list") == 0) {
-                System.out.println("[ParametrosController]"
+                System.out.println(WEB_NAME+"[ParametrosController]"
                     + "mostrando parametros para empresa_id= " + request.getParameter("empresaId"));
                 try{
                     int objectsCount = 0;
@@ -151,7 +151,7 @@ public class ParametrosController extends BaseServlet {
                             jtSorting);
                         
                         //Get Total Record Count for Pagination
-                        objectsCount = parametrosbp.getParametrosCount(empresaId);
+                        objectsCount = parametrosbp.getParametrosCount(request.getParameter("paraEmpresaId"));
                     }
                     //Convert Java Object to Json
                     JsonElement element = gson.toJsonTree(listaObjetos,
@@ -172,7 +172,7 @@ public class ParametrosController extends BaseServlet {
                     ex.printStackTrace();
                 }   
             }else if (action.compareTo("create") == 0) {
-                    System.out.println("[ParametrosController]"
+                    System.out.println(WEB_NAME+"[ParametrosController]"
                         + "Insertar Parametro. "
                         + "empresa_id: " + parametro.getEmpresaId()
                         + ", param_code: " + parametro.getParamCode()
@@ -187,7 +187,7 @@ public class ParametrosController extends BaseServlet {
                     String listData="{\"Result\":\"OK\",\"Record\":"+json+"}";											
                     response.getWriter().print(listData);
             }else if (action.compareTo("update") == 0) {  
-                    System.out.println("[ParametrosController]Modificar parametro...");
+                    System.out.println(WEB_NAME+"[ParametrosController]Modificar parametro...");
                     try{
                         MaintenanceVO doUpdate = parametrosbp.update(parametro, resultado);
                         listaObjetos.add(parametro);

@@ -77,7 +77,7 @@ public class CargosController extends BaseServlet {
         CargoBp auxnegocio=new CargoBp(appProperties);
 
         if(request.getParameter("action") != null){
-            System.out.println("---->action is: " + request.getParameter("action"));
+            System.out.println(WEB_NAME+"---->action is: " + request.getParameter("action"));
             List<CargoVO> listaObjetos = new ArrayList<CargoVO>();
             String action=(String)request.getParameter("action");
             Gson gson = new Gson();
@@ -127,7 +127,7 @@ public class CargosController extends BaseServlet {
             }
             
             if (action.compareTo("list")==0) {
-                System.out.println("Mantenedor - Cargo - "
+                System.out.println(WEB_NAME+"Mantenedor - Cargo - "
                     + "mostrando Cargos...");
                 try{
                     listaObjetos = auxnegocio.getCargos(nombre, estado,
@@ -157,7 +157,7 @@ public class CargosController extends BaseServlet {
                     ex.printStackTrace();
                 }   
             }else if (action.compareTo("create") == 0) {
-                    System.out.println("Mantenedor - Cargo - Insertar...");
+                    System.out.println(WEB_NAME+"Mantenedor - Cargo - Insertar...");
                     MaintenanceVO doCreate = auxnegocio.insert(auxdata, resultado);					
                     listaObjetos.add(auxdata);
 
@@ -167,7 +167,7 @@ public class CargosController extends BaseServlet {
                     String listData="{\"Result\":\"OK\",\"Record\":"+json+"}";											
                     response.getWriter().print(listData);
             }else if (action.compareTo("update") == 0) {  
-                    System.out.println("Mantenedor - Cargo - Actualizar...");
+                    System.out.println(WEB_NAME+"Mantenedor - Cargo - Actualizar...");
                     try{
                         MaintenanceVO doUpdate = auxnegocio.update(auxdata, resultado);
                         listaObjetos.add(auxdata);

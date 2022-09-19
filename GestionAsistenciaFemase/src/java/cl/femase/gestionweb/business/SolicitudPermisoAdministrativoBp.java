@@ -14,7 +14,7 @@ import cl.femase.gestionweb.vo.SolicitudPermisoAdministrativoVO;
  *
  * @author Alexander
  */
-public class SolicitudPermisoAdministrativoBp {
+public class SolicitudPermisoAdministrativoBp  extends BaseBp{
 
     /**
      *
@@ -22,12 +22,12 @@ public class SolicitudPermisoAdministrativoBp {
     public PropertiesVO props;
     /** para guardar los eventos de mantencion de informacion*/
     private final cl.femase.gestionweb.dao.MaintenanceEventsDAO eventsService;
-    private final cl.femase.gestionweb.dao.SolicitudPermisoAdministrativoDAO solicitudDao;
+    private final cl.femase.gestionweb.dao.SolicitudPermisoAdministrativoDAO solicitudPADao;
     
     public SolicitudPermisoAdministrativoBp(PropertiesVO props) {
         this.props      = props;
         eventsService   = new cl.femase.gestionweb.dao.MaintenanceEventsDAO(this.props);
-        solicitudDao    = new cl.femase.gestionweb.dao.SolicitudPermisoAdministrativoDAO();
+        solicitudPADao    = new cl.femase.gestionweb.dao.SolicitudPermisoAdministrativoDAO();
     }
 
     /**
@@ -39,7 +39,7 @@ public class SolicitudPermisoAdministrativoBp {
     public MaintenanceVO insert(SolicitudPermisoAdministrativoVO _objToInsert, 
             MaintenanceEventVO _eventdata){
         
-        MaintenanceVO insValues = solicitudDao.insert(_objToInsert);
+        MaintenanceVO insValues = solicitudPADao.insert(_objToInsert);
         
         //if (!updValues.isThereError()){
             String msgFinal = insValues.getMsg();
@@ -64,7 +64,7 @@ public class SolicitudPermisoAdministrativoBp {
             String _username, String _fechaHoraCancelacion, 
             MaintenanceEventVO _eventdata){
         MaintenanceVO updValues = 
-            solicitudDao.cancelarSolicitud(_idSolicitud, 
+            solicitudPADao.cancelarSolicitud(_idSolicitud, 
                 _username, 
                 _fechaHoraCancelacion);
         
@@ -94,7 +94,7 @@ public class SolicitudPermisoAdministrativoBp {
             String _notaObservacion,
              MaintenanceEventVO _eventdata){
         MaintenanceVO updValues = 
-            solicitudDao.aprobarSolicitud(_idSolicitud, 
+            solicitudPADao.aprobarSolicitud(_idSolicitud, 
                 _usernameAprueba, 
                 _fechaHoraAprobacion, _notaObservacion);
         
@@ -124,7 +124,7 @@ public class SolicitudPermisoAdministrativoBp {
             String _motivoRechazo,
              MaintenanceEventVO _eventdata){
         MaintenanceVO updValues = 
-            solicitudDao.rechazarSolicitud(_idSolicitud, 
+            solicitudPADao.rechazarSolicitud(_idSolicitud, 
                 _usernameRechaza, 
                 _fechaHoraRechazo, 
                 _motivoRechazo);

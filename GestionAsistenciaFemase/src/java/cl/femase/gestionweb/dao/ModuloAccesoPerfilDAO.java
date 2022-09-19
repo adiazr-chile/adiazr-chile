@@ -76,7 +76,7 @@ public class ModuloAccesoPerfilDAO extends BaseDAO{
 //            psupdate.setInt(4,  _data.getId());
 //            int rowAffected = psupdate.executeUpdate();
 //            if (rowAffected == 1){
-//                System.out.println("[update]acceso"
+//                System.out.println(WEB_NAME+"[update]acceso"
 //                        + ", id:" +_data.getId()
 //                        + ", nombre:" +_data.getNombre()
 //                        + ", label:" +_data.getLabel()
@@ -146,7 +146,7 @@ public class ModuloAccesoPerfilDAO extends BaseDAO{
             
             int filasAfectadas = insert.executeUpdate();
             if (filasAfectadas == 1){
-                System.out.println("[insert "
+                System.out.println(WEB_NAME+"[insert "
                     + "modulo acceso perfil-usuario]"
                     + " modulo_id: "+_data.getModuloId()
                     + ", acceso_id: "+_data.getAccesoId()
@@ -253,7 +253,7 @@ public class ModuloAccesoPerfilDAO extends BaseDAO{
 
             sql+=" order by ap.orden_despliegue";
             
-            System.out.println("[ModuloAccesoPerfilDAO.getAccesosByModuloPerfil]"
+            System.out.println(WEB_NAME+"[ModuloAccesoPerfilDAO.getAccesosByModuloPerfil]"
                 + ", Sql: "+sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,"[ModuloAccesoPerfilDAO.getAccesosByModuloPerfil]");
@@ -310,7 +310,7 @@ public class ModuloAccesoPerfilDAO extends BaseDAO{
                 
             sql+=" order by ap.orden_despliegue";
 
-            System.out.println("[ModuloAccesoPerfilDAO.getSoloAccesosKeyByModuloPerfil]"
+            System.out.println(WEB_NAME+"[ModuloAccesoPerfilDAO.getSoloAccesosKeyByModuloPerfil]"
                 + ", Sql: "+sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,"[ModuloAccesoPerfilDAO.getSoloAccesosKeyByModuloPerfil]");

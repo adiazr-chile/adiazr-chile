@@ -27,7 +27,7 @@ import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
-public class CalculaAsistenciaFMCJob implements Job {
+public class CalculaAsistenciaFMCJob extends BaseJobs implements Job {
 
     /**
      *
@@ -67,7 +67,7 @@ public class CalculaAsistenciaFMCJob implements Job {
         ejecucion.setProcesoId(37);
         ejecucion.setFechaHoraInicioEjecucion(sdf.format(start));
             
-        System.out.println("\n[GestionFemase."
+        System.out.println(WEB_NAME+"[GestionFemase."
             + "CalculaAsistenciaFMCJob]"
             + "INICIO - Calculo de asistencia para "
             + "todos los centros de costo. "
@@ -78,7 +78,7 @@ public class CalculaAsistenciaFMCJob implements Job {
 //        startDate ="2018-05-01";
 //        endDate ="2018-05-31";
         
-        System.out.println("[GestionFemase."
+        System.out.println(WEB_NAME+"[GestionFemase."
             + "CalculaAsistenciaFMCJob]"
             + "Obteniendo lista de deptos para la empresaId: " + empresaId);
         
@@ -91,7 +91,7 @@ public class CalculaAsistenciaFMCJob implements Job {
             deptosBp.getDepartamentosEmpresa(auxUser, empresaId);
         for (int i = 0; i < departamentos.size(); i++) {
             DepartamentoVO itDepto= departamentos.get(i);
-            System.out.println("[GestionFemase."
+            System.out.println(WEB_NAME+"[GestionFemase."
                 + "CalculaAsistenciaFMCJob]Depto: " + itDepto.getId()
                 + ", nombre: " + itDepto.getNombre());
             
@@ -103,7 +103,7 @@ public class CalculaAsistenciaFMCJob implements Job {
 
                     MaintenanceVO resultadoCalculo = new MaintenanceVO();
                     if (itCenco.getId() != -1){
-                        System.out.println("[GestionFemase."
+                        System.out.println(WEB_NAME+"[GestionFemase."
                             + "CalculaAsistenciaFMCJob]INICIO Calculo para Cenco: " + itCenco.getId()
                             +", nombre: " + itCenco.getNombre()
                             +". startDate: " + startDate
@@ -132,7 +132,7 @@ public class CalculaAsistenciaFMCJob implements Job {
                              * El calculo de asistencia es iniciado para cada uno de los empleados.
                              */
                             CalculoAsistenciaRunnable.setHebras(empleados);
-                            System.out.println("[GestionFemase."
+                            System.out.println(WEB_NAME+"[GestionFemase."
                                 + "DetalleAsistenciaController]"
                                 + "FIN CALCULO ASISTENCIA...");
 
@@ -143,13 +143,13 @@ public class CalculaAsistenciaFMCJob implements Job {
     //                            itCenco.getId(), 
     //                            empleadosCalculo, 
     //                            startDate, endDate);
-                            System.out.println("[GestionFemase."
+                            System.out.println(WEB_NAME+"[GestionFemase."
                                 + "CalculaAsistenciaFMCJob]******FIN Calculo para Cenco: " + itCenco.getId()
                                 +", nombre: " + itCenco.getNombre()
                                 +". startDate: " + startDate
                                 +". endDate: " + endDate);
                         }else{
-                            System.out.println("[GestionFemase."
+                            System.out.println(WEB_NAME+"[GestionFemase."
                                 + "CalculaAsistenciaFMCJob]No hay empleados para Cenco: " + itCenco.getId()
                                 +", nombre: " + itCenco.getNombre());
                         }    
@@ -158,7 +158,7 @@ public class CalculaAsistenciaFMCJob implements Job {
             }
         }//fin iteracion de departamentos de la empresa
         
-        System.out.println("\n[GestionFemase."
+        System.out.println(WEB_NAME+"[GestionFemase."
             + "CalculaAsistenciaFMCJob]"
             + "FIN - Calculo de asistencia para "
             + "todos los centros de costo- " + new java.util.Date());
@@ -183,7 +183,7 @@ public class CalculaAsistenciaFMCJob implements Job {
             String _deptoId, 
             int _cencoId){
     
-        System.out.println("[GestionFemase."
+        System.out.println(WEB_NAME+"[GestionFemase."
             + "CalculaAsistenciaFMCJob]empresa: "+_empresaId
             +", depto: "+_deptoId
             +", cenco: "+_cencoId);

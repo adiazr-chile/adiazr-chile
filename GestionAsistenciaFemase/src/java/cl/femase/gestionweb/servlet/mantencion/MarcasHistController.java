@@ -79,7 +79,7 @@ public class MarcasHistController extends BaseServlet {
         MaintenanceEventsBp eventosBp   = new MaintenanceEventsBp(appProperties);
         
         if(request.getParameter("action") != null){
-            System.out.println("[MarcasHistController]"
+            System.out.println(WEB_NAME+"[MarcasHistController]"
                 + "action is: " + request.getParameter("action"));
             List<MarcaVO> listaObjetos = new ArrayList<>();
             String action=(String)request.getParameter("action");
@@ -100,7 +100,7 @@ public class MarcasHistController extends BaseServlet {
             String deptoId  = null;
             String cencoId  = "-1";
             String paramCencoID         = request.getParameter("cencoId");
-            System.out.println("[MarcasHistController]"
+            System.out.println(WEB_NAME+"[MarcasHistController]"
                 + "token param 'cencoID'= " + paramCencoID);
             if (paramCencoID != null && paramCencoID.compareTo("-1") != 0){
                 StringTokenizer tokenCenco  = new StringTokenizer(paramCencoID, "|");
@@ -125,7 +125,7 @@ public class MarcasHistController extends BaseServlet {
                 numRecordsPerPage   = Integer.parseInt(request.getParameter("jtPageSize"));
             if (request.getParameter("jtSorting") != null) 
                 jtSorting   = request.getParameter("jtSorting");
-            System.out.println("MarcasHistController." +
+            System.out.println(WEB_NAME+"MarcasHistController." +
                 " jtSorting: " + request.getParameter("jtSorting"));
             
             if (jtSorting.contains("codDispositivo")) jtSorting = jtSorting.replaceFirst("codDispositivo","cod_dispositivo");
@@ -133,7 +133,7 @@ public class MarcasHistController extends BaseServlet {
             else if (jtSorting.contains("rutEmpleado")) jtSorting = jtSorting.replaceFirst("rutEmpleado","rut_empleado");
             else if (jtSorting.contains("fechaHoraStr")) jtSorting = jtSorting.replaceFirst("fechaHoraStr","fecha_hora");
                                          
-            System.out.println("cl.femase.gestionweb."
+            System.out.println(WEB_NAME+"cl.femase.gestionweb."
                 + "servlet.mantencion."
                 + "MarcasHistController."
                 + "processRequest()."
@@ -207,7 +207,7 @@ public class MarcasHistController extends BaseServlet {
             }
             
             if (action.compareTo("list") == 0){
-                System.out.println("[MarcasHistController]"
+                System.out.println(WEB_NAME+"[MarcasHistController]"
                     + "mostrando marcas."+
                         "CencoId= " +cencoId
                         +", rutEmpleado= " +request.getParameter("rutEmpleado")
@@ -293,7 +293,7 @@ public class MarcasHistController extends BaseServlet {
 //                    resultado.setCencoId(infoEmpleado.getCentroCosto().getId());
 //                }
 //                
-//                System.out.println("[MarcasHistController]Insertar marca. "
+//                System.out.println(WEB_NAME+"[MarcasHistController]Insertar marca. "
 //                    + "Empresa: " + auxdata.getEmpresaCod()
 //                    + ", rut: " + auxdata.getRutEmpleado()
 //                    + ", fechaHora: " + auxdata.getFechaHora()
@@ -309,7 +309,7 @@ public class MarcasHistController extends BaseServlet {
 //                String listData="{\"Result\":\"OK\",\"Record\":"+json+"}";											
 //                response.getWriter().print(listData);
 //            }else if (action.compareTo("update") == 0) {  
-//                    System.out.println("[MarcasHistController]}"
+//                    System.out.println(WEB_NAME+"[MarcasHistController]}"
 //                        + "Actualizar marca, rowKey: "+request.getParameter("rowKey"));
 //                    if (request.getParameter("rowKey")!=null){
 //                        StringTokenizer tokenKey = new StringTokenizer(request.getParameter("rowKey"), "|");
@@ -317,7 +317,7 @@ public class MarcasHistController extends BaseServlet {
 //                        auxdata.setEmpresaCod(tokenKey.nextToken());
 //                        auxdata.setRutEmpleado(tokenKey.nextToken());
 //                        auxdata.setFechaHora(tokenKey.nextToken());
-//                        System.out.println("[MarcasHistController]}"
+//                        System.out.println(WEB_NAME+"[MarcasHistController]}"
 //                            + "Actualizar marca, "
 //                            + "rut: " + auxdata.getRutEmpleado()
 //                            + ", fechaHora: " + auxdata.getFechaHora());
@@ -340,7 +340,7 @@ public class MarcasHistController extends BaseServlet {
 //                        String newfechaHora = auxfecha + " " 
 //                            + auxdata.getHora()
 //                            + ":" + auxdata.getMinutos() + ":00";
-//                        System.out.println("[MarcasHistController]new fecha hora: "+newfechaHora);
+//                        System.out.println(WEB_NAME+"[MarcasHistController]new fecha hora: "+newfechaHora);
 //                        auxdata.setFechaHora(newfechaHora);
 //                        auxdata.setFechaHoraKey(newfechaHora);
 //                        auxdata.setFechaHoraStr(newfechaHora);
@@ -357,14 +357,14 @@ public class MarcasHistController extends BaseServlet {
 //                        response.getWriter().print(error);
 //                    }
 //            }else if (action.compareTo("delete") == 0) {
-//                    System.out.println("[MarcasHistController]}"
+//                    System.out.println(WEB_NAME+"[MarcasHistController]}"
 //                        + "Eliminar marca, rowKey: "+request.getParameter("rowKey"));
 //                    StringTokenizer tokenKey = new StringTokenizer(request.getParameter("rowKey"), "|");
 //                    //emp01|15695517B|2018-01-15 08:34:00|1
 //                    auxdata.setEmpresaCod(tokenKey.nextToken());
 //                    auxdata.setRutEmpleado(tokenKey.nextToken());
 //                    auxdata.setFechaHora(tokenKey.nextToken());
-//                    System.out.println("[MarcasHistController]}"
+//                    System.out.println(WEB_NAME+"[MarcasHistController]}"
 //                        + "Eliminar marca, rut: " + auxdata.getRutEmpleado());
 //                    try{
 //                        resultado.setEmpresaId(auxdata.getEmpresaCod());

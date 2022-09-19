@@ -97,11 +97,11 @@ public class UploadVacacionesServlet extends BaseServlet {
                         if(!item.isFormField()){
                             File auxfile = new File(item.getName());
                             String filename = auxfile.getName();
-                            System.out.println("[UploadVacacionesServlet]"
+                            System.out.println(WEB_NAME+"[UploadVacacionesServlet]"
                                 + "Filename: "+filename);
                             String extension = FilenameUtils.getExtension(filename);
                             String filePathLoaded= pathUploadedFiles + File.separator + filename;
-                            System.out.println("[UploadVacacionesServlet]"
+                            System.out.println(WEB_NAME+"[UploadVacacionesServlet]"
                                 + "filePathLoaded="+filePathLoaded);
                             item.write( new File(filePathLoaded));
                             if (extension.compareTo("csv") == 0){
@@ -113,7 +113,7 @@ public class UploadVacacionesServlet extends BaseServlet {
                                     "fecha_fin").parse(in);
                                 DetalleAusenciaVO data;
                                 for (CSVRecord record : records) {
-                                    System.out.println("[UploadVacacionesServlet]"
+                                    System.out.println(WEB_NAME+"[UploadVacacionesServlet]"
                                         + "recordNumber: "+record.getRecordNumber()
                                         + ". Linea csv: "+record.toString());
                                     if (record.getRecordNumber() > 0){
@@ -140,7 +140,7 @@ public class UploadVacacionesServlet extends BaseServlet {
                                             empleadosBp.getEmpleado(empresaId, rut);
                                         boolean empleadoValido=true;
                                         if (infoEmpleado == null){
-                                            System.out.println("[UploadVacacionesServlet]"
+                                            System.out.println(WEB_NAME+"[UploadVacacionesServlet]"
                                                 + "recordNumber:" + record.getRecordNumber() 
                                                 + ", empresaId: " + empresaId
                                                 + ", rut: " + rut + " no es valido...");
@@ -173,7 +173,7 @@ public class UploadVacacionesServlet extends BaseServlet {
                                                     rutAutorizador = itEmpleado.getRut();
                                                 }
                                             }
-                                            System.out.println("[UploadVacacionesServlet]"
+                                            System.out.println(WEB_NAME+"[UploadVacacionesServlet]"
                                                 + "recordNumber:" + record.getRecordNumber() 
                                                 + ", empresaId: " + infoEmpleado.getEmpresaId()
                                                 + ", deptoId: " + infoEmpleado.getDeptoId()
@@ -203,7 +203,7 @@ public class UploadVacacionesServlet extends BaseServlet {
                                             Date fechaHasta = fechaFormat.parse(data.getFechaFinAsStr());
                                             boolean vacacionFutura = false;
                                             if (fechaHasta.after(fechaActual)) vacacionFutura = true;
-                                            System.out.println("[UploadVacacionesServlet]"
+                                            System.out.println(WEB_NAME+"[UploadVacacionesServlet]"
                                                 + "Vacacion futura?" + vacacionFutura);
                                             
                                             if (ausenciasConflicto.isEmpty()){
@@ -212,7 +212,7 @@ public class UploadVacacionesServlet extends BaseServlet {
                                                         appProperties,
                                                         userConnected,
                                                         request);
-                                                System.out.println("[UploadVacacionesServlet]"
+                                                System.out.println(WEB_NAME+"[UploadVacacionesServlet]"
                                                     + "dias efectivos tomados: "
                                                     + saldoVacaciones.getDiasEfectivos());
                                                 data.setDiasEfectivosVacaciones(saldoVacaciones.getDiasEfectivos());
@@ -220,22 +220,22 @@ public class UploadVacacionesServlet extends BaseServlet {
                                                 if (vacacionFutura){
                                                     //validar saldo de vacaciones para ingreso de vacacion con fecha futura
                                                     if (saldoVacaciones.getMensajeValidacion() == null){
-                                                        System.out.println("[UploadVacacionesServlet]"
+                                                        System.out.println(WEB_NAME+"[UploadVacacionesServlet]"
                                                             + "Vacacion fecha futura. Insertar vacacion");
                                                         insertResult = insertarVacacion(request, appProperties, parametrosSistema, userConnected, data);
                                                     }else{
                                                         mensajeFinal= saldoVacaciones.getMensajeValidacion();
-                                                        System.out.println("[UploadVacacionesServlet]"
+                                                        System.out.println(WEB_NAME+"[UploadVacacionesServlet]"
                                                             + "Vacacion fecha futura. Erroa al Insertar vacacion");
                                                         data.setMensajeError(mensajeFinal);
                                                         mensajes.add(new ResultadoCargaCsvVO("ERROR",
                                                             "Vacacion fecha futura"));
                                                     }
                                                 }else{//fin if vacacionFutura
-                                                    System.out.println("[UploadVacacionesServlet]"
+                                                    System.out.println(WEB_NAME+"[UploadVacacionesServlet]"
                                                         + "Vacacion fecha pasada. "
                                                         + "Insertar vacacion sin validar saldo de dias");
-                                                    System.out.println("[UploadVacacionesServlet]Insertar vacacion. "
+                                                    System.out.println(WEB_NAME+"[UploadVacacionesServlet]Insertar vacacion. "
                                                         + "empresaId: " + empresaId
                                                         + ", rut: " + rut
                                                         + ", autorizador: " + data.getRutAutorizador()
@@ -246,13 +246,13 @@ public class UploadVacacionesServlet extends BaseServlet {
                                                 }
 
                                                 if (insertResult.isThereError()){
-                                                    System.out.println("[UploadVacacionesServlet]"
+                                                    System.out.println(WEB_NAME+"[UploadVacacionesServlet]"
                                                         + "Error -1- al insertar vacacion");
                                                     //registrosError.put(rowKey, data);
                                                     mensajes.add(new ResultadoCargaCsvVO("ERROR",
                                                         insertResult.getMsgError()));
                                                 }else {
-                                                    System.out.println("[UploadVacacionesServlet]"
+                                                    System.out.println(WEB_NAME+"[UploadVacacionesServlet]"
                                                         + "Vacacion insertada OK. Actualizar "
                                                         + "dias efectivos de vacaciones recien ingresadas.");
                                                     ausenciasBp.updateDiasEfectivosVacaciones(data, null);
@@ -273,7 +273,7 @@ public class UploadVacacionesServlet extends BaseServlet {
                                                 //registrosError.put(rowKey, data);
                                             }
 
-                                            System.out.println("[UploadVacacionesServlet]"
+                                            System.out.println(WEB_NAME+"[UploadVacacionesServlet]"
                                                 + "data vacacion:"
                                                 + data.toString());
                                             
@@ -281,10 +281,10 @@ public class UploadVacacionesServlet extends BaseServlet {
                                             mensajes.add(new 
                                                 ResultadoCargaCsvVO("ERROR", 
                                                     "Empresa/empleado no corresponde"));
-                                            System.out.println("[UploadVacacionesServlet]"
+                                            System.out.println(WEB_NAME+"[UploadVacacionesServlet]"
                                                 + "Empresa/empleado no corresponde");
                                         }
-                                        System.out.println("[UploadVacacionesServlet]"
+                                        System.out.println(WEB_NAME+"[UploadVacacionesServlet]"
                                             + "Add mensaje---");
                                         resultado.setEmpleado(infoEmpleado);
                                         resultado.setMensajes(mensajes);
@@ -352,7 +352,7 @@ public class UploadVacacionesServlet extends BaseServlet {
             UsuarioVO _userConnected, 
             DetalleAusenciaVO _ausencia){
        
-        System.out.println("[UploadVacacionesServlet.insertarVacacion]"
+        System.out.println(WEB_NAME+"[UploadVacacionesServlet.insertarVacacion]"
             + "Insertar detalle ausencia (vacacion)");
         String mensajeFinal = null;
         DetalleAusenciaBp ausenciasBp   = new DetalleAusenciaBp(_appProperties);
@@ -370,7 +370,7 @@ public class UploadVacacionesServlet extends BaseServlet {
         MaintenanceVO doCreate = ausenciasBp.insert(_ausencia, resultado);
         
 ////        if (!doCreate.isThereError()){
-////            System.out.println("[UploadVacacionesServlet.insertarVacacion]"
+////            System.out.println(WEB_NAME+"[UploadVacacionesServlet.insertarVacacion]"
 ////                + "Insertar vacaciones."
 ////                + "Recalcular saldo dias de vacaciones "
 ////                + "para empleado. "
@@ -384,15 +384,15 @@ public class UploadVacacionesServlet extends BaseServlet {
 ////                    _ausencia.getRutEmpleado(), -1, -1, -1, "vac.rut_empleado");
 ////            if (infoVacaciones != null) saldoVacaciones = infoVacaciones.get(0);
 ////        }
-        System.out.println("[UploadVacacionesServlet.insertarVacacion]"
+        System.out.println(WEB_NAME+"[UploadVacacionesServlet.insertarVacacion]"
             + "paso 1");
-        System.out.println("[UploadVacacionesServlet.insertarVacacion]"
+        System.out.println(WEB_NAME+"[UploadVacacionesServlet.insertarVacacion]"
             + "paso 2");
         if (doCreate.isThereError()){
             mensajeFinal= "Error al insertar vacacion " + doCreate.getMsgError();
             doCreate.setMsg(mensajeFinal);
         }
-        System.out.println("[UploadVacacionesServlet.insertarVacacion]"
+        System.out.println(WEB_NAME+"[UploadVacacionesServlet.insertarVacacion]"
             + "Saliendo del metodo OK.");
         return doCreate;
     }
@@ -452,14 +452,14 @@ public class UploadVacacionesServlet extends BaseServlet {
             vacacionesBp.getInfoVacaciones(_datosAusencia.getEmpresaId(), 
                 _datosAusencia.getRutEmpleado(), -1, -1, -1, "vac.rut_empleado");
         
-        System.out.println("[UploadVacacionesServlet.validarVacaciones]"
+        System.out.println(WEB_NAME+"[UploadVacacionesServlet.validarVacaciones]"
             + "EmpresaId: " + _datosAusencia.getEmpresaId()
             + ", rutEmpleado: " + _datosAusencia.getRutEmpleado()
             + ", fecha inicio: " + _datosAusencia.getFechaInicioAsStr()
             + ", fecha fin: " + _datosAusencia.getFechaFinAsStr());
 
         if (infoVacaciones.isEmpty()){
-            System.out.println("[UploadVacacionesServlet.validarVacaciones]"
+            System.out.println(WEB_NAME+"[UploadVacacionesServlet.validarVacaciones]"
                 + "EmpresaId: " + _datosAusencia.getEmpresaId()
                 + ", rutEmpleado: " + _datosAusencia.getRutEmpleado()
                 + ", No tiene informacion de vacaciones (saldo)");
@@ -479,7 +479,7 @@ public class UploadVacacionesServlet extends BaseServlet {
                 fechaFinVacaciones = Utilidades.getFechaYYYYmmdd(_datosAusencia.getFechaFinAsStr());
             }
                         
-            System.out.println("[UploadVacacionesServlet.validarVacaciones]"
+            System.out.println(WEB_NAME+"[UploadVacacionesServlet.validarVacaciones]"
                 + "Iterar fechas en el rango. "
                 + "Inicio: " + fechaInicioVacaciones
                 + ", Fin: " + fechaFinVacaciones);
@@ -492,7 +492,7 @@ public class UploadVacacionesServlet extends BaseServlet {
                     _datosAusencia.getEmpresaId(), 
                     _datosAusencia.getRutEmpleado());
             
-            System.out.println("[UploadVacacionesServlet.validarVacaciones]"
+            System.out.println(WEB_NAME+"[UploadVacacionesServlet.validarVacaciones]"
                 + "EmpresaId: " + _datosAusencia.getEmpresaId()
                 + ", rutEmpleado: " + _datosAusencia.getRutEmpleado()
                 + ", dias solicitados: " + diasSolicitados 
@@ -501,7 +501,7 @@ public class UploadVacacionesServlet extends BaseServlet {
             //2020-03-15. Se deshabilita validacion de dias solicitados vs el saldo actual.
             
             if (diasSolicitados > saldoDias) {
-                System.out.println("[UploadVacacionesServlet.validarVacaciones]"
+                System.out.println(WEB_NAME+"[UploadVacacionesServlet.validarVacaciones]"
                     + "EmpresaId: " + _datosAusencia.getEmpresaId()
                     + ", rutEmpleado: " + _datosAusencia.getRutEmpleado()
                     + ", los dias solicitados ("+diasSolicitados+") "
@@ -511,7 +511,7 @@ public class UploadVacacionesServlet extends BaseServlet {
                     + "de dias disponibles: "+saldoDias);
                 //enviar correo al director?
             }else{
-                System.out.println("[UploadVacacionesServlet.validarVacaciones]"
+                System.out.println(WEB_NAME+"[UploadVacacionesServlet.validarVacaciones]"
                     + "EmpresaId: " + _datosAusencia.getEmpresaId()
                     + ", rutEmpleado: " + _datosAusencia.getRutEmpleado()
                     + ", dias solicitados(A): " + diasSolicitados);
@@ -523,7 +523,7 @@ public class UploadVacacionesServlet extends BaseServlet {
                 saldoVacaciones.setFechaInicioUltimasVacaciones(fechaInicioVacaciones);
                 saldoVacaciones.setFechaFinUltimasVacaciones(fechaFinVacaciones);
                 vacacionesBp.updateSaldoYUltimasVacaciones(saldoVacaciones, resultado);
-                System.out.println("[UploadVacacionesServlet.validarVacaciones]"
+                System.out.println(WEB_NAME+"[UploadVacacionesServlet.validarVacaciones]"
                     + "EmpresaId: " + _datosAusencia.getEmpresaId()
                     + ", rutEmpleado: " + _datosAusencia.getRutEmpleado()
                     + ", dias solicitados(B): " + saldoVacaciones.getDiasEfectivos());

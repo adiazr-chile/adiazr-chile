@@ -20,6 +20,9 @@ public class BaseServlet extends HttpServlet {
 
     public GetPropertyValues m_properties = new GetPropertyValues();
     
+    public String WEB_NAME = "[GestionFemaseWeb]";
+    
+    
     //public HttpSession session;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>

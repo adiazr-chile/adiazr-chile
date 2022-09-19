@@ -62,7 +62,7 @@ public class DepartamentoDAO extends BaseDAO{
                 + "estado_id "
                 + "from departamento "
                 + "where depto_id = '" + _deptoId + "'";
-            System.out.println("[DepartamentoDAO.getDepartamentoByKey]"
+            System.out.println(WEB_NAME+"[DepartamentoDAO.getDepartamentoByKey]"
                 + "Sql: " + sql);
             dbConn = dbLocator.getConnection(m_dbpoolName,
                 "[DepartamentoDAO.getDepartamentoByKey]");
@@ -134,7 +134,7 @@ public class DepartamentoDAO extends BaseDAO{
             
             int rowAffected = psupdate.executeUpdate();
             if (rowAffected == 1){
-                System.out.println("[update]departamento"
+                System.out.println(WEB_NAME+"[update]departamento"
                     + ", id:" +_data.getId()
                     + ", empresaId:" +_data.getEmpresaId()
                     + ", estado:" +_data.getEstado()    
@@ -199,7 +199,7 @@ public class DepartamentoDAO extends BaseDAO{
                                     
             int filasAfectadas = insert.executeUpdate();
             if (filasAfectadas == 1){
-                System.out.println("[insert departamento]"
+                System.out.println(WEB_NAME+"[insert departamento]"
                     + ", nombre:" +_data.getNombre()
                     + ", id:" +_data.getId()
                     +" insertado OK!");
@@ -323,7 +323,7 @@ public class DepartamentoDAO extends BaseDAO{
                 sql += " limit "+_jtPageSize + " offset "+_jtStartIndex;
             }
             
-            System.out.println("[cl.femase.gestionweb."
+            System.out.println(WEB_NAME+"[cl.femase.gestionweb."
                 + "service.DepartamentoDAO."
                 + "getDepartamentos]sql: "+sql);
             
@@ -381,13 +381,13 @@ public class DepartamentoDAO extends BaseDAO{
              * se muestran los deptos/centros de costo
              * definidos para el respectivo usuario.
             */
-            System.out.println("[DepartamentoDAO]"
+            System.out.println(WEB_NAME+"[DepartamentoDAO]"
                 + "getDepartamentosEmpresa. "
                 + "Usuario: " + _usuario.getUsername());
             String strdeptos = "-1";
             if (_usuario.getIdPerfil() != Constantes.ID_PERFIL_SUPER_ADMIN){
                 List cencos = _usuario.getCencos();
-                System.out.println("[DepartamentoDAO]"
+                System.out.println(WEB_NAME+"[DepartamentoDAO]"
                     + "getDepartamentosEmpresa. "
                     + "Cencos usuario.size= " + cencos.size());
                 if (cencos.size() > 0){
@@ -417,7 +417,7 @@ public class DepartamentoDAO extends BaseDAO{
             }
             
             sql += "order by empresa_id,depto_id";
-            System.out.println("[DepartamentoDAO]sql: "+sql);
+            System.out.println(WEB_NAME+"[DepartamentoDAO]sql: "+sql);
             dbConn = dbLocator.getConnection(m_dbpoolName,"[DepartamentoDAO.getDepartamentosEmpresa]");
             ps = dbConn.prepareStatement(sql);
             rs = ps.executeQuery();

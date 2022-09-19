@@ -10,13 +10,10 @@
 
 <%
     UsuarioVO theUser = (UsuarioVO) session.getAttribute("usuarioObj");
-    /*
-    SimpleDateFormat sdfhora = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-    java.util.Date ahora = new java.util.Date();
-    */
+    boolean tieneTurnoRotativo = (Boolean)session.getAttribute("tieneTurnoRotativo");
     LinkedHashMap<String, ModuloSistemaVO> modulosSistema = 
         (LinkedHashMap<String, ModuloSistemaVO>)session.getAttribute("modulosSistema");
-    
+    System.out.println("[GestionFemaseWeb]main_menu.jsp]tieneTurnoRotativo? " + tieneTurnoRotativo);    
 %>
         
 <!doctype html>
@@ -67,43 +64,53 @@ body {
                 Iterator<ModuloSistemaVO> itModulos = modulosSistema.values().iterator();
                 while (itModulos.hasNext())
                 {
-                    ModuloSistemaVO currentModulo = itModulos.next();
-                    //System.out.println("[menuFrame.jsp]get acciones para modulo: "+currentModulo.getModulo_id());
-                    LinkedHashMap<String, ModuloAccesoPerfilVO> listaAccesos 
-                        = accesosModulo.get(""+currentModulo.getModulo_id());
-                
-                    moduleName      = currentModulo.getModulo_nombre();
-                    moduleFontIcon  = currentModulo.getIconId();
-            %>
-                 <!-- generar cabecera menu-->
-                <li>
-                    <span><i class="<%=moduleFontIcon%>" aria-hidden="true"></i>&nbsp;<%=moduleName%></span>
-                </li>
-                <!-- generar menu items-->
-                <ul class="submenu">
-                    <div class="expand-triangle"><img src="images/expand.png"></div>
-                <%//iterando acciones
-                
-                    String thetarget="mainFrame";
-                    for ( Map.Entry<String, ModuloAccesoPerfilVO> entry : listaAccesos.entrySet() ){
-                        ModuloAccesoPerfilVO theaction = entry.getValue();
-                        thetarget="mainFrame";
-                        if (theaction.getAccesoUrl() != null) {
-                            if (theaction.getAccesoNombre().compareTo("endsession") == 0){
-                                thetarget="_parent";
-                            }%>
-                          <li>
-                                    <a href="<%=request.getContextPath()%>/<%=theaction.getAccesoUrl()%>" 
-                                       target="<%=thetarget%>" 
-                                        title="<%=theaction.getAccesoLabel()%>">
-                                            <span><%=theaction.getAccesoLabel()%></span>
-                                    </a>
-                          </li>
-                        <%}%>
-                <%  }//fin iteracion de acciones x modulo del menu %>
-                </ul>
-                
-            <%}//fin iteracion de modulos%>
+                        ModuloSistemaVO currentModulo = itModulos.next();
+                        LinkedHashMap<String, ModuloAccesoPerfilVO> listaAccesos 
+                            = accesosModulo.get(""+currentModulo.getModulo_id());
+
+                        moduleName      = currentModulo.getModulo_nombre();
+                        moduleFontIcon  = currentModulo.getIconId();
+                        
+                        /**
+                        * Si el usuario tiene turno rotativo, 
+                        * no se debe mostrar el menu de Permisos Administrativos 
+                        */
+                        int idxPA = moduleName.indexOf("(PA)");
+                        boolean mostrarModulo = true;
+                        if (idxPA >= 0 && tieneTurnoRotativo){
+                            mostrarModulo = false;
+                        }
+                    %>
+                    <%if (mostrarModulo){%>
+                            <!-- generar cabecera menu-->
+                            <li>
+                                <span><i class="<%=moduleFontIcon%>" aria-hidden="true"></i>&nbsp;<%=moduleName%></span>
+                            </li>
+                            <!-- generar menu items-->
+                            <ul class="submenu">
+                            <div class="expand-triangle"><img src="images/expand.png"></div>
+                            <%//iterando acciones
+
+                                String thetarget="mainFrame";
+                                for ( Map.Entry<String, ModuloAccesoPerfilVO> entry : listaAccesos.entrySet() ){
+                                    ModuloAccesoPerfilVO theaction = entry.getValue();
+                                    thetarget="mainFrame";
+                                    if (theaction.getAccesoUrl() != null) {
+                                        if (theaction.getAccesoNombre().compareTo("endsession") == 0){
+                                            thetarget="_parent";
+                                        }%>
+                                        <li>
+                                            <a href="<%=request.getContextPath()%>/<%=theaction.getAccesoUrl()%>" 
+                                               target="<%=thetarget%>" 
+                                                title="<%=theaction.getAccesoLabel()%>">
+                                                    <span><%=theaction.getAccesoLabel()%></span>
+                                            </a>
+                                        </li>
+                                    <%}%>
+                                <%}//fin iteracion de acciones x modulo del menu %>
+                            </ul>
+                       <%}%>     
+                <%}//fin iteracion de modulos%>
         
 	</ul><!-- fin div mainmenu-->
 </body>

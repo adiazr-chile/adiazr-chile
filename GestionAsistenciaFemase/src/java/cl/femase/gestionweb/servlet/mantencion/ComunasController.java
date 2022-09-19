@@ -95,7 +95,7 @@ public class ComunasController extends BaseServlet {
         ComunaBp comunabp = new ComunaBp(appProperties);
 
         if(request.getParameter("action") != null){
-            System.out.println("[ComunasController]"
+            System.out.println(WEB_NAME+"[ComunasController]"
                 + "action is: " + request.getParameter("action"));
             List<ComunaVO> listaObjetos = new ArrayList<ComunaVO>();
             String action=(String)request.getParameter("action");
@@ -148,7 +148,7 @@ public class ComunasController extends BaseServlet {
             }
             
             if (action.compareTo("list")==0) {
-                System.out.println("[ComunasController]"
+                System.out.println(WEB_NAME+"[ComunasController]"
                     + "mostrando comunas...");
                 try{
                     listaObjetos = comunabp.getComunas(nombre,
@@ -179,7 +179,7 @@ public class ComunasController extends BaseServlet {
                     ex.printStackTrace();
                 }   
             }else if (action.compareTo("create") == 0) {
-                    System.out.println("[ComunasController]Insertar comuna.");
+                    System.out.println(WEB_NAME+"[ComunasController]Insertar comuna.");
                     MaintenanceVO doCreate = comunabp.insert(auxdata, resultado);					
                     listaObjetos.add(auxdata);
 
@@ -189,7 +189,7 @@ public class ComunasController extends BaseServlet {
                     String listData="{\"Result\":\"OK\",\"Record\":"+json+"}";											
                     response.getWriter().print(listData);
             }else if (action.compareTo("update") == 0) {  
-                    System.out.println("[ComunasController]Modificar comuna...");
+                    System.out.println(WEB_NAME+"[ComunasController]Modificar comuna...");
                     try{
                         MaintenanceVO doUpdate = comunabp.update(auxdata, resultado);
                         listaObjetos.add(auxdata);

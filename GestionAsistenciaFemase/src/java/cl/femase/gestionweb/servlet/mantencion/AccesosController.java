@@ -78,7 +78,7 @@ public class AccesosController extends BaseServlet {
         AccesoBp auxnegocio=new AccesoBp(appProperties);
 
         if(request.getParameter("action") != null){
-            System.out.println("---->action is: " + request.getParameter("action"));
+            System.out.println(WEB_NAME+"---->action is: " + request.getParameter("action"));
             List<AccesoVO> listaObjetos = new ArrayList<AccesoVO>();
             String action=(String)request.getParameter("action");
             Gson gson = new Gson();
@@ -130,9 +130,9 @@ public class AccesosController extends BaseServlet {
             }
             
             if (action.compareTo("list")==0) {
-                    System.out.println("Mantenedor - Accesos - mostrando accesos...");
+                    System.out.println(WEB_NAME+"Mantenedor - Accesos - mostrando accesos...");
                     try{
-//                        System.out.println("Ordenar por columna "+jtSorting);
+//                        System.out.println(WEB_NAME+"Ordenar por columna "+jtSorting);
                         listaObjetos = auxnegocio.getAccesos(label, 
                                 startPageIndex, 
                                 numRecordsPerPage, 
@@ -160,7 +160,7 @@ public class AccesosController extends BaseServlet {
                         ex.printStackTrace();
                     }   
             }else if (action.compareTo("create") == 0) {
-                        System.out.println("Mantenedor - Accesos - Insertar acceso...");
+                        System.out.println(WEB_NAME+"Mantenedor - Accesos - Insertar acceso...");
                         MaintenanceVO doCreate = auxnegocio.insert(auxdata, resultado);					
                         listaObjetos.add(auxdata);
 
@@ -170,7 +170,7 @@ public class AccesosController extends BaseServlet {
                         String listData="{\"Result\":\"OK\",\"Record\":"+json+"}";											
                         response.getWriter().print(listData);
             }else if (action.compareTo("update") == 0) {  
-                    System.out.println("Mantenedor - Modulos - Actualizar modulo sistema...");
+                    System.out.println(WEB_NAME+"Mantenedor - Modulos - Actualizar modulo sistema...");
                     try{
                         MaintenanceVO doUpdate = auxnegocio.update(auxdata, resultado);
                         listaObjetos.add(auxdata);
@@ -187,7 +187,7 @@ public class AccesosController extends BaseServlet {
             }
             else if (action.compareTo("delete") == 0) {  
                     //Delete record
-                    System.out.println("Eliminando accion- "
+                    System.out.println(WEB_NAME+"Eliminando accion- "
                             + "Id: " + auxdata.getId()
                             +", label: "+ auxdata.getLabel());
                     try{

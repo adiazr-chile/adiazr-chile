@@ -101,7 +101,7 @@ public class ReporteAsistencia extends BaseServlet {
             && paramTurno.compareTo("-1") != 0){
                 intTurno = Integer.parseInt(paramTurno);
         }
-        System.out.println("[servlet.ReporteAsistencia]"
+        System.out.println(WEB_NAME+"[servlet.ReporteAsistencia]"
             + "token param 'cencoID'= " + paramCencoID
             +", turnoId: "+ paramTurno
             +", turnoRotativoId: "+ paramTurnoRotativo);
@@ -117,7 +117,7 @@ public class ReporteAsistencia extends BaseServlet {
                 }
             }
         }
-        System.out.println("[servlet.ReporteAsistencia]"
+        System.out.println(WEB_NAME+"[servlet.ReporteAsistencia]"
             + "empresa: " + paramEmpresa
             + ", depto: " + paramDepto
             + ", cenco: " + intCencoId
@@ -126,13 +126,13 @@ public class ReporteAsistencia extends BaseServlet {
         String[] empleadosSelected = request.getParameterValues("rutEmpleado");
         if (empleadosSelected != null){
             for (int x = 0; x < empleadosSelected.length; x++){
-                System.out.println("[servlet.ReporteAsistencia]"
+                System.out.println(WEB_NAME+"[servlet.ReporteAsistencia]"
                     + "rut seleccionado[" + x + "] = " + empleadosSelected[x]);
                 EmpleadoVO auxEmpleado=new EmpleadoVO();
                 auxEmpleado.setRut(empleadosSelected[x]);
                 listaEmpleados.add(auxEmpleado);
             }     
-        }else System.out.println("[servlet.ReporteAsistencia]"
+        }else System.out.println(WEB_NAME+"[servlet.ReporteAsistencia]"
             + "No hay empleados seleccionados");
              
         String fileName = userConnected.getUsername()+REPORT_NAME_CSV;
@@ -160,7 +160,7 @@ public class ReporteAsistencia extends BaseServlet {
         
         FileGeneratedVO fileGenerated = new FileGeneratedVO(fileName,fullFilePath);
         if (fileGenerated != null){
-            System.out.println("[servlet.ReporteAsistencia]"
+            System.out.println(WEB_NAME+"[servlet.ReporteAsistencia]"
                 + "Add archivo generado: " + fileGenerated.getFileName());
             showFileToDownload(fileGenerated, response);
             File auxpdf=new File(fileGenerated.getFilePath());
@@ -213,7 +213,7 @@ public class ReporteAsistencia extends BaseServlet {
             PropertiesVO appProperties=(PropertiesVO)application.getAttribute("appProperties");
             HttpSession session = _request.getSession(true);
             UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
-            System.out.println("[servlet.ReporteAsistencia.writeCSVFile]"
+            System.out.println(WEB_NAME+"[servlet.ReporteAsistencia.writeCSVFile]"
                 + "empresaId: " + _empresaId
                 + ", deptoId: " + _deptoId
                 + ", cencoId: " + _cencoId
@@ -269,7 +269,7 @@ public class ReporteAsistencia extends BaseServlet {
             if (listaDetalles != null && !listaDetalles.isEmpty()){
                 Set<String> keys = listaDetalles.keySet();
                 for(String k:keys){
-                    System.out.println("[servlet.ReporteAsistencia.writeCSVFile]"
+                    System.out.println(WEB_NAME+"[servlet.ReporteAsistencia.writeCSVFile]"
                         + "key empleado: " + k);
                     if (k != null && k.compareTo("")!=0){    
                         filas = 0;
@@ -395,7 +395,7 @@ public class ReporteAsistencia extends BaseServlet {
             PropertiesVO appProperties=(PropertiesVO)application.getAttribute("appProperties");
             HttpSession session = _request.getSession(true);
             UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
-            System.out.println("[servlet.ReporteAsistencia.writeXLSFile]"
+            System.out.println(WEB_NAME+"[servlet.ReporteAsistencia.writeXLSFile]"
                 + "empresaId: " + _empresaId
                 + ", deptoId: " + _deptoId
                 + ", cencoId: " + _cencoId
@@ -467,7 +467,7 @@ public class ReporteAsistencia extends BaseServlet {
             if (listaDetalles != null && !listaDetalles.isEmpty()){
                 Set<String> keys = listaDetalles.keySet();
                 for(String k:keys){
-                    System.out.println("[servlet.ReporteAsistencia.writeXLSFile]"
+                    System.out.println(WEB_NAME+"[servlet.ReporteAsistencia.writeXLSFile]"
                         + "key empleado: " + k);
                     if (k != null && k.compareTo("")!=0){    
                         List<DetalleAsistenciaVO> details = listaDetalles.get(k);
@@ -494,7 +494,7 @@ public class ReporteAsistencia extends BaseServlet {
                     }
                 }
             }else{
-                System.out.println("[servlet."
+                System.out.println(WEB_NAME+"[servlet."
                     + "ReporteAsistencia.writeXLSFile]"
                     + "No hay informacion de asistencia");
                 ReportDetailVO detailReport = new ReportDetailVO();
@@ -551,7 +551,7 @@ public class ReporteAsistencia extends BaseServlet {
             PropertiesVO appProperties=(PropertiesVO)application.getAttribute("appProperties");
             HttpSession session = _request.getSession(true);
             UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
-            System.out.println("[servlet.ReporteAsistencia.writeXMLFile]"
+            System.out.println(WEB_NAME+"[servlet.ReporteAsistencia.writeXMLFile]"
                 + "empresaId: " + _empresaId
                 + ", deptoId: " + _deptoId
                 + ", cencoId: " + _cencoId
@@ -603,7 +603,7 @@ public class ReporteAsistencia extends BaseServlet {
             if (listaDetalles != null && !listaDetalles.isEmpty()){
                 Set<String> keys = listaDetalles.keySet();
                 for(String k:keys){
-                    System.out.println("[servlet.ReporteAsistencia.writeXMLFile]"
+                    System.out.println(WEB_NAME+"[servlet.ReporteAsistencia.writeXMLFile]"
                         + "key empleado: " + k);
                     if (k != null && k.compareTo("")!=0){    
                         List<DetalleAsistenciaVO> details = listaDetalles.get(k);
@@ -631,7 +631,7 @@ public class ReporteAsistencia extends BaseServlet {
                     }
                 }
             }else{
-                System.out.println("[servlet."
+                System.out.println(WEB_NAME+"[servlet."
                     + "ReporteAsistencia.writeXMLFile]"
                     + Constantes.NO_HAY_INFO_ASISTENCIA);
                 Element detail = document.createElement("detail");
@@ -655,7 +655,7 @@ public class ReporteAsistencia extends BaseServlet {
             // You can use that for debugging 
  
             transformer.transform(domSource, streamResult);
-            System.out.println("[servlet."
+            System.out.println(WEB_NAME+"[servlet."
                 + "ReporteAsistencia.writeXMLFile]"
                 + "Done creating XML File");
             

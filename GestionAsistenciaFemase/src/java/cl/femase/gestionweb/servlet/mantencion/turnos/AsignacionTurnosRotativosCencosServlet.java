@@ -54,7 +54,7 @@ public class AsignacionTurnosRotativosCencosServlet extends BaseServlet {
         HttpSession session = request.getSession(true);
         if (session!=null) session.removeAttribute("mensaje");else session = request.getSession();
         UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
-        System.out.println("[AsignacionTurnosRotativosCencosServlet]doGet...");
+        System.out.println(WEB_NAME+"[AsignacionTurnosRotativosCencosServlet]doGet...");
         if (userConnected != null){
             setResponseHeaders(response);processRequest(request, response);
         }else{
@@ -72,7 +72,7 @@ public class AsignacionTurnosRotativosCencosServlet extends BaseServlet {
         HttpSession session = request.getSession(true);
         if (session!=null) session.removeAttribute("mensaje");else session = request.getSession();
         UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
-        System.out.println("[AsignacionTurnosRotativosCencosServlet]doPost...");
+        System.out.println(WEB_NAME+"[AsignacionTurnosRotativosCencosServlet]doPost...");
         if (userConnected != null){
             setResponseHeaders(response);processRequest(request, response);
         }else{
@@ -104,7 +104,7 @@ public class AsignacionTurnosRotativosCencosServlet extends BaseServlet {
  
         TurnoRotativoBp turnosBp      = new TurnoRotativoBp(appProperties);
         if(request.getParameter("action") != null){
-            System.out.println("[AsignacionTurnosRotativosCencosServlet]"
+            System.out.println(WEB_NAME+"[AsignacionTurnosRotativosCencosServlet]"
                 + "action is: " + request.getParameter("action"));
             String action=(String)request.getParameter("action");
             //Gson gson = new Gson();
@@ -122,7 +122,7 @@ public class AsignacionTurnosRotativosCencosServlet extends BaseServlet {
             String deptoId  = null;
             String cencoId  = "-1";
             String paramCencoID = request.getParameter("cencoId");
-            System.out.println("[AsignacionTurnosRotativosCencosServlet]"
+            System.out.println(WEB_NAME+"[AsignacionTurnosRotativosCencosServlet]"
                 + "token param 'cencoID'= " + paramCencoID);
             if (paramCencoID != null && paramCencoID.compareTo("-1") != 0){
                 StringTokenizer tokenCenco  = new StringTokenizer(paramCencoID, "--");
@@ -142,7 +142,7 @@ public class AsignacionTurnosRotativosCencosServlet extends BaseServlet {
                     CentroCostoVO infocenco = cencosBp.getCentroCostoByKey(deptoId, Integer.parseInt(cencoId));
                     labelCenco = infocenco.getNombre();
                 }
-                System.out.println("[AsignacionTurnosRotativosCencosServlet]"
+                System.out.println(WEB_NAME+"[AsignacionTurnosRotativosCencosServlet]"
                     + "mostrar turnos rotativos asignados a "
                     + "EmpresaId: " + empresaId
                     + ", deptoId: " + deptoId
@@ -179,7 +179,7 @@ public class AsignacionTurnosRotativosCencosServlet extends BaseServlet {
                     ex.printStackTrace();
                 }   
             }else if (action.compareTo("guardar_asignacion") == 0) {
-                    System.out.println("[AsignacionTurnosRotativosCencosServlet]"
+                    System.out.println(WEB_NAME+"[AsignacionTurnosRotativosCencosServlet]"
                         + "Guardar asignacion de turnos rotativos a centro de costo");
                     String[] turnosSelected = request.getParameterValues("list2");
                     String labelCenco = (String)session.getAttribute("labelCenco");
@@ -239,7 +239,7 @@ public class AsignacionTurnosRotativosCencosServlet extends BaseServlet {
                 filePath = appProperties.getPathExportedFiles()+
                     File.separator+
                     userConnected.getUsername()+"_asignacion_turnos_rotativos.csv";
-                System.out.println("[AsignacionTurnosRotativosCencosServlet."
+                System.out.println(WEB_NAME+"[AsignacionTurnosRotativosCencosServlet."
                     + "exportResultadosToCSV]filePath:" + filePath);
                 FileWriter filewriter = new FileWriter(filePath);
                 outfile     = new PrintWriter(filewriter);

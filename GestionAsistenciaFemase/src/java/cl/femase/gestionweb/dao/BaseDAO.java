@@ -19,13 +19,14 @@ public class BaseDAO{
     Connection dbConn;
     DatabaseLocator dbLocator;
     String m_dbpoolName;
+    public String WEB_NAME = "[GestionFemaseWeb]";
     
     public BaseDAO() {
         try {
             dbLocator  = DatabaseLocator.getInstance();
             GetPropertyValues m_properties = new GetPropertyValues();
             m_dbpoolName = m_properties.getKeyValue("dbpoolname");
-            //System.out.println("[BaseDAO]datasource a usar: "+m_dbpoolName);
+            //System.out.println(WEB_NAME+"[BaseDAO]datasource a usar: "+m_dbpoolName);
         } catch (DatabaseException ex) {
             m_logger.error("DbError: "+ex.toString());
         }

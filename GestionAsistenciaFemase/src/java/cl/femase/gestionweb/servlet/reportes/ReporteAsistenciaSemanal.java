@@ -118,7 +118,7 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
         String tipoParam = request.getParameter("tipo");
         UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
         FileGeneratedVO fileGenerated = null;
-        System.out.println("[servlet.reportes."
+        System.out.println(WEB_NAME+"[servlet.reportes."
             + "ReporteAsistenciaSemanal.processRequestRut]"
             + "tipoParam: "+tipoParam
             +", usuario conectado: "+userConnected.getUsername());
@@ -128,7 +128,7 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
         String jasperFullPath   = appProperties.getReportesPath() + File.separator + jasperFilename;
         String pdfFullPath      = appProperties.getPathExportedFiles() + File.separator + pdfFileName;
         
-        System.out.println("[ReporteAsistenciaSemanal."
+        System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal."
             + "processRequestRut]"
             + "Iterar "
             + "empresaId: " + _empleado.getEmpresaId()
@@ -136,7 +136,7 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
         Map parameters = getParameters(request, _empleado, _detalleAsistencia);
             
         if (parameters != null && !m_registros.isEmpty()){
-                System.out.println("[ReporteAsistenciaSemanal.processRequestRut]Generar archivo...");
+                System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal.processRequestRut]Generar archivo...");
                 try{
                     String csvFile = appProperties.getPathExportedFiles()+
                         File.separator+
@@ -159,7 +159,7 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
                     getCSVFile(_empleado, 
                         csvFile, columnNames, m_registros);
                     
-                    System.out.println("[ReporteAsistenciaSemanal."
+                    System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal."
                         + "processRequestRut]"
                         + "jasperFullPath: " + jasperFullPath
                         + ", csvFile: " + csvFile
@@ -203,7 +203,7 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
                 //}
                 fileGenerated = new FileGeneratedVO(pdfFileName, pdfFullPath);     
         }else{
-            System.out.println("[ReporteAsistenciaSemanal."
+            System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal."
                 + "processRequestRut]NO Generar archivo...");
             fileGenerated = null;
         }
@@ -277,7 +277,7 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
 //        String tipoParam = _request.getParameter("tipo");
 //        HashMap parameters = new HashMap();
 //                
-//        System.out.println("ReporteAsistenciaSemanal."
+//        System.out.println(WEB_NAME+"ReporteAsistenciaSemanal."
 //            + "getParameters. "
 //            + "Param rut= " +rutParam
 //            + ", startDate= " +startDateParam
@@ -411,7 +411,7 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
         //DetalleTurnosBp detalleTurnoBp = new DetalleTurnosBp(new PropertiesVO());
         //TurnoRotativoBp turnoRotativoBp = new TurnoRotativoBp(new PropertiesVO());
         
-        System.out.println("[ReporteAsistenciaSemanal."
+        System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal."
             + "getParameters]"
             + "Param rut= " + _objEmpleado.getRut()
             + ", empresaId= " + _objEmpleado.getEmpresaId()    
@@ -432,12 +432,12 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
         int countDiasAusente   = 0;
         
         if (_registros == null){
-            System.out.println("[ReporteAsistenciaSemanal."
+            System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal."
                 + "getParameters]Consultar detalles_asistencia a la BD...");
             m_registros = m_detAsistenciaBp.getDetalles(_objEmpleado.getRut(), 
                     startDateParam, endDateParam);
         }else{
-            System.out.println("[ReporteAsistenciaSemanal."
+            System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal."
                 + "getParameters]"
                 + "Param rut= " + _objEmpleado.getRut()
                 + ", empresaId= " + _objEmpleado.getEmpresaId()
@@ -471,7 +471,7 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
                 strAuxHextras = detalle.getHorasMinsExtrasAutorizadas();
                 if (strAuxHextras != null) listaHorasExtras.add(strAuxHextras);
                 strAuxHrsJustificadas = detalle.getHhmmJustificadas();
-                System.out.println("[ReporteAsistenciaSemanal."
+                System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal."
                     + "getParameters]fecha: " + detalle.getFechaEntradaMarca()
                     + ", hrs trabajadas: " + strAuxHt
                     + ", observacion: " + detalle.getObservacion());
@@ -492,7 +492,7 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
                 
                 listaHorasTeoricas.add(auxDetail.getHhmmTeoricas());
                 
-                System.out.println("[ReporteAsistenciaSemanal."
+                System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal."
                     + "getParameters]"
                     + "Fecha entrada= " + detalle.getFechaEntradaMarca()
                     + ", getObservacion= " + detalle.getHrsAusencia()
@@ -504,7 +504,7 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
 
                 if (detalle.getObservacion() != null 
                         && detalle.getObservacion().compareTo("Sin marcas") == 0){
-                    System.out.println("[ReporteAsistenciaSemanal.getParameters]Sumo dias de ausencia");
+                    System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal.getParameters]Sumo dias de ausencia");
                     countDiasAusente++;
                 }  
 
@@ -540,12 +540,12 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
                 totalHrsJustificadas = Utilidades.sumTimesList(listaHorasJustificadas);
             }
             String auxRut = _objEmpleado.getRut();
-            System.out.println("[ReporteAsistenciaSemanal."
+            System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal."
                 + "getParameters]auxRut: " + auxRut);
             
             if (_objEmpleado.getAction() != null 
                     && _objEmpleado.getAction().compareTo("solo_un_rut") == 0){
-                System.out.println("[ReporteAsistenciaSemanal."
+                System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal."
                     + "getParameters]Un solo rut, "
                     + "buscar datos faltantes en tabla empleado...");
                 _objEmpleado = 
@@ -554,7 +554,7 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
                     Integer.parseInt(turnoParam));
             }
             if (_objEmpleado != null){
-                System.out.println("[ReporteAsistenciaSemanal]"
+                System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal]"
                     + "totalHrsTrabajadas: " + totalHrsTrabajadas
                     + ", countDiasTrabajados: " + countDiasTrabajados);
                 
@@ -598,7 +598,7 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
                 parameters = null;
             }
             
-            System.out.println("[ReporteAsistenciaSemanal."
+            System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal."
                 + "getParameters]"
                 + "startDate= " +startDateParam
                 + ", endDate= " +endDateParam);
@@ -615,7 +615,7 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
         listaEmpleados = new ArrayList<>();
         
         EmpleadosBp empleadosBp = new EmpleadosBp(new PropertiesVO());
-        System.out.println("[ReporteAsistenciaSemanal.getEmpleados]"
+        System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal.getEmpleados]"
             + "empresaId: " + _empresaId
             + ",deptoId: " + _deptoId    
             + ", cenco Id: " + _cencoId
@@ -648,7 +648,7 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
 ////////            deptosBp.getDepartamentosEmpresa(empresaId);
 ////////        for (int i = 0; i < departamentos.size(); i++) {
 ////////            DepartamentoVO itDepto= departamentos.get(i);
-////////            System.out.println("[ReporteAsistenciaSemanal.getTotalesAsistencia]"
+////////            System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal.getTotalesAsistencia]"
 ////////                + "Depto: " + itDepto.getId()
 ////////                + ", nombre: " + itDepto.getNombre());
 ////////            UsuarioVO auxUser = new UsuarioVO();
@@ -657,7 +657,7 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
 ////////                cencosBp.getCentrosCostoDepto(auxUser, itDepto.getId());
 //////            //for (int j = 0; j < cencos.size(); j++) {
 //////                //CentroCostoVO itCenco = cencos.get(j);
-//////                System.out.println("[ReporteAsistenciaSemanal.getTotalesAsistencia]"
+//////                System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal.getTotalesAsistencia]"
 //////                    + "Cenco Id: " + cencoId);
 //////                //if (itCenco.getId() != -1){
 //////                    //empleados del cenco
@@ -666,7 +666,7 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
 //////                    //iterar empleados...
 //////                    if (listaEmpleados.size() > 0){
 //////                        for (EmpleadoVO empleado : listaEmpleados) {
-//////                            System.out.println("[ReporteAsistenciaSemanal.getTotalesAsistencia]"
+//////                            System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal.getTotalesAsistencia]"
 //////                                + "Empleado a mostrar: " + empleado.getRut()
 //////                                +", Cenco nombre: " + empleado.getCentroCosto().getNombre());
 //////
@@ -720,7 +720,7 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
         String startDateParam = _request.getParameter("startDate");
         String endDateParam = _request.getParameter("endDate");
         
-        System.out.println("[ReporteAsistenciaSemanal."
+        System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal."
             + "getTotalesAsistenciaEmpresa]"
             + "perfil usuario: " + _userConnected.getIdPerfil()
             + "param empresa: " + empresaId);
@@ -729,7 +729,7 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
         //deptosBp.getDepartamentosEmpresa(_userConnected, empresaId);
         List<CentroCostoVO> cencos=null;
         if (deptoParamId != null && deptoParamId.compareTo("-1") != 0){
-            System.out.println("[ReporteAsistenciaSemanal."
+            System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal."
                 + "getTotalesAsistenciaEmpresa]"
                 + "Generar reporte solo para deptoId: " + deptoParamId);
             DepartamentoVO auxDepto = 
@@ -737,7 +737,7 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
             departamentos = new ArrayList<DepartamentoVO>();
             departamentos.add(auxDepto);
         }else{
-            System.out.println("[ReporteAsistenciaSemanal."
+            System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal."
                 + "getTotalesAsistenciaEmpresa]"
                 + "Generar reporte para todos los deptos de la empresaId: " + empresaId);
             departamentos = deptosBp.getDepartamentosEmpresa(_userConnected, empresaId);
@@ -745,11 +745,11 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
         
         for (int i = 0; i < departamentos.size(); i++) {
             DepartamentoVO itDepto= departamentos.get(i);
-            System.out.println("[ReporteAsistenciaSemanal.getTotalesAsistenciaEmpresa]"
+            System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal.getTotalesAsistenciaEmpresa]"
                 + "Depto: " + itDepto.getId()
                 + ", nombre: " + itDepto.getNombre());
             if (cencoParamId != null && cencoParamId.compareTo("-1") != 0){
-                System.out.println("[ReporteAsistenciaSemanal."
+                System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal."
                     + "getTotalesAsistenciaEmpresa]"
                     + "Generar reporte solo para cencoId: " + cencoParamId);
                 CentroCostoVO auxCenco = 
@@ -757,7 +757,7 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
                 cencos = new ArrayList<CentroCostoVO>();
                 cencos.add(auxCenco);
             }else{
-                System.out.println("[ReporteAsistenciaSemanal."
+                System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal."
                     + "getTotalesAsistenciaEmpresa]"
                     + "Generar reporte para todos los "
                     + "cencos de la empresaId: " + empresaId
@@ -767,13 +767,13 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
             }
             for (int j = 0; j < cencos.size(); j++) {
                 CentroCostoVO itCenco = cencos.get(j);
-                System.out.println("[ReporteAsistenciaSemanal.getTotalesAsistenciaEmpresa]"
+                System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal.getTotalesAsistenciaEmpresa]"
                     + "Cenco Id: " + itCenco.getId() 
                     + ", Cenco Name: " + itCenco.getNombre() 
                     + ". Solo empleados vigentes y sin articulo22");
                 if (itCenco.getId() != -1){
                     //empleados del cenco
-                    System.out.println("[ReporteAsistenciaSemanal.getTotalesAsistenciaEmpresa]"
+                    System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal.getTotalesAsistenciaEmpresa]"
                         + "Buscar empleados para empresaId: " + empresaId 
                         + ", deptoId: " + itDepto.getId()
                         + ", cencoId: " + itCenco.getId());
@@ -781,7 +781,7 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
                         empleadosBp.getEmpleadosSimpleByFiltro(empresaId, 
                         itDepto.getId(), itCenco.getId(), 1, false);
                     if (listaEmpleados.size() > 0){
-                        System.out.println("[ReporteAsistenciaSemanal.getTotalesAsistenciaEmpresa]"
+                        System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal.getTotalesAsistenciaEmpresa]"
                             + "Obteniendo detalle asistencia "
                             + "para todos los empleados vigentes y sin articulo22...");
                         LinkedHashMap<String,List<DetalleAsistenciaVO>> detalles 
@@ -792,11 +792,11 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
                         //iterar empleados...
                     
                         for (EmpleadoVO empleado : listaEmpleados) {
-                            System.out.println("[ReporteAsistenciaSemanal.getTotalesAsistenciaEmpresa]"
+                            System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal.getTotalesAsistenciaEmpresa]"
                                 + "Empleado a mostrar: " + empleado.getRut()
                                 +", Cenco nombre: " + empleado.getCencoNombre());
                             List<DetalleAsistenciaVO> detalleAsistenciaRut = detalles.get(empleado.getRut());
-                            System.out.println("[ReporteAsistenciaSemanal.getTotalesAsistenciaEmpresa]aquiii "
+                            System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal.getTotalesAsistenciaEmpresa]aquiii "
                                 + "detalleAsistenciaRut: " + detalleAsistenciaRut);
                             
                             //m_detAsistenciaBp.openDbConnection();
@@ -828,7 +828,7 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
                             }
                         }
                     }else{
-                        System.out.println("[ReporteAsistenciaSemanal.getTotalesAsistenciaEmpresa]"
+                        System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal.getTotalesAsistenciaEmpresa]"
                             + "No hay empleados para empresaId: " + empresaId 
                             + ", deptoId: " + itDepto.getId()
                             + ", cencoId: " + itCenco.getId());
@@ -857,7 +857,7 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
             String endDateParam     = _request.getParameter("endDate");
             int intCencoId          = Integer.parseInt(strCencoId);
             CentroCostoBp cencoBp   = new CentroCostoBp(appProperties);
-            System.out.println("[ReporteAsistenciaSemanal.setTotalesAsistenciaToCSV]"
+            System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal.setTotalesAsistenciaToCSV]"
                 + "empresaId: " + empresaId
                 + ", deptoId: " + deptoId
                 + ", strCencoId: " + strCencoId
@@ -948,7 +948,7 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(true);
-        System.out.println("[ReporteAsistenciaSemanal.doGet]entrando...");
+        System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal.doGet]entrando...");
         if (session!=null) session.removeAttribute("mensaje");else session = request.getSession();
         UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
 //
@@ -960,7 +960,7 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
         }else{
             session.setAttribute("mensaje", "Sesion de usuario "+request.getParameter("username")
                 +" no valida");
-            System.out.println("Sesion de usuario "+request.getParameter("username")
+            System.out.println(WEB_NAME+"Sesion de usuario "+request.getParameter("username")
                 +" no valida");
             request.getRequestDispatcher("/mensaje.jsp").forward(request, response);
         }
@@ -991,7 +991,7 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
         String formato          = request.getParameter("formato");
         String startDateParam   = request.getParameter("startDate");
         String endDateParam     = request.getParameter("endDate");
-        System.out.println("[ReporteAsistenciaSemanal.doPost]"
+        System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal.doPost]"
             + "empresaId: " + empresaId
             + ", deptoId: " + deptoId
             + ", strCencoId: " + strCencoId
@@ -1009,7 +1009,7 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
             m_dbLocator             = DatabaseLocator.getInstance();
             m_dbpoolName            = appProperties.getDbPoolName();
             m_databaseConnection    = m_dbLocator.getConnection(m_dbpoolName,"[ReporteAsistenciaSemanal.doPost]");
-            System.out.println("[ReporteAsistenciaSemanal.doPost]"
+            System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal.doPost]"
                 + "Abrir conexion a la BD. Datasource: " + m_dbpoolName);
         } catch (DatabaseException ex) {
             System.err.println("Error: "+ex.toString());
@@ -1020,7 +1020,7 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
                 && tipoParam.compareTo("3") != 0){
             //generar informes por centro de costo
             LinkedHashMap<String, String> archivosGenerados = new LinkedHashMap<>();
-            System.out.println("[ReporteAsistenciaSemanal.doPost]"
+            System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal.doPost]"
                 + "Generar informes para todos los empleados de "
                 + "empresaId: " + empresaId
                 + ", deptoId: " + deptoId
@@ -1033,29 +1033,29 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
             FileGeneratedVO archivoGenerado;
             String nombreCenco="";
             
-            System.out.println("[ReporteAsistenciaSemanal.doPost]"
+            System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal.doPost]"
                 + "Obteniendo detalle asistencia para todos los empleados seleccionados...");
             LinkedHashMap<String,List<DetalleAsistenciaVO>> detalles 
                 = m_detAsistenciaBp.getDetallesInforme(listaEmpleados, startDateParam, endDateParam,-1);
                     
             for (EmpleadoVO empleado : listaEmpleados) {
-                System.out.println("[ReporteAsistenciaSemanal.doPost]"
+                System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal.doPost]"
                     + "Generar informe para empleado rut: " + empleado.getRut()
                     +", nombre: " + empleado.getNombreCompleto());
                 if (nombreCenco.compareTo("") == 0) nombreCenco = empleado.getCencoNombre();
                 List<DetalleAsistenciaVO> detalleAsistenciaRut = detalles.get(empleado.getRut());
                 if (detalleAsistenciaRut!=null){
-                    System.out.println("[ReporteAsistenciaSemanal.doPost]"
+                    System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal.doPost]"
                         + "detalleAsistenciaRut != null!");
                 }else{
-                    System.out.println("[ReporteAsistenciaSemanal.doPost]"
+                    System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal.doPost]"
                         + "detalleAsistenciaRut is null!");
                 }
                 empleado.setEmpresaId(empresaId);
                 archivoGenerado = processRequestRut(request, response, empleado, detalleAsistenciaRut);
                 
                 if (archivoGenerado != null){
-                    System.out.println("[ReporteAsistenciaSemanal.doPost]Add "
+                    System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal.doPost]Add "
                         + "archivo generado: " + archivoGenerado.getFileName());
                     archivosGenerados.put(empleado.getRut(), archivoGenerado.getFilePath());
                 }    
@@ -1088,7 +1088,7 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
             
             //m_detAsistenciaBp.closeDbConnection();
         }else{
-            System.out.println("[ReporteAsistenciaSemanal.doPost]"
+            System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal.doPost]"
                 + "Generar reporte asistencia solo para el rut: " + rutParam);
             EmpleadoVO singleEmpleado = new EmpleadoVO();
             singleEmpleado.setEmpresaId(empresaId);
@@ -1096,7 +1096,7 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
             singleEmpleado.setAction("solo_un_rut");
             FileGeneratedVO filegenerated=processRequestRut(request, response, singleEmpleado, null);
             if (filegenerated != null){
-                System.out.println("[ReporteAsistenciaSemanal.doPost]Add "
+                System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal.doPost]Add "
                     + "archivo generado: " + filegenerated.getFileName());
                 showFileToDownload(filegenerated, tipoParam, formato, response);
                 File auxpdf=new File(filegenerated.getFilePath());
@@ -1115,13 +1115,13 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
                 resultado.setDescription("Consulta reporte de asistencia.");
                 eventosBp.addEvent(resultado);
             }else{
-                System.out.println("[ReporteAsistenciaSemanal.doPost]No Generar "
+                System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal.doPost]No Generar "
                     + "archivo. Mostrar mensaje...");
                 session.setAttribute("mensaje", Constantes.NO_HAY_DATOS_REPORTE);
                 request.getRequestDispatcher("/mensaje.jsp").forward(request, response);
             }
         }
-        System.out.println("[ReporteAsistenciaSemanal.doPost]Cerrar conexiones a la BD...");
+        System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal.doPost]Cerrar conexiones a la BD...");
         //m_empleadosBp.closeDbConnection();
         //m_detAsistenciaBp.closeDbConnection();
     }
@@ -1165,7 +1165,7 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
             }else{
                 //pdf
                 if (_formato.compareTo("pdf") == 0){
-                    System.out.println("[ReporteAsistenciaSemanal.showFileToDownload]Generar PDF."
+                    System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal.showFileToDownload]Generar PDF."
                         + " fileName: " + _fileGenerated.getFileName()
                         + ". Mostrar PDF para guardar.");
                     //***********************************************************************
@@ -1196,7 +1196,7 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
 //
 //                        // if you want to use a relative path to context root:
 //                        String relativePath = getServletContext().getRealPath("");
-//                        System.out.println("[ReporteAsistenciaSemanal.showFileToDownload]"
+//                        System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal.showFileToDownload]"
 //                            + "relativePath = " + relativePath);
 //
 //                        // obtains ServletContext
@@ -1208,7 +1208,7 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
 //                            // set to binary type if MIME mapping not found
 //                            mimeType = "application/octet-stream";
 //                        }
-//                        System.out.println("[ReporteAsistenciaSemanal.showFileToDownload]"
+//                        System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal.showFileToDownload]"
 //                            + "MIME type: " + mimeType);
 //
 //                        // modifies response
@@ -1233,7 +1233,7 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
 //                        inStream.close();
 //                        outStream.close();     
 //
-//                        System.out.println("[ReporteAsistenciaSemanal.showFileToDownload]"
+//                        System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal.showFileToDownload]"
 //                            + "Mostrando PDF");
 //
 //    ////                        try{
@@ -1294,7 +1294,7 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
             + "_"+_cencoNombre + "_todos.pdf");
 
         archivoGenerado=new FileGeneratedVO(mergedFile.getName(), mergedFile.getAbsolutePath());
-        System.out.println("\n[mergePdfFiles]"
+        System.out.println(WEB_NAME+"[mergePdfFiles]"
             + "uniendo archivos en uno solo. "
             + "Path: " + mergedFile.getAbsolutePath());
 
@@ -1304,7 +1304,7 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
             for( String key : _archivos.keySet() ){
                 String pathFile = _archivos.get(key);
                 File itFile = new File(pathFile);
-                System.out.println("[mergePdfFiles]itera archivo " + pathFile);
+                System.out.println(WEB_NAME+"[mergePdfFiles]itera archivo " + pathFile);
                 
                 mergePdf.addSource(itFile);
                 
@@ -1315,7 +1315,7 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
             for( String key : _archivos.keySet() ){
                 String pathFile2 = _archivos.get(key);
                 File itFile2 = new File(pathFile2);
-                System.out.println("[mergePdfFiles]Eliminando archivo " + pathFile2);
+                System.out.println(WEB_NAME+"[mergePdfFiles]Eliminando archivo " + pathFile2);
                 itFile2.delete();
             }
             
@@ -1362,7 +1362,7 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
             //TurnoRotativoBp turnoRotativoBp = new TurnoRotativoBp(new PropertiesVO());
             EmpleadoVO infoEmpleado = 
                 empleadosBp.getEmpleado(_empleadoBase.getEmpresaId(), _empleadoBase.getRut());
-            System.out.println("[ReporteAsistenciaSemanal."
+            System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal."
                 + "getCSVFile]Generar archivo CSV: " + _csvFilePath);
             //write csv file
             List<DetalleAsistenciaVO>  registrosSemana = new ArrayList<>();
@@ -1378,7 +1378,7 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
 ////            csvWriter.append("\n");
             int filas = 0;
             for (DetalleAsistenciaVO detalle : _registrosAsistencia) {
-                System.out.println("[ReporteAsistenciaSemanal."
+                System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal."
                     + "getCSVFile]"
                     + "empresaId: " + infoEmpleado.getEmpresaId()
                     + ", rutEmpleado: " +  infoEmpleado.getRut()        
@@ -1416,7 +1416,7 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
                 if (hrsNoTrabajadas == null) hrsNoTrabajadas = "-";
                 if (hrsMinsExtras == null) hrsMinsExtras = "-";
                 if (hrsTeoricasMenosColacion == null) hrsTeoricasMenosColacion = "-";
-                System.out.println("[ReporteAsistenciaSemanal."
+                System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal."
                     + "getCSVFile]"
                     + "Fecha: " + detalle.getFechaEntradaMarca()
                     + ", hrsTeoricasMenosColacion(2): " + hrsTeoricasMenosColacion
@@ -1450,7 +1450,7 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
                 Calcular linea de totales de horas (va al final del reporte)
                 */
                 if (labelFecha.startsWith("Do") || filas == _registrosAsistencia.size()){//es dia domingo o es el ultimo dia de la lista
-                    System.out.println("[ReporteAsistenciaSemanal."
+                    System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal."
                         + "getCSVFile]Es domingo");
                     registrosSemana.add(detalle);
                     //mostrar detalle del dia domingo (si es que tiene turno este dia)
@@ -1565,7 +1565,7 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
             strAuxHextras = detalle.getHorasMinsExtrasAutorizadas();
             if (strAuxHextras != null) listaHorasExtras.add(strAuxHextras);
             strAuxHrsJustificadas = detalle.getHhmmJustificadas();
-            System.out.println("[ReporteAsistenciaSemanal."
+            System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal."
                 + "getParameters]fecha: " + detalle.getFechaEntradaMarca()
                 + ", hrs trabajadas: " + strAuxHt
                 + ", observacion: " + detalle.getObservacion());
@@ -1578,14 +1578,14 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
                     || (strAuxHt != null) ){
                 countDiasTrabajados++;
             }
-            System.out.println("[ReporteAsistenciaSemanal."
+            System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal."
                 + "getParameters]"
                 + "Fecha entrada= " + detalle.getFechaEntradaMarca()
                 + ", getObservacion= " + detalle.getHrsAusencia()
                 + ", getObservacion= " + detalle.getObservacion());
             if (detalle.getObservacion() != null 
                         && detalle.getObservacion().compareTo("Sin marcas") == 0){
-                    System.out.println("[ReporteAsistenciaSemanal.getParameters]Sumo dias de ausencia");
+                    System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal.getParameters]Sumo dias de ausencia");
                     countDiasAusente++;
                 }  
 
@@ -1635,7 +1635,7 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
         int diaSemana = Utilidades.getDiaSemana(Integer.parseInt(tokenFecha.nextToken()), 
             Integer.parseInt(tokenFecha.nextToken()), 
             Integer.parseInt(tokenFecha.nextToken()));
-        System.out.println("[ReporteAsistenciaSemanal."
+        System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal."
             + "getHrsTeoricas]"
             + "Fecha: " + _detalle.getFechaEntradaMarca()
             + ", cod dia semana: " + diaSemana
@@ -1654,7 +1654,7 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
             tieneTurnoRotativo = true;
         }
         
-        System.out.println("[ReporteAsistenciaSemanal."
+        System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal."
             + "getHrsTeoricas]"
             + "Fecha: " + _detalle.getFechaEntradaMarca() 
             + ", horaEntrada: " + _detalle.getHoraEntrada()
@@ -1665,7 +1665,7 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
         if (_detalle.getHoraEntrada().compareTo("00:00:00") == 0 && _detalle.getHoraSalida().compareTo("00:00:00") != 0) soloMarcaSalida = true;
         if (_detalle.getHoraEntrada().compareTo("00:00:00") == 0 && _detalle.getHoraSalida().compareTo("00:00:00") == 0) noTieneMarcas = true;
         
-        System.out.println("[ReporteAsistenciaSemanal."
+        System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal."
             + "getHrsTeoricas]"
             + "Fecha: " + _detalle.getFechaEntradaMarca() 
             + ", noTieneMarcas: " + noTieneMarcas
@@ -1676,7 +1676,7 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
             detalleTurno = 
                 turnoRotativoBp.getAsignacionTurnoByFecha(_infoEmpleado.getEmpresaId(), 
                 _infoEmpleado.getRut(), _detalle.getFechaEntradaMarca());
-            System.out.println("[ReporteAsistenciaSemanal."
+            System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal."
                 + "getHrsTeoricas]"
                 + "Fecha: " + _detalle.getFechaEntradaMarca()
                 + ". Tiene turno rotativo");
@@ -1684,7 +1684,7 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
             detalleTurno = 
                 detalleTurnoBp.getDetalleTurno(_infoEmpleado.getEmpresaId(), 
                 _infoEmpleado.getIdTurno(), diaSemana);
-            System.out.println("[ReporteAsistenciaSemanal."
+            System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal."
                 + "getHrsTeoricas]"
                 + "Fecha: " + _detalle.getFechaEntradaMarca()
                 + ". Tiene turno normal");
@@ -1706,7 +1706,7 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
             
         if (esFeriado) calcularHrsTeoricas = false;
         
-        System.out.println("[ReporteAsistenciaSemanal."
+        System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal."
             + "getHrsTeoricas]"
             + "Fecha: " + _detalle.getFechaEntradaMarca() 
             + ", esFeriado?: " + esFeriado    
@@ -1723,12 +1723,12 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
             if (detalleTurno != null){
                 hrsTeoricasMenosColacion = 
                     Utilidades.restarMinsHora(hrsTeoricas, detalleTurno.getMinutosColacion());
-                System.out.println("[ReporteAsistenciaSemanal."
+                System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal."
                     + "getHrsTeoricas]"
                     + "Fecha: " + _detalle.getFechaEntradaMarca()
                     + ", minsColacion: " + detalleTurno.getMinutosColacion());
             }
-            System.out.println("[ReporteAsistenciaSemanal."
+            System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal."
                 + "getHrsTeoricas]"
                 + "Fecha: " + _detalle.getFechaEntradaMarca()
                 + ", hrsTeoricas: " + hrsTeoricas
@@ -1755,7 +1755,7 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
 //        }
 //        
 //        if (observacion.compareTo("Sin marcas") == 0 && _esFeriado && _codDia != 6) observacion = "Feriado";
-//        System.out.println("[ReporteAsistenciaSemanal.getObservacion]"
+//        System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal.getObservacion]"
 //            + " Fecha: " + _fecha
 //                + ", codDia? " + _codDia
 //            + ", esFeriado? " + _esFeriado

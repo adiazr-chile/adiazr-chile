@@ -86,7 +86,7 @@ public class LoadParams extends BaseServlet {
      @Override
    public void init() {
 	m_logger.debug("Cargando parametros en sesion");
-        System.out.println("[GestionFemase.LoadParams.init]Cargando parametros en sesion...");
+        System.out.println(WEB_NAME+"[GestionFemase.LoadParams.init]Cargando parametros en sesion...");
         appProperties=new PropertiesVO();
         
         Calendar currentCalendar = Calendar.getInstance(new Locale("es","CL"));
@@ -95,7 +95,7 @@ public class LoadParams extends BaseServlet {
         appProperties.setStartYear(m_properties.getKeyValue("launchYear"));
         appProperties.setCurrentYear(yearFmt.format(currentCalendar.getTime()));
         
-        System.out.println("[GestionFemase.LoadParams.init]Version del Sistema: " + appProperties.getVersion());
+        System.out.println(WEB_NAME+"[GestionFemase.LoadParams.init]Version del Sistema: " + appProperties.getVersion());
         
 //        appProperties.setCalendarWSEndPoint(m_properties.getKeyValue("calendarWSEndPoint"));
         appProperties.setMailHost(m_properties.getKeyValue("mailHost"));
@@ -136,7 +136,7 @@ public class LoadParams extends BaseServlet {
         appProperties.setDbPoolName(m_properties.getKeyValue("dbpoolname"));
         appProperties.setUploadsPath(m_properties.getKeyValue("uploadsPath"));
         appProperties.setReportesPath(m_properties.getKeyValue("reportesPath"));
-        System.out.println("[GestionFemase.LoadParams.init]"
+        System.out.println(WEB_NAME+"[GestionFemase.LoadParams.init]"
             + "reportesPath= "+appProperties.getReportesPath()
             + ",uploadsPath= "+appProperties.getUploadsPath()
             + ",imagesPath= "+appProperties.getImagesPath());
@@ -161,7 +161,7 @@ public class LoadParams extends BaseServlet {
         application.setAttribute("appProperties", appProperties);
         application.removeAttribute("exportFilesProperties");
        
-        System.out.println("[GestionFemase.LoadParams.init]Gestion WEB deploy completed...");
+        System.out.println(WEB_NAME+"[GestionFemase.LoadParams.init]Gestion WEB deploy completed...");
     }
    
 }

@@ -55,7 +55,7 @@ public class JsonListServlet extends BaseServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
-        System.out.println("[JsonListServlet]processRequest()");
+        System.out.println(WEB_NAME+"[JsonListServlet]processRequest()");
         HttpSession session = request.getSession(true);
         ServletContext application = this.getServletContext();
         PropertiesVO appProperties=(PropertiesVO)application.getAttribute("appProperties");
@@ -78,7 +78,7 @@ public class JsonListServlet extends BaseServlet {
          * En este parametro vendra 'deptoId|cencoId'
          */
         String paramCencoID         = request.getParameter("cencoID");
-        System.out.println("[JsonListServlet]"
+        System.out.println(WEB_NAME+"[JsonListServlet]"
             + "paramCencoID= " + paramCencoID);
         if (paramCencoID != null){
             try{
@@ -97,7 +97,7 @@ public class JsonListServlet extends BaseServlet {
             }
         }
                 
-        System.out.println("[JsonListServlet]"
+        System.out.println(WEB_NAME+"[JsonListServlet]"
             + "paramCencoID= " + paramCencoID
             + ",empresaId: " + empresaID
             + ",deptoId: " + deptoID
@@ -107,7 +107,7 @@ public class JsonListServlet extends BaseServlet {
         String empresaTurnoID = request.getParameter("empresaTurnoID"); 
         String empresaProcesoID = request.getParameter("empresaProcesoID"); 
         String source = request.getParameter("source");
-        System.out.println("[JsonListServlet]param source: "+source);
+        System.out.println(WEB_NAME+"[JsonListServlet]param source: "+source);
         List<DepartamentoVO> listaDeptos;
         List<CentroCostoVO> listaCencos;
         List<EmpleadoVO> listaEmpleados;
@@ -161,7 +161,7 @@ public class JsonListServlet extends BaseServlet {
         //lista de centros de costo. Key=depto_id
         LinkedHashMap<String,List<CentroCostoVO>> allCencos = (LinkedHashMap<String,List<CentroCostoVO>>)session.getAttribute("allCencos");
               
-        System.out.println("[JsonListServlet]"
+        System.out.println(WEB_NAME+"[JsonListServlet]"
             + "empresaID= " + empresaID
             + ",empresaTurnoID= " + empresaTurnoID
             + ",empresaProcesoID= " + empresaProcesoID
@@ -176,7 +176,7 @@ public class JsonListServlet extends BaseServlet {
         
         if (cargarDeptos){
             //cargando deptos para la empresa seleccionada
-            System.out.println("[JsonListServlet.processRequest]cargarDeptos: "
+            System.out.println(WEB_NAME+"[JsonListServlet.processRequest]cargarDeptos: "
                 + "empresaID= " + empresaID);
             listaDeptos = new ArrayList<>();
             if (empresaID.compareTo("-1") == 0) {
@@ -186,7 +186,7 @@ public class JsonListServlet extends BaseServlet {
             }
             jsonFinalString = new Gson().toJson(listaDeptos);
         }else if (cargarCencos){
-            System.out.println("[JsonListServlet.processRequest]cargarCencos: "
+            System.out.println(WEB_NAME+"[JsonListServlet.processRequest]cargarCencos: "
                 + "empresaID= " + empresaID
                 + ", deptoID= " + deptoID);
                 
@@ -199,7 +199,7 @@ public class JsonListServlet extends BaseServlet {
             }
             jsonFinalString = new Gson().toJson(listaCencos);
         }else if (cargarSaldoDiasVacaciones){
-                    System.out.println("[JsonListServlet.processRequest]Obtener Saldo dias vacaciones: "
+                    System.out.println(WEB_NAME+"[JsonListServlet.processRequest]Obtener Saldo dias vacaciones: "
                         + "empresaID= " + empresaID
                         + ", rutEmpleado= " + rutEmpleado);
                     VacacionesBp vacacionesbp = new VacacionesBp(appProperties);
@@ -216,7 +216,7 @@ public class JsonListServlet extends BaseServlet {
                     jsonFinalString = new Gson().toJson(listaVacaciones);
         }
         else if (!cargarTurnosNormales && cargarEmpleados){
-            System.out.println("[JsonListServlet.processRequest]cargarEmpleados: "
+            System.out.println(WEB_NAME+"[JsonListServlet.processRequest]cargarEmpleados: "
                 + "empresaID= " + empresaID
                 + ", deptoID= " + deptoID
                 + ", cencoID= " + cencoID);
@@ -225,14 +225,14 @@ public class JsonListServlet extends BaseServlet {
             if (cencoID.compareTo("-1") == 0) {
                 listaEmpleados.add(new EmpleadoVO());
             }else{
-                System.out.println("[JsonListServlet.processRequest]cargarEmpleados. "
+                System.out.println(WEB_NAME+"[JsonListServlet.processRequest]cargarEmpleados. "
                     + "nomPerfil: "+userConnected.getNomPerfil()
                     +", excluirArt22=" + excluirArt22);
                 if (userConnected.getNomPerfil().compareTo("Empleado") != 0){
                     if (source != null 
                             && (source.compareTo("reporte_asistencia") == 0 
                             || source.compareTo("marcacion_virtual") == 0 || excluirArt22)){
-                        System.out.println("[JsonListServlet."
+                        System.out.println(WEB_NAME+"[JsonListServlet."
                             + "processRequest]cargarEmpleados Vigentes y sin articulo22");
                         EmpleadoVO filtroEmpleado = new EmpleadoVO();
                         filtroEmpleado.setEmpresaId(empresaID);
@@ -245,7 +245,7 @@ public class JsonListServlet extends BaseServlet {
                         listaEmpleados = 
                             empleadosBp.getEmpleadosByFiltro(filtroEmpleado);
                     }else{
-                        System.out.println("[JsonListServlet."
+                        System.out.println(WEB_NAME+"[JsonListServlet."
                             + "processRequest]"
                             + "CargarEmpleados 2. "
                             + "excluirArt22 = " + excluirArt22
@@ -261,7 +261,7 @@ public class JsonListServlet extends BaseServlet {
                                 null,
                                 Constantes.ESTADO_VIGENTE);
                         }else{
-                            System.out.println("[JsonListServlet."
+                            System.out.println(WEB_NAME+"[JsonListServlet."
                                 + "processRequest]"
                                 + "Mostrar Empleados desvinculados.");
                             listaEmpleados = empleadosBp.getEmpleadosDesvinculados(empresaID,
@@ -273,7 +273,7 @@ public class JsonListServlet extends BaseServlet {
                     //Mostrar empleado filtrando por rut
                     String aux = userConnected.getUsername();
                     aux = aux.replace(".", "");
-                    System.out.println("[JsonListServlet.processRequest]cargarEmpleados. "
+                    System.out.println(WEB_NAME+"[JsonListServlet.processRequest]cargarEmpleados. "
                         + " username: "+userConnected.getUsername()
                             + ", filtro rut: "+aux);
                     
@@ -291,12 +291,12 @@ public class JsonListServlet extends BaseServlet {
                         "empl.empl_rut");
                 }
                 
-                System.out.println("[JsonListServlet.processRequest]cargarEmpleados: "
+                System.out.println(WEB_NAME+"[JsonListServlet.processRequest]cargarEmpleados: "
                     + "size empleados= " + listaEmpleados.size());
             }
             jsonFinalString = new Gson().toJson(listaEmpleados);
         }else if (cargarDispositivos){
-                System.out.println("[JsonListServlet.processRequest]cargarDispositivos: "
+                System.out.println(WEB_NAME+"[JsonListServlet.processRequest]cargarDispositivos: "
                     + "cencoID= " + cencoID);
                 //cargando dispositivos asociados a centro de costo
                 listaDispositivos = new ArrayList<>();
@@ -310,7 +310,7 @@ public class JsonListServlet extends BaseServlet {
                 }
                 jsonFinalString = new Gson().toJson(listaDispositivos);
         }else if (cargarTurnosNormales){
-                System.out.println("[JsonListServlet."
+                System.out.println(WEB_NAME+"[JsonListServlet."
                     + "processRequest]cargarTurnosNormales"
                     + ". empresa|depto|cencoID= " + empresaID + "|" + deptoID + "|" + cencoID);
                 TurnosBp turnosBp      = new TurnosBp(appProperties);
@@ -323,11 +323,11 @@ public class JsonListServlet extends BaseServlet {
 
                 //Creating an ArrayList of values
                 List<TurnoVO> listOfValues = new ArrayList<>(values);
-//                System.out.println("[JsonListServlet."
+//                System.out.println(WEB_NAME+"[JsonListServlet."
 //                    + "processRequest]turnos.size = "+listOfValues.size());
 //                for (TurnoVO value : listOfValues) 
 //                {
-//                    System.out.println("[JsonListServlet."
+//                    System.out.println(WEB_NAME+"[JsonListServlet."
 //                        + "processRequest]"
 //                        + "turnos.empresaId = " + value.getEmpresaId()
 //                        + ", turnos.id = " + value.getId()
@@ -335,7 +335,7 @@ public class JsonListServlet extends BaseServlet {
 //                }
                 jsonFinalString = new Gson().toJson(listOfValues);
         }else if (cargarAllTurnos){
-                System.out.println("[JsonListServlet."
+                System.out.println(WEB_NAME+"[JsonListServlet."
                     + "processRequest]cargar Turnos Normales y rotativos"
                     + ". empresa|depto|"
                     + "cencoID= " + empresaID + "|" + deptoID + "|" + cencoID);
@@ -357,7 +357,7 @@ public class JsonListServlet extends BaseServlet {
         
         if (cargarTurnosRotativos){
             //cargando turnos rotativos para la empresa seleccionada
-            System.out.println("[JsonListServlet.processRequest]"
+            System.out.println(WEB_NAME+"[JsonListServlet.processRequest]"
                 + "cargarTurnos rotativos: "
                 + "empresaTurnoID= " + empresaTurnoID
                 + ",source= " + source);
@@ -366,7 +366,7 @@ public class JsonListServlet extends BaseServlet {
                 listaTurnosRotativos.add(new TurnoRotativoVO(-1,"Seleccione turno"));
             }else{
                 listaTurnosRotativos = 
-                    turnoRotativoBp.getTurnos(empresaTurnoID, null, 0, 0, "hora_entrada");
+                    turnoRotativoBp.getTurnos(empresaTurnoID, null, -1, 0, 0, "hora_entrada");
 //                if (source!=null && source.compareTo("crearAsignacionTurnoRotativo") == 0){
 //                    //mostrar solo los turnos rotativos sin detalle creado
 //                    listaTurnosRotativos = turnoRotativoBp.getTurnosSinDetalle(empresaTurnoID);
@@ -378,7 +378,7 @@ public class JsonListServlet extends BaseServlet {
             jsonFinalString = new Gson().toJson(listaTurnosRotativos);
         }else if (cargarProcesos){
             //cargando procesos para la empresa seleccionada
-            System.out.println("[JsonListServlet.processRequest]"
+            System.out.println(WEB_NAME+"[JsonListServlet.processRequest]"
                 + "cargar Procesos: "
                 + "empresaProcesoID= " + empresaProcesoID
                 + ",source= " + source);

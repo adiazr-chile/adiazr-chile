@@ -170,7 +170,7 @@ public class DetalleAsistenciaDAO extends BaseDAO{
 //                       
 //            int rowAffected = psupdate.executeUpdate();
 //            if (rowAffected == 1){
-//                System.out.println("[delete]detalle calculo"
+//                System.out.println(WEB_NAME+"[delete]detalle calculo"
 //                    + ", rut:" +_rutEmpleado
 //                    + ", fecha:" +_fechaMarca
 //                    +" actualizado OK!");
@@ -241,7 +241,7 @@ public class DetalleAsistenciaDAO extends BaseDAO{
                        
             int rowAffected = psupdate.executeUpdate();
             if (rowAffected == 1){
-                System.out.println("[update]detalle_asistencia "
+                System.out.println(WEB_NAME+"[update]detalle_asistencia "
                     + ", rut:" +_rutEmpleado
                     + ", fecha:" +_fechaMarca
                     + ", authAtraso: "+_authAtraso
@@ -411,7 +411,7 @@ public class DetalleAsistenciaDAO extends BaseDAO{
             }
             int filasAfectadas = insert.executeUpdate();
             if (filasAfectadas == 1){
-                System.out.println("[insert detalle_asistencia]"
+                System.out.println(WEB_NAME+"[insert detalle_asistencia]"
                    + " empresa: " + _detalle.getEmpresaId()
                     + ", rut: " + _detalle.getRutEmpleado()
                     + ", fechaEntrada: " + _detalle.getFechaEntradaMarca()
@@ -450,10 +450,10 @@ public class DetalleAsistenciaDAO extends BaseDAO{
             PreparedStatement statement = dbConn.prepareStatement(SQL_INSERT);
         ) {
             int i = 0;
-            System.out.println("[DetalleAsistenciaDAO.saveList]"
+            System.out.println(WEB_NAME+"[DetalleAsistenciaDAO.saveList]"
                 + "items a insertar: "+entities.size());
             for (DetalleAsistenciaToInsertVO entity : entities) {
-                System.out.println("[DetalleAsistenciaDAO.saveList] "
+                System.out.println(WEB_NAME+"[DetalleAsistenciaDAO.saveList] "
                     + "Insert de calculos asistencia. "
                     + "Rut= " + entity.getDetalle().getRutEmpleado()
                     + ", fechaEntrada= " + entity.getDetalle().getFechaEntradaMarca()
@@ -516,7 +516,7 @@ public class DetalleAsistenciaDAO extends BaseDAO{
 
                 if (i % 50 == 0 || i == entities.size()) {
                     int[] rowsAffected = statement.executeBatch(); // Execute every 1000 items.
-                    System.out.println("[DetalleAsistenciaDAO."
+                    System.out.println(WEB_NAME+"[DetalleAsistenciaDAO."
                         + "saveList]filas afectadas= "+rowsAffected.length);
                 }
             }
@@ -537,11 +537,11 @@ public class DetalleAsistenciaDAO extends BaseDAO{
             PreparedStatement statement = dbConn.prepareStatement(SQL_DELETE);
         ) {
             int i = 0;
-            System.out.println("[DetalleAsistenciaDAO.delete]"
+            System.out.println(WEB_NAME+"[DetalleAsistenciaDAO.delete]"
                 + "items a eliminar: "+entities.size());
             for (DetalleAsistenciaToInsertVO entity : entities) {
                                 
-                System.out.println("[DetalleAsistenciaDAO.delete]"
+                System.out.println(WEB_NAME+"[DetalleAsistenciaDAO.delete]"
                     + "rut: "+entity.getDetalle().getRutEmpleado()
                     +", fechaMarca: "+entity.getDetalle().getFechaEntradaMarca());
                 
@@ -555,7 +555,7 @@ public class DetalleAsistenciaDAO extends BaseDAO{
 
                 if (i % 50 == 0 || i == entities.size()) {
                     int[] rowsAffected = statement.executeBatch(); // Execute every 1000 items.
-                    System.out.println("[DetalleAsistenciaDAO."
+                    System.out.println(WEB_NAME+"[DetalleAsistenciaDAO."
                         + "deleteList]filas afectadas= "+rowsAffected.length);
                 }
             }
@@ -583,7 +583,7 @@ public class DetalleAsistenciaDAO extends BaseDAO{
 //                dbConn.prepareStatement(SQL_UPDATE_MARCAS_PROCESADAS);
 //        ) {
 //            int i = 0;
-//            System.out.println("[DetalleAsistenciaDAO.setMarcasProcesadas]"
+//            System.out.println(WEB_NAME+"[DetalleAsistenciaDAO.setMarcasProcesadas]"
 //                + "items a insertar: "+entities.size());
 //            for (DetalleAsistenciaToInsertVO entity : entities) {
 //                
@@ -597,7 +597,7 @@ public class DetalleAsistenciaDAO extends BaseDAO{
 //                    // ...
 //                    statement.addBatch();
 //                    i++;
-//                    System.out.println("[DetalleAsistenciaDAO.setMarcasProcesadas] "
+//                    System.out.println(WEB_NAME+"[DetalleAsistenciaDAO.setMarcasProcesadas] "
 //                        + "Update entrada procesada. "
 //                        + "Rut= " + entity.getDetalle().getRutEmpleado()
 //                        + ", fechaHora= " + 
@@ -615,7 +615,7 @@ public class DetalleAsistenciaDAO extends BaseDAO{
 //                    // ...
 //                    statement.addBatch();
 //                    i++;
-//                    System.out.println("[DetalleAsistenciaDAO.setMarcasProcesadas] "
+//                    System.out.println(WEB_NAME+"[DetalleAsistenciaDAO.setMarcasProcesadas] "
 //                        + "Update salida procesada. "
 //                        + "Rut= " + entity.getDetalle().getRutEmpleado()
 //                        + ", fechaHora= " + 
@@ -623,12 +623,12 @@ public class DetalleAsistenciaDAO extends BaseDAO{
 //                            + " "
 //                            + entity.getDetalle().getHoraSalida());
 //                }
-//                System.out.println("[DetalleAsistenciaDAO.setMarcasProcesadas] "
+//                System.out.println(WEB_NAME+"[DetalleAsistenciaDAO.setMarcasProcesadas] "
 //                    + "i = " + i
 //                    + ", entities.size()= " +entities.size());
 //                if (i % 50 == 0 || i%2 ==0 || i == entities.size()) {
 //                    int[] rowsAffected = statement.executeBatch(); // Execute every 1000 items.
-//                    System.out.println("[DetalleAsistenciaDAO."
+//                    System.out.println(WEB_NAME+"[DetalleAsistenciaDAO."
 //                        + "setMarcasProcesadas]filas afectadas= "+rowsAffected.length);
 //                }
 //            }
@@ -682,7 +682,7 @@ public class DetalleAsistenciaDAO extends BaseDAO{
         List<DetalleAsistenciaVO> lista = new ArrayList<>();
         DetalleAsistenciaVO data;
         
-        System.out.println("[DetalleAsistenciaDAO.getDetalles]inicio");
+        System.out.println(WEB_NAME+"[DetalleAsistenciaDAO.getDetalles]inicio");
         
         String sql ="SELECT empresa_id, depto_id, "
             + "cenco_id, rut_empleado, "
@@ -824,9 +824,9 @@ public class DetalleAsistenciaDAO extends BaseDAO{
         DetalleAsistenciaVO data;
         String cadenaRuts = "";
         
-        System.out.println("[DetalleAsistenciaDAO.getDetallesInforme]inicio");
+        System.out.println(WEB_NAME+"[DetalleAsistenciaDAO.getDetallesInforme]inicio");
         if (_listaEmpleados != null && !_listaEmpleados.isEmpty()){
-            System.out.println("[DetalleAsistenciaDAO.getDetallesInforme]"
+            System.out.println(WEB_NAME+"[DetalleAsistenciaDAO.getDetallesInforme]"
                 + "num empleados: "+ _listaEmpleados.size());
             for (EmpleadoVO empleado : _listaEmpleados) {
                 cadenaRuts += "'" + empleado.getRut() + "',";
@@ -896,7 +896,7 @@ public class DetalleAsistenciaDAO extends BaseDAO{
         
         sql += " order by rut_empleado,fecha_marca_entrada";
             
-        System.out.println("[DetalleAsistenciaDAO."
+        System.out.println(WEB_NAME+"[DetalleAsistenciaDAO."
             + "getDetallesInforme]Para lista empleados. "
             + "sql: "+ sql);
         try {
@@ -953,26 +953,26 @@ public class DetalleAsistenciaDAO extends BaseDAO{
                     data.setRowKey(data.getRut() + "|" 
                         + data.getFechaEntradaMarca());
                     
-                    System.out.println("[DetalleAsistenciaDAO."
+                    System.out.println(WEB_NAME+"[DetalleAsistenciaDAO."
                         + "getDetallesInforme]"
                         + "rutIteracion= " + rutIteracion
                         + ", rutAnterior= " + rutAnterior);
                     
                     if (_listaEmpleados.size()==1){
-                        System.out.println("[DetalleAsistenciaDAO."
+                        System.out.println(WEB_NAME+"[DetalleAsistenciaDAO."
                             + "getDetallesInforme](A)Un solo rut. Agrega detalle "
                             + "asistencia para el rut: "+rutAnterior + " - (lista.put)");
                         detallesAsistenciaEmpleado.add(data);
                         fullList.put(rutAnterior, detallesAsistenciaEmpleado);
                     }else if (rutIteracion.compareTo(rutAnterior) == 0){//mas de un rut
                         //Agrega detalle asistencia para el rut
-                        System.out.println("[DetalleAsistenciaDAO."
+                        System.out.println(WEB_NAME+"[DetalleAsistenciaDAO."
                             + "getDetallesInforme](B)Agrega detalle "
                             + "asistencia para el rut: "+rutIteracion);
                         detallesAsistenciaEmpleado.add(data);
                     }else{
                         //if (rutAnterior.compareTo("")==0) rutAnterior=rutIteracion;
-                        System.out.println("[DetalleAsistenciaDAO."
+                        System.out.println(WEB_NAME+"[DetalleAsistenciaDAO."
                             + "getDetallesInforme](C)Agrega lista con detalle "
                             + "asistencia para el rut: " + rutAnterior  + " - (lista.put)");
                         fullList.put(rutAnterior, detallesAsistenciaEmpleado);
@@ -1032,9 +1032,9 @@ public class DetalleAsistenciaDAO extends BaseDAO{
         DetalleAsistenciaVO data;
         String cadenaRuts = "";
         
-        System.out.println("[DetalleAsistenciaDAO.getDetalles]inicio");
+        System.out.println(WEB_NAME+"[DetalleAsistenciaDAO.getDetalles]inicio");
         if (_listaEmpleados != null && !_listaEmpleados.isEmpty()){
-            System.out.println("[DetalleAsistenciaDAO.getDetalles]"
+            System.out.println(WEB_NAME+"[DetalleAsistenciaDAO.getDetalles]"
                 + "num empleados: "+ _listaEmpleados.size());
             for (EmpleadoVO empleado : _listaEmpleados) {
                 cadenaRuts += "'" + empleado.getRut() + "',";
@@ -1085,7 +1085,7 @@ public class DetalleAsistenciaDAO extends BaseDAO{
                 + "and '"+_endDate+"' "
             + "order by rut_empleado,fecha_marca_entrada";
             
-        System.out.println("[DetalleAsistenciaDAO."
+        System.out.println(WEB_NAME+"[DetalleAsistenciaDAO."
             + "getDetalles]Para lista empleados. "
             + "sql: "+ sql);
         try {
@@ -1138,13 +1138,13 @@ public class DetalleAsistenciaDAO extends BaseDAO{
                     
                     if (rutIteracion.compareTo(rutAnterior) == 0){
                         //Agrega detalle asistencia para el rut
-                        System.out.println("[DetalleAsistenciaDAO."
+                        System.out.println(WEB_NAME+"[DetalleAsistenciaDAO."
                             + "getDetalles](1)Agrega detalle "
                             + "asistencia para el rut: "+rutIteracion);
                         detallesAsistenciaEmpleado.add(data);
                     }else{
                         //if (rutAnterior.compareTo("")==0) rutAnterior=rutIteracion;
-                        System.out.println("[DetalleAsistenciaDAO."
+                        System.out.println(WEB_NAME+"[DetalleAsistenciaDAO."
                             + "getDetalles](2)Agrega lista con detalle "
                             + "asistencia para el rut: " + rutAnterior);
                         fullList.put(rutAnterior, detallesAsistenciaEmpleado);
@@ -1237,7 +1237,7 @@ public class DetalleAsistenciaDAO extends BaseDAO{
                     + "and '"+_endDate+"' "
                 + "order by fecha_marca_entrada";
              
-            System.out.println("[DetalleAsistenciaDAO.getDetallesHist]Sql: "+sql); 
+            System.out.println(WEB_NAME+"[DetalleAsistenciaDAO.getDetallesHist]Sql: "+sql); 
             dbConn = dbLocator.getConnection(m_dbpoolName,"[DetalleAsistenciaDAO.getDetalles]");
                         
             ps = dbConn.prepareStatement(sql);
@@ -1369,7 +1369,7 @@ public class DetalleAsistenciaDAO extends BaseDAO{
                 sql += " limit "+_jtPageSize + " offset "+_jtStartIndex;
             }
             
-            System.out.println("[DetalleAsistenciaDAO."
+            System.out.println(WEB_NAME+"[DetalleAsistenciaDAO."
                 + "getHeaders]"
                 + "empresa: "+_empresaId
                 + ",depto: "+_deptoId

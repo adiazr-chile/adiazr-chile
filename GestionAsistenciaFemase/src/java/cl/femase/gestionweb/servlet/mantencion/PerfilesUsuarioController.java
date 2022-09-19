@@ -88,7 +88,7 @@ public class PerfilesUsuarioController extends BaseServlet {
         PerfilUsuarioBp auxnegocio=new PerfilUsuarioBp(appProperties);
 
         if(request.getParameter("action") != null){
-            System.out.println("---->action is: " + request.getParameter("action"));
+            System.out.println(WEB_NAME+"---->action is: " + request.getParameter("action"));
             List<PerfilUsuarioVO> listaObjetos = new ArrayList<PerfilUsuarioVO>();
             String action=(String)request.getParameter("action");
             Gson gson = new Gson();
@@ -139,7 +139,7 @@ public class PerfilesUsuarioController extends BaseServlet {
             }
             
             if (action.compareTo("list")==0) {
-                System.out.println("[PerfilUsuarioController]mostrar lista de perfiles...");
+                System.out.println(WEB_NAME+"[PerfilUsuarioController]mostrar lista de perfiles...");
                 try{
                     listaObjetos = auxnegocio.getPerfiles(nombre, 
                         startPageIndex, 
@@ -168,7 +168,7 @@ public class PerfilesUsuarioController extends BaseServlet {
                     ex.printStackTrace();
                 }   
             }else if (action.compareTo("create") == 0) {
-                        System.out.println("[PerfilUsuarioController]Insertar perfil...");
+                        System.out.println(WEB_NAME+"[PerfilUsuarioController]Insertar perfil...");
                         MaintenanceVO doCreate = auxnegocio.insert(auxdata, resultado);					
                         listaObjetos.add(auxdata);
 
@@ -178,7 +178,7 @@ public class PerfilesUsuarioController extends BaseServlet {
                         String listData="{\"Result\":\"OK\",\"Record\":"+json+"}";											
                         response.getWriter().print(listData);
             }else if (action.compareTo("update") == 0) {  
-                    System.out.println("[PerfilUsuarioController]Modificar perfil de usuario...");
+                    System.out.println(WEB_NAME+"[PerfilUsuarioController]Modificar perfil de usuario...");
                     try{
                         MaintenanceVO doUpdate = auxnegocio.update(auxdata, resultado);
                         listaObjetos.add(auxdata);
@@ -196,7 +196,7 @@ public class PerfilesUsuarioController extends BaseServlet {
             }
             /*else if (action.compareTo("delete") == 0) {  
                     //Delete record
-                    System.out.println("Eliminando accion- "
+                    System.out.println(WEB_NAME+"Eliminando accion- "
                             + "Id: " + auxdata.getId()
                             +", label: "+ auxdata.getLabel());
                     try{

@@ -71,11 +71,11 @@ public class UploadCentrosCostoServlet extends BaseServlet {
                         if(!item.isFormField()){
                             File auxfile = new File(item.getName());
                             String filename = auxfile.getName();
-                            System.out.println("[UploadCentrosCostoServlet]"
+                            System.out.println(WEB_NAME+"[UploadCentrosCostoServlet]"
                                 + "Filename: "+filename);
                             String extension = FilenameUtils.getExtension(filename);
                             String filePathLoaded= pathUploadedFiles + File.separator + filename;
-                            System.out.println("--->filePathLoaded="+filePathLoaded);
+                            System.out.println(WEB_NAME+"--->filePathLoaded="+filePathLoaded);
                             item.write( new File(filePathLoaded));
                             if (extension.compareTo("csv") == 0){
                                 Reader in = new FileReader(filePathLoaded);
@@ -86,7 +86,7 @@ public class UploadCentrosCostoServlet extends BaseServlet {
                                         ).parse(in);
                                 
                                 for (CSVRecord record : records) {
-                                    System.out.println("[UploadCentrosCostoServlet]"
+                                    System.out.println(WEB_NAME+"[UploadCentrosCostoServlet]"
                                         + "Linea csv: "+record.toString());
                                     if (record.getRecordNumber()>1){
                                         String depto_id = record.get("depto_id");
@@ -106,7 +106,7 @@ public class UploadCentrosCostoServlet extends BaseServlet {
                                         data.setTelefonos(telefonos);
                                         data.setEmail(email);
                                             
-                                        System.out.println("[UploadCentrosCostoServlet]"
+                                        System.out.println(WEB_NAME+"[UploadCentrosCostoServlet]"
                                             + "datacencos:"
                                             + data.toString());
                                         
@@ -116,7 +116,7 @@ public class UploadCentrosCostoServlet extends BaseServlet {
                                         resultado.setUserIP(request.getRemoteAddr());
                                         resultado.setType("ACO");
                                         resultado.setEmpresaIdSource(userConnected.getEmpresaId());
-                                        System.out.println("[UploadCentrosCostoServlet]"
+                                        System.out.println(WEB_NAME+"[UploadCentrosCostoServlet]"
                                             + "Insertar cenco nombre: " + data.getNombre());
                                         MaintenanceVO insertCenco = 
                                             cencoBp.insert(data, resultado);

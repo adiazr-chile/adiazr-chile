@@ -17,7 +17,7 @@ import java.util.List;
  *
  * @author Alexander
  */
-public class EmpresaBp {
+public class EmpresaBp  extends BaseBp{
 
     public PropertiesVO props;
     /** para guardar los eventos de mantencion de informacion*/
@@ -46,13 +46,13 @@ public class EmpresaBp {
         
         List<EmpresaVO> lista;
         if (_usuario.getIdPerfil() != Constantes.ID_PERFIL_SUPER_ADMIN){
-            System.out.println("[EmpresaBp.getEmpresas]"
+            System.out.println(WEB_NAME+"[EmpresaBp.getEmpresas]"
                 + "Obtener lista de empresas para usuario normal...");
             lista = 
                empresaDao.getEmpresas(_usuario, _nombre);
         }else {
             //perfil super admin
-            System.out.println("[EmpresaBp.getEmpresas]"
+            System.out.println(WEB_NAME+"[EmpresaBp.getEmpresas]"
                 + "Obtener lista de empresas para usuario super admin...");
             lista = 
                 empresaDao.getEmpresas(_nombre, _jtStartIndex, 

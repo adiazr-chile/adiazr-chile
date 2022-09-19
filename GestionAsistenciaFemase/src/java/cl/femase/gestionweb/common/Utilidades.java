@@ -39,7 +39,9 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Locale;
 import java.util.StringTokenizer;
 import java.util.jar.JarEntry;
@@ -48,6 +50,7 @@ import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.validator.UrlValidator;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
+import org.joda.time.Interval;
 import org.joda.time.Period;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.PeriodFormatter;
@@ -60,6 +63,8 @@ import org.json.JSONObject;
  * @author Alexander
  */
 public class Utilidades {
+    
+    public static String WEB_NAME = "[GestionFemaseWeb]";
     
     private static final SimpleDateFormat horaformat = new SimpleDateFormat("HH:mm:ss");
         
@@ -95,13 +100,39 @@ public class Utilidades {
     
     /**
     * 
+    * @param _fecha
+    * @return 
+    */
+    public static int getSemestre(Date _fecha){
+        int semestre =1;
+        //SimpleDateFormat sdfFull    = new SimpleDateFormat("yyyy-MM-dd", new Locale("es","CL"));
+        try {
+            Calendar cal5 = Calendar.getInstance(new Locale("es","CL"));
+            cal5.setTime(_fecha);
+            
+            int month = cal5.get(Calendar.MONTH)+1;
+            if (month > 6) semestre = 2;
+            System.out.println(WEB_NAME + "[Utilidades.getSemestre]"
+                + "Fecha Date = " + _fecha 
+                + ", Semestre = " + semestre);
+           
+        } catch (Exception ex) {
+            System.err.println(WEB_NAME 
+                + "[Utilidades.getSemestre]Error al obtener semestre: " + ex.toString());
+        }
+        
+        return semestre;
+    }
+    
+    /**
+    * 
     * @param _numero
     * @return 
     */
     public static String formatDouble(double _numero){
         NumberFormat nf = NumberFormat.getInstance(new Locale("es", "CL"));
         String val = nf.format(_numero);
-        //System.out.println("numero: " + registros+", con formato: " + val);
+        //System.out.println(WEB_NAME+"numero: " + registros+", con formato: " + val);
         
         return val;
     }
@@ -159,7 +190,7 @@ public class Utilidades {
             LocalDateTime.of(calendarHasta.get(Calendar.YEAR), 
                 calendarHasta.get(Calendar.MONTH) + 1, 
                 calendarHasta.get(Calendar.DATE), 0, 0, 0);
-        System.out.println("[Urilidades.getDiferenciaEntreFechas]"
+        System.out.println(WEB_NAME+"[Utilidades.getDiferenciaEntreFechas]"
             + "fecha desde: " + oldDate 
             + ", fecha hasta: " + newDate);  
       
@@ -269,7 +300,7 @@ public class Utilidades {
 //     * @return 
 //     */
 //    public static String restaHoras(String _fechaHoraInicio, String _fechaHoraFin){
-////        System.out.println("[Utilidades.restaHoras]"
+////        System.out.println(WEB_NAME+"[Utilidades.restaHoras]"
 ////            + "_horaInicio= "+_horaInicio
 ////            + ", _horaFin= "+_horaFin);
 //        String difHrsMins = "";
@@ -291,7 +322,7 @@ public class Utilidades {
 //        diferencia=(int) ((fechaFinal.getTime()-fechaInicial.getTime())/1000);
 //        if (diferencia < 0 ) diferencia *= -1;
 //        
-////        System.out.println("[Utilidades.restaHoras]diferencia= "+diferencia);
+////        System.out.println(WEB_NAME+"[Utilidades.restaHoras]diferencia= "+diferencia);
 //        
 //        int dias=0;
 //        int horas=0;
@@ -306,7 +337,7 @@ public class Utilidades {
 //        }
 //        if(diferencia>=60 && diferencia < 3600) {
 //            minutos=(int)Math.floor(diferencia/60);
-////            System.out.println("[Utilidades.restaHoras]minutos= "+minutos);
+////            System.out.println(WEB_NAME+"[Utilidades.restaHoras]minutos= "+minutos);
 //            diferencia=diferencia-(minutos*60);
 //        }
 //        String strhh = ""+horas;
@@ -315,7 +346,7 @@ public class Utilidades {
 //        if (minutos < 10) strmm = "0" + minutos;
 //        difHrsMins = strhh + ":" + strmm;
 //       
-////        System.out.println("[Utilidades.restaHoras]difHrsMins= "+difHrsMins);
+////        System.out.println(WEB_NAME+"[Utilidades.restaHoras]difHrsMins= "+difHrsMins);
 //        return difHrsMins;
 //    }
     
@@ -352,11 +383,11 @@ public class Utilidades {
 //    }
     
     /**
-     * 
-     * @param time1
-     * @param time2
-     * @return 
-     */
+    * 
+    * @param time1
+    * @param time2
+    * @return 
+    */
     public static String sumaHoras(String time1, String time2) {
         PeriodFormatter formatter = new PeriodFormatterBuilder()
             .minimumPrintedDigits(2)
@@ -447,7 +478,7 @@ public class Utilidades {
     public static long getDifferenceInDays(Date _startDate, 
         Date _endDate){
                
-        System.out.println("[Urilidades.getDifferenceInDays]"
+        System.out.println(WEB_NAME+"[Urilidades.getDifferenceInDays]"
             + "startDate: "+_startDate+", endDate: "+_endDate);       
         
         // Crear 2 instancias de Calendar para restarlas
@@ -458,7 +489,7 @@ public class Utilidades {
         cal1.set(getDatePart(_startDate, "yyyy"), getDatePart(_startDate, "MM"), getDatePart(_startDate, "dd"),0,0,0);
         cal2.set(getDatePart(_endDate, "yyyy"), getDatePart(_endDate, "MM"), getDatePart(_endDate, "dd"),0,0,0);
         
-        System.out.println("[Urilidades.getDifferenceInDays]"
+        System.out.println(WEB_NAME+"[Urilidades.getDifferenceInDays]"
             + "cal.getTime: "+cal1.getTime()+", cal2.getTime: "+cal2.getTime());       
         
         // conseguir la representacion de la fecha en milisegundos
@@ -478,8 +509,8 @@ public class Utilidades {
         // calcular la diferencia en dias
         long diffDays = diff / (24 * 60 * 60 * 1000);
 
-        //System.out.println("En milisegundos: " + diff + " milisegundos.");
-        //System.out.println("En segundos: " + diffSeconds + " segundos.");
+        //System.out.println(WEB_NAME+"En milisegundos: " + diff + " milisegundos.");
+        //System.out.println(WEB_NAME+"En segundos: " + diffSeconds + " segundos.");
     
         return diffDays;
         
@@ -531,8 +562,8 @@ public class Utilidades {
         // calcular la diferencia en dias
 //        long diffDays = diff / (24 * 60 * 60 * 1000);
 
-        //System.out.println("En milisegundos: " + diff + " milisegundos.");
-        //System.out.println("En segundos: " + diffSeconds + " segundos.");
+        //System.out.println(WEB_NAME+"En milisegundos: " + diff + " milisegundos.");
+        //System.out.println(WEB_NAME+"En segundos: " + diffSeconds + " segundos.");
     
         return diffSeconds;
     }
@@ -665,12 +696,12 @@ public class Utilidades {
             }
         }
         
-//        System.out.println("[getMinValue]precio menor inicial=" +min);
+//        System.out.println(WEB_NAME+"[getMinValue]precio menor inicial=" +min);
         for (int i=0; i<_lista.length; i++) {
             if (_lista[i] > 0 && _lista[i] < min) {
                 min = _lista[i];
             }
-//            System.out.println("[getMinValue]lista[i]=" +_lista[i]+", min= "+min);
+//            System.out.println(WEB_NAME+"[getMinValue]lista[i]=" +_lista[i]+", min= "+min);
         }
         
         return min;
@@ -847,11 +878,11 @@ public class Utilidades {
             String largoCampo){
         int largo = datos.length();
         int largoCampoComoEntero = Integer.parseInt(largoCampo);
-        //System.out.println("Alineacion.alinearConRelleno: largoCampoComoEntero  : " + largoCampoComoEntero);
+        //System.out.println(WEB_NAME+"Alineacion.alinearConRelleno: largoCampoComoEntero  : " + largoCampoComoEntero);
         int relleno = largoCampoComoEntero - largo;
         String salida = datos;
         if (relleno > 0) {
-                //System.out.println("Alineacion.alinearConRelleno: relleno > 0 : " + relleno);
+                //System.out.println(WEB_NAME+"Alineacion.alinearConRelleno: relleno > 0 : " + relleno);
                 if (alineacion.toUpperCase().equals("DERECHA")) {
                         for (int j=0; j < relleno; j++) salida = caracterRelleno + salida;
                 } else if (alineacion.toUpperCase().equals("IZQUIERDA")) {
@@ -859,7 +890,7 @@ public class Utilidades {
                 }
 
         } else {
-                //System.out.println("Alineacion.alinearConRelleno: relleno < 0: " + relleno);
+                //System.out.println(WEB_NAME+"Alineacion.alinearConRelleno: relleno < 0: " + relleno);
                 //Si el string no cabe en el espacio asignado, se corta por el final
                 salida = salida.substring(0, largoCampoComoEntero);
         }
@@ -911,7 +942,7 @@ public class Utilidades {
             // build jar file name, then loop through zipped entries
             jarFileName = URLDecoder.decode(packageURL.getFile(), "UTF-8");
             jarFileName = jarFileName.substring(5,jarFileName.indexOf("!"));
-            System.out.println(">jarFileName: " + jarFileName);
+            System.out.println(WEB_NAME+">jarFileName: " + jarFileName);
             jf = new JarFile(jarFileName);
             jarEntries = jf.entries();
             while(jarEntries.hasMoreElements()){
@@ -956,12 +987,17 @@ public class Utilidades {
         return names;
     }
     
+    /**
+    * 
+    * @param _year
+    * @param _month
+    * @param _day
+    * @return 
+    */
     public static int getDiaSemana(int _year, int _month, int _day){
         int intday = -1;
         LocalDate date=LocalDate.of(_year, _month, _day);
         intday = date.getDayOfWeek().getValue();
-        //System.out.println("Fecha: " + date.toString());
-        //System.out.println("Dia semana= " + intday);
         
         return intday;
     }
@@ -1022,9 +1058,9 @@ public class Utilidades {
     }
     
     /**
-     * Retorna un objeto Time.
-     * 
-     */
+    * Retorna un objeto Time.
+    * 
+    */
     public static java.sql.Time getHora(String _hora){
         java.sql.Time theTime = null;
         
@@ -1099,7 +1135,7 @@ public class Utilidades {
         //SimpleDateFormat sdfddMMyyyy = new SimpleDateFormat("dd-MM-yyyy");
         String fDesde=_startDate;
         String fHasta=_endDate;
-        System.out.println("[Utilidades.getFechas]"
+        System.out.println(WEB_NAME+"[Utilidades.getFechas]"
             + "fDesde: " + fDesde +  ", fHasta: " + fHasta);        
         Date defaultDate = new Date();
         String[] dates = null;
@@ -1130,7 +1166,7 @@ public class Utilidades {
             }catch(IllegalArgumentException ilex){
                 dateTimeHasta = dateTimeFormat_ddMMyyyy.parseLocalDate(fHasta);
             }
-            System.out.println("[gestionweb.Utilidades.getFechas]"
+            System.out.println(WEB_NAME+"[gestionweb.Utilidades.getFechas]"
                 + "startDate: " + dateTimeDesde
                 + ", endDate: " + dateTimeHasta);
 
@@ -1149,7 +1185,7 @@ public class Utilidades {
             }
             
         }catch(Exception excepcion){
-            System.out.println("[gestionweb."
+            System.out.println(WEB_NAME+"[gestionweb."
                 + "Utilidades.getFechas]"
                 + "Error: "+excepcion.toString());
             excepcion.printStackTrace();
@@ -1162,7 +1198,7 @@ public class Utilidades {
 ////        SimpleDateFormat sdfddMMyyyy = new SimpleDateFormat("dd-MM-yyyy");
 ////        String fDesde=_startDate;
 ////        String fHasta=_endDate;
-////        System.out.println("[Utilidades.getFechas]"
+////        System.out.println(WEB_NAME+"[Utilidades.getFechas]"
 ////            + "fDesde: " + fDesde +  ", fHasta: " + fHasta);        
 ////        Date defaultDate = new Date();
 ////        String[] dates = null;
@@ -1207,7 +1243,7 @@ public class Utilidades {
 ////            //DateTime date2 = new DateTime(_endDate);
 ////            //date2.plusDays(1);
 ////
-////            System.out.println("[gestionweb.Utilidades.getFechas]"
+////            System.out.println(WEB_NAME+"[gestionweb.Utilidades.getFechas]"
 ////                + "startDate: " + _startDate
 ////                + ", endDate: " + _endDate);
 ////
@@ -1216,7 +1252,7 @@ public class Utilidades {
 ////            */
 ////            int dias = Days.daysBetween(date1, date2.plusDays(1)).getDays();  
 ////
-////            //System.out.println("dias entre las fechas: " + Days.daysBetween(date1, date2.plusDays(1)).getDays());  
+////            //System.out.println(WEB_NAME+"dias entre las fechas: " + Days.daysBetween(date1, date2.plusDays(1)).getDays());  
 ////            dates = new String[dias];
 ////            int x = 0;
 ////            StringTokenizer toketdate = new StringTokenizer(_startDate, "-");
@@ -1251,7 +1287,7 @@ public class Utilidades {
 ////                x++;
 ////            }
 ////        }catch(Exception excepcion){
-////            System.out.println("[gestionweb."
+////            System.out.println(WEB_NAME+"[gestionweb."
 ////                + "Utilidades.getFechas]"
 ////                + "Error: "+excepcion.toString());
 ////            excepcion.printStackTrace();
@@ -1282,7 +1318,7 @@ public class Utilidades {
             Date date1 = horaformat.parse(_horaReal);
             Date date2 = horaformat.parse(_horaTeorica);
             diff = date1.compareTo(date2);
-            System.out.println("HoraTeorica: "+date1
+            System.out.println(WEB_NAME+"HoraTeorica: "+date1
                 +", hora2: "+date2+", diff: "+diff);
             
         }catch(ParseException pex){
@@ -1361,7 +1397,7 @@ public class Utilidades {
 //        int dias=0;
 //        int horas=0;
 //        int minutos=0;
-////        System.out.println("[restaHoras]"
+////        System.out.println(WEB_NAME+"[restaHoras]"
 ////            + "diferencia= " + diferencia);
 //        if(diferencia > 86400) {
 //            dias=(int)Math.floor(diferencia/86400);
@@ -1373,7 +1409,7 @@ public class Utilidades {
 //        }
 //        if(diferencia>=60 && diferencia < 3600) {
 //            minutos=(int)Math.floor(diferencia/60);
-////            System.out.println("[Utilidades.restaHoras]minutos= "+minutos);
+////            System.out.println(WEB_NAME+"[Utilidades.restaHoras]minutos= "+minutos);
 //            diferencia=diferencia-(minutos*60);
 //        }
 //        String strhh = ""+horas;
@@ -1385,7 +1421,7 @@ public class Utilidades {
 //        resultado.setStrDiferenciaHorasMinutos(difHrsMins);
 //        resultado.setIntDiferenciaHoras(Integer.parseInt(strhh));
 //        resultado.setIntDiferenciaMinutos(Integer.parseInt(strmm));
-////        System.out.println("[Utilidades.restaHoras]difHrsMins= "+difHrsMins);
+////        System.out.println(WEB_NAME+"[Utilidades.restaHoras]difHrsMins= "+difHrsMins);
 //        return resultado;
 //     }
      
@@ -1405,7 +1441,7 @@ public class Utilidades {
      * @return 
      */
     public static DiferenciaHorasVO getTimeDifference(String _fechaHoraInicio, String _fechaHoraFin){
-        System.out.println("[Utilidades.getTimeDifference]"
+        System.out.println(WEB_NAME+"[Utilidades.getTimeDifference]"
             + "fechaHoraInicio: " + _fechaHoraInicio
             + ", fechaHoraFin: " + _fechaHoraFin);
         SimpleDateFormat fechaFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -1436,7 +1472,7 @@ public class Utilidades {
         
             if (fechaInicial!=null && (soloFechaInicio.compareTo(soloFechaFin)!=0 && fechaInicial.after(fechaFinal))){
                 //sumar un dia a la fecha de salida(final)
-                System.out.println("[Utilidades.getTimeDifference]Fechas distintas (turno de noche). "
+                System.out.println(WEB_NAME+"[Utilidades.getTimeDifference]Fechas distintas (turno de noche). "
                     + "Sumar un dia a la fecha de salida(final)");
                 Date newDate = sumaRestarFecha(fechaFinal, 1, "DAYS");
                 Calendar newCal = Calendar.getInstance(new Locale("es", "CL"));
@@ -1482,7 +1518,7 @@ public class Utilidades {
         resultado.setIntDiferenciaMinutos(Integer.parseInt(strmm));
         resultado.setIntDiferenciaSegundos(Integer.parseInt(strss));
         
-        System.out.println("[Utilidades.getTimeDifference]"
+        System.out.println(WEB_NAME+"[Utilidades.getTimeDifference]"
             + "Diferencia hh:mm:ss: "+ (strhh + ":" + strmm + ":" + strss) );
         
         return resultado;
@@ -1522,7 +1558,7 @@ public class Utilidades {
 ////        }
 ////        if(diferencia>=60 && diferencia < 3600) {
 ////            minutos=(int)Math.floor(diferencia/60);
-//////            System.out.println("[Utilidades.restaHoras]minutos= "+minutos);
+//////            System.out.println(WEB_NAME+"[Utilidades.restaHoras]minutos= "+minutos);
 ////            diferencia=diferencia-(minutos*60);
 ////        }
 ////        String strhh = ""+horas;
@@ -1534,7 +1570,7 @@ public class Utilidades {
 ////        resultado.setStrDiferenciaHorasMinutos(difHrsMins);
 ////        resultado.setIntDiferenciaHoras(Integer.parseInt(strhh));
 ////        resultado.setIntDiferenciaMinutos(Integer.parseInt(strmm));
-//////        System.out.println("[Utilidades.restaHoras]difHrsMins= "+difHrsMins);
+//////        System.out.println(WEB_NAME+"[Utilidades.restaHoras]difHrsMins= "+difHrsMins);
 ////        return resultado;
 ////    }
     
@@ -1571,7 +1607,7 @@ public class Utilidades {
         java.util.Date etimeAsDate1 = mycal_1.getTime();
         // restar 7 dias
         newCal_1.add(Calendar.DATE, - _diasRestar);            
-//        System.out.println("[Utilidades.restaDias]"
+//        System.out.println(WEB_NAME+"[Utilidades.restaDias]"
 //            + "Fecha actual: " + etimeAsDate1
 //            +" ,Fecha antes: " + newCal_1.getTime());
     
@@ -1592,7 +1628,7 @@ public class Utilidades {
         String[] h2 = hora2.split(":");
         
         int diffMinutos = (Integer.parseInt(h2[1]) - Integer.parseInt(h1[1]));
-        System.out.println("[restarMinutos]minutosDiferencia= "+diffMinutos);
+        System.out.println(WEB_NAME+"[restarMinutos]minutosDiferencia= "+diffMinutos);
         
         return diffMinutos;
     }
@@ -1606,7 +1642,7 @@ public class Utilidades {
     */
     public static String restarMinsHora(String _horaHHMM, int _minutosARestar){
         //******************* restar minutos a una hora
-        System.out.println("[Utilidades.restarMinsHora](new)hora: " + _horaHHMM
+        System.out.println(WEB_NAME+"[Utilidades.restarMinsHora](new)hora: " + _horaHHMM
             + ", minutosRestar: "+_minutosARestar);
         SimpleDateFormat fechaFormat = new SimpleDateFormat("yyyy-MM-dd");
         SimpleDateFormat horaFormat = new SimpleDateFormat("HH:mm:ss");
@@ -1618,14 +1654,14 @@ public class Utilidades {
         // Obtiene fecha y hora actuales
         Calendar fecha = Calendar.getInstance();
         fecha.setTime(fechaAux);
-        System.out.println("La fecha actual es: " +fechahoraFormat.format(fechaAux));
+        System.out.println(WEB_NAME+"La fecha actual es: " +fechahoraFormat.format(fechaAux));
         
         // Restar minutos a la fecha
         fecha.add(Calendar.MINUTE, (_minutosARestar * -1));
         
         String result = horaFormat.format(fecha.getTimeInMillis());
-        System.out.println("La fecha actual nueva es: " + result);
-        System.out.println("[Utilidades.restarMinsHora](new)resultado: " + result);
+        System.out.println(WEB_NAME+"La fecha actual nueva es: " + result);
+        System.out.println(WEB_NAME+"[Utilidades.restarMinsHora](new)resultado: " + result);
         
         return result;
     }
@@ -1666,5 +1702,100 @@ public class Utilidades {
         }
         
         return dates;
+    }
+    
+    /**
+    * 
+    */
+    private static List<Interval> splitDateTime(long start, long end, int intervalNo) {
+        long interval = (end - start) / intervalNo;
+        List<Interval> list = new ArrayList<>();
+        for (long i = start + interval; i < end; i += interval) {
+            list.add(new Interval(start, i));
+            start=start + interval;
+        }
+        list.add(new Interval(start, end));
+        return list;
+    }
+    
+    
+    /**
+    * Retorna intervalos de tiempo (en horas) 
+    * Sirve para dividir la jornada en partes iguales
+    * 
+    * @param _horaInicioTurno
+    * @param _horaFinTurno
+    * @param _numIntervalos
+    * @return 
+    */
+    public static HashMap<Integer,IntervaloVO> getIntervalos(String _horaInicioTurno, 
+        String _horaFinTurno, int _numIntervalos){
+        
+        HashMap<Integer, IntervaloVO> hashIntervalos = new HashMap<>();
+        SimpleDateFormat sdfHora    = new SimpleDateFormat("HH:mm:ss", new Locale("es","CL"));
+        
+        try{
+            
+            Date dteDesde = sdfHora.parse(_horaInicioTurno);
+            Date dteHasta = sdfHora.parse(_horaFinTurno);
+            
+            List<Interval> listIntervals = splitDateTime(dteDesde.getTime(), dteHasta.getTime(), _numIntervalos);
+            
+            // Creating an instance of ListIterator
+            int iteracion = 1;
+            ListIterator<Interval> iterate = listIntervals.listIterator();
+            System.out.println(WEB_NAME+"[getIntervalos]Iterando intervalos segun jornada...");
+            while(iterate.hasNext()) {
+                Interval intervalo = iterate.next();
+                Date start = intervalo.getStart().toDate();
+                Date end = intervalo.getEnd().toDate();
+                
+                IntervaloVO objIntervalo = new IntervaloVO();
+                objIntervalo.setHoraInicio(sdfHora.format(start));
+                objIntervalo.setHoraFin(sdfHora.format(end));
+                
+                hashIntervalos.put(iteracion, objIntervalo);
+                
+                System.out.println(WEB_NAME+"[getIntervalos]Intervalo[" + iteracion + "]. "
+                    + "Inicio = " + sdfHora.format(start)
+                    + ", fin = " + sdfHora.format(end));
+                iteracion++;
+            }
+           
+        }catch(ParseException pex){
+            System.err.println("[getIntervalos]Error al parsear horas: " + pex.toString());
+        }
+        
+        return hashIntervalos;
+    }
+
+    public static class IntervaloVO {
+
+        private String horaInicio;
+        private String horaFin;
+    
+        public IntervaloVO() {
+        }
+        
+        public String getHoraInicio() {
+            return horaInicio;
+        }
+
+        public void setHoraInicio(String horaInicio) {
+            this.horaInicio = horaInicio;
+        }
+
+        public String getHoraFin() {
+            return horaFin;
+        }
+
+        public void setHoraFin(String horaFin) {
+            this.horaFin = horaFin;
+        }
+
+        @Override
+        public String toString() {
+            return "IntervaloVO{" + "horaInicio=" + horaInicio + ", horaFin=" + horaFin + '}';
+        }
     }
 }

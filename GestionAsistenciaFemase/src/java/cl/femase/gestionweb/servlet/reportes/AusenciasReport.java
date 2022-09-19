@@ -81,20 +81,20 @@ public class AusenciasReport extends BaseServlet {
         } catch (DatabaseException ex) {
             System.err.println("Error: "+ex.toString());
         }
-        System.out.println("[AusenciasReport.processRequestRut]"
+        System.out.println(WEB_NAME+"[AusenciasReport.processRequestRut]"
             + "Abrir conexion a la BD. Datasource: " + m_dbpoolName);
-        System.out.println("[servlet.reportes."
+        System.out.println(WEB_NAME+"[servlet.reportes."
             + "AusenciasReport]tipoParam: "+tipoParam);
         if (tipoParam.compareTo("1") == 0){
             if (_rutParam==null) return null;
             String jasperfile= "detalle_ausencias.jasper";
-            System.out.println("[AusenciasReport]"
+            System.out.println(WEB_NAME+"[AusenciasReport]"
                 + "tipo: " + tipoParam
                 + ", formato: " + formato);
             fileName = "ausencias_"+_rutParam+"."+formato;
             
             String jasperFileName = appProperties.getReportesPath() + File.separator +jasperfile;
-            System.out.println("[AusenciasReport]"
+            System.out.println(WEB_NAME+"[AusenciasReport]"
                 + "jasperfile: " + jasperFileName);
             
             Map parameters = getParameters(request, _rutParam);
@@ -106,7 +106,7 @@ public class AusenciasReport extends BaseServlet {
                     System.err.println("[AusenciasReport]Error: "+ex.toString());
                 }
                 if (formato.compareTo("pdf") == 0){
-                    System.out.println("[processRequestRut]"
+                    System.out.println(WEB_NAME+"[processRequestRut]"
                         + "Generar PDF."
                         + " fileName: " + fileName);
                     try{
@@ -146,7 +146,7 @@ public class AusenciasReport extends BaseServlet {
         String tipoParam = _request.getParameter("tipo");
         HashMap parameters = new HashMap();
                 
-        System.out.println("AusenciasReport."
+        System.out.println(WEB_NAME+"AusenciasReport."
             + "getParameters. "
             + "Param rut= " + _rutEmpleado
             + ", startDate= " +startDateParam
@@ -167,7 +167,7 @@ public class AusenciasReport extends BaseServlet {
         parameters.put("startDate", startDateParam);
         parameters.put("endDate", endDateParam);
             
-        System.out.println("AusenciasReport."
+        System.out.println(WEB_NAME+"AusenciasReport."
             + "getParameters. "
             + "startDate= " +startDateParam
             + ", endDate= " +endDateParam);
@@ -184,7 +184,7 @@ public class AusenciasReport extends BaseServlet {
         LinkedHashMap<String, AsistenciaTotalesVO>  totalesAsistencia 
             = new LinkedHashMap<>();
         EmpleadosBp empleadosBp = new EmpleadosBp(new PropertiesVO());
-        System.out.println("[AusenciasReport.getEmpleados]"
+        System.out.println(WEB_NAME+"[AusenciasReport.getEmpleados]"
             + "empresaId: " + _empresaId
             + ",deptoId: " + _deptoId    
             +", cenco Id: " + _cencoId);
@@ -207,7 +207,7 @@ public class AusenciasReport extends BaseServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(true);
-        System.out.println("[AusenciasReport.doGet]entrando...");
+        System.out.println(WEB_NAME+"[AusenciasReport.doGet]entrando...");
         if (session!=null) session.removeAttribute("mensaje");else session = request.getSession();
         UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
 //
@@ -219,7 +219,7 @@ public class AusenciasReport extends BaseServlet {
         }else{
             session.setAttribute("mensaje", "Sesion de usuario "+request.getParameter("username")
                 +" no valida");
-            System.out.println("Sesion de usuario "+request.getParameter("username")
+            System.out.println(WEB_NAME+"Sesion de usuario "+request.getParameter("username")
                 +" no valida");
             request.getRequestDispatcher("/mensaje.jsp").forward(request, response);
         }
@@ -253,7 +253,7 @@ public class AusenciasReport extends BaseServlet {
         PropertiesVO appProperties  = (PropertiesVO)application.getAttribute("appProperties");
         DetalleAusenciaBp detAusenciasBp = new DetalleAusenciaBp(appProperties);
         
-        System.out.println("[AusenciasReport.doPost]"
+        System.out.println(WEB_NAME+"[AusenciasReport.doPost]"
             + "empresaId: " + empresaId
             + ", deptoId: " + deptoId
             + ", strCencoId: " + strCencoId
@@ -274,7 +274,7 @@ public class AusenciasReport extends BaseServlet {
                 && tipoParam.compareTo("3") != 0){
             //generar informes por centro de costo.
             LinkedHashMap<String, String> archivosGenerados = new LinkedHashMap<>();
-            System.out.println("[AusenciasReport.doPost]"
+            System.out.println(WEB_NAME+"[AusenciasReport.doPost]"
                 + "Generar informes para todos los empleados de "
                 + "empresaId: " + empresaId
                 +", deptoId: " + deptoId
@@ -284,7 +284,7 @@ public class AusenciasReport extends BaseServlet {
             FileGeneratedVO archivoGenerado;
             String nombreCenco="";
             for (EmpleadoVO empleado : listaEmpleados) {
-                System.out.println("[AusenciasReport.doPost]"
+                System.out.println(WEB_NAME+"[AusenciasReport.doPost]"
                     + "Generar informe para empleado rut: " + empleado.getRut()
                     +", nombre: " + empleado.getNombreCompleto());
                 List<DetalleAusenciaVO> ausencias = 
@@ -296,7 +296,7 @@ public class AusenciasReport extends BaseServlet {
                     if (nombreCenco.compareTo("") == 0) nombreCenco = empleado.getCencoNombre();
                     archivoGenerado = processRequestRut(request, response, empleado.getRut());
                     if (archivoGenerado != null){
-                        System.out.println("[AusenciasReport.doPost]Add "
+                        System.out.println(WEB_NAME+"[AusenciasReport.doPost]Add "
                             + "archivo generado: " + archivoGenerado.getFileName());
                         archivosGenerados.put(empleado.getRut(), archivoGenerado.getFilePath());
                     }
@@ -313,11 +313,11 @@ public class AusenciasReport extends BaseServlet {
             }
             
         }else{
-            System.out.println("[AusenciasReport.doPost]"
+            System.out.println(WEB_NAME+"[AusenciasReport.doPost]"
                 + "Generar reporte asistencia solo para el rut: " + rutParam);
             FileGeneratedVO filegenerated=processRequestRut(request, response, rutParam);
             if (filegenerated != null){
-                System.out.println("[AusenciasReport.doPost]Add "
+                System.out.println(WEB_NAME+"[AusenciasReport.doPost]Add "
                     + "archivo generado: " + filegenerated.getFileName());
                 showFileToDownload(filegenerated, tipoParam, formato, response);
                 File auxpdf=new File(filegenerated.getFilePath());
@@ -339,7 +339,7 @@ public class AusenciasReport extends BaseServlet {
         File auxFile = new File(_fileGenerated.getFilePath());
         int length   = 0;
         //pdf
-        System.out.println("[AusenciasReport.showFileToDownload]Generar PDF."
+        System.out.println(WEB_NAME+"[AusenciasReport.showFileToDownload]Generar PDF."
             + " fileName: " + _fileGenerated.getFileName());
         try{
             File pointToFile = new File(_fileGenerated.getFilePath());
@@ -393,7 +393,7 @@ public class AusenciasReport extends BaseServlet {
             + "_"+_cencoNombre + "_todos.pdf");
 
         archivoGenerado=new FileGeneratedVO(mergedFile.getName(), mergedFile.getAbsolutePath());
-        System.out.println("\n[mergePdfFiles]"
+        System.out.println(WEB_NAME+"[mergePdfFiles]"
             + "uniendo archivos en uno solo. "
             + "Path: " + mergedFile.getAbsolutePath());
 
@@ -403,7 +403,7 @@ public class AusenciasReport extends BaseServlet {
             for( String key : _archivos.keySet() ){
                 String pathFile = _archivos.get(key);
                 File itFile = new File(pathFile);
-                System.out.println("[mergePdfFiles]itera archivo " + pathFile);
+                System.out.println(WEB_NAME+"[mergePdfFiles]itera archivo " + pathFile);
                 
                 mergePdf.addSource(itFile);
                 
@@ -414,7 +414,7 @@ public class AusenciasReport extends BaseServlet {
             for( String key : _archivos.keySet() ){
                 String pathFile2 = _archivos.get(key);
                 File itFile2 = new File(pathFile2);
-                System.out.println("[mergePdfFiles]Eliminando archivo " + pathFile2);
+                System.out.println(WEB_NAME+"[mergePdfFiles]Eliminando archivo " + pathFile2);
                 itFile2.delete();
             }
             

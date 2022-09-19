@@ -27,7 +27,7 @@ import org.quartz.JobExecutionException;
  *  
  */
 
-public class TraspasoHistoricosFMCJob implements Job {
+public class TraspasoHistoricosFMCJob extends BaseJobs implements Job {
 
     GetPropertyValues m_properties = new GetPropertyValues();
     
@@ -53,7 +53,7 @@ public class TraspasoHistoricosFMCJob implements Job {
         ProcesosDAO daoProcesos=new ProcesosDAO(null);
         ProcesoEjecucionVO ejecucion=new ProcesoEjecucionVO();
         Date start = new Date();
-        System.out.println("\n[GestionFemase."
+        System.out.println(WEB_NAME+"[GestionFemase."
             + "TraspasoHistoricosFMCJob]"
             + "INICIO - Traspaso a tablas historicas los "
             + "registros con mas de 6 meses de antiguedad. "
@@ -70,7 +70,7 @@ public class TraspasoHistoricosFMCJob implements Job {
         String asuntoMail   = "Sistema de Gestion-Traspaso Historico Fundacion Mi Casa";
         String mailBody = "";
         String mailTo = m_properties.getKeyValue("mailAdmin");
-//        System.out.println("[GestionFemase."
+//        System.out.println(WEB_NAME+"[GestionFemase."
 //            + "TraspasoHistoricosFMCJob]"
 //            + "Enviando correo al admin ("+m_properties.getKeyValue("mailAdmin")+"), "
 //            + "informando que se ha procedido a realizar traspaso a tablas historicas");
@@ -87,13 +87,13 @@ public class TraspasoHistoricosFMCJob implements Job {
             ejecucion.setProcesoId(procesoId);
             ejecucion.setFechaHoraInicioEjecucion(sdf.format(start));
             if (numMarcas > 0) {
-                System.out.println("[GestionFemase."
+                System.out.println(WEB_NAME+"[GestionFemase."
                     + "TraspasoHistoricosFMCJob]"
                     + "Eliminando marcas recien traspasadas a historico");
                 deleteMarcas(empresaId);
             }
             if (numMarcasRechazo > 0) {
-                System.out.println("[GestionFemase."
+                System.out.println(WEB_NAME+"[GestionFemase."
                     + "TraspasoHistoricosFMCJob]"
                     + "Eliminando marcas rechazadas recien traspasadas a historico");
                 deleteMarcasRechazadas(empresaId);
@@ -101,19 +101,19 @@ public class TraspasoHistoricosFMCJob implements Job {
             }
             
             if (numDetallesAsistencia > 0) {
-                System.out.println("[GestionFemase."
+                System.out.println(WEB_NAME+"[GestionFemase."
                     + "TraspasoHistoricosFMCJob]"
                     + "Eliminando detalle_asistencia recien traspasadas a historico");
                 deleteAsistencias(empresaId);
             }
             if (numAusencias > 0) {
-                System.out.println("[GestionFemase."
+                System.out.println(WEB_NAME+"[GestionFemase."
                     + "TraspasoHistoricosFMCJob]"
                     + "Eliminando detalle_ausencia recien traspasadas a historico");
                 deleteAusencias(empresaId);
             }
             if (numLogEventos > 0) {
-                System.out.println("[GestionFemase."
+                System.out.println(WEB_NAME+"[GestionFemase."
                     + "TraspasoHistoricosFMCJob]"
                     + "Eliminando log de eventos recien traspasadas a historico");
                 deleteLogEventos(empresaId);
@@ -138,7 +138,7 @@ public class TraspasoHistoricosFMCJob implements Job {
                 + "<p>Log eventos = " + numLogEventos + ",</p>"
                 + "<p>Detalle asistencia = " + numDetallesAsistencia + ",</p>"
                 + "<br><br><b> Atte. Equipo Soporte FEMASE</b>";
-            System.out.println("[GestionFemase."
+            System.out.println(WEB_NAME+"[GestionFemase."
                 + "TraspasoHistoricosFMCJob]"
                 + "Registros historicos insertados:"
                 + "Marcas = " + numMarcas + ","    
@@ -146,7 +146,7 @@ public class TraspasoHistoricosFMCJob implements Job {
                 + "Log eventos = " + numLogEventos + ","
                 + "Detalle asistencia = " + numDetallesAsistencia);
             MailSender.sendWithAttachment(null, fromLabel, fromMail, mailTo, asuntoMail,mailBody);    
-            System.out.println("\n[GestionFemase."
+            System.out.println(WEB_NAME+"[GestionFemase."
                 + "TraspasoHistoricosFMCJob]"
                 + "FIN - Traspaso historico. "
                 + "End at " + new Date());
@@ -378,7 +378,7 @@ public class TraspasoHistoricosFMCJob implements Job {
                 + " where fecha_ingreso::date < (current_date - interval '6 month')::date "
                     + "and empleado.empresa_id='" + _empresaId + "'";
 
-            //System.out.println("[insertAusenciasHistoricas]sql: "+sql);
+            //System.out.println(WEB_NAME+"[insertAusenciasHistoricas]sql: "+sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,"[TraspasoHistoricosFMCJob.insertAusenciasHistoricas]");
             ps = dbConn.prepareStatement(sql);

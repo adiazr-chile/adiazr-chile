@@ -102,7 +102,7 @@ public class TurnosRotativosController extends BaseServlet {
         TurnoRotativoBp turnoRotativoBp                 = new TurnoRotativoBp(appProperties);
                 
         if(request.getParameter("action") != null){
-            System.out.println("[TurnosRotativosController]"
+            System.out.println(WEB_NAME+"[TurnosRotativosController]"
                 + "action is: " + request.getParameter("action"));
             List<TurnoRotativoVO> listaObjetos = new ArrayList<TurnoRotativoVO>();
             String action=(String)request.getParameter("action");
@@ -123,6 +123,7 @@ public class TurnosRotativosController extends BaseServlet {
             /** filtros de busqueda */
             String filtroNombre      = "";
             String filtroEmpresa     = "";
+            int filtroEstado = -1;
             
             if (request.getParameter("jtStartIndex") != null) 
                 startPageIndex = Integer.parseInt(request.getParameter("jtStartIndex"));
@@ -143,10 +144,13 @@ public class TurnosRotativosController extends BaseServlet {
                 filtroNombre  = request.getParameter("filtroNombre");
             if (request.getParameter("filtroEmpresa") != null) 
                 filtroEmpresa = request.getParameter("filtroEmpresa");
+            if (request.getParameter("filtroEstado") != null) 
+                filtroEstado = Integer.parseInt(request.getParameter("filtroEstado"));
             
-            System.out.println("Mantenedor - Turnos Rotativos - "
+            System.out.println(WEB_NAME+"Mantenedor - Turnos Rotativos - "
                 + "Buscar empresa = " + filtroEmpresa
-                + ", nombre turno: " + filtroNombre);
+                + ", nombre turno: " + filtroNombre
+                + ", estado: " + filtroEstado);
             
             //objeto usado para update/insert
             TurnoRotativoVO turnoRotativoVO = new TurnoRotativoVO();
@@ -194,19 +198,22 @@ public class TurnosRotativosController extends BaseServlet {
             session.removeAttribute("asignados_turno_rotativo");
                         
             if (action.compareTo("list") == 0) {
-                System.out.println("Mantenedor - Turnos Rotativos - "
+                System.out.println(WEB_NAME+"Mantenedor - Turnos Rotativos - "
                     + "mostrando turnos...");
                 try{
                     int objectsCount = 0;
                     if (filtroEmpresa != null && filtroEmpresa.compareTo("-1") != 0){ 
                         listaObjetos = turnoRotativoBp.getTurnos(filtroEmpresa, 
                             filtroNombre, 
+                            filtroEstado,
                             startPageIndex, 
                             numRecordsPerPage, 
                             jtSorting);
                         //Get Total Record Count for Pagination
                         objectsCount =
-                            turnoRotativoBp.getTurnosCount(filtroEmpresa, filtroNombre);
+                            turnoRotativoBp.getTurnosCount(filtroEmpresa, 
+                                filtroNombre, 
+                                filtroEstado);
                     }
                     
                     //Convert Java Object to Json
@@ -222,7 +229,7 @@ public class TurnosRotativosController extends BaseServlet {
                     listData="{\"Result\":\"OK\",\"Records\":" + 
                         listData+",\"TotalRecordCount\": " + 
                         objectsCount + "}";
-                    //System.out.println("[TurnosRotativosController]json data: "+listData);
+                    //System.out.println(WEB_NAME+"[TurnosRotativosController]json data: "+listData);
                     response.getWriter().print(listData);
                     //request.getRequestDispatcher("/mantenedores/mantenedoresFrmSet.jsp").forward(request, response);
                 }catch(Exception ex){
@@ -231,7 +238,7 @@ public class TurnosRotativosController extends BaseServlet {
                     ex.printStackTrace();
                 }   
             }else if (action.compareTo("create") == 0) {
-                    System.out.println("Mantenedor - Turnos Rotativos- Insertar Turno...");
+                    System.out.println(WEB_NAME+"Mantenedor - Turnos Rotativos- Insertar Turno...");
                     MaintenanceVO doCreate = turnoRotativoBp.insert(turnoRotativoVO, resultado);					
                     
                     //enviar correo informando el evento de creacion de marca
@@ -244,7 +251,7 @@ public class TurnosRotativosController extends BaseServlet {
                     String listData="{\"Result\":\"OK\",\"Record\":"+json+"}";											
                     response.getWriter().print(listData);
             }else if (action.compareTo("update") == 0) {  
-                    System.out.println("Mantenedor - Turnos - "
+                    System.out.println(WEB_NAME+"Mantenedor - Turnos - "
                         + "Actualizar Turno Rotativo ID: "+ turnoRotativoVO.getId());
                     try{
                         
@@ -254,12 +261,13 @@ public class TurnosRotativosController extends BaseServlet {
                         }
                         listaObjetos = turnoRotativoBp.getTurnos(turnoRotativoVO.getEmpresaId(), 
                             null, 
+                            -1,
                             startPageIndex, 
                             numRecordsPerPage, 
                             "nombre_turno");
                         //Get Total Record Count for Pagination
                         int objectsCount = 
-                            turnoRotativoBp.getTurnosCount(turnoRotativoVO.getEmpresaId(), filtroNombre);
+                            turnoRotativoBp.getTurnosCount(turnoRotativoVO.getEmpresaId(), filtroNombre, filtroEstado);
                                        
                         //Convert Java Object to Json
                         JsonElement element = gson.toJsonTree(listaObjetos,
@@ -274,7 +282,7 @@ public class TurnosRotativosController extends BaseServlet {
                         listData="{\"Result\":\"OK\",\"Records\":" + 
                             listData+",\"TotalRecordCount\": " + 
                             objectsCount + "}";
-                        //System.out.println("[TurnosRotativosController]json data: "+listData);
+                        //System.out.println(WEB_NAME+"[TurnosRotativosController]json data: "+listData);
                         response.getWriter().print(listData);
                         
 //                        //Convert Java Object to Json
@@ -300,7 +308,7 @@ public class TurnosRotativosController extends BaseServlet {
                     String paramFechasLaborales = request.getParameter("input_dias_laborales");
                     String paramFechasLibres    = request.getParameter("input_dias_libres");
                     
-                    System.out.println("\n\n[Mantenedor - "
+                    System.out.println(WEB_NAME+"\n[Mantenedor - "
                         + "Turnos Rotativos]- "
                         + "Guardar Asignacion "
                         + "de empleados "
@@ -334,7 +342,7 @@ public class TurnosRotativosController extends BaseServlet {
                     abuscar.setMes(intMes);
                     TurnoRotativoDetalleVO detalleTurno = turnoRotativoDetalleBp.getDetalleTurno(abuscar);
                     
-                    System.out.println("\n\n[Mantenedor - "
+                    System.out.println(WEB_NAME+"\n[Mantenedor - "
                         + "Turnos Rotativos]- "
                         + "Cargar Asignacion para el empleado "
                         + " empresaId: " + paramEmpresa
@@ -351,7 +359,7 @@ public class TurnosRotativosController extends BaseServlet {
                     ArrayList<String> diasLaborales = new ArrayList<>();
                     ArrayList<String> diasLibres = new ArrayList<>();
                     if (detalleTurno != null){
-                        System.out.println("\n\n[Mantenedor - "
+                        System.out.println(WEB_NAME+"\n[Mantenedor - "
                         + "Turnos Rotativos]- Detalle turno. "
                         + "Dias laborales: " + detalleTurno.getDiasLaborales()
                         + ", Dias libres: " + detalleTurno.getDiasLibres());
@@ -420,7 +428,7 @@ public class TurnosRotativosController extends BaseServlet {
                         String paramFechasLaborales = request.getParameter("input_dias_laborales");
                         String paramFechasLibres    = request.getParameter("input_dias_libres");
 
-                        System.out.println("\n\n[Mantenedor - "
+                        System.out.println(WEB_NAME+"\n[Mantenedor - "
                             + "Turnos Rotativos]- "
                             + "Modificar Asignacion para el empleado. "
                             + " empresaId: " + paramEmpresa
@@ -438,7 +446,7 @@ public class TurnosRotativosController extends BaseServlet {
                         request.getRequestDispatcher("/mantencion/modif_asig_turno_rotativo.jsp").forward(request, response);        
             }
 //            else if (action.compareTo("edit") == 0) {  
-//                    System.out.println("Mantenedor - Turnos Rotativos- Mostrar datos para edicion");
+//                    System.out.println(WEB_NAME+"Mantenedor - Turnos Rotativos- Mostrar datos para edicion");
 //                    try{
 //                       // get info del turno
 //                        TurnoRotativoVO detalleTurno = turnoRotativoBp.getTurno(idTurno);
@@ -455,7 +463,7 @@ public class TurnosRotativosController extends BaseServlet {
 //            }
 //            else 
 //                if (action.compareTo("insert") == 0) {  
-//                    System.out.println("Mantenedor - Turnos Rotativos- Insertar nuevo turno");
+//                    System.out.println(WEB_NAME+"Mantenedor - Turnos Rotativos- Insertar nuevo turno");
 //                    try{
 //                       // get info del turno
 //                        TurnoRotativoVO detalleTurno = turnoRotativoBp.getTurno(idTurno);
@@ -471,7 +479,7 @@ public class TurnosRotativosController extends BaseServlet {
 //                    }
             
 //            else if (action.compareTo("asignacion_start") == 0) {  
-//                    System.out.println("Mantenedor - Turnos Rotativos"
+//                    System.out.println(WEB_NAME+"Mantenedor - Turnos Rotativos"
 //                        + "- Mostrar Formulario Asignacion "
 //                            + "masiva de Turnos");
 //                    
@@ -486,7 +494,7 @@ public class TurnosRotativosController extends BaseServlet {
 //                    request.getRequestDispatcher("/mantencion/asignacion_turnos.jsp").forward(request, response);        
 //            }
 //            else if (action.compareTo("load_asignacion") == 0) {
-//                    System.out.println("\n\nMantenedor - Turnos Rotativos"
+//                    System.out.println(WEB_NAME+"\nMantenedor - Turnos Rotativos"
 //                        + "- Mostrar Asignacion "
 //                        + "para el turno: " + 
 //                            idTurno);
@@ -533,17 +541,17 @@ public class TurnosRotativosController extends BaseServlet {
            StringTokenizer tokenFechasLaborales = new StringTokenizer(_fechasLaborales, ",");//n elementos como fechas se hayan seleccionado
            while (tokenFechasLaborales.hasMoreTokens()){
                String tuplaFecha = tokenFechasLaborales.nextToken();//2017-11|2017-11-09
-               System.out.println("[TurnosRotativosController]tuplaFecha: " + tuplaFecha);
+               System.out.println(WEB_NAME+"[TurnosRotativosController]tuplaFecha: " + tuplaFecha);
                StringTokenizer tokenTuplaFechaLaboral = new StringTokenizer(tuplaFecha, "|");//2 elementos
                while (tokenTuplaFechaLaboral.hasMoreTokens()){
                    String anioMesKey = tokenTuplaFechaLaboral.nextToken().trim();//2017-11 (KEY)
-                   System.out.println("[TurnosRotativosController]anioMesKey: " + anioMesKey);
+                   System.out.println(WEB_NAME+"[TurnosRotativosController]anioMesKey: " + anioMesKey);
                    hashAnioMes.put(anioMesKey,anioMesKey);
 
                    StringTokenizer tokenAnioMes = new StringTokenizer(anioMesKey, "-");//2 elementos {anio, mes}
                    String auxanio=tokenAnioMes.nextToken().trim();
                    String auxames=tokenAnioMes.nextToken();
-                   System.out.println("[TurnosRotativosController]"
+                   System.out.println(WEB_NAME+"[TurnosRotativosController]"
                        + "auxAnio: " + auxanio+", auxMes: "+auxames);
                    int intAnio = Integer.parseInt(auxanio);
                    int intMes = Integer.parseInt(auxames);
@@ -581,14 +589,14 @@ public class TurnosRotativosController extends BaseServlet {
 
        //itera anio-mes
        hashAnioMes.values().stream().forEach((aniomesKey) -> {
-           System.out.println("\n[TurnosRotativosController]AnioMesKey = " + aniomesKey);
+           System.out.println(WEB_NAME+"[TurnosRotativosController]AnioMesKey = " + aniomesKey);
            ArrayList<DetalleFechasTurnoRotativoVO> listaFechas = new ArrayList<>();
 
            //------------ itera fechas laborales --------------------
            hashFechasLaborales.values().stream().forEach((objFechaLaboral) -> {
                final DetalleFechasTurnoRotativoVO detalleFechaLaboral = new DetalleFechasTurnoRotativoVO();
                if (objFechaLaboral.getAnioMes().compareTo(aniomesKey) == 0){
-                   System.out.println("[TurnosRotativosController]Add fecha laboral = " + objFechaLaboral.toString());
+                   System.out.println(WEB_NAME+"[TurnosRotativosController]Add fecha laboral = " + objFechaLaboral.toString());
                    detalleFechaLaboral.setFechaLaboral(objFechaLaboral);
                    listaFechas.add(detalleFechaLaboral);
                }
@@ -598,7 +606,7 @@ public class TurnosRotativosController extends BaseServlet {
            hashFechasLibres.values().stream().forEach((objFechaLibre) -> {
                if (objFechaLibre.getAnioMes().compareTo(aniomesKey) == 0){
                    final DetalleFechasTurnoRotativoVO detalleFechaLibre = new DetalleFechasTurnoRotativoVO();
-                   System.out.println("[TurnosRotativosController]Add fecha libre = " + objFechaLibre.toString());
+                   System.out.println(WEB_NAME+"[TurnosRotativosController]Add fecha libre = " + objFechaLibre.toString());
                    detalleFechaLibre.setFechaLibre(objFechaLibre);
                    listaFechas.add(detalleFechaLibre);
                }
@@ -611,7 +619,7 @@ public class TurnosRotativosController extends BaseServlet {
        if (_empleados!=null){
            ArrayList<TurnoRotativoDetalleVO> detallesTR=new ArrayList<>();
            for (String rutEmpleado : _empleados) {
-               System.out.println("[TurnosRotativosController]"
+               System.out.println(WEB_NAME+"[TurnosRotativosController]"
                    + "rutEmpleado = " + rutEmpleado);
                if (rutEmpleado.compareTo("-1") != 0){
                    String diasLaborales    = "";
@@ -627,17 +635,17 @@ public class TurnosRotativosController extends BaseServlet {
                        int intAnio = Integer.parseInt(tokenAnioMes.nextToken());
                        int intMes = Integer.parseInt(tokenAnioMes.nextToken());
 
-                       System.out.println("\n[TurnosRotativosController]AnioMesKey = " + aniomesKey);
+                       System.out.println(WEB_NAME+"[TurnosRotativosController]AnioMesKey = " + aniomesKey);
                        ArrayList<DetalleFechasTurnoRotativoVO> listaFechas = hashFechas.get(aniomesKey);
                        Iterator<DetalleFechasTurnoRotativoVO> fechasIterator = listaFechas.iterator();
                        while (fechasIterator.hasNext()) {
                            DetalleFechasTurnoRotativoVO infoFecha=fechasIterator.next();
                            if (infoFecha.getFechaLaboral() != null){
-                               System.out.println("[TurnosRotativosController]"
+                               System.out.println(WEB_NAME+"[TurnosRotativosController]"
                                    + "detalleFechas.fechaLaboral = " + infoFecha.getFechaLaboral().toString());
                                diasLaborales += infoFecha.getFechaLaboral().getFecha()+",";
                            }else{
-                               System.out.println("[TurnosRotativosController]"
+                               System.out.println(WEB_NAME+"[TurnosRotativosController]"
                                    + "detalleFechas.fechaLibre = " + infoFecha.getFechaLibre().toString());
                                diasLibres += infoFecha.getFechaLibre().getFecha()+",";
                            }
@@ -652,7 +660,7 @@ public class TurnosRotativosController extends BaseServlet {
                             diasLibres      = Utilidades.getValoresOrdenados(diasLibres, ",");
                        }
                       
-                       System.out.println("\n\n[Mantenedor - "
+                       System.out.println(WEB_NAME+"\n[Mantenedor - "
                            + "Turnos Rotativos]- "
                            + "Insertar Asignacion turno rotativo."
                            + "EmpresaId: " + _empresaId
@@ -683,7 +691,7 @@ public class TurnosRotativosController extends BaseServlet {
            turnoRotativoDetalleBp.saveList(detallesTR);
            turnoRotativoDetalleBp.openDbConnection();
        }else {
-           System.out.println("\n\n[Mantenedor - Asignacion Turnos Rotativos"
+           System.out.println(WEB_NAME+"\n[Mantenedor - Asignacion Turnos Rotativos"
            + "]- No hay empleados asignados para el Turno: " + 
                _idTurno);
        }

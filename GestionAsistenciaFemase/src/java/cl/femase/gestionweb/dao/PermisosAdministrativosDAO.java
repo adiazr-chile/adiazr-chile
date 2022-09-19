@@ -76,29 +76,36 @@ public class PermisosAdministrativosDAO extends BaseDAO{
         MaintenanceVO objresultado = new MaintenanceVO();
         PreparedStatement psupdate = null;
         int result=0;
+        Date currentDate = new Date();
+        int semestreActual = Utilidades.getSemestre(currentDate);
+        double diasDisponiblesSemestre = _data.getDiasDisponiblesSemestre1();
+        double diasUtilizadosSemestre = _data.getDiasUtilizadosSemestre1();
+        if (semestreActual == 2){
+            diasDisponiblesSemestre = _data.getDiasDisponiblesSemestre2();
+            diasUtilizadosSemestre = _data.getDiasUtilizadosSemestre2();
+        }
         String msgError = "Error al actualizar "
             + "resumen Permiso Administrativo, "
             + "EmpresaId: " + _data.getEmpresaId()
             + ", rutEmpleado: " + _data.getRunEmpleado()    
             + ", anio: " + _data.getAnio()
-            + ", dias_disponibles: " + _data.getDiasDisponibles()
-            + ", dias_utilizados: " + _data.getDiasUtilizados();
+            + ", dias_disponibles semestre (" + semestreActual + " ): " + diasDisponiblesSemestre
+            + ", dias_utilizados (" + semestreActual + " ): " + diasUtilizadosSemestre;
         
         try{
             String msgFinal = " Actualiza resumen Permiso Administrativo:"
                 + "EmpresaId [" + _data.getEmpresaId() + "]" 
                 + ", runEmpleado [" + _data.getRunEmpleado() + "]"    
                 + ", anio [" + _data.getAnio() + "]"
-                + ", dias_disponibles [" + _data.getDiasDisponibles() + "]"
-                + ", dias_utilizados [" + _data.getDiasUtilizados() + "]";
+                + ", dias_disponibles (" + semestreActual + " )[" + diasDisponiblesSemestre + "]"
+                + ", dias_utilizados (" + semestreActual + " )[" + diasUtilizadosSemestre + "]";
             
             System.out.println(msgFinal);
             objresultado.setMsg(msgFinal);
-            
             String sql = "UPDATE permiso_administrativo "
                 + "SET "
-                    + "dias_disponibles = ?, "
-                    + "dias_utilizados = ?, "
+                    + "dias_disponibles_semestre" + semestreActual + "= ?, "
+                    + "dias_utilizados_semestre" + semestreActual + "= ?, "
                     + "last_update = current_timestamp "
                 + "WHERE empresa_id = ? "
                     + "and run_empleado = ? "
@@ -106,8 +113,8 @@ public class PermisosAdministrativosDAO extends BaseDAO{
 
             dbConn = dbLocator.getConnection(m_dbpoolName,"[PermisosAdministrativosDAO.updateResumenPA]");
             psupdate = dbConn.prepareStatement(sql);
-            psupdate.setDouble(1,  _data.getDiasDisponibles());
-            psupdate.setDouble(2,  _data.getDiasUtilizados());
+            psupdate.setDouble(1,  diasDisponiblesSemestre);
+            psupdate.setDouble(2,  diasUtilizadosSemestre);
             
             //filtro update            
             psupdate.setString(3, _data.getEmpresaId());
@@ -116,11 +123,11 @@ public class PermisosAdministrativosDAO extends BaseDAO{
             
             int rowAffected = psupdate.executeUpdate();
             if (rowAffected == 1){
-                System.out.println("[PermisosAdministrativosDAO.updateResumenPA]"
+                System.out.println(WEB_NAME+"[PermisosAdministrativosDAO.updateResumenPA]"
                    + ", empresaId:" + _data.getEmpresaId()
                     + ", runEmpleado:" + _data.getRunEmpleado()    
-                    + ", dias_disponibles:" +_data.getDiasDisponibles()
-                    + ", dias_utilizados:" + _data.getDiasUtilizados()
+                    + ", dias_disponibles:" + diasDisponiblesSemestre
+                    + ", dias_utilizados:" + diasUtilizadosSemestre
                     + " actualizado OK!");
             }
 
@@ -143,65 +150,149 @@ public class PermisosAdministrativosDAO extends BaseDAO{
 
         return objresultado;
     }
-
+    
     /**
-    * Reinicie el número de días de 'permisos administrativos' (disponibles y utilizados)
-    * Esto es: 
-    *   Insertar un nuevo registro en la tabla 'permiso_administrativo' 
-    *   para el año sgte al anio especificado con dias_disponibles=NUM_MAXIMO y dias_utilizados = 0.
+    * Actualiza dias disponibles y dias_utilizados del semestre especificado
     * 
     * @param _empresaId
-    * @param _maximoDiasPA
+    * @param _anio
+    * @param _maximoDiasSemestre
+    * @param _semestre
+    * @return 
+    */
+    public MaintenanceVO updateDiasAdministrativosSemestre(String _empresaId, 
+            int _anio, 
+            int _semestre,
+            int _maximoDiasSemestre){
+        MaintenanceVO objresultado = new MaintenanceVO();
+        PreparedStatement psupdate = null;
+        int result=0;
+        String msgError = "Error al actualizar "
+            + "resumen Permiso Administrativo, "
+            + "EmpresaId: " + _empresaId
+            + ", anio: " + _anio
+            + ", semestre: " + _semestre;
+        int semestrePrevio = 1;
+        if (_semestre == 1){
+            semestrePrevio = 2;
+        }
+        
+        try{
+            String msgFinal = " Actualiza resumen Permiso Administrativo:"
+                + "EmpresaId [" + _empresaId + "]" 
+                + ", anio [" + _anio + "]"
+                + ", semestre [" + _semestre + "]";
+            
+            System.out.println(msgFinal);
+            objresultado.setMsg(msgFinal);
+            
+            String sql = "UPDATE permiso_administrativo "
+                + "SET "
+                    + "dias_disponibles_semestre" + semestrePrevio + " = 0, "
+                    + "dias_disponibles_semestre" + _semestre + " = ?, "
+                    + "dias_utilizados_semestre" + _semestre + " = 0, "
+                    + "last_update = current_timestamp "
+                + "WHERE empresa_id = ? "
+                    + "and anio = ?";
+
+            dbConn = dbLocator.getConnection(m_dbpoolName,"[PermisosAdministrativosDAO.updateDiasAdministrativosSemestre]");
+            psupdate = dbConn.prepareStatement(sql);
+            psupdate.setDouble(1,  _maximoDiasSemestre);
+            
+            //filtro update            
+            psupdate.setString(2, _empresaId);
+            psupdate.setInt(3, _anio);
+            
+            int rowAffected = psupdate.executeUpdate();
+            if (rowAffected == 1){
+                System.out.println(WEB_NAME+"[PermisosAdministrativosDAO.updateDiasAdministrativosSemestre]"
+                   + ", empresaId:" + _empresaId
+                    + ", anio:" + _anio    
+                    + ", semestre:" + _semestre
+                    + " actualizado OK!");
+            }
+
+            psupdate.close();
+            dbLocator.freeConnection(dbConn);
+        }catch(SQLException|DatabaseException sqle){
+            System.err.println("[PermisosAdministrativosDAO.updateDiasAdministrativosSemestre]"
+                + "update Error: " + sqle.toString());
+            objresultado.setThereError(true);
+            objresultado.setCodError(result);
+            objresultado.setMsgError(msgError+" :"+sqle.toString());
+        }finally{
+            try {
+                if (psupdate!=null) psupdate.close();
+                dbLocator.freeConnection(dbConn);
+            } catch (SQLException ex) {
+                System.err.println("[PermisosAdministrativosDAO.updateDiasAdministrativosSemestre]Error: "+ex.toString());
+            }
+        }
+
+        return objresultado;
+    }
+
+    /**
+    * Reinicia el número de días de 'permisos administrativos' de un semestre (disponibles y utilizados)
+    * Para todos los empleados de la empresa indicada
+    * Esto es: 
+    *   Insertar un nuevo registro en la tabla 'permiso_administrativo' 
+    *   
+    * @param _empresaId
+    * @param _maximoDiasSemestre
     * @param _currentYear
+    * @param _semestre
     * 
     * @return 
     */
-    public MaintenanceVO resetearDiasAdministrativosAnio(String _empresaId, 
-            int _maximoDiasPA,
-            int _currentYear){
+    public MaintenanceVO resetearDiasAdministrativosSemestre(String _empresaId, 
+            int _maximoDiasSemestre,
+            int _currentYear, 
+            int _semestre){
         MaintenanceVO objresultado = new MaintenanceVO();
         int result=0;
         String msgError = "Error al retetear "
-            + "Resumen Permiso Administrativo para el anio " + _currentYear
+            + "Resumen Permiso Administrativo para el "
+            + "anio-semestre: " + _currentYear + "-" + _semestre
             + ", empresaId: " + _empresaId
-            + ", maximo dias PA: " + _maximoDiasPA;
+            + ", maximo dias PA Semestre: " + _maximoDiasSemestre;
         
         String msgFinal = " Inserta Resumen Permiso Administrativo:"
             + " Anio [" + _currentYear 
+            + ", semestre [" + _semestre     
             + ", empresaId [" + _empresaId 
-            + ", runEmpleado [" + _empresaId + "]"    
-            + ", maximo dias PA [" + _maximoDiasPA + "]";
+            + ", maximo dias Semestre [" + _maximoDiasSemestre + "]";
        
         objresultado.setMsg(msgFinal);
         PreparedStatement insert    = null;
-        
+       
         try{
             String sql = "INSERT INTO permiso_administrativo("
                 + "empresa_id, "
                 + "run_empleado, "
                 + "anio, "
-                + "dias_disponibles, "
-                + "dias_utilizados, "
+                + "dias_disponibles_semestre" + _semestre + ", "
+                + "dias_utilizados_semestre" + _semestre + ", "
                 + "last_update) "
                 + "select empresa_id, empl_rut, "
-                    + _currentYear + "," + _maximoDiasPA + ",0,current_timestamp "
+                    + _currentYear + "," + _maximoDiasSemestre + ",0,current_timestamp "
                     + "from empleado "
                     + "where empleado.empresa_id= '" + _empresaId + "' and empl_estado = 1 "
                     + "and empl_fec_fin_contrato >= current_date";
 
-            dbConn = dbLocator.getConnection(m_dbpoolName,"[PermisosAdministrativosDAO.resetearDiasAdministrativosAnio]");
+            dbConn = dbLocator.getConnection(m_dbpoolName,"[PermisosAdministrativosDAO.resetearDiasAdministrativosSemestre]");
             insert = dbConn.prepareStatement(sql);
                         
             int filasAfectadas = insert.executeUpdate();
             if (filasAfectadas > 0){
-                System.out.println("[PermisosAdministrativosDAO.resetearDiasAdministrativosAnio]"
+                System.out.println(WEB_NAME+"[PermisosAdministrativosDAO.resetearDiasAdministrativosSemestre]"
                     + "Reseteo de Resumen PA OK, Anio: " + _currentYear+", filas afectadas= " + filasAfectadas);
             }
             
             insert.close();
             dbLocator.freeConnection(dbConn);
         }catch(SQLException|DatabaseException sqle){
-            System.err.println("[PermisosAdministrativosDAO.resetearDiasAdministrativosAnio]"
+            System.err.println("[PermisosAdministrativosDAO.resetearDiasAdministrativosSemestre]"
                 + "Error1: " + sqle.toString());
             objresultado.setThereError(true);
             objresultado.setCodError(result);
@@ -211,7 +302,7 @@ public class PermisosAdministrativosDAO extends BaseDAO{
                 if (insert != null) insert.close();
                 dbLocator.freeConnection(dbConn);
             } catch (SQLException ex) {
-                System.err.println("[PermisosAdministrativosDAO.resetearDiasAdministrativosAnio]"
+                System.err.println("[PermisosAdministrativosDAO.resetearDiasAdministrativosSemestre]"
                     + "Error: " + ex.toString());
             }
         }
@@ -219,82 +310,79 @@ public class PermisosAdministrativosDAO extends BaseDAO{
         return objresultado;
     }
     
-    /**
-    * Agrega un nuevo registro de Permiso Administrativo
-    * 
-    * @param _data
-    * @return 
-    */
-    public MaintenanceVO insertResumenPA(PermisoAdministrativoVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
-        int result=0;
-        String msgError = "Error al insertar "
-            + "Resumen Permiso Administrativo, "
-            + "EmpresaId: " + _data.getEmpresaId()
-            + ", runEmpleado: " + _data.getRunEmpleado()    
-            + ", anio: " + _data.getAnio()
-            + ", dias_disponibles: " + _data.getDiasDisponibles()
-            + ", dias_utilizados: " + _data.getDiasUtilizados();
-        
-        String msgFinal = " Inserta Resumen Permiso Administrativo:"
-            + "EmpresaId [" + _data.getEmpresaId() + "]" 
-            + ", runEmpleado [" + _data.getRunEmpleado() + "]"    
-            + ", anio [" + _data.getAnio() + "]"
-            + ", dias_disponibles [" + _data.getDiasDisponibles() + "]"
-            + ", dias_utilizados [" + _data.getDiasUtilizados() + "]";
-       
-        objresultado.setMsg(msgFinal);
-        PreparedStatement insert    = null;
-        
-        try{
-            String sql = "INSERT INTO permiso_administrativo "
-                + "(empresa_id, "
-                + "run_empleado, "
-                + "anio, "
-                + "dias_disponibles, "
-                + "dias_utilizados, "
-                + "last_update) "
-                + "VALUES (?, ?, ?, ?, ?, current_timestamp)";
-
-            dbConn = dbLocator.getConnection(m_dbpoolName,"[PermisosAdministrativosDAO.insertResumenPA]");
-            insert = dbConn.prepareStatement(sql);
-            insert.setString(1,  _data.getEmpresaId());
-            insert.setString(2,  _data.getRunEmpleado());
-            insert.setInt(3,  _data.getAnio());
-            insert.setDouble(4,  _data.getDiasDisponibles());
-            insert.setDouble(5,  _data.getDiasUtilizados());
-                        
-            int filasAfectadas = insert.executeUpdate();
-            if (filasAfectadas == 1){
-                System.out.println("[PermisosAdministrativosDAO.insertResumenPA]"
-                    + "EmpresaId:" + _data.getEmpresaId()
-                    + ", rutEmpleado:" + _data.getRunEmpleado()    
-                    + ", anio:" +_data.getAnio()
-                    + ", dias_utilizados:" + _data.getDiasUtilizados()
-                    + ", dias_disponibles:" + _data.getDiasDisponibles()
-                    + " insertado OK!");
-            }
-            
-            insert.close();
-            dbLocator.freeConnection(dbConn);
-        }catch(SQLException|DatabaseException sqle){
-            System.err.println("[PermisosAdministrativosDAO.insertResumenPA]"
-                + "Error1: " + sqle.toString());
-            objresultado.setThereError(true);
-            objresultado.setCodError(result);
-            objresultado.setMsgError(msgError+" :"+sqle.toString());
-        }finally{
-            try {
-                if (insert != null) insert.close();
-                dbLocator.freeConnection(dbConn);
-            } catch (SQLException ex) {
-                System.err.println("[PermisosAdministrativosDAO.insertResumenPA]"
-                    + "Error: " + ex.toString());
-            }
-        }
-
-        return objresultado;
-    }
+////    /**
+////    * Agrega un nuevo registro de Permiso Administrativo
+////    * 
+////    * @param _data
+////    * @return 
+////    */
+////    public MaintenanceVO insertResumenPASemestre1(PermisoAdministrativoVO _data){
+////        MaintenanceVO objresultado = new MaintenanceVO();
+////        int result=0;
+////        String msgError = "Error al insertar "
+////            + "Resumen Permiso Administrativo (1er semestre), "
+////            + "EmpresaId: " + _data.getEmpresaId()
+////            + ", runEmpleado: " + _data.getRunEmpleado()    
+////            + ", anio: " + _data.getAnio()
+////            + ", dias_disponibles_1erSemestre: " + _data.getDiasDisponiblesSemestre1()
+////            + ", dias_utilizados_1erSemestre: " + _data.getDiasUtilizadosSemestre1();
+////        
+////        String msgFinal = " Inserta Resumen Permiso Administrativo (1er semestre):"
+////            + "EmpresaId [" + _data.getEmpresaId() + "]" 
+////            + ", runEmpleado [" + _data.getRunEmpleado() + "]"    
+////            + ", anio [" + _data.getAnio() + "]"
+////            + ", dias_disponibles [" + _data.getDiasDisponiblesSemestre1() + "]"
+////            + ", dias_utilizados [" + _data.getDiasUtilizadosSemestre1() + "]";
+////       
+////        objresultado.setMsg(msgFinal);
+////        PreparedStatement insert    = null;
+////        
+////        try{
+////            String sql = "INSERT INTO permiso_administrativo("
+////                + "empresa_id, run_empleado, anio, "
+////                + "dias_disponibles_semestre1, "
+////                + "dias_utilizados_semestre1, last_update) "
+////                + "VALUES (?, ?, ?, ?, ?, current_timestamp)";
+////
+////            dbConn = dbLocator.getConnection(m_dbpoolName,"[PermisosAdministrativosDAO.insertResumenPASemestre1]");
+////            insert = dbConn.prepareStatement(sql);
+////            insert.setString(1,  _data.getEmpresaId());
+////            insert.setString(2,  _data.getRunEmpleado());
+////            insert.setInt(3,  _data.getAnio());
+////            insert.setDouble(4,  _data.getDiasDisponiblesSemestre1());
+////            insert.setDouble(5,  _data.getDiasUtilizadosSemestre1());
+////                        
+////            int filasAfectadas = insert.executeUpdate();
+////            if (filasAfectadas == 1){
+////                System.out.println(WEB_NAME+"[PermisosAdministrativosDAO.insertResumenPASemestre1]"
+////                    + "EmpresaId:" + _data.getEmpresaId()
+////                    + ", rutEmpleado:" + _data.getRunEmpleado()    
+////                    + ", anio:" +_data.getAnio()
+////                    + ", dias_utilizados:" + _data.getDiasUtilizadosSemestre1()
+////                    + ", dias_disponibles:" + _data.getDiasDisponiblesSemestre1()
+////                    + " insertado OK!");
+////            }
+////            
+////            insert.close();
+////            dbLocator.freeConnection(dbConn);
+////        }catch(SQLException|DatabaseException sqle){
+////            System.err.println("[PermisosAdministrativosDAO.insertResumenPASemestre1]"
+////                + "Error1: " + sqle.toString());
+////            objresultado.setThereError(true);
+////            objresultado.setCodError(result);
+////            objresultado.setMsgError(msgError+" :"+sqle.toString());
+////        }finally{
+////            try {
+////                if (insert != null) insert.close();
+////                dbLocator.freeConnection(dbConn);
+////            } catch (SQLException ex) {
+////                System.err.println("[PermisosAdministrativosDAO.insertResumenPASemestre1]"
+////                    + "Error: " + ex.toString());
+////            }
+////        }
+////
+////        return objresultado;
+////    }
     
     /**
     * Elimina info de permiso administrativo
@@ -332,10 +420,10 @@ public class PermisosAdministrativosDAO extends BaseDAO{
             psdelete.setInt(3,  _data.getAnio());
                         
             int filasAfectadas = psdelete.executeUpdate();
-            System.out.println("[PermisosAdministrativosDAO.deleteResumenPA]"
+            System.out.println(WEB_NAME+"[PermisosAdministrativosDAO.deleteResumenPA]"
                 + "filasAfectadas: " + filasAfectadas);
             if (filasAfectadas == 1){
-                System.out.println("[PermisosAdministrativosDAO.deleteResumenPA]"
+                System.out.println(WEB_NAME+"[PermisosAdministrativosDAO.deleteResumenPA]"
                     + "delete resumen permiso_administrativo]"
                     + ", empresaId:" +_data.getEmpresaId()
                     + ", runEmpleado:" + _data.getRunEmpleado()
@@ -365,13 +453,14 @@ public class PermisosAdministrativosDAO extends BaseDAO{
     }
     
     /**
-    * Elimina info de permiso administrativo
+    * Elimina info de permiso administrativo para el semestre-anio indicado
     * 
     * @param _empresaId
     * @param _anio
     * @return 
     */
-    public boolean deleteResumenPAAnio(String _empresaId, int _anio){
+    public boolean deleteResumenPAAnio(String _empresaId, 
+            int _anio){
         int result=0;
         PreparedStatement psdelete    = null;
         boolean isOk=true;
@@ -387,10 +476,10 @@ public class PermisosAdministrativosDAO extends BaseDAO{
             psdelete.setInt(2,  _anio);
                         
             int filasAfectadas = psdelete.executeUpdate();
-            System.out.println("[PermisosAdministrativosDAO.deleteResumenPAAnio]"
+            System.out.println(WEB_NAME+"[PermisosAdministrativosDAO.deleteResumenPAAnio]"
                 + "filasAfectadas: " + filasAfectadas);
             if (filasAfectadas == 1){
-                System.out.println("[PermisosAdministrativosDAO.deleteResumenPAAnio]"
+                System.out.println(WEB_NAME+"[PermisosAdministrativosDAO.deleteResumenPAAnio]"
                     + "delete resumen permiso_administrativo]"
                     + ", empresaId:" + _empresaId
                     + ", anio:" + _anio   
@@ -453,8 +542,10 @@ public class PermisosAdministrativosDAO extends BaseDAO{
                     + "pa.run_empleado,"
                     + "pa.anio,"
                     + "empleado.nombre || ' ' || empleado.materno nombre_empleado,"
-                    + "pa.dias_disponibles,"
-                    + "pa.dias_utilizados,"
+                    + "pa.dias_disponibles_semestre1,"
+                    + "pa.dias_utilizados_semestre1,"
+                    + "pa.dias_disponibles_semestre2,"
+                    + "pa.dias_utilizados_semestre2,"
                     + "to_char(pa.last_update,'yyyy-MM-dd HH24:MI:SS') last_update "
                 + "from permiso_administrativo pa "
                     + "inner join view_empleado empleado "
@@ -478,7 +569,7 @@ public class PermisosAdministrativosDAO extends BaseDAO{
                 sql += " limit "+_jtPageSize + " offset "+_jtStartIndex;
             }
             
-            System.out.println("[PermisosAdministrativosDAO."
+            System.out.println(WEB_NAME+"[PermisosAdministrativosDAO."
                 + "getResumenPermisosAdministrativos]sql: " + sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,
@@ -498,8 +589,10 @@ public class PermisosAdministrativosDAO extends BaseDAO{
                 data.setNombreEmpleado(rs.getString("nombre_empleado"));
                 data.setAnio(rs.getInt("anio"));
                 
-                data.setDiasDisponibles(rs.getDouble("dias_disponibles"));
-                data.setDiasUtilizados(rs.getDouble("dias_utilizados"));
+                data.setDiasDisponiblesSemestre1(rs.getDouble("dias_disponibles_semestre1"));
+                data.setDiasUtilizadosSemestre1(rs.getDouble("dias_utilizados_semestre1"));
+                data.setDiasDisponiblesSemestre2(rs.getDouble("dias_disponibles_semestre2"));
+                data.setDiasUtilizadosSemestre2(rs.getDouble("dias_utilizados_semestre2"));
                 data.setLastUpdate(rs.getString("last_update"));
                 
                 data.setRowKey(data.getEmpresaId() + "|" + data.getRunEmpleado());
@@ -655,7 +748,7 @@ public class PermisosAdministrativosDAO extends BaseDAO{
                 sql += " limit "+_jtPageSize + " offset "+_jtStartIndex;
             }
             
-            System.out.println("[PermisosAdministrativosDAO."
+            System.out.println(WEB_NAME+"[PermisosAdministrativosDAO."
                 + "getDetallePermisosAdministrativos]sql: " + sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,
@@ -730,7 +823,7 @@ public class PermisosAdministrativosDAO extends BaseDAO{
             fechaInicioPA = Utilidades.getFechaYYYYmmdd(_inicioPermisoAdministrativo);
             fechaFinPA = Utilidades.getFechaYYYYmmdd(_finPermisoAdministrativo);
         }
-        System.out.println("[PermisosAdministrativosDAO."
+        System.out.println(WEB_NAME+"[PermisosAdministrativosDAO."
             + "getDiasEfectivos]"
             + "Iterar fechas en el rango. "
             + "Inicio: " + fechaInicioPA
@@ -757,26 +850,26 @@ public class PermisosAdministrativosDAO extends BaseDAO{
             fechaInicioPA, fechaFinPA);
         //aca son dias efectivos totales
         for (String itfecha : fechas) {
-            System.out.println("[PermisosAdministrativosDAO."
+            System.out.println(WEB_NAME+"[PermisosAdministrativosDAO."
                 + "getDiasEfectivos]"
                 + "Itera fecha= " + itfecha);
             LocalDate localdate = Utilidades.getLocalDate(itfecha);
             int diaSemana = localdate.getDayOfWeek().getValue();
             if (diaSemana >= 1 && diaSemana <= 5){
-                System.out.println("[PermisosAdministrativosDAO.getDiasEfectivos]Es dia de semana (Lu-Vi)");
+                System.out.println(WEB_NAME+"[PermisosAdministrativosDAO.getDiasEfectivos]Es dia de semana (Lu-Vi)");
                 String strKey = _empresaId + "|" + _runEmpleado + "|" + itfecha;
                 InfoFeriadoVO infoFeriado = fechasCalendarioFeriados.get(strKey);
                 boolean esFeriado = infoFeriado.isFeriado();
-                System.out.println("[PermisosAdministrativosDAO.getDiasEfectivos]"
+                System.out.println(WEB_NAME+"[PermisosAdministrativosDAO.getDiasEfectivos]"
                     + "Fecha " + itfecha + ", es feriado? " + esFeriado);
                 if (!esFeriado) {
                     diasEfectivos++;
                 }else{
-                    System.out.println("[PermisosAdministrativosDAO.getDiasEfectivos]-1-"
+                    System.out.println(WEB_NAME+"[PermisosAdministrativosDAO.getDiasEfectivos]-1-"
                         + "Fecha " + itfecha + ", no contabilizar dias efectivos");
                 }
             }else{
-                System.out.println("[PermisosAdministrativosDAO.getDiasEfectivos]-2-"
+                System.out.println(WEB_NAME+"[PermisosAdministrativosDAO.getDiasEfectivos]-2-"
                     + "Fecha " + itfecha + ", no contabilizar dias efectivos (no es dia de semana)");
             }
             
@@ -814,7 +907,7 @@ public class PermisosAdministrativosDAO extends BaseDAO{
                 + " and to_char(fecha_inicio,'yyyy')::integer = " + _anio
                 + " group by empleado.empresa_id,detalle_ausencia.rut_empleado";
             
-            System.out.println("[PermisosAdministrativosDAO."
+            System.out.println(WEB_NAME+"[PermisosAdministrativosDAO."
                 + "getDiasSolicitados]sql: " + sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,

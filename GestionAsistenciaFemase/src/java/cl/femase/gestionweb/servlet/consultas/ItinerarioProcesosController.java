@@ -79,7 +79,7 @@ public class ItinerarioProcesosController extends BaseServlet {
         ProcesosBp procesosBp=new ProcesosBp(appProperties);
 
         if(request.getParameter("action") != null){
-            System.out.println("[ItinerarioProcesosController]action is: " + request.getParameter("action"));
+            System.out.println(WEB_NAME+"[ItinerarioProcesosController]action is: " + request.getParameter("action"));
             List<ProcesoEjecucionVO> lstItinerario = new ArrayList<>();
             String action=(String)request.getParameter("action");
             Gson gson = new Gson();
@@ -112,7 +112,7 @@ public class ItinerarioProcesosController extends BaseServlet {
             else if (jtSorting.contains("cencoNombre")) jtSorting = jtSorting.replaceFirst("cencoNombre","cenco.ccosto_nombre");
             
             if (action.compareTo("list") == 0) {
-                System.out.println("[ItinerarioProcesosController]"
+                System.out.println(WEB_NAME+"[ItinerarioProcesosController]"
                     + "mostrando itinerario: empresaId: "+request.getParameter("empresaId")
                     +", idProceso: " + request.getParameter("idProceso"));
                 try{

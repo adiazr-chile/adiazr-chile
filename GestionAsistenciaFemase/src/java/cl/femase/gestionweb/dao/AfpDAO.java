@@ -118,7 +118,7 @@ public class AfpDAO extends BaseDAO{
             if (_jtPageSize > 0){
                 sql += " limit "+_jtPageSize + " offset "+_jtStartIndex;
             }
-            System.out.println("[AfpDAO.getAfps]Sql: " + sql);
+            System.out.println(WEB_NAME+"[AfpDAO.getAfps]Sql: " + sql);
             dbConn = dbLocator.getConnection(m_dbpoolName,"[AfpDAO.getAfps]");
             ps = dbConn.prepareStatement(sql);
             rs = ps.executeQuery();
@@ -226,7 +226,7 @@ public class AfpDAO extends BaseDAO{
                                                
             int filasAfectadas = insert.executeUpdate();
             if (filasAfectadas == 1){
-                System.out.println("[AfpDAO.insert Afp]"
+                System.out.println(WEB_NAME+"[AfpDAO.insert Afp]"
                     + ", code:" +_data.getCode()    
                     + ", nombre:" +_data.getNombre()
                     + ", estado:" +_data.getEstado()
@@ -289,7 +289,7 @@ public class AfpDAO extends BaseDAO{
             
             int rowAffected = psupdate.executeUpdate();
             if (rowAffected == 1){
-                System.out.println("[AfpDAO.update]AFP"
+                System.out.println(WEB_NAME+"[AfpDAO.update]AFP"
                     + ", code:" +_data.getCode()
                     + ", nombre:" +_data.getNombre()
                     + ", estado:" +_data.getEstado()

@@ -13,7 +13,9 @@ import org.apache.jcs.JCS;
  * un cache con el formato precio de c/instrumento.
  */
 public class InstrumentosManager {
-
+    
+    public static String WEB_NAME = "[GestionFemaseWeb]";
+    
     protected static Logger m_logger = Logger.getLogger("gestionweb");
 
     private static InstrumentosManager instance;
@@ -22,7 +24,7 @@ public class InstrumentosManager {
     private static PropertiesVO m_props;
 
     public InstrumentosManager(PropertiesVO _props) {
-        System.out.println("Constructor InstrumentosManager");
+        System.out.println(WEB_NAME+"Constructor InstrumentosManager");
         try {
             instrumentoCache = JCS.getInstance("instrumentoCache");
         } catch (Exception e) {
@@ -39,7 +41,7 @@ public class InstrumentosManager {
      * @return 
      */
     public static InstrumentosManager getInstance() {
-        System.out.println("InstrumentosManager.getInstance");
+        System.out.println(WEB_NAME+"InstrumentosManager.getInstance");
         synchronized (InstrumentosManager.class) {
             if (instance == null) {
                 instance = new InstrumentosManager(m_props);
@@ -81,7 +83,7 @@ public class InstrumentosManager {
                 vObj = loadInstrumento(_nombreInstrumento);//desde el repositorio de instrumentos
             }
 //            }else{
-//            	System.out.println("InstrumentosManager.getInstrumento " +
+//            	System.out.println(WEB_NAME+"InstrumentosManager.getInstrumento " +
 //            			"[_nombreInstrumento]=[" + _nombreInstrumento + "] encontrado en cache!!");
 //            }
             if (vObj != null){
@@ -108,7 +110,7 @@ public class InstrumentosManager {
         try {
             // First, if requested, attempt to load from cache
             if (fromCache) {
-//                System.out.println("InstrumentosManager.getFormatoPrecio " +
+//                System.out.println(WEB_NAME+"InstrumentosManager.getFormatoPrecio " +
 //                		"from cache id:"+_nombreInstrumento);
                 vObj = (ModuloSistemaVO) instrumentoCache.get(_nombreInstrumento);
             }
@@ -117,13 +119,13 @@ public class InstrumentosManager {
             // call loadCorredoraBEC to create it
 
             if (vObj == null) {
-                System.out.println("InstrumentosManager.getFormatoPrecio. "
+                System.out.println(WEB_NAME+"InstrumentosManager.getFormatoPrecio. "
                         + "Rescatar formatoPrecio de "+_nombreInstrumento+" "
                         + "desde el repositorio de instrumentos");
                 vObj = loadInstrumento(_nombreInstrumento);//desde el repositorio de instrumentos
             }
 //            else{
-//            	System.out.println("InstrumentosManager.getFormatoPrecio " +
+//            	System.out.println(WEB_NAME+"InstrumentosManager.getFormatoPrecio " +
 //            			"[_nombreInstrumento]=[" + _nombreInstrumento + "] encontrado en cache!!");
 //            }
             if (vObj != null){
@@ -144,7 +146,7 @@ public class InstrumentosManager {
      * @return 
      */
     public ModuloSistemaVO loadInstrumento(String _nombreInstrumento) {
-//        System.out.println("InstrumentosManager.loadInstrumento " +
+//        System.out.println(WEB_NAME+"InstrumentosManager.loadInstrumento " +
 //        		"[nomInstrumento]: ["+_nombreInstrumento+"]");
 
         ModuloSistemaVO dataNemo = new ModuloSistemaVO();
@@ -185,7 +187,7 @@ public class InstrumentosManager {
      * Create all DTOs from the instrument table and stores them in the cache.
      */
 //    public void populateInstrumentos() {
-//        System.out.println("InstrumentosManager.populateInstrumentos <START>");
+//        System.out.println(WEB_NAME+"InstrumentosManager.populateInstrumentos <START>");
 //
 //        DBConnectionManager connMgr;
 //        connMgr = DBConnectionManager.getInstance();
@@ -237,7 +239,7 @@ public class InstrumentosManager {
 //                    "Error al agregar al cache:" + e.toString());
 //        }
 //
-//        System.out.println("InstrumentosManager.populateInstrumentos <STOP>");
+//        System.out.println(WEB_NAME+"InstrumentosManager.populateInstrumentos <STOP>");
 //
 //    }
 

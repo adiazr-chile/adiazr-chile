@@ -16,7 +16,7 @@ import cl.femase.gestionweb.vo.PropertiesVO;
  *
  * @author Alexander
  */
-public class AsignacionDispositivoBp {
+public class AsignacionDispositivoBp  extends BaseBp{
 
     public PropertiesVO props;
     /** para guardar los eventos de mantencion de informacion*/

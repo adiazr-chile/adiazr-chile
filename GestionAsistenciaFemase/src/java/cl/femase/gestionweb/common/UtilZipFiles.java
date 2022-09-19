@@ -26,6 +26,7 @@ import java.util.zip.ZipOutputStream;
 *
 */
 public class UtilZipFiles {
+    public static String WEB_NAME = "[GestionFemaseWeb]";
     /**
      * A constants for buffer size used to read/write data
      */
@@ -39,7 +40,7 @@ public class UtilZipFiles {
      * @throws IOException
      */
    public static void compressFiles(List<File> listFiles, String destZipFile) throws FileNotFoundException, IOException {
-       System.out.println("[UtilZipFiles.compressFiles]"
+       System.out.println(WEB_NAME+"[UtilZipFiles.compressFiles]"
                + "zip destino: "+destZipFile);
 
        ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(destZipFile));

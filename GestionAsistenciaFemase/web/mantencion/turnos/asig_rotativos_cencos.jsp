@@ -38,7 +38,7 @@
     if (turnosAsignados == null) turnosAsignados = new LinkedHashMap<>();
     if (turnosDisponibles == null) turnosDisponibles = new LinkedHashMap<>();
 	 
-    System.out.println("[asig_rotativos_cencos.jsp]-1-"
+    System.out.println("[GestionFemaseWeb]asig_rotativos_cencos.jsp]-1-"
         + " strReload= " + strReload);
     
 %>
@@ -152,16 +152,15 @@
     <div class="panel panel-default">
       <div class="panel-heading">Selecci&oacute;n de turnos rotativos para &nbsp;<%=strLabelCenco%></div>
       <div class="panel-body">
-        <table width="90%" border="0">
+        <table width="45%" border="0" align="center">
           <tr>
             <td width="61%" class="h4">Turnos rotativos existentes</td>
             <td width="3%">&nbsp;</td>
-            <td width="36%" class="h4">Turnos rotativos seleccionados</td>
-          </tr>
+            </tr>
           <tr>
             <td rowspan="3" valign="top">
               <select name="list1" size="8" 
-                      multiple="multiple" class="dropdown-header" id="list1" style="width:400px" rows=2>
+                      multiple="multiple" class="dropdown-header" id="list1" style="width:700px" rows=2>
                 <%
                     int intValue = -1;
                     String strLabel = "";
@@ -179,12 +178,23 @@
                 %>
               </select></td>
             <td height="14" valign="top">&nbsp;</td>
-            <td rowspan="3" valign="top">
-                <select name="list2" size="8" 
+            </tr>
+          <tr>
+            <td height="62" valign="top"><input id="button1" type="button" value="Agregar" class="button button-blue"/></td>
+            </tr>
+          <tr>
+            <td height="51" valign="top"><input id="button2" type="button" value="Quitar" class="button button-blue"/></td>
+          </tr>
+          <tr>
+            <td valign="top"><span class="h4">Turnos rotativos seleccionados</span></td>
+            <td height="21" valign="top">&nbsp;</td>
+            </tr>
+          <tr>
+            <td valign="top"><select name="list2" size="8" 
                         multiple="multiple" 
                         class="dropdown-header" 
                         id="list2" 
-                        style="width:400px" rows=2>
+                        style="width:700px" rows=2>
               <%
                     int intValue2 = -1;
                     String strLabel2 = "";    
@@ -198,26 +208,20 @@
                             + " (" + auxTurno2.getHoraEntrada() + " a " + auxTurno2.getHoraSalida() + ")";
                         strLabel2 = "["+auxTurno2.getId()+"] "+strLabel2.toUpperCase();
                     %>
-                        <option value="<%=intValue2%>"><%=strLabel2%></option>
-                        <%
+              <option value="<%=intValue2%>"><%=strLabel2%></option>
+              <%
                     }
                 %>
             </select></td>
-          </tr>
-          <tr>
-            <td height="62" valign="top"><input id="button1" type="button" value=">" class="button button-blue"/></td>
+            <td height="21" valign="top">&nbsp;</td>
             </tr>
           <tr>
-            <td height="51" valign="top"><input id="button2" type="button" value="<" class="button button-blue"/></td>
-          </tr>
-          <tr>
-            <td valign="top">&nbsp;</td>
-            <td height="21" valign="top">&nbsp;</td>
             <td valign="top"><span class="col-md-4">
               <input type="button" name="btn_preview2" id="btn_preview2" value="Guardar" 
               class="button button-blue" onClick="guardarAsignacion()">
             </span></td>
-          </tr>
+            <td height="21" valign="top">&nbsp;</td>
+            </tr>
         </table>
       </div>
     </div>

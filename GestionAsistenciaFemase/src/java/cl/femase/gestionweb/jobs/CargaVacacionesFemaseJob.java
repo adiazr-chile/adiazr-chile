@@ -24,13 +24,13 @@ import org.quartz.JobExecutionException;
 * 
 */
 
-public class CargaVacacionesFemaseJob implements Job {
+public class CargaVacacionesFemaseJob extends BaseJobs implements Job {
 
     GetPropertyValues m_properties = new GetPropertyValues();
     
     @Override
     public void execute(JobExecutionContext arg0) throws JobExecutionException {
-        System.out.println("\n[GestionFemase."
+        System.out.println(WEB_NAME+"[GestionFemase."
             + "CargaVacacionesFemaseJob]"
             + "INICIO " + new java.util.Date());
         //String outputPath = m_utilconfig.geyKeyValue("pathExportedFiles");
@@ -52,7 +52,7 @@ public class CargaVacacionesFemaseJob implements Job {
         ejecucion.setProcesoId(procesoId);
         ejecucion.setFechaHoraInicioEjecucion(sdf.format(start));
         
-        System.out.println("[GestionFemase."
+        System.out.println(WEB_NAME+"[GestionFemase."
             + "CargaVacacionesFemaseJob]Inicia carga de registros faltantes en tabla vacaciones."
             + "Empresa:" + empresaId+", id_proceso= " + procesoId);
        
@@ -61,7 +61,7 @@ public class CargaVacacionesFemaseJob implements Job {
         String result="Carga de registros faltantes de vacaciones= OK. " + resultado.getMsg();
         if (resultado.isThereError()) result="Error al Carga de registros faltantes de vacaciones";
         
-        System.out.println("[GestionFemase."
+        System.out.println(WEB_NAME+"[GestionFemase."
             + "CargaVacacionesFemaseJob]Finaliza carga de registros faltantes en tabla vacaciones."
             + "Empresa:" + empresaId 
             + ", id_proceso= " + procesoId
@@ -88,7 +88,7 @@ public class CargaVacacionesFemaseJob implements Job {
 ////        ) {
 ////            if (_empleados.size()>0) {
 ////                EmpleadoMarcaRechazoVO aux1= _empleados.get(0);
-////                System.out.println("[GestionFemase."
+////                System.out.println(WEB_NAME+"[GestionFemase."
 ////                    + "CargaVacacionesFemaseJob]Generar CSV para cenco " 
 ////                    + aux1.getCenco_nombre());    
 ////            }

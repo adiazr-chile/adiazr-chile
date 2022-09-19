@@ -11,7 +11,7 @@
     //Date lastAccess = new Date(now - session.getLastAccessedTime());
     //Date age = new Date(now - session.getCreationTime());
     Date expirationDate = new Date(session.getLastAccessedTime() + session.getMaxInactiveInterval()*1000);
-    System.out.println("[check_session.jsp]fecha de expiracion de la sesion: " + expirationDate);
+    System.out.println("[GestionFemaseWeb]check_session.jsp]fecha de expiracion de la sesion: " + expirationDate);
     
     if (request.getRequestedSessionId() != null
         && !request.isRequestedSessionIdValid()) {

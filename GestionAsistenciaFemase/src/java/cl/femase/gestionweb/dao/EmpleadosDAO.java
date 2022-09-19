@@ -177,7 +177,7 @@ public class EmpleadosDAO extends BaseDAO{
             //}
             sql+= " WHERE empl_rut = ?";
 
-            System.out.println("[updateEmpleado]Sql= " + sql);
+            System.out.println(WEB_NAME+"[updateEmpleado]Sql= " + sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,"[EmpleadosDAO.update]");
             psupdate = dbConn.prepareStatement(sql);
@@ -190,7 +190,7 @@ public class EmpleadosDAO extends BaseDAO{
             psupdate.setDate(7,  new java.sql.Date(_data.getFechaInicioContrato().getTime()));
             psupdate.setInt(8,  _data.getEstado());
             if (_data.isCambiarFoto()){
-                System.out.println("[updateEmpleado]cambiar foto es true");
+                System.out.println(WEB_NAME+"[updateEmpleado]cambiar foto es true");
                 psupdate.setString(9,  _data.getPathFoto());
                 psupdate.setString(10,  _data.getSexo());
                 psupdate.setString(11,  _data.getFonoFijo());
@@ -223,7 +223,7 @@ public class EmpleadosDAO extends BaseDAO{
                 psupdate.setString(26,  _data.getCodInterno());
                 
             }else{
-                System.out.println("[update empleado]no actualiza foto...");
+                System.out.println(WEB_NAME+"[update empleado]no actualiza foto...");
                 psupdate.setString(9,  _data.getSexo());
                 psupdate.setString(10,  _data.getFonoFijo());
                 psupdate.setString(11,  _data.getFonoMovil());
@@ -233,14 +233,14 @@ public class EmpleadosDAO extends BaseDAO{
                 psupdate.setInt(15,  _data.getIdCargo());
                 //agregados el 24-04-2017.
                 if (_data.getFechaTerminoContrato() != null){
-                    System.out.println("[update empleado]"
+                    System.out.println(WEB_NAME+"[update empleado]"
                         + "Actualiza fecha fin contrato a: "
                         +_data.getFechaTerminoContrato());
                     psupdate.setDate(16,  new java.sql.Date(_data.getFechaTerminoContrato().getTime()));
                 }else{
                     psupdate.setDate(16,  new java.sql.Date(dateRepresentation.getTime()));
                 }
-                System.out.println("[update empleado]"
+                System.out.println(WEB_NAME+"[update empleado]"
                     + "Actualiza Tiene contrato indefinido "
                     + "a valor boolean="+_data.isContratoIndefinido());
                 psupdate.setBoolean(17,  _data.isContratoIndefinido());
@@ -264,7 +264,7 @@ public class EmpleadosDAO extends BaseDAO{
             }
             int rowAffected = psupdate.executeUpdate();
             if (rowAffected == 1){
-                System.out.println("[update]empleado"
+                System.out.println(WEB_NAME+"[update]empleado"
                     + ", rut (PK, puntos y guion):" +_data.getRut()
                     + ", codInterno:" +_data.getCodInterno()    
                     + ", nombres:" +_data.getNombres()
@@ -276,7 +276,7 @@ public class EmpleadosDAO extends BaseDAO{
                     + ", fechaFinContrato: "+_data.getFechaTerminoContratoAsStr()    
                     +"  - actualizado OK!");
             }else{
-                System.out.println("[update]empleado. No se actualizo empleado!!");
+                System.out.println(WEB_NAME+"[update]empleado. No se actualizo empleado!!");
             }
             
             psupdate.close();
@@ -343,7 +343,7 @@ public class EmpleadosDAO extends BaseDAO{
             
             int rowAffected = psupdate.executeUpdate();
             if (rowAffected == 1){
-                System.out.println("[CargoDAO.updateEmpleadoCaducado]"
+                System.out.println(WEB_NAME+"[CargoDAO.updateEmpleadoCaducado]"
                     + "rut: " + _data.getRut()
                     + ", codInterno: " + _data.getCodInterno()
                     + ", estado: " + _data.getEstado()
@@ -498,7 +498,7 @@ public class EmpleadosDAO extends BaseDAO{
             
             int filasAfectadas = insert.executeUpdate();
             if (filasAfectadas == 1){
-                System.out.println("[insert]empleado"
+                System.out.println(WEB_NAME+"[insert]empleado"
                     + ", rut:" +_data.getRut()
                     + ", codInterno:" +_data.getCodInterno()
                     + ", nombres:" +_data.getNombres()
@@ -642,7 +642,7 @@ public class EmpleadosDAO extends BaseDAO{
                 sql += " limit "+_jtPageSize + " offset "+_jtStartIndex;
             }
                         
-            System.out.println("EmpleadosDAO.getEmpleados(). SQL: "+sql);
+            System.out.println(WEB_NAME+"EmpleadosDAO.getEmpleados(). SQL: "+sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,"[EmpleadosDAO.getEmpleados]");
             ps = dbConn.prepareStatement(sql);
@@ -845,7 +845,7 @@ public class EmpleadosDAO extends BaseDAO{
             }
             
             sql += " order by empl.empl_rut";
-            System.out.println("[EmpladosDAO."
+            System.out.println(WEB_NAME+"[EmpladosDAO."
                 + "getEmpleados]sql: " + sql);
             dbConn = dbLocator.getConnection(m_dbpoolName,"[EmpleadosDAO.getEmpleados2]");
             ps = dbConn.prepareStatement(sql);
@@ -1015,7 +1015,7 @@ public class EmpleadosDAO extends BaseDAO{
                         
             sql += " order by empl.empl_rut";
             
-            System.out.println("[EmpleadosDAO."
+            System.out.println(WEB_NAME+"[EmpleadosDAO."
                 + "getEmpleadosByFiltro]Sql: " + sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,
@@ -1188,7 +1188,7 @@ public class EmpleadosDAO extends BaseDAO{
                         
             sql += " order by empl_nombres"; 
                         
-            System.out.println("[EmpleadosDAO."
+            System.out.println(WEB_NAME+"[EmpleadosDAO."
                 + "getEmpleadosDesvinculados]SQL: " + sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,"[EmpleadosDAO.getEmpleadosDesvinculados]");
@@ -1413,7 +1413,7 @@ public class EmpleadosDAO extends BaseDAO{
                 sql += " limit "+_jtPageSize + " offset "+_jtStartIndex;
             }
                         
-            System.out.println("[EmpleadosDAO.getEmpleados]SQL: " + sql);
+            System.out.println(WEB_NAME+"[EmpleadosDAO.getEmpleados]SQL: " + sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,"[EmpleadosDAO.getEmpleados3]");
             ps = dbConn.prepareStatement(sql);
@@ -1641,7 +1641,7 @@ public class EmpleadosDAO extends BaseDAO{
                 sql += " limit "+_jtPageSize + " offset "+_jtStartIndex;
             }
                         
-            System.out.println("[EmpleadosDAO.getCaducados]SQL: " + sql);
+            System.out.println(WEB_NAME+"[EmpleadosDAO.getCaducados]SQL: " + sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,"[EmpleadosDAO.getCaducados]");
             ps = dbConn.prepareStatement(sql);
@@ -1791,7 +1791,7 @@ public class EmpleadosDAO extends BaseDAO{
             if (_empresaId!=null){
                 sql += "and empleado.empresa_id ='"+_empresaId+"'";
             }
-            System.out.println("[EmpleadosDAO.getEmpleado]SQL: "+sql);
+            System.out.println(WEB_NAME+"[EmpleadosDAO.getEmpleado]SQL: "+sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,"[EmpleadosDAO.getEmpleado]");
             ps = dbConn.prepareStatement(sql);
@@ -1887,7 +1887,7 @@ public class EmpleadosDAO extends BaseDAO{
                 + "where empl_email= '" + _email + "' "
                     + "and cod_interno != '" +_rutEmpleado + "' "
                     + "and empresa_id = '" + _empresaId + "'";
-            System.out.println("[EmpleadosDAO.existeEmail]SQL: "+sql);
+            System.out.println(WEB_NAME+"[EmpleadosDAO.existeEmail]SQL: "+sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,"[EmpleadosDAO.existeEmail]");
             ps = dbConn.prepareStatement(sql);
@@ -1978,7 +1978,7 @@ public class EmpleadosDAO extends BaseDAO{
             if (_turnoId != -1){
                 sql += " and empleado.empl_id_turno =" + _turnoId;
             }
-            System.out.println("[EmpleadosDAO.getEmpleado]SQL: "+sql);
+            System.out.println(WEB_NAME+"[EmpleadosDAO.getEmpleado]SQL: "+sql);
             //if (dbConn==null){ 
                 openDb = true;
                 dbConn = dbLocator.getConnection(m_dbpoolName,"[EmpleadosDAO.getEmpleado]");
@@ -2060,7 +2060,7 @@ public class EmpleadosDAO extends BaseDAO{
                 + "(empresa_id = '" + _empresaId + "' "
                 + "and upper(empl_rut) = upper('" + _codInterno + "')  and cenco_id = " + _cencoId + ") "
                 + " and (contrato_indefinido is true or (contrato_indefinido is false and current_date between empl_fec_ini_contrato  and empl_fec_fin_contrato))";
-            System.out.println("[EmpleadosDAO.tieneContratoVigente]SQL: "+sql);
+            System.out.println(WEB_NAME+"[EmpleadosDAO.tieneContratoVigente]SQL: "+sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,"[EmpleadosDAO.tieneContratoVigente]");
             ps = dbConn.prepareStatement(sql);
@@ -2110,7 +2110,7 @@ public class EmpleadosDAO extends BaseDAO{
                 + "and upper(empl_rut) = '"+_rut.toUpperCase()+"' "
                 + "and cod_interno = '"+_codInterno+"'";
                         
-            System.out.println("[EmpleadosDAO.existeEmpleado]"
+            System.out.println(WEB_NAME+"[EmpleadosDAO.existeEmpleado]"
                 + "SQL: " + sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,"[EmpleadosDAO.existeEmpleado]");
@@ -2161,7 +2161,7 @@ public class EmpleadosDAO extends BaseDAO{
                 + "get_empleado_json"
                     + "('" + _empresaId + "','" + _deptoId + "',"+_cencoId+",'" + _rutEmpleado + "') strjson";
 
-            System.out.println("[EmpleadosDAO."
+            System.out.println(WEB_NAME+"[EmpleadosDAO."
                 + "getEmpleadoJson]Sql: "+sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,"[EmpleadosDAO.getEmpleadoJson]");
@@ -2212,7 +2212,7 @@ public class EmpleadosDAO extends BaseDAO{
                 + "get_empleados_json"
                     + "('" + _empresaId + "','" + _deptoId + "',"+_cencoId+") strjson";
 
-            System.out.println("[EmpleadosDAO."
+            System.out.println(WEB_NAME+"[EmpleadosDAO."
                 + "getEmpleadosJson]Sql: "+sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,"[EmpleadosDAO.getEmpleadosJson]");
@@ -2324,7 +2324,7 @@ public class EmpleadosDAO extends BaseDAO{
             
             sql += " order by empleado.empl_nombres";
             
-            System.out.println("[EmpleadosDAO.getEmpleadosNew]"
+            System.out.println(WEB_NAME+"[EmpleadosDAO.getEmpleadosNew]"
                 + "EmpresaId: " + _empresaId
                 + ",deptoId: " + _deptoId
                 + ",cencoId: " + _cencoId
@@ -2510,7 +2510,7 @@ public class EmpleadosDAO extends BaseDAO{
                 sql += " limit "+_jtPageSize + " offset "+_jtStartIndex;
             }
             
-            System.out.println("[EmpleadosDAO.getEmpleadosShort]"
+            System.out.println(WEB_NAME+"[EmpleadosDAO.getEmpleadosShort]"
                 + "EmpresaId: "+_empresaId
                 + ",deptoId: "+_deptoId
                 + ",cencoId: "+_cencoId
@@ -2628,7 +2628,7 @@ public class EmpleadosDAO extends BaseDAO{
                     + " and empleado.cenco_id = " + _cencoId + " "
                     + "order by rut";
             
-            System.out.println("[EmpleadosDAO.getEmpleadosSimple]"
+            System.out.println(WEB_NAME+"[EmpleadosDAO.getEmpleadosSimple]"
                 + "EmpresaId: "+_empresaId
                 + ",deptoId: "+_deptoId
                 + ",cencoId: "+_cencoId);
@@ -2676,7 +2676,7 @@ public class EmpleadosDAO extends BaseDAO{
                 
                 data.setFechaInicioContratoAsStr(rs.getString("fechainicontrato"));
                                 
-                System.out.println("[EmpleadosDAO.getEmpleadosSimple]"
+                System.out.println(WEB_NAME+"[EmpleadosDAO.getEmpleadosSimple]"
                     + "add. Rut: " + data.getRut()
                     + ",empresa.id: " + data.getEmpresa().getId() + " - " + data.getEmpresa().getNombre()
                     + ",deptoId.id: " + data.getDepartamento().getId() + " " + data.getDepartamento().getNombre()
@@ -2701,6 +2701,122 @@ public class EmpleadosDAO extends BaseDAO{
         }
         
         return lista;
+    }
+    
+    /**
+    * Obtiene info de empleado
+    * 
+    * @param _empresaId
+    * @param _runEmpleado
+    *
+    * @return 
+    */
+    public EmpleadoVO getEmpleadoByEmpresaRun(String _empresaId, String _runEmpleado){
+        
+        List<EmpleadoVO> lista = new ArrayList<>();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        EmpleadoVO infoEmpleado = null;
+        
+        try{
+            String sql = "SELECT "
+                + "rut,"
+                + "nombre nombreCompleto,"
+                + "empresa_id, "
+                + "cenco_id,"
+                + "ccosto_nombre,"
+                + "empl_id_turno turno_id, "
+                + "nombre_turno turno_nombre,"
+                + "cod_interno,"
+                + "nombre,"
+                + "empleado.materno,"
+                + "cargo.cargo_nombre,"
+                + "empleado.depto_id,"
+                + "empresa_nombre,"
+                + "depto_nombre,"
+                + "ccosto_nombre,"
+                + "to_char(fecha_inicio_contrato,'dd/MM/yyyy') fechainicontrato "
+                + "FROM view_empleado empleado "
+                + "inner join cargo on (empleado.empl_id_cargo = cargo.cargo_id) "
+                + "WHERE "
+                + " empleado.empresa_id= '" + _empresaId + "' "
+                + " and empleado.rut = '" + _runEmpleado + "'";
+            
+            System.out.println(WEB_NAME+"[EmpleadosDAO.getEmpleadoByRun]"
+                + "EmpresaId: " + _empresaId
+                + ", runEmpleado: " + _runEmpleado);
+            
+            dbConn = dbLocator.getConnection(m_dbpoolName,
+                "[EmpleadosDAO.getEmpleadoByRun]");
+            ps = dbConn.prepareStatement(sql);
+            rs = ps.executeQuery();
+
+            while (rs.next()){
+                infoEmpleado = new EmpleadoVO();
+               
+                infoEmpleado.setRut(rs.getString("rut"));
+                infoEmpleado.setNombres(rs.getString("nombreCompleto"));
+                infoEmpleado.setEmpresaId(rs.getString("empresa_id"));
+                infoEmpleado.setCencoId(rs.getInt("cenco_id"));
+                infoEmpleado.setCencoNombre(rs.getString("ccosto_nombre"));
+                
+                infoEmpleado.setIdTurno(rs.getInt("turno_id"));
+                infoEmpleado.setIdturno(infoEmpleado.getIdTurno());
+                infoEmpleado.setNombreTurno(rs.getString("turno_nombre"));
+                
+                //nuevos
+                infoEmpleado.setEmpresaNombre(rs.getString("empresa_nombre"));        
+                infoEmpleado.setDeptoNombre(rs.getString("depto_nombre"));        
+                infoEmpleado.setCencoNombre(rs.getString("ccosto_nombre"));        
+                
+                infoEmpleado.setCodInterno(rs.getString("cod_interno"));
+                infoEmpleado.setNombres(rs.getString("nombre"));
+                infoEmpleado.setApeMaterno(rs.getString("materno"));
+                infoEmpleado.setNombreCargo(rs.getString("cargo_nombre"));
+                
+                EmpresaVO auxEmpresa = new EmpresaVO();
+                auxEmpresa.setId(rs.getString("empresa_id"));
+                auxEmpresa.setNombre(infoEmpleado.getEmpresaNombre());
+                
+                DepartamentoVO auxDepto = new DepartamentoVO();
+                auxDepto.setId(rs.getString("depto_id"));
+                auxDepto.setNombre(infoEmpleado.getDeptoNombre());
+                
+                CentroCostoVO auxCenco = new CentroCostoVO();
+                auxCenco.setId(rs.getInt("cenco_id"));
+                auxCenco.setNombre(infoEmpleado.getCencoNombre());
+                
+                infoEmpleado.setEmpresa(auxEmpresa);
+                infoEmpleado.setDepartamento(auxDepto);
+                infoEmpleado.setCentroCosto(auxCenco);
+                
+                infoEmpleado.setFechaInicioContratoAsStr(rs.getString("fechainicontrato"));
+                                
+                System.out.println(WEB_NAME+"[EmpleadosDAO.getEmpleadoByRun]"
+                    + "add. Rut: " + infoEmpleado.getRut()
+                    + ",empresa.id: " + infoEmpleado.getEmpresa().getId() + " - " + infoEmpleado.getEmpresa().getNombre()
+                    + ",deptoId.id: " + infoEmpleado.getDepartamento().getId() + " " + infoEmpleado.getDepartamento().getNombre()
+                    + ",cencoI.id:" + infoEmpleado.getCentroCosto().getId() + " " + infoEmpleado.getCentroCosto().getNombre());
+                
+                lista.add(infoEmpleado);
+                //
+            }
+            ps.close();
+            rs.close();
+            dbLocator.freeConnection(dbConn);
+        }catch(SQLException|DatabaseException sqle){
+            m_logger.error("Error: "+sqle.toString());
+        }finally{
+            try {
+                if (ps != null) ps.close();
+                if (rs != null) rs.close();
+                dbLocator.freeConnection(dbConn);
+            } catch (SQLException ex) {
+                System.err.println("Error: "+ex.toString());
+            }
+        }
+        
+        return infoEmpleado;
     }
     
     /**
@@ -2756,7 +2872,7 @@ public class EmpleadosDAO extends BaseDAO{
             
             sql += " order by rut";
             
-            System.out.println("[EmpleadosDAO.getEmpleadosSimpleByFiltro]"
+            System.out.println(WEB_NAME+"[EmpleadosDAO.getEmpleadosSimpleByFiltro]"
                 + "EmpresaId: "+_empresaId
                 + ",deptoId: "+_deptoId
                 + ",cencoId: "+_cencoId+", sql: " + sql);
@@ -2804,7 +2920,7 @@ public class EmpleadosDAO extends BaseDAO{
                 
                 data.setFechaInicioContratoAsStr(rs.getString("fechainicontrato"));
                                 
-                System.out.println("[EmpleadosDAO.getEmpleadosSimpleByFiltro]"
+                System.out.println(WEB_NAME+"[EmpleadosDAO.getEmpleadosSimpleByFiltro]"
                     + "add. Rut: " + data.getRut()
                     + ",empresa.id: " + data.getEmpresa().getId() + " - " + data.getEmpresa().getNombre()
                     + ",deptoId.id: " + data.getDepartamento().getId() + " " + data.getDepartamento().getNombre()
@@ -2923,7 +3039,7 @@ public class EmpleadosDAO extends BaseDAO{
                 sql += " limit "+_jtPageSize + " offset "+_jtStartIndex;
             }
             
-            System.out.println("[EmpleadosDAO.getEmpleadosByTurno]"
+            System.out.println(WEB_NAME+"[EmpleadosDAO.getEmpleadosByTurno]"
                 + ", Sql: "+sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,"[EmpleadosDAO.getEmpleadosByTurno]");
@@ -3094,7 +3210,7 @@ public class EmpleadosDAO extends BaseDAO{
                 sql += " limit "+_jtPageSize + " offset "+_jtStartIndex;
             }
             
-            System.out.println("[EmpleadosDAO.getEmpleadosByListEmpleados]"
+            System.out.println(WEB_NAME+"[EmpleadosDAO.getEmpleadosByListEmpleados]"
                 + "EmpresaId: "+_empresaId
                 + ",deptoId: "+_deptoId
                 + ",cencoId: "+_cencoId
@@ -3246,7 +3362,7 @@ public class EmpleadosDAO extends BaseDAO{
                 count=rs.getInt("count");
             }
             
-            System.out.println("cl.femase.gestionweb."
+            System.out.println(WEB_NAME+"cl.femase.gestionweb."
                 + "service.EmpleadosDAO."
                 + "getEmpleadosCount(). Sql= "+strSql);
             
@@ -3352,7 +3468,7 @@ public class EmpleadosDAO extends BaseDAO{
                 count=rs.getInt("count");
             }
             
-            System.out.println("[EmpleadosDAO."
+            System.out.println(WEB_NAME+"[EmpleadosDAO."
                 + "getCaducadosCount]Sql= " + strSql);
             
             statement.close();
@@ -3472,10 +3588,10 @@ public class EmpleadosDAO extends BaseDAO{
         ) {
             
             int i = 0;
-            System.out.println("[EmpleadosDAO.insertListEmpleados]"
+            System.out.println(WEB_NAME+"[EmpleadosDAO.insertListEmpleados]"
                 + "items a insertar: "+_empleados.size());
             for (EmpleadoVO entity : _empleados) {
-                System.out.println("[EmpleadosDAO.insertListEmpleados] "
+                System.out.println(WEB_NAME+"[EmpleadosDAO.insertListEmpleados] "
                     + "Insert empleado. "
                     + "Rut(sin puntos- Llave)= " + entity.getCodInterno()
                     + ", codInterno(con puntos)= " + entity.getRut()
@@ -3518,13 +3634,13 @@ public class EmpleadosDAO extends BaseDAO{
                 // ...
                 statement.addBatch();
                 i++;
-                System.out.println("[EmpleadosDAO.insertListEmpleados]"
+                System.out.println(WEB_NAME+"[EmpleadosDAO.insertListEmpleados]"
                     + "fila i : " + i);
                 
                 if (i % 50 == 0 || i == _empleados.size()) {
                     try{
                         int[] rowsAffected = statement.executeBatch(); // Execute every 1000 items.
-                        System.out.println("[EmpleadosDAO.insertListEmpleados]"
+                        System.out.println(WEB_NAME+"[EmpleadosDAO.insertListEmpleados]"
                             + "filas afectadas= "+rowsAffected.length);
                     }catch(Exception ex){
                         System.err.println("[EmpleadosDAO.insertListEmpleados]"
@@ -3545,10 +3661,10 @@ public class EmpleadosDAO extends BaseDAO{
 ////    public void insertListEmpleados(ArrayList<EmpleadoVO> _empleados)throws SQLException{
 ////        PreparedStatement statement    = null;
 ////        int i = 0;
-////        System.out.println("[EmpleadosDAO.insertListEmpleados]"
+////        System.out.println(WEB_NAME+"[EmpleadosDAO.insertListEmpleados]"
 ////            + "items a insertar: "+_empleados.size());
 ////        for (EmpleadoVO entity : _empleados) {
-////            System.out.println("[EmpleadosDAO.insertListEmpleados] "
+////            System.out.println(WEB_NAME+"[EmpleadosDAO.insertListEmpleados] "
 ////                + "Insert empleado. "
 ////                + "Rut(sin puntos- Llave)= " + entity.getCodInterno()
 ////                + ", codInterno(con puntos)= " + entity.getRut()
@@ -3593,18 +3709,18 @@ public class EmpleadosDAO extends BaseDAO{
 ////                    + "Error al parsear campos: " + ex.toString());
 ////                ex.printStackTrace();
 ////            }
-////            System.out.println("[EmpleadosDAO.insertListEmpleados]"
+////            System.out.println(WEB_NAME+"[EmpleadosDAO.insertListEmpleados]"
 ////                + "(A)Add Insert, i= " + i);
 ////                
 ////            try{
 ////                // ...
 ////                statement.addBatch();
 ////                i++;
-////                System.out.println("[EmpleadosDAO.insertListEmpleados]"
+////                System.out.println(WEB_NAME+"[EmpleadosDAO.insertListEmpleados]"
 ////                    + "Add Insert, i= " + i);
 ////                if (i % 50 == 0 || i == _empleados.size()) {
 ////                    int[] rowsAffected = statement.executeBatch(); // Execute every 1000 items.
-////                    System.out.println("[EmpleadosDAO.insertListEmpleados]"
+////                    System.out.println(WEB_NAME+"[EmpleadosDAO.insertListEmpleados]"
 ////                        + "filas afectadas= "+rowsAffected.length);
 ////                }
 ////            }catch(Exception ex){
@@ -3613,7 +3729,7 @@ public class EmpleadosDAO extends BaseDAO{
 ////                    + "Error: " + ex.toString());
 ////                ex.printStackTrace();
 ////            }finally{
-////                System.out.println("[EmpleadosDAO.insertListEmpleados]"
+////                System.out.println(WEB_NAME+"[EmpleadosDAO.insertListEmpleados]"
 ////                    + "Saliendo...");
 ////                try {
 ////                    if (statement != null) statement.close();

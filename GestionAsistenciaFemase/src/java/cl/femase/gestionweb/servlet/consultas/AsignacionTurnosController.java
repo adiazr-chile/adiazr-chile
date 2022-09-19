@@ -37,7 +37,7 @@ public class AsignacionTurnosController extends BaseServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
-        System.out.println("[AsignacionTurnosController.doGet]session: "+session);
+        System.out.println(WEB_NAME+"[AsignacionTurnosController.doGet]session: "+session);
         if (session!=null) session.removeAttribute("mensaje");else session = request.getSession();
         UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
 
@@ -59,7 +59,7 @@ public class AsignacionTurnosController extends BaseServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
-        System.out.println("[AsignacionTurnosController.doPost]session: "+session);
+        System.out.println(WEB_NAME+"[AsignacionTurnosController.doPost]session: "+session);
         if (session!=null) session.removeAttribute("mensaje");else session = request.getSession();
         UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
 
@@ -87,7 +87,7 @@ public class AsignacionTurnosController extends BaseServlet {
         response.setHeader("Cache-Control", "private, no-store, no-cache, must-revalidate");
         
         HttpSession session = request.getSession(false);
-        System.out.println("[AsignacionTurnosController.processRequest]session: "+session);
+        System.out.println(WEB_NAME+"[AsignacionTurnosController.processRequest]session: "+session);
         ServletContext application = this.getServletContext();
         PropertiesVO appProperties=(PropertiesVO)application.getAttribute("appProperties");
         if (session!=null) session.removeAttribute("mensaje");else session = request.getSession();
@@ -96,7 +96,7 @@ public class AsignacionTurnosController extends BaseServlet {
         AsignacionTurnoBp asignacionBp = new AsignacionTurnoBp(appProperties);
         
         if(request.getParameter("action") != null){
-            System.out.println("[AsignacionTurnosController]action is: " + request.getParameter("action"));
+            System.out.println(WEB_NAME+"[AsignacionTurnosController]action is: " + request.getParameter("action"));
             List<AsignacionTurnoVO> listaAsignaciones = new ArrayList<>();
             String action=(String)request.getParameter("action");
             Gson gson = new Gson();
@@ -134,7 +134,7 @@ public class AsignacionTurnosController extends BaseServlet {
                 String deptoId  = null;
                 String cencoId  = "-1";
                 String paramCencoID         = request.getParameter("cencoId");
-                System.out.println("[AsignacionTurnosController]"
+                System.out.println(WEB_NAME+"[AsignacionTurnosController]"
                     + "token param 'cencoID'= " + paramCencoID);
                 if (paramCencoID != null && paramCencoID.compareTo("-1") != 0){
                     StringTokenizer tokenCenco  = new StringTokenizer(paramCencoID, "|");
@@ -161,7 +161,7 @@ public class AsignacionTurnosController extends BaseServlet {
                     if (empresaId != null && 
                             empresaId.compareTo("-1") != 0){
                             
-                        System.out.println("[AsignacionTurnosController]"
+                        System.out.println(WEB_NAME+"[AsignacionTurnosController]"
                             + "mostrando asignacion de turnos: "
                             + " empresaId: " + empresaId
                             + ", deptoId: " + deptoId    

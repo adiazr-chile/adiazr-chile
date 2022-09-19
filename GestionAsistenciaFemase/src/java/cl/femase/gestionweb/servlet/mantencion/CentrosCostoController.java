@@ -87,7 +87,7 @@ public class CentrosCostoController extends BaseServlet {
             new AsignacionDispositivoBp(appProperties);
         
         if(request.getParameter("action") != null){
-            System.out.println("---->action is: " + request.getParameter("action"));
+            System.out.println(WEB_NAME+"---->action is: " + request.getParameter("action"));
             List<CentroCostoVO> listaObjetos = new ArrayList<CentroCostoVO>();
             String action=(String)request.getParameter("action");
             Gson gson = new Gson();
@@ -125,7 +125,7 @@ public class CentrosCostoController extends BaseServlet {
             else if (jtSorting.contains("deptoId")) jtSorting = jtSorting.replaceFirst("deptoId","cc.depto_id");
             else if (jtSorting.contains("regionId")) jtSorting = jtSorting.replaceFirst("regionId","comuna.region_id");
                         
-            System.out.println("[cl.femase.gestionweb.servlet."
+            System.out.println(WEB_NAME+"[cl.femase.gestionweb.servlet."
                     + "mantencion.CentrosCostoController.processRequest]"
                     + "empresaId = " +request.getParameter("empresaId"));
             if (request.getParameter("empresaId") != null && 
@@ -178,7 +178,7 @@ public class CentrosCostoController extends BaseServlet {
             String[] dispositivos = request.getParameterValues("dispositivo");
             if (dispositivos != null){
                 for (int x = 0; x < dispositivos.length; x++){
-                    System.out.println("dispositivo seleccionado[" + x + "] = " + dispositivos[x]);
+                    System.out.println(WEB_NAME+"dispositivo seleccionado[" + x + "] = " + dispositivos[x]);
                     DispositivoCentroCostoVO newCenco = 
                         new DispositivoCentroCostoVO(dispositivos[x],auxdata.getId());
                     asignacionBp.insertAsignacionCentroCosto(newCenco, resultado);
@@ -186,7 +186,7 @@ public class CentrosCostoController extends BaseServlet {
             }
             
             if (action.compareTo("list") == 0) {
-                System.out.println("[servlet.CentrosCostoController]"
+                System.out.println(WEB_NAME+"[servlet.CentrosCostoController]"
                     + "Mantenedor - Centro de Costo - "
                     + "Listar centros de costo...");
                 try{
@@ -220,7 +220,7 @@ public class CentrosCostoController extends BaseServlet {
                     ex.printStackTrace();
                 }   
             }else if (action.compareTo("create") == 0) {
-                    System.out.println("[servlet.CentrosCostoController]Insertar...");
+                    System.out.println(WEB_NAME+"[servlet.CentrosCostoController]Insertar...");
                     MaintenanceVO doCreate = auxnegocio.insert(auxdata, resultado);					
                     listaObjetos.add(auxdata);
 
@@ -230,7 +230,7 @@ public class CentrosCostoController extends BaseServlet {
                     String listData="{\"Result\":\"OK\",\"Record\":"+json+"}";											
                     response.getWriter().print(listData);
             }else if (action.compareTo("update") == 0) {  
-                    System.out.println("[servlet.CentrosCostoController]Actualizar...");
+                    System.out.println(WEB_NAME+"[servlet.CentrosCostoController]Actualizar...");
                     try{
                         MaintenanceVO doUpdate = auxnegocio.update(auxdata, resultado);
                         listaObjetos.add(auxdata);

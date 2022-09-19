@@ -76,7 +76,7 @@ public class DispositivoDAO extends BaseDAO{
             
             int rowAffected = psupdate.executeUpdate();
             if (rowAffected == 1){
-                System.out.println("[DispositivoDAO."
+                System.out.println(WEB_NAME+"[DispositivoDAO."
                     + "updateEstadoDispositivo]update Dispositivo."
                     + " Id:" + _idDispositivo
                     + ", estado:" + _estado   
@@ -168,7 +168,7 @@ public class DispositivoDAO extends BaseDAO{
             
             int rowAffected = psupdate.executeUpdate();
             if (rowAffected == 1){
-                System.out.println("[DispositivoDAO.update]"
+                System.out.println(WEB_NAME+"[DispositivoDAO.update]"
                     + ", id:" +_data.getId()
                     + ", tipo:" +_data.getIdTipo()
                     +" actualizado OK!");
@@ -262,7 +262,7 @@ public class DispositivoDAO extends BaseDAO{
             
             int filasAfectadas = insert.executeUpdate();
             if (filasAfectadas == 1){
-                System.out.println("[DispositivoDAO.insert]"
+                System.out.println(WEB_NAME+"[DispositivoDAO.insert]"
                     + ", Id:" +_data.getId()
                     + ", tipo:" +_data.getIdTipo()
                     + ", modelo:" +_data.getModelo()    
@@ -361,7 +361,7 @@ public class DispositivoDAO extends BaseDAO{
                 sql += " limit "+_jtPageSize + " offset "+_jtStartIndex;
             }
             
-            System.out.println("[DispositivoDAO.getDispositivos]sql: " + sql);
+            System.out.println(WEB_NAME+"[DispositivoDAO.getDispositivos]sql: " + sql);
             if (!m_usedGlobalDbConnection) dbConn = dbLocator.getConnection(m_dbpoolName,"[DispositivoDAO.getDispositivos]");
             ps = dbConn.prepareStatement(sql);
             rs = ps.executeQuery();

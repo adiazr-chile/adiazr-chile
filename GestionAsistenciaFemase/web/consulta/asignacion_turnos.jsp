@@ -25,13 +25,13 @@
     
     String startDate = (String)session.getAttribute("startDate");
     String endDate = (String)session.getAttribute("endDate");
-    System.out.println("[consulta/asignacion_turnos.jsp]"
+    System.out.println("[GestionFemaseWeb]consulta/asignacion_turnos.jsp]"
         + "startDate= "+startDate
         + ",endDate= "+endDate);
     String paramEmpresa = (String)request.getAttribute("empresa");
     String paramRut     = (String)request.getAttribute("rut_empleado");
     
-    System.out.println("[consulta/asignacion_turnos.jsp]"
+    System.out.println("[GestionFemaseWeb]consulta/asignacion_turnos.jsp]"
         + "paramEmpresa= " + paramEmpresa
         + ",paramRut= " + paramRut);
 %>

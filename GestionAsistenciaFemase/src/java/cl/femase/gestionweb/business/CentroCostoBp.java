@@ -22,7 +22,7 @@ import java.util.List;
  *
  * @author Alexander
  */
-public class CentroCostoBp {
+public class CentroCostoBp  extends BaseBp{
 
     public PropertiesVO props;
     /** para guardar los eventos de mantencion de informacion*/
@@ -188,14 +188,14 @@ public class CentroCostoBp {
     
     public List<DispositivoVO> getDispositivosAsignados(int _cencoId){
         
-        System.out.println("cl.femase.gestionweb."
+        System.out.println(WEB_NAME+"cl.femase.gestionweb."
             + "business.CentroCostoBp."
             + "getDispositivosAsignados(). CencoID: "+_cencoId);
         List<DispositivoVO> dispositivos=null; 
         
         HashMap<String,DispositivoVO> lista = 
             centrocostoDao.getDispositivosAsignados(_cencoId);
-        System.out.println("cl.femase.gestionweb."
+        System.out.println(WEB_NAME+"cl.femase.gestionweb."
             + "business.CentroCostoBp."
             + "getDispositivosAsignados(). "
             + "CencoID: "+_cencoId

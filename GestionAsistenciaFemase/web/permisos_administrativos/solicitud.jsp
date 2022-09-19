@@ -377,6 +377,22 @@
                     edit:false,
                     sorting: false
                 },
+                anio: {
+                    title:'Año',
+                    width: '6%',
+                    list: true,
+                    create:false,
+                    sorting: false,
+                    edit:false
+                },
+                semestre: {
+                    title:'Semestre',
+                    width: '6%',
+                    list: true,
+                    create:false,
+                    sorting: false,
+                    edit:false
+                },
                 fechaHoraCancela: {
                     title:'Fecha hora cancelacion',
                     width: '10%',

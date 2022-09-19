@@ -12,17 +12,19 @@ import org.apache.jcs.engine.ElementAttributes;
 
 public class CacheFactory {
 
-private static final String DEFAULT_VALUES_SETTINGS_FILE =
-"jcsdefaults.properties";
+    public static String WEB_NAME = "[GestionFemaseWeb]";
+    
+    private static final String DEFAULT_VALUES_SETTINGS_FILE =
+        "jcsdefaults.properties";
 
-private static Properties defaultProperties = new Properties();
+    private static Properties defaultProperties = new Properties();
 
-private static String defaultsFile = null;
+    private static String defaultsFile = null;
 
-/**Constructor*/
-private CacheFactory() {
+    /**Constructor*/
+    private CacheFactory() {
 
-}
+    }
 
 
 /**
@@ -58,7 +60,7 @@ region
 			String pkg = CacheFactory.class.getPackage().getName();
 			pkg = pkg.replace(".".charAt(0), "/".charAt(0));
 
-			System.out.println("package: " + pkg);
+			System.out.println(WEB_NAME+"package: " + pkg);
 
 			defaultsFile = "/" + pkg + "/" + DEFAULT_VALUES_SETTINGS_FILE;
 

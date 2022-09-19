@@ -124,6 +124,15 @@
                 }
             %>
         </select>
+        
+        <label for="estado">Estado</label>
+                <select id="filtroEstado" name="filtroEstado" 
+                           class="chosen-select" style="width:150px;" tabindex="2">
+                        <option value="-1" selected>Cualquiera</option>
+                        <option value="1" >Vigente</option>
+                        <option value="2">No Vigente</option>
+                    </select>
+        
         <button type="submit" id="LoadRecordsButton">Buscar</button>
                 <input name="botoncrear" type="button" value="Crear usuario" class="button button-blue" onclick="crearUsuario();">
             
@@ -136,7 +145,7 @@
     $(document).ready(function () {
 
         $('#UsuariosTableContainer').jtable({       
-            title: 'Usuarios',
+            title: 'Usuarios del Sistema',
             paging: true, //Enable paging
             pageSize: 10, //Set page size (default: 10)
             sorting: true, //Enable sorting
@@ -243,7 +252,8 @@
                 username: $('#username').val(),
                 nombres: $('#nombres').val(),
                 empresaId: $('#empresaId').val(),
-                idPerfil: $('#idPerfil').val()
+                idPerfil: $('#idPerfil').val(),
+                filtroEstado: $('#filtroEstado').val()
             });
         });
 

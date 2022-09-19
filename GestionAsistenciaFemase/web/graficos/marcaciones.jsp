@@ -11,7 +11,7 @@
 <!DOCTYPE html>
 <%
     String dataPoints = (String)request.getAttribute("dataPoints");
-    System.out.println("[graficos-marcaciones.jsp]dataPoints: "+dataPoints);
+    System.out.println("[GestionFemaseWeb]graficos-marcaciones.jsp]dataPoints: "+dataPoints);
 %>
  
 <!DOCTYPE HTML>

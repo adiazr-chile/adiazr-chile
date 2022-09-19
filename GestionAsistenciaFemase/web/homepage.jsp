@@ -17,7 +17,7 @@
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     String strFechaActual = sdf.format(fechaActual);
     
-    System.out.println("[homepage.jsp]"
+    System.out.println("[GestionFemaseWeb]homepage.jsp]"
         + "Fecha actual: " + strFechaActual
         + ", Usuario: " + userInSession.getUsername() 
         + ", marca virtual? " + userInSession.getMarcacionVirtual());
@@ -29,15 +29,15 @@
                 mainPage = "vistas/contratos_caducados.jsp";
     }else if (userInSession.getMarcacionVirtual().compareTo("S") == 0 
             && !fechasMarcacionVirtual.isEmpty()){
-        System.out.println("[homepage.jsp]"
+        System.out.println("[GestionFemaseWeb]homepage.jsp]"
             + "Hay fechas definidas para marcacion virtual...");
         if (fechasMarcacionVirtual.containsKey(strFechaActual)){
-            System.out.println("[homepage.jsp]"
+            System.out.println("[GestionFemaseWeb]homepage.jsp]"
                 + "La fecha actual " + strFechaActual 
                 +" es valida para realizar marcacion virtual.");
             mainPage = "marcacion_virtual/ingresa_marca_virtual.jsp";
         }else{
-            System.out.println("[homepage.jsp]"
+            System.out.println("[GestionFemaseWeb]homepage.jsp]"
                 + "La fecha actual " + strFechaActual 
                 +" no esta dentro de las fechas asignadas para marcacion virtual.");
         }

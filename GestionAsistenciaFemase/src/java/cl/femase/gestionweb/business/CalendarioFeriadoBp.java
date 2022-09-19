@@ -22,7 +22,7 @@ import java.util.List;
  *
  * @author Alexander
  */
-public class CalendarioFeriadoBp {
+public class CalendarioFeriadoBp  extends BaseBp{
 
     public PropertiesVO props;
     /** para guardar los eventos de mantencion de informacion*/
@@ -83,7 +83,7 @@ public class CalendarioFeriadoBp {
                 InfoFeriadoJsonObjectVO datos[] = gson.fromJson(jsonOutput, InfoFeriadoJsonObjectVO[].class);
                 InfoFeriadoJsonObjectVO dataFeriadoFromJson = datos[0];
                 if (dataFeriadoFromJson != null){
-                    System.out.println("[CalendarioFeriadoBp.validaFeriado]"
+                    System.out.println(WEB_NAME+"[CalendarioFeriadoBp.validaFeriado]"
                         + "Objeto from json: " + dataFeriadoFromJson.toString());
                     infoFeriado.setFecha(dataFeriadoFromJson.getFecha());
                     infoFeriado.setFeriado(dataFeriadoFromJson.isFeriado());
@@ -122,7 +122,7 @@ public class CalendarioFeriadoBp {
             String _startDate, 
             String _endDate){
     
-        System.out.println("[CalendarioFeriadoBp.getFechas]"
+        System.out.println(WEB_NAME+"[CalendarioFeriadoBp.getFechas]"
             + "empresaId: " + _empresaId
             + ", runEmpleado: " + _runEmpleado
             + ", startDate: " + _startDate
@@ -141,7 +141,7 @@ public class CalendarioFeriadoBp {
             for (int x = 0; x < datos.length ; x++){
                 InfoFeriadoJsonObjectVO dataFeriadoFromJson = datos[x];
                 if (dataFeriadoFromJson != null){
-                    System.out.println("[CalendarioFeriadoBp.getFechas]"
+                    System.out.println(WEB_NAME+"[CalendarioFeriadoBp.getFechas]"
                         + "Objeto from json: " + dataFeriadoFromJson.toString());
                     InfoFeriadoVO infoFeriado = new InfoFeriadoVO();
                     infoFeriado.setFecha(dataFeriadoFromJson.getFecha());
@@ -153,7 +153,7 @@ public class CalendarioFeriadoBp {
                 }
             }
         }else{
-            System.out.println("[CalendarioFeriadoBp.getFechas]"
+            System.out.println(WEB_NAME+"[CalendarioFeriadoBp.getFechas]"
                 + "empresaId: " + _empresaId
                 + ", runEmpleado: " + _runEmpleado
                 + ", startDate: " + _startDate

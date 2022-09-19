@@ -91,7 +91,7 @@ public class ProcesosController extends BaseServlet {
         ProcesosBp auxnegocio=new ProcesosBp(appProperties);
 
         if(request.getParameter("action") != null){
-            System.out.println("---->action is: " + request.getParameter("action"));
+            System.out.println(WEB_NAME+"[ProcesosController]action is: " + request.getParameter("action"));
             List<ProcesoVO> listaObjetos = new ArrayList<ProcesoVO>();
             String action=(String)request.getParameter("action");
             Gson gson = new Gson();
@@ -146,7 +146,7 @@ public class ProcesosController extends BaseServlet {
                 auxdata.setJobName(request.getParameter("jobName"));
             }
              
-//            System.out.println("--->rowKey: " + auxdata.getRowKey());
+//            System.out.println(WEB_NAME+"--->rowKey: " + auxdata.getRowKey());
             String keyEmpresa = "";
             String keyIdProceso = "";
             
@@ -158,7 +158,7 @@ public class ProcesosController extends BaseServlet {
                 auxdata.setId(Integer.parseInt(keyIdProceso));
             }
             if (action.compareTo("list") == 0) {
-                System.out.println("Mantenedor - Procesos - "
+                System.out.println(WEB_NAME+"Mantenedor - Procesos - "
                     + "mostrando procesos. "
                     + "empresa: "+auxdata.getEmpresaId()
                     + ", nombre: "+auxdata.getNombre());
@@ -193,8 +193,8 @@ public class ProcesosController extends BaseServlet {
                     ex.printStackTrace();
                 }   
             }else if (action.compareTo("create") == 0) {
-                    System.out.println("Mantenedor - Procesos - Insertar...");
-                    System.out.println("Proceso rowKey: "+auxdata.getRowKey()
+                    System.out.println(WEB_NAME+"Mantenedor - Procesos - Insertar...");
+                    System.out.println(WEB_NAME+"Proceso rowKey: "+auxdata.getRowKey()
                         +", empresaId: "+auxdata.getEmpresaId()
                         +", idproceso: "+auxdata.getId());
                     logEvento.setEmpresaId(auxdata.getEmpresaId());
@@ -207,9 +207,9 @@ public class ProcesosController extends BaseServlet {
                     String listData="{\"Result\":\"OK\",\"Record\":"+json+"}";											
                     response.getWriter().print(listData);
             }else if (action.compareTo("update") == 0) {  
-                    System.out.println("Mantenedor - Procesos - Actualizar...");
+                    System.out.println(WEB_NAME+"Mantenedor - Procesos - Actualizar...");
                     try{
-                        System.out.println("Proceso rowKey: " + auxdata.getRowKey()
+                        System.out.println(WEB_NAME+"Proceso rowKey: " + auxdata.getRowKey()
                             +", empresaId: " + auxdata.getEmpresaId()
                             +", idproceso: " + auxdata.getId());
                         logEvento.setEmpresaId(auxdata.getEmpresaId());
@@ -259,7 +259,7 @@ public class ProcesosController extends BaseServlet {
                         
                         if (horasSelected != null){
                             for (int x = 0;x < horasSelected.length; x++){
-                                System.out.println("[ProcesosController]"
+                                System.out.println(WEB_NAME+"[ProcesosController]"
                                     + "guardar programacion proceso[" + x + "] = " + horasSelected[x]);
                                 strHoras += horasSelected[x] + ",";
                             }
@@ -275,7 +275,7 @@ public class ProcesosController extends BaseServlet {
                         MaintenanceVO deleteProg = auxnegocio.deleteProgramacion(programacion, logEvento);
                         if (!deleteProg.isThereError()){
                             if (codDia != -1 && horasSelected != null){
-                                System.out.println("[ProcesosController]"
+                                System.out.println(WEB_NAME+"[ProcesosController]"
                                     + "guardar programacion dia especifico. "
                                     + " empresaID= " + paramEmpresa
                                     + ",procesoID= " + paramIdProceso
@@ -286,7 +286,7 @@ public class ProcesosController extends BaseServlet {
                                     //eliminar toda la programacion del proceso
                                    for (int intDia = 1;intDia <= 7; intDia++){
                                         programacion.setCodDia(intDia);
-                                        System.out.println("[ProcesosController]"
+                                        System.out.println(WEB_NAME+"[ProcesosController]"
                                             + "guardar programacion. "
                                             + " empresaID= " + paramEmpresa
                                             + ",procesoID= " + paramIdProceso
@@ -313,7 +313,7 @@ public class ProcesosController extends BaseServlet {
                             }
                         }
 
-                        System.out.println("[ProcesosController]"
+                        System.out.println(WEB_NAME+"[ProcesosController]"
                             + "recargar programacion de jobs quartz. "
                             + " EmpresaID = " + paramEmpresa
                             + ", procesoID = " + paramIdProceso
@@ -331,7 +331,7 @@ public class ProcesosController extends BaseServlet {
             }else if (action.compareTo("load_filtros") == 0) {
                         String paramEmpresa = request.getParameter("empresaProceso");
                         int paramIdProceso = Integer.parseInt(request.getParameter("idProceso"));
-                        System.out.println("[ProcesosController."
+                        System.out.println(WEB_NAME+"[ProcesosController."
                             + "loadFiltros]"
                             + "empresaId: "+ paramEmpresa    
                             + ", procesoId: "+ paramIdProceso);
@@ -346,7 +346,7 @@ public class ProcesosController extends BaseServlet {
             }else if (action.compareTo("ejecutar_proceso") == 0) {
                     String paramEmpresa = request.getParameter("empresaProceso");
                     int paramIdProceso = Integer.parseInt(request.getParameter("idProceso"));
-                    System.out.println("[ProcesosController."
+                    System.out.println(WEB_NAME+"[ProcesosController."
                         + "ejecutar]Ejecutar proceso. "
                         + "EmpresaId: "+ paramEmpresa    
                         + ", procesoId: "+ paramIdProceso);
@@ -367,7 +367,7 @@ public class ProcesosController extends BaseServlet {
                             JobDetail job = newJob(jobClass)
                                 .withIdentity(jobname, "group_" + proceso.getJobName())
                                 .build();            
-                            System.out.println("[ProcesosController."
+                            System.out.println(WEB_NAME+"[ProcesosController."
                                 + "ejecutar]Ejecutar proceso. "
                                 + "jobName: "+ proceso.getJobName());
                             job.getJobDataMap().put("exec_user", userConnected.getUsername());
@@ -380,7 +380,7 @@ public class ProcesosController extends BaseServlet {
                                 for(String k:keysFiltros){
                                     ProcesoFiltroVO filtro = filtros.get(k);
                                     String filtroValue = request.getParameter(filtro.getCode());
-                                    System.out.println("[ProcesosController."
+                                    System.out.println(WEB_NAME+"[ProcesosController."
                                         + "ejecutar]filtro: "+filtro.getCode()
                                         + ", value: " + filtroValue);
                                     if (filtro.getCode().compareTo("cenco_id") == 0){
@@ -391,7 +391,7 @@ public class ProcesosController extends BaseServlet {
                                                 filtrocencos += cencosSelected[x]+",";
                                             }
                                             filtrocencos = filtrocencos.substring(0, filtrocencos.length()-1);
-                                            System.out.println("[ProcesosController."
+                                            System.out.println(WEB_NAME+"[ProcesosController."
                                                 + "ejecutar]cencosSeleccionados: "+filtrocencos);
                                             job.getJobDataMap().put(filtro.getCode(), filtrocencos);
                                         }
@@ -400,12 +400,12 @@ public class ProcesosController extends BaseServlet {
                                     }
                                 }//fin iteracion de filtros
                             }else{
-                                System.out.println("[ProcesosController."
+                                System.out.println(WEB_NAME+"[ProcesosController."
                                     + "ejecutar]No hay filtros definidos. "
                                     + "Usar empresa seleccionada: " + paramEmpresa);
                                 job.getJobDataMap().put("empresa_id", paramEmpresa);
                             }
-                            System.out.println("[ProcesosController."
+                            System.out.println(WEB_NAME+"[ProcesosController."
                                 + "ejecutar]Ejecutar job: "+strClassRef);
                             SimpleTrigger trigger = (SimpleTrigger)newTrigger()
                                 .withIdentity("trigger"+correlativo, "group_"+proceso.getJobName())

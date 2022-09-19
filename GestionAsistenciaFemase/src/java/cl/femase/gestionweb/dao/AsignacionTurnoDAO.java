@@ -120,7 +120,7 @@ public class AsignacionTurnoDAO extends BaseDAO{
                 sql += " limit "+_jtPageSize + " offset "+_jtStartIndex;
             }
             
-            System.out.println("[AsignacionTurnoDAO.getAsignaciones]sql: "+sql);
+            System.out.println(WEB_NAME+"[AsignacionTurnoDAO.getAsignaciones]sql: "+sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,"[AsignacionTurnoDAO.getAsignaciones]");
             ps = dbConn.prepareStatement(sql);
@@ -198,7 +198,7 @@ public class AsignacionTurnoDAO extends BaseDAO{
                 + "and ta.rut_empleado='"+_rutEmpleado+"' "
                 + "order by ta.fecha_desde desc limit 1";
             
-            System.out.println("[AsignacionTurnoDAO.getTurnoVigente]sql: "+sql);
+            System.out.println(WEB_NAME+"[AsignacionTurnoDAO.getTurnoVigente]sql: "+sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,"[AsignacionTurnoDAO.getTurnoVigente]");
             ps = dbConn.prepareStatement(sql);
@@ -266,7 +266,7 @@ public class AsignacionTurnoDAO extends BaseDAO{
                 + "and ta.rut_empleado='"+_rutEmpleado+"' "
                 + "order by ta.fecha_desde desc limit 1";
             
-            System.out.println("[AsignacionTurnoDAO.getTurnoAnterior]sql: "+sql);
+            System.out.println(WEB_NAME+"[AsignacionTurnoDAO.getTurnoAnterior]sql: "+sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,"[AsignacionTurnoDAO.getTurnoAnterior]");
             ps = dbConn.prepareStatement(sql);
@@ -326,7 +326,7 @@ public class AsignacionTurnoDAO extends BaseDAO{
                 + "and rut_empleado = '" + _rutEmpleado + "' "
                 + "order by fecha_desde desc limit 1";
             
-            System.out.println("[AsignacionTurnoDAO.getTurnoActual]sql: "+sql);
+            System.out.println(WEB_NAME+"[AsignacionTurnoDAO.getTurnoActual]sql: "+sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,"[AsignacionTurnoDAO.getTurnoActual]");
             ps = dbConn.prepareStatement(sql);
@@ -372,7 +372,7 @@ public class AsignacionTurnoDAO extends BaseDAO{
                     + "and id_turno = ?";
             PreparedStatement statement = dbConn.prepareStatement(sqlUpdate);
            
-            System.out.println("[AsignacionTurnoDAO.venceTurnoAsignado] "
+            System.out.println(WEB_NAME+"[AsignacionTurnoDAO.venceTurnoAsignado] "
                 + "Vence turno asignado. "
                 + "empresaId= " + _asignacionTurno.getEmpresaId()
                 + ", rut= " + _asignacionTurno.getRutEmpleado()
@@ -389,7 +389,7 @@ public class AsignacionTurnoDAO extends BaseDAO{
             statement.addBatch();
 
             int[] rowsAffected = statement.executeBatch(); // Execute every 1000 items.
-            System.out.println("[AsignacionTurnoDAO.venceTurnoAsignado]filas afectadas= "+rowsAffected.length);
+            System.out.println(WEB_NAME+"[AsignacionTurnoDAO.venceTurnoAsignado]filas afectadas= "+rowsAffected.length);
            
         }catch(DatabaseException | SQLException ex){
             System.err.println("[AsignacionTurnoDAO.venceTurnoAsignado]Error= " + ex.toString());
@@ -412,7 +412,7 @@ public class AsignacionTurnoDAO extends BaseDAO{
             dbConn = dbLocator.getConnection(m_dbpoolName,"[AsignacionTurnoDAO.insertaTurnoAsignado]");
             PreparedStatement statement = dbConn.prepareStatement(SQL_INSERT_ONE_ROW);
            
-            System.out.println("[AsignacionTurnoDAO.insertaTurnoAsignado] "
+            System.out.println(WEB_NAME+"[AsignacionTurnoDAO.insertaTurnoAsignado] "
                 + "Insert turno asignado. "
                 + "empresaId= " + _asignacionTurno.getEmpresaId()
                 + ", rut= " + _asignacionTurno.getRutEmpleado()
@@ -432,7 +432,7 @@ public class AsignacionTurnoDAO extends BaseDAO{
             statement.addBatch();
 
             int[] rowsAffected = statement.executeBatch(); // Execute every 1000 items.
-            System.out.println("[AsignacionTurnoDAO.insertaTurnoAsignado]filas afectadas= "+rowsAffected.length);
+            System.out.println(WEB_NAME+"[AsignacionTurnoDAO.insertaTurnoAsignado]filas afectadas= "+rowsAffected.length);
            
         }catch(DatabaseException | SQLException ex){
             System.err.println("[AsignacionTurnoDAO.insertaTurnoAsignado]Error= " + ex.toString());
@@ -485,7 +485,7 @@ public class AsignacionTurnoDAO extends BaseDAO{
                 if (_rutEmpleado != null && _rutEmpleado.compareTo("-1") != 0){        
                     strSql += " and ta.rut_empleado = '" + _rutEmpleado +"' ";
                 }
-                System.out.println("[AsignacionTurnoDAO.getAsignacionesCount]sql: "+strSql); 
+                System.out.println(WEB_NAME+"[AsignacionTurnoDAO.getAsignacionesCount]sql: "+strSql); 
                 rs = statement.executeQuery(strSql);
                 if (rs.next()) {
                     count=rs.getInt("count");

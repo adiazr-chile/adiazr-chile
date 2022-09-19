@@ -6,6 +6,7 @@
 package cl.femase.gestionweb.servlet.procesos;
 
 import cl.femase.gestionweb.dao.TraspasoHistoricoDAO;
+import cl.femase.gestionweb.servlet.BaseServlet;
 import cl.femase.gestionweb.vo.MaintenanceVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import cl.femase.gestionweb.vo.RegistroHistoricoVO;
@@ -14,7 +15,6 @@ import java.io.IOException;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -24,7 +24,7 @@ import javax.servlet.http.HttpSession;
  * @author aledi
  */
 @WebServlet(name = "TransferToHistoricalTables", urlPatterns = {"/servlet/TransferToHistoricalTables"})
-public class TransferToHistoricalTables extends HttpServlet {
+public class TransferToHistoricalTables extends BaseServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -48,8 +48,8 @@ public class TransferToHistoricalTables extends HttpServlet {
         String empresa          = userConnected.getEmpresaId();
         String tabla            = request.getParameter("tabla");
         
-        System.out.println("-----------------------------------");
-        System.out.println("[GestionFemase."
+        System.out.println(WEB_NAME+"-----------------------------------");
+        System.out.println(WEB_NAME+"[GestionFemase."
             + "servlet.TraspasoHistorico.processRequest]"
             + "Accion: " + accion 
             + ", tabla: " + tabla
@@ -60,14 +60,14 @@ public class TransferToHistoricalTables extends HttpServlet {
         
         if (accion.compareTo("lastrow") == 0){
             //Mostrar ultimo registro traspasado a historico
-            System.out.println("[GestionFemase."
+            System.out.println(WEB_NAME+"[GestionFemase."
                 + "servlet.TraspasoHistorico.processRequest]"
                 + "Mostrar ultimo registro traspasado a historico");
             RegistroHistoricoVO ultimoRegistro = historicosDao.getUltimoRegistroHistorico(empresa, tabla);
             request.setAttribute("ultimoRegistro", ultimoRegistro);
         }else if (accion.compareTo("preview") == 0){
             //vista previa
-            System.out.println("[GestionFemase."
+            System.out.println(WEB_NAME+"[GestionFemase."
                 + "servlet.TraspasoHistorico.processRequest]"
                 + "Vista previa de traspaso a historico");
             String startDate    = request.getParameter("startDate");
@@ -76,7 +76,7 @@ public class TransferToHistoricalTables extends HttpServlet {
             RegistroHistoricoVO registro = 
                 historicosDao.getVistaPreviaTraspasoHistorico(empresa, tabla, startDate, endDate);
             
-            System.out.println("[GestionFemase."
+            System.out.println(WEB_NAME+"[GestionFemase."
                 + "servlet.TraspasoHistorico.processRequest]"
                 + "Objeto Vista Previa."
                 + "Tabla: " + registro.getTabla()
@@ -87,7 +87,7 @@ public class TransferToHistoricalTables extends HttpServlet {
             request.setAttribute("endDate", endDate);
         }else if (accion.compareTo("execute") == 0){
             //Ejecutar traspaso a historico
-            System.out.println("[GestionFemase."
+            System.out.println(WEB_NAME+"[GestionFemase."
                 + "servlet.TraspasoHistorico.processRequest]"
                 + "Ejecutar traspaso a historico");
             String startDate    = request.getParameter("startDate");
@@ -118,7 +118,7 @@ public class TransferToHistoricalTables extends HttpServlet {
             resumen.setTabla(tabla);
             resumen.setNumRegistrosInsertados(resultado.getFilasAfectadas());
             
-            System.out.println("[GestionFemase."
+            System.out.println(WEB_NAME+"[GestionFemase."
                 + "servlet.TraspasoHistorico.processRequest]"
                 + "Objeto Resumen."
                 + "Tabla: " + resumen.getTabla()

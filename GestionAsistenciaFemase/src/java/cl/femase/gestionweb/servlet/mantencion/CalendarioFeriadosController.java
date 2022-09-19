@@ -81,7 +81,7 @@ public class CalendarioFeriadosController extends BaseServlet {
         CalendarioFeriadoBp feriadosBp = new CalendarioFeriadoBp(appProperties);
 
         if(request.getParameter("action") != null){
-            System.out.println("[CalendarioFeriadosController]"
+            System.out.println(WEB_NAME+"[CalendarioFeriadosController]"
                 + "action is: " + request.getParameter("action"));
             List<CalendarioFeriadoVO> listaObjetos = new ArrayList<>();
             String action=(String)request.getParameter("action");
@@ -144,7 +144,7 @@ public class CalendarioFeriadosController extends BaseServlet {
                 auxdata.setDia(Integer.parseInt(tokenFecha.nextToken()));
             }
             
-            System.out.println("[CalendarioFeriadosController]"
+            System.out.println(WEB_NAME+"[CalendarioFeriadosController]"
                 + "rowKey: " + request.getParameter("rowKey"));
             
             if (request.getParameter("rowKey") != null){
@@ -170,7 +170,7 @@ public class CalendarioFeriadosController extends BaseServlet {
             }
             
             if (action.compareTo("list") == 0) {
-                System.out.println("[CalendarioFeriadosController]"
+                System.out.println(WEB_NAME+"[CalendarioFeriadosController]"
                     + " listar feriados...");
                 try{
                     listaObjetos = feriadosBp.getFeriados(paramAnio,paramMes,paramTipoFeriado,
@@ -200,7 +200,7 @@ public class CalendarioFeriadosController extends BaseServlet {
                     ex.printStackTrace();
                 }   
             }else if (action.compareTo("create") == 0) {
-                    System.out.println("[CalendarioFeriadosController]"
+                    System.out.println(WEB_NAME+"[CalendarioFeriadosController]"
                         + "Insertar feriado...");
                     MaintenanceVO doCreate = feriadosBp.insert(auxdata, resultado);					
                     listaObjetos.add(auxdata);
@@ -211,7 +211,7 @@ public class CalendarioFeriadosController extends BaseServlet {
                     String listData="{\"Result\":\"OK\",\"Record\":"+json+"}";											
                     response.getWriter().print(listData);
             }else if (action.compareTo("update") == 0) {  
-                    System.out.println("[CalendarioFeriadosController]"
+                    System.out.println(WEB_NAME+"[CalendarioFeriadosController]"
                         + "Actualizar Feriado, rowKey: " + request.getParameter("rowKey"));
                     try{
                         MaintenanceVO doUpdate = feriadosBp.update(auxdata, resultado);
@@ -227,7 +227,7 @@ public class CalendarioFeriadosController extends BaseServlet {
                         response.getWriter().print(error);
                     }
             }else if (action.compareTo("delete") == 0) {  
-                    System.out.println("[CalendarioFeriadosController]"
+                    System.out.println(WEB_NAME+"[CalendarioFeriadosController]"
                         + "Eliminar Feriado...");
                     try{
                         MaintenanceVO doDelete = feriadosBp.delete(auxdata.getRowKey(), resultado);

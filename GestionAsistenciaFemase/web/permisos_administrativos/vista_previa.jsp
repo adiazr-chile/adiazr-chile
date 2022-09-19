@@ -13,7 +13,8 @@
     String saldoPostPA = (String)request.getAttribute("saldoPostPA");
     ArrayList<MensajeUsuarioVO> mensajes = (ArrayList<MensajeUsuarioVO>)request.getAttribute("mensajes");
     boolean ingresarPA = (Boolean)request.getAttribute("ingresarPA");
-    
+    String horaInicio = (String)request.getAttribute("hora_inicio");
+    String horaFin = (String)request.getAttribute("hora_fin");
 %>
 
 <!DOCTYPE html>
@@ -131,7 +132,7 @@ th, td {
                 if (mensaje.getType().compareTo("ERROR")==0){
                     td_style="value_tabla_rojo";
                 }
-		System.out.println("[permiso_administrativo/vista_previa.jsp]label=" + label + ",value= " + value);
+		System.out.println("[GestionFemaseWeb]permiso_administrativo/vista_previa.jsp]label=" + label + ",value= " + value);
             %>
             <tr>
               <th width="50%" align="right" class="label_tabla" scope="col"><%=label%></th>
@@ -144,7 +145,8 @@ th, td {
         <input name="fechaDesde" type="hidden" id="fechaDesde" value="<%=fechaDesde%>" />
         <input name="fechaHasta" type="hidden" id="fechaHasta" value="<%=fechaHasta%>" />
         <input name="jornada" type="hidden" id="jornada" value="<%=jornada%>" />
-        
+        <input name="hora_inicio" type="hidden" id="jornada" value="<%=horaInicio%>" />
+        <input name="hora_fin" type="hidden" id="jornada" value="<%=horaFin%>" />
         <input name="diasEfectivosSolicitados" type="hidden" id="diasEfectivosSolicitados" value="<%=diasEfectivosSolicitados%>" />
         <input name="saldoPostVacaciones" type="hidden" id="saldoPostPA" value="<%=saldoPostPA%>" />
         

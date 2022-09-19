@@ -16,7 +16,7 @@
     String deptoSelected = (String)session.getAttribute("deptoSelected");
     String cencoSelected = (String)session.getAttribute("cencoSelected");
     
-    System.out.println("[contratos_caducados.jsp]"
+    System.out.println("[GestionFemaseWeb]contratos_caducados.jsp]"
         + "empresaSelected= " + empresaSelected
         +", deptoSelected= " + deptoSelected
         +", cencoSelected= " + cencoSelected

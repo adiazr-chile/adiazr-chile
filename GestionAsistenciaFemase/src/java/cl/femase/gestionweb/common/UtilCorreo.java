@@ -1,9 +1,3 @@
-/**
- * UtilCorreo.java 07-03-2017
- *
- * 
- */
-
 package cl.femase.gestionweb.common;
 
 import com.sun.mail.smtp.SMTPTransport;
@@ -26,6 +20,8 @@ import javax.mail.internet.MimeMultipart;
 
 public class UtilCorreo {
 
+    public static String WEB_NAME = "[GestionFemaseWeb]";
+    
     private Properties m_props;
     private String m_protocol;
     private boolean m_useAuth;
@@ -233,7 +229,7 @@ public class UtilCorreo {
                 t.sendMessage(msg, msg.getAllRecipients());
 	    } finally {
                 //if (verbose)
-                //System.out.println("Response: " + t.getLastServerResponse());
+                //System.out.println(WEB_NAME+"Response: " + t.getLastServerResponse());
                 t.close();
 	    }
 
@@ -298,11 +294,11 @@ public class UtilCorreo {
                 InternetAddress[] address = { new InternetAddress(mailTo) };
                 msg.setRecipients(Message.RecipientType.TO, address);
             } else {
-                System.out.println("num destinatarios= " + this.getDestinatarios().length);
+                System.out.println(WEB_NAME+"num destinatarios= " + this.getDestinatarios().length);
                 InternetAddress[] addressesTo = new InternetAddress[this.getDestinatarios().length];
 
                 for (int i = 0; i < this.getDestinatarios().length; i++) {
-                    System.out.println("Email destinatario= " + this.destinatarios[i]);
+                    System.out.println(WEB_NAME+"Email destinatario= " + this.destinatarios[i]);
                     //addressesTo[i] =
                     //        new InternetAddress(this.destinatarios[i].toString(),
                     //            this.destinatariosNombres[i].toString());
@@ -339,17 +335,17 @@ public class UtilCorreo {
                     (SMTPTransport) m_session.getTransport(m_protocol);
             try {
                 if (m_useAuth) {
-                    System.out.println("[setEnviarMensajeConAttachmentFile]autenticar!");
+                    System.out.println(WEB_NAME+"[setEnviarMensajeConAttachmentFile]autenticar!");
                     t.connect(smtpHost, nomUsuario, claveUsuario);
                 } else {
                     t.connect();
-                    System.out.println("[setEnviarMensajeConAttachmentFile]NO autenticar!");
+                    System.out.println(WEB_NAME+"[setEnviarMensajeConAttachmentFile]NO autenticar!");
                 }
                 t.sendMessage(msg, msg.getAllRecipients());
                 this.messageSent = true;
             } finally {
                 //if (verbose)
-                System.out.println("Response: " + t.getLastServerResponse());
+                System.out.println(WEB_NAME+"Response: " + t.getLastServerResponse());
                 t.close();
             }
         } catch (MessagingException e1) {
@@ -423,16 +419,16 @@ public class UtilCorreo {
                     (SMTPTransport) m_session.getTransport(m_protocol);
             try {
                 if (m_useAuth) {
-                    System.out.println("[setEnviarMensajeConAttachmentFile]autenticar!");
+                    System.out.println(WEB_NAME+"[setEnviarMensajeConAttachmentFile]autenticar!");
                     t.connect(smtpHost, nomUsuario, claveUsuario);
                 } else {
                     t.connect();
-                    System.out.println("[setEnviarMensajeConAttachmentFile]NO autenticar!");
+                    System.out.println(WEB_NAME+"[setEnviarMensajeConAttachmentFile]NO autenticar!");
                 }
                 t.sendMessage(msg, msg.getAllRecipients());
             } finally {
                 //if (verbose)
-                System.out.println("Response: " + t.getLastServerResponse());
+                System.out.println(WEB_NAME+"Response: " + t.getLastServerResponse());
                 t.close();
             }
             

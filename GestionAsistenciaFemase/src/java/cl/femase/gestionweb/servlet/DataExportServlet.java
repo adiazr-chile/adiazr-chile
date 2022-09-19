@@ -176,7 +176,7 @@ public class DataExportServlet extends BaseServlet {
             outStream.close();
 
             if (file.delete()){
-                System.out.println("[DataExportServlet."
+                System.out.println(WEB_NAME+"[DataExportServlet."
                     + "processRequest]"
                     + "Archivo CSV eliminado con exito...");
             }
@@ -217,7 +217,7 @@ public class DataExportServlet extends BaseServlet {
                 filePath = appProperties.getPathExportedFiles()+
                     File.separator+
                     userConnected.getUsername()+"_empleados.csv";
-                System.out.println("cl.femase.gestionweb.servlet."
+                System.out.println(WEB_NAME+"cl.femase.gestionweb.servlet."
                     + "DataExportServlet.exportEmpleadosToCSV(). filePath:" + filePath);
                 FileWriter filewriter = new FileWriter(filePath);
                 outfile     = new PrintWriter(filewriter);
@@ -338,7 +338,7 @@ public class DataExportServlet extends BaseServlet {
                     strcencos += cencosIt.next().getCcostoId()+",";
                 }
                 strcencos = strcencos.substring(0, strcencos.length()-1);
-                System.out.println("[EmpleadosCaducadosController."
+                System.out.println(WEB_NAME+"[EmpleadosCaducadosController."
                     + "processRequest]"
                     + "Mostrar empleados "
                     + "para los cencos seleccionados: " + strcencos);
@@ -363,7 +363,7 @@ public class DataExportServlet extends BaseServlet {
                 filePath = appProperties.getPathExportedFiles()+
                     File.separator+
                     userConnected.getUsername()+"_contratos_caducados.csv";
-                System.out.println("[DataExportServlet."
+                System.out.println(WEB_NAME+"[DataExportServlet."
                     + "exportEmpleadosCaducadosToCSV]"
                     + "filePath:" + filePath);
                 FileWriter filewriter = new FileWriter(filePath);
@@ -473,7 +473,7 @@ public class DataExportServlet extends BaseServlet {
                 filePath = appProperties.getPathExportedFiles()+
                     File.separator+
                     userConnected.getUsername()+"_eventos.csv";
-                System.out.println("cl.femase.gestionweb.servlet."
+                System.out.println(WEB_NAME+"cl.femase.gestionweb.servlet."
                     + "DataExportServlet.exportEventosToCSV(). filePath:" + filePath);
                 FileWriter filewriter = new FileWriter(filePath);
                 outfile     = new PrintWriter(filewriter);
@@ -538,7 +538,7 @@ public class DataExportServlet extends BaseServlet {
     protected String exportInfoVacacionesToCSV(HttpServletRequest request, 
             HttpServletResponse response)
     throws ServletException, IOException {
-        System.out.println("[DataExportServlet."
+        System.out.println(WEB_NAME+"[DataExportServlet."
             + "exportInfoVacacionesToCSV]entrando...");
         String filePath="";
         PrintWriter outfile=null;
@@ -556,7 +556,7 @@ public class DataExportServlet extends BaseServlet {
                 filePath = appProperties.getPathExportedFiles()+
                     File.separator+
                     userConnected.getUsername()+"_infovacaciones.csv";
-                System.out.println("[DataExportServlet."
+                System.out.println(WEB_NAME+"[DataExportServlet."
                     + "exportInfoVacacionesToCSV]filePath:" + filePath);
                 FileWriter filewriter = new FileWriter(filePath);
                 outfile     = new PrintWriter(filewriter);
@@ -662,7 +662,7 @@ public class DataExportServlet extends BaseServlet {
     protected String exportAsignacionMarcacionVirtualToCSV(HttpServletRequest request, 
             HttpServletResponse response)
             throws ServletException, IOException {
-        System.out.println("[DataExportServlet."
+        System.out.println(WEB_NAME+"[DataExportServlet."
             + "exportAsignacionMarcacionVirtualToCSV]entrando...");
         String filePath="";
         PrintWriter outfile=null;
@@ -693,7 +693,7 @@ public class DataExportServlet extends BaseServlet {
                 filePath = appProperties.getPathExportedFiles()+
                     File.separator+
                     userConnected.getUsername()+"_asig_marcacion_virtual.csv";
-                System.out.println("[DataExportServlet."
+                System.out.println(WEB_NAME+"[DataExportServlet."
                     + "exportAsignacionMarcacionVirtualToCSV]filePath:" + filePath);
                 FileWriter filewriter = new FileWriter(filePath);
                 outfile     = new PrintWriter(filewriter);
@@ -801,7 +801,7 @@ public class DataExportServlet extends BaseServlet {
     protected String exportMovilesToCSV(HttpServletRequest request, 
             HttpServletResponse response)
             throws ServletException, IOException {
-        System.out.println("[DataExportServlet."
+        System.out.println(WEB_NAME+"[DataExportServlet."
             + "exportMovilesToCSV]Entrando...");
         String filePath="";
         PrintWriter outfile=null;
@@ -830,7 +830,7 @@ public class DataExportServlet extends BaseServlet {
                 filePath = appProperties.getPathExportedFiles()+
                     File.separator+
                     userConnected.getUsername()+"_dispositivos_moviles.csv";
-                System.out.println("[DataExportServlet."
+                System.out.println(WEB_NAME+"[DataExportServlet."
                     + "exportMovilesToCSV]filePath:" + filePath);
                 FileWriter filewriter = new FileWriter(filePath);
                 outfile     = new PrintWriter(filewriter);
@@ -911,7 +911,7 @@ public class DataExportServlet extends BaseServlet {
     protected String exportInfoVacacionesLogToCSV(HttpServletRequest request, 
             HttpServletResponse response)
     throws ServletException, IOException {
-        System.out.println("[DataExportServlet."
+        System.out.println(WEB_NAME+"[DataExportServlet."
             + "exportInfoVacacionesLogToCSV]entrando...");
         String filePath="";
         PrintWriter outfile=null;
@@ -929,7 +929,7 @@ public class DataExportServlet extends BaseServlet {
                 filePath = appProperties.getPathExportedFiles()+
                     File.separator+
                     userConnected.getUsername()+"_infovacacioneshist.csv";
-                System.out.println("[DataExportServlet."
+                System.out.println(WEB_NAME+"[DataExportServlet."
                     + "exportInfoVacacionesLogToCSV]filePath:" + filePath);
                 FileWriter filewriter = new FileWriter(filePath);
                 outfile     = new PrintWriter(filewriter);
@@ -1058,7 +1058,7 @@ public class DataExportServlet extends BaseServlet {
                 MarcasBp marcasBp = new MarcasBp(appProperties);
                 HashMap<Integer, String> tiposMarcas = marcasBp.getTiposMarca();
                 
-                System.out.println("[DataExportServlet.exportMarcasModificadasToCSV()."
+                System.out.println(WEB_NAME+"[DataExportServlet.exportMarcasModificadasToCSV()."
                     + " filePath:" + filePath);
                 FileWriter filewriter = new FileWriter(filePath);
                 outfile     = new PrintWriter(filewriter);
@@ -1162,7 +1162,7 @@ public class DataExportServlet extends BaseServlet {
                 TipoMarcaManualBp tipoManualBp = new TipoMarcaManualBp(appProperties);
                 HashMap<Integer, TipoMarcaManualVO> tiposMarcasManuales = tipoManualBp.getHashTipos();
                 
-                System.out.println("[DataExportServlet.exportMarcasToCSV()."
+                System.out.println(WEB_NAME+"[DataExportServlet.exportMarcasToCSV()."
                     + " filePath:" + filePath);
                 FileWriter filewriter = new FileWriter(filePath);
                 outfile     = new PrintWriter(filewriter);
@@ -1273,7 +1273,7 @@ public class DataExportServlet extends BaseServlet {
                     File.separator+
                     userConnected.getUsername()+"_logerror_"+sdf.format(calNow.getTime())+".csv";
                 
-                System.out.println("[DataExportServlet.exportLogErrorToCSV()."
+                System.out.println(WEB_NAME+"[DataExportServlet.exportLogErrorToCSV()."
                     + " filePath:" + filePath);
                 filewriter = new FileWriter(filePath);
                 outfile     = new PrintWriter(filewriter);
@@ -1372,7 +1372,7 @@ public class DataExportServlet extends BaseServlet {
                 filePath = appProperties.getPathExportedFiles()+
                     File.separator+
                     userConnected.getUsername()+"_dispositivos.csv";
-                System.out.println("cl.femase.gestionweb.servlet."
+                System.out.println(WEB_NAME+"cl.femase.gestionweb.servlet."
                     + "DataExportServlet.exportDispositivosToCSV(). filePath:" + filePath);
                 FileWriter filewriter = new FileWriter(filePath);
                 outfile     = new PrintWriter(filewriter);
@@ -1455,7 +1455,7 @@ public class DataExportServlet extends BaseServlet {
                     File.separator+
                     userConnected.getUsername() 
                         + "_asig_turnos_" + sdf.format(calNow.getTime()) + ".csv";
-                System.out.println("[DataExportServlet.exportAsignacionTurnosToCSV(). "
+                System.out.println(WEB_NAME+"[DataExportServlet.exportAsignacionTurnosToCSV(). "
                     + "filePath:" + filePath);
                 FileWriter filewriter = new FileWriter(filePath);
                 outfile     = new PrintWriter(filewriter);
@@ -1538,7 +1538,7 @@ public class DataExportServlet extends BaseServlet {
                 filePath = appProperties.getPathExportedFiles()+
                     File.separator+
                     userConnected.getUsername()+"_usuarios.csv";
-                System.out.println("cl.femase.gestionweb.servlet."
+                System.out.println(WEB_NAME+"cl.femase.gestionweb.servlet."
                     + "DataExportServlet.exportUsuariosToCSV(). "
                     + "filePath:" + filePath);
                 FileWriter filewriter = new FileWriter(filePath);
@@ -1614,7 +1614,7 @@ public class DataExportServlet extends BaseServlet {
                 filePath = appProperties.getPathExportedFiles()+
                     File.separator+
                     userConnected.getUsername()+"_detalle_ausencias.csv";
-                System.out.println("cl.femase.gestionweb.servlet."
+                System.out.println(WEB_NAME+"cl.femase.gestionweb.servlet."
                     + "DataExportServlet."
                     + "exportDetalleAusenciasToCSV(). "
                     + "filePath:" + filePath);
@@ -1709,7 +1709,7 @@ public class DataExportServlet extends BaseServlet {
                 filePath = appProperties.getPathExportedFiles()+
                     File.separator+
                     userConnected.getUsername()+"_marcas_rechazadas.csv";
-                System.out.println("cl.femase.gestionweb.servlet."
+                System.out.println(WEB_NAME+"cl.femase.gestionweb.servlet."
                     + "DataExportServlet.exportMarcasRechazadasToCSV(). "
                     + "filePath:" + filePath);
                 FileWriter filewriter = new FileWriter(filePath);
@@ -1855,7 +1855,7 @@ public class DataExportServlet extends BaseServlet {
     protected String exportResumenPermisosAdministrativosToCSV(HttpServletRequest request, 
             HttpServletResponse response)
     throws ServletException, IOException {
-        System.out.println("[DataExportServlet."
+        System.out.println(WEB_NAME+"[DataExportServlet."
             + "exportResumenPermisosAdministrativosToCSV]entrando...");
         String filePath="";
         PrintWriter outfile=null;
@@ -1873,7 +1873,7 @@ public class DataExportServlet extends BaseServlet {
                 filePath = appProperties.getPathExportedFiles()+
                     File.separator+
                     userConnected.getUsername()+"_resumen_permisos_administrativos.csv";
-                System.out.println("[DataExportServlet."
+                System.out.println(WEB_NAME+"[DataExportServlet."
                     + "exportResumenPermisosAdministrativosToCSV]filePath:" + filePath);
                 FileWriter filewriter = new FileWriter(filePath);
                 outfile     = new PrintWriter(filewriter);
@@ -1888,8 +1888,10 @@ public class DataExportServlet extends BaseServlet {
                     + "Centro de costo;"
                     + "Run empleado;"
                     + "Nombre empleado;"
-                    + "Dias disponibles;"
-                    + "Dias utilizados;"
+                    + "Dias disponibles semestre1;"
+                    + "Dias utilizados semestre1;"
+                    + "Dias disponibles semestre2;"
+                    + "Dias utilizados semestre2;"    
                     + "Ultima actualizacion");
 
                 while( iterador.hasNext() ) {
@@ -1908,9 +1910,13 @@ public class DataExportServlet extends BaseServlet {
                     outfile.print(separatorFields);
                     outfile.print(detailObj.getNombreEmpleado());
                     outfile.print(separatorFields);
-                    outfile.print(detailObj.getDiasDisponibles());
+                    outfile.print(detailObj.getDiasDisponiblesSemestre1());
                     outfile.print(separatorFields);
-                    outfile.print(detailObj.getDiasUtilizados());
+                    outfile.print(detailObj.getDiasUtilizadosSemestre1());
+                    outfile.print(separatorFields);
+                    outfile.print(detailObj.getDiasDisponiblesSemestre2());
+                    outfile.print(separatorFields);
+                    outfile.print(detailObj.getDiasUtilizadosSemestre2());
                     outfile.print(separatorFields);
                     
                     if (filas < resumenPAList.size()){

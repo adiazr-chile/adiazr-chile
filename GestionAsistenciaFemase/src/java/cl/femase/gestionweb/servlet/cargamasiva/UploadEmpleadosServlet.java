@@ -82,11 +82,11 @@ public class UploadEmpleadosServlet extends BaseServlet {
                         if(!item.isFormField()){
                             File auxfile = new File(item.getName());
                             String filename = auxfile.getName();
-                            System.out.println("[UploadEmpleadosServlet]"
+                            System.out.println(WEB_NAME+"[UploadEmpleadosServlet]"
                                 + "Filename: "+filename);
                             String extension = FilenameUtils.getExtension(filename);
                             String filePathLoaded= pathUploadedFiles + File.separator + filename;
-                            System.out.println("[UploadEmpleadosServlet]filePathLoaded="+filePathLoaded);
+                            System.out.println(WEB_NAME+"[UploadEmpleadosServlet]filePathLoaded="+filePathLoaded);
                             item.write( new File(filePathLoaded));
                             
                             if (extension.compareTo("csv") == 0){
@@ -106,7 +106,7 @@ public class UploadEmpleadosServlet extends BaseServlet {
                                         "art_22","cod_interno").parse(in);
                                 
                                 for (CSVRecord record : records) {
-                                    System.out.println("[UploadEmpleadosServlet]"
+                                    System.out.println(WEB_NAME+"[UploadEmpleadosServlet]"
                                         + "recordNumber: "+record.getRecordNumber()
                                         + ", Linea csv: "+record.toString());
                                     if (record.getRecordNumber()>1){
@@ -117,14 +117,14 @@ public class UploadEmpleadosServlet extends BaseServlet {
                                             System.err.println("[UploadEmpleadosServlet]"
                                                 + "Error "+ex.toString());
                                         }
-                                        System.out.println("[UploadEmpleadosServlet]"
+                                        System.out.println(WEB_NAME+"[UploadEmpleadosServlet]"
                                             + "empresaId: "+empresaId);
                                         String deptoId = record.get("depto");
                                         String cencoId = record.get("cenco");
                                         String comuna = record.get("comuna");
                                         String turno = record.get("turno");
                                         String cargo = record.get("cargo");
-                                        System.out.println("[UploadEmpleadosServlet]"
+                                        System.out.println(WEB_NAME+"[UploadEmpleadosServlet]"
                                             + "turno: "+turno);
                                         //datos personales
                                         String rut = record.get("rut");
@@ -132,7 +132,7 @@ public class UploadEmpleadosServlet extends BaseServlet {
                                         String paterno = record.get("paterno");
                                         String materno = record.get("materno");
                                         String fecha_nacimiento = record.get("fecha_nacimiento");
-                                        System.out.println("fechaNacimiento: "+fecha_nacimiento);
+                                        System.out.println(WEB_NAME+"fechaNacimiento: "+fecha_nacimiento);
                                         String fecha_inicio_contrato = record.get("fecha_inicio_contrato");
                                         String fecha_fin_contrato = record.get("fecha_fin_contrato");
                                         String direccion = record.get("direccion");
@@ -214,7 +214,7 @@ public class UploadEmpleadosServlet extends BaseServlet {
                                         dataEmpleado.setDepartamento(new DepartamentoVO(deptoId, "Depto NN",empresaId));
                                         dataEmpleado.setCentroCosto(new CentroCostoVO(Integer.parseInt(cencoId), "cenco NN", 1, deptoId));
                                             
-                                        System.out.println("[UploadEmpleadosServlet]dataempleado:"
+                                        System.out.println(WEB_NAME+"[UploadEmpleadosServlet]dataempleado:"
                                             + dataEmpleado.toString());
                                      
                                         empleadosInsert.add(dataEmpleado);

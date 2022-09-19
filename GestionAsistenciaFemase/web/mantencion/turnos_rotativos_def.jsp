@@ -12,7 +12,7 @@
 <%@page import="java.util.List"%>
 <%
     List<EmpresaVO> empresas            = (List<EmpresaVO>)session.getAttribute("empresas");
-    //System.out.println("[asignacion_turno_rotativo.jsp]empresas.size= " + empresas.size());
+    //System.out.println("[GestionFemaseWeb]asignacion_turno_rotativo.jsp]empresas.size= " + empresas.size());
     String accion = "insertUpdate";
     EmpleadoVO objEmpleado = (EmpleadoVO)request.getAttribute("empleadoSelected");
     String anioMesSelected = (String)request.getAttribute("anioMesSelected");
@@ -25,7 +25,7 @@
     if (strDiasLaborales==null) strDiasLaborales="";
     if (strDiasLibres==null) strDiasLibres="";
 	
-    System.out.println("[turnos_rotativos_def.jsp]"
+    System.out.println("[GestionFemaseWeb]turnos_rotativos_def.jsp]"
         + "anioMesSelected: " + anioMesSelected);
     if (anioMesSelected == null) anioMesSelected="";
     String labelRut = "";
@@ -50,18 +50,18 @@
         auxmes = Integer.parseInt(tokenaniomes.nextToken());
         auxanio = Integer.parseInt(tokenaniomes.nextToken());
         
-        System.out.println("[turnos_rotativos_def.jsp]"
+        System.out.println("[GestionFemaseWeb]turnos_rotativos_def.jsp]"
             + "Date inicial: "+auxanio + "-" + auxmes + "-1");
         Date date = sdf.parse(auxanio + "-" + auxmes + "-1");
         Calendar calendar = Calendar.getInstance();  
         calendar.setTime(date);  
-        System.out.println("[turnos_rotativos_def.jsp]First Day Of Month : " + calendar.getActualMinimum(Calendar.DAY_OF_MONTH));  
-        System.out.println("[turnos_rotativos_def.jsp]Last Day of Month  : " + calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+        System.out.println("[GestionFemaseWeb]turnos_rotativos_def.jsp]First Day Of Month : " + calendar.getActualMinimum(Calendar.DAY_OF_MONTH));  
+        System.out.println("[GestionFemaseWeb]turnos_rotativos_def.jsp]Last Day of Month  : " + calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
         startday = calendar.getActualMinimum(Calendar.DAY_OF_MONTH);
         endday = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
         auxmes--;
         if (auxmes<0) auxanio--;
-        System.out.println("[turnos_rotativos_def.jsp]"
+        System.out.println("[GestionFemaseWeb]turnos_rotativos_def.jsp]"
             + "startDay "+startday + ", endDay: "+endday);
     }
 	

@@ -96,7 +96,7 @@ public class TiempoExtraController extends BaseServlet {
         List<EmpleadoVO> listaEmpleados = new ArrayList<EmpleadoVO>();
         List<TiempoExtraVO> listaTE = new ArrayList<TiempoExtraVO>();
         if(request.getParameter("action") != null){
-            System.out.println("[TiempoExtraController]"
+            System.out.println(WEB_NAME+"[TiempoExtraController]"
                 + "action is: " + request.getParameter("action"));
             
             String action=(String)request.getParameter("action");
@@ -145,7 +145,7 @@ public class TiempoExtraController extends BaseServlet {
             
             //objeto usado para update/insert
             TiempoExtraVO auxdata = new TiempoExtraVO();
-            System.out.println("Mantenedor - Tiempos extra - "
+            System.out.println(WEB_NAME+"Mantenedor - Tiempos extra - "
                 + "Parametros. "
                 + "action="+request.getParameter("action")    
                 + ",rut="+request.getParameter("rut")
@@ -181,7 +181,7 @@ public class TiempoExtraController extends BaseServlet {
             auxdata.setTiempoExtra(fullTiempoExtra);
             
             if (action.compareTo("listEmpleados")==0) {
-                System.out.println("Mantenedor - Tiempos extra - "
+                System.out.println(WEB_NAME+"Mantenedor - Tiempos extra - "
                     + "mostrando listado de empleados...");
                 try{
                     int objectsCount = 0;
@@ -223,7 +223,7 @@ public class TiempoExtraController extends BaseServlet {
                     listData="{\"Result\":\"OK\",\"Records\":" + 
                         listData+",\"TotalRecordCount\": " + 
                         objectsCount + "}";
-                    System.out.println("[TiempoExtraController]json data: "+listData);
+                    System.out.println(WEB_NAME+"[TiempoExtraController]json data: "+listData);
                     response.getWriter().print(listData);
                         //request.getRequestDispatcher("/mantenedores/mantenedoresFrmSet.jsp").forward(request, response);
                 }catch(IOException ex){
@@ -234,7 +234,7 @@ public class TiempoExtraController extends BaseServlet {
             }
             else if (action.compareTo("listTE") == 0) {
                     try{
-                        System.out.println("Mantenedor - Tiempos extra - "
+                        System.out.println(WEB_NAME+"Mantenedor - Tiempos extra - "
                             + "Mostrar tiempos extra "
                             + "para el rut: " 
                             + request.getParameter("rut"));
@@ -254,7 +254,7 @@ public class TiempoExtraController extends BaseServlet {
                         listData="{\"Result\":\"OK\",\"Records\":" + 
                             listData+",\"TotalRecordCount\": " + 
                             listaTE.size() + "}";
-                        System.out.println("[TiempoExtraController]json data: "+listData);
+                        System.out.println(WEB_NAME+"[TiempoExtraController]json data: "+listData);
                         response.getWriter().print(listData);
                         //request.getRequestDispatcher("/mantenedores/mantenedoresFrmSet.jsp").forward(request, response);
                     }catch(IOException ex){
@@ -263,7 +263,7 @@ public class TiempoExtraController extends BaseServlet {
                         ex.printStackTrace();
                     }   
             }else if (action.compareTo("createTE") == 0) {  
-                    System.out.println("Mantenedor Tiempos extra - "
+                    System.out.println(WEB_NAME+"Mantenedor Tiempos extra - "
                         + "Crear nuevo tiempo extra...");
                     try{
                         resultado.setRutEmpleado(auxdata.getRut());
@@ -280,7 +280,7 @@ public class TiempoExtraController extends BaseServlet {
                         response.getWriter().print(error);
                     }
             }else if (action.compareTo("updateTE") == 0) {  
-                    System.out.println("Mantenedor Tiempos extra - "
+                    System.out.println(WEB_NAME+"Mantenedor Tiempos extra - "
                         + "Actualizar tiempo extra...");
                     try{
                         MaintenanceVO doUpdate = tenegocio.update(auxdata, resultado);
@@ -293,7 +293,7 @@ public class TiempoExtraController extends BaseServlet {
                         response.getWriter().print(error);
                     }
             }else if (action.compareTo("deleteTE") == 0) {  
-                    System.out.println("Mantenedor Tiempos extra - "
+                    System.out.println(WEB_NAME+"Mantenedor Tiempos extra - "
                         + "Eliminar tiempo extra...");
                     try{
                         MaintenanceVO doDelete = tenegocio.delete(auxdata, resultado);

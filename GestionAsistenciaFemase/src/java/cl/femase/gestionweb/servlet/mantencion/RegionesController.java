@@ -87,7 +87,7 @@ public class RegionesController extends BaseServlet {
         RegionBp regionbp = new RegionBp(appProperties);
 
         if(request.getParameter("action") != null){
-            System.out.println("[RegionesController]"
+            System.out.println(WEB_NAME+"[RegionesController]"
                 + "action is: " + request.getParameter("action"));
             List<RegionVO> listaObjetos = new ArrayList<RegionVO>();
             String action=(String)request.getParameter("action");
@@ -135,7 +135,7 @@ public class RegionesController extends BaseServlet {
             }
             
             if (action.compareTo("list")==0) {
-                System.out.println("[RegionesController]"
+                System.out.println(WEB_NAME+"[RegionesController]"
                     + "mostrando regiones...");
                 try{
                     listaObjetos = regionbp.getRegiones(nombre,
@@ -165,7 +165,7 @@ public class RegionesController extends BaseServlet {
                     ex.printStackTrace();
                 }   
             }else if (action.compareTo("create") == 0) {
-                    System.out.println("[RegionesController]Insertar Region.");
+                    System.out.println(WEB_NAME+"[RegionesController]Insertar Region.");
                     MaintenanceVO doCreate = regionbp.insert(auxdata, resultado);					
                     listaObjetos.add(auxdata);
 
@@ -175,7 +175,7 @@ public class RegionesController extends BaseServlet {
                     String listData="{\"Result\":\"OK\",\"Record\":"+json+"}";											
                     response.getWriter().print(listData);
             }else if (action.compareTo("update") == 0) {  
-                    System.out.println("[RegionesController]Modificar region...");
+                    System.out.println(WEB_NAME+"[RegionesController]Modificar region...");
                     try{
                         MaintenanceVO doUpdate = regionbp.update(auxdata, resultado);
                         listaObjetos.add(auxdata);

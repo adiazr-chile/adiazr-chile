@@ -19,7 +19,7 @@
     String startDate = (String)session.getAttribute("startDate");
     String endDate = (String)session.getAttribute("endDate");
     //ID_PERFIL_DIRECTOR
-    System.out.println("[calculoHoras.jsp]"
+    System.out.println("[GestionFemaseWeb]calculoHoras.jsp]"
         + "startDate= "+startDate
         + ",endDate= "+endDate);
 %>

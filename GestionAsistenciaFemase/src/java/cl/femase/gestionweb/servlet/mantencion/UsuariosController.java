@@ -107,7 +107,7 @@ public class UsuariosController extends BaseServlet {
             resultado.setDeptoId(userConnected.getDeptoId());
             resultado.setCencoId(userConnected.getIdCencoUsuario());
             
-            System.out.println("[UsuariosControllet]"
+            System.out.println(WEB_NAME+"[UsuariosControllet]"
                 + "user.empresaId: " + userConnected.getEmpresaId()
                 + ", user.deptoId: " + userConnected.getDeptoId()
                 + ", user.cencoId: " + userConnected.getIdCencoUsuario());
@@ -138,6 +138,7 @@ public class UsuariosController extends BaseServlet {
             /** filtros de busqueda */
             String username=null;
             String empresaId=null;
+            int filtroEstado = -1;
             String password = null;
             String nombres=null;
             String apePaterno=null;
@@ -145,6 +146,9 @@ public class UsuariosController extends BaseServlet {
             int idPerfil=-1;
             int idEstado=-1;
             String email=null;
+            
+            if (request.getParameter("filtroEstado") != null) 
+                filtroEstado = Integer.parseInt(request.getParameter("filtroEstado"));
             
             if (request.getParameter("nombres") != null) 
                 nombres  = request.getParameter("nombres");
@@ -178,12 +182,12 @@ public class UsuariosController extends BaseServlet {
             userdata.setRunEmpleado(request.getParameter("run"));
             
             if (action.compareTo("list") == 0) {
-                System.out.println("[UsuariosControllet]"
+                System.out.println(WEB_NAME+"[UsuariosControllet]"
                     + "Listar usuarios...");
                 try{
                     listaObjetos = auxnegocio.getUsuarios(username, 
                         nombres, apePaterno, 
-                        idPerfil, idEstado, 
+                        idPerfil, filtroEstado, 
                         empresaId, startPageIndex, 
                         numRecordsPerPage, 
                         jtSorting);
@@ -193,7 +197,7 @@ public class UsuariosController extends BaseServlet {
                     //Get Total Record Count for Pagination
                     int rowsCount = auxnegocio.getUsuariosCount(username, 
                         nombres, apePaterno, 
-                        idPerfil, idEstado, empresaId);
+                        idPerfil, filtroEstado, empresaId);
 
                     //Convert Java Object to Json
                     JsonElement element = gson.toJsonTree(listaObjetos,
@@ -214,7 +218,7 @@ public class UsuariosController extends BaseServlet {
                     ex.printStackTrace();
                 }   
             }else if (action.compareTo("changepass") == 0) {  
-                    System.out.println("[UsuariosControllet]Cambiar clave...");
+                    System.out.println(WEB_NAME+"[UsuariosControllet]Cambiar clave...");
                     try{
                         MaintenanceVO doUpdate = 
                             auxnegocio.setPassword(userConnected.getUsername(), 
@@ -232,7 +236,7 @@ public class UsuariosController extends BaseServlet {
             }
             
             /*else if (action.compareTo("create") == 0) {
-                        System.out.println("[UsuariosControllet]Insertar usuario...");
+                        System.out.println(WEB_NAME+"[UsuariosControllet]Insertar usuario...");
                         MaintenanceVO doCreate = auxnegocio.insert(userdata, resultado);					
                         listaObjetos.add(userdata);
 
@@ -243,7 +247,7 @@ public class UsuariosController extends BaseServlet {
                         response.getWriter().print(listData);
             */
             /*else if (action.compareTo("update") == 0) {  
-                    System.out.println("[UsuariosControllet]Actualizar un usuario...");
+                    System.out.println(WEB_NAME+"[UsuariosControllet]Actualizar un usuario...");
                     try{
                         MaintenanceVO doUpdate = 
                             auxnegocio.update(userdata, resultado);

@@ -142,7 +142,7 @@ public class TipoMarcaManualDAO extends BaseDAO{
             }
            
             sql += " order by display_order"; 
-            System.out.println("[TipoMarcaManualDAO.getTipos]Sql: " + sql);
+            System.out.println(WEB_NAME+"[TipoMarcaManualDAO.getTipos]Sql: " + sql);
             dbConn = dbLocator.getConnection(m_dbpoolName,"[TipoMarcaManualDAO.getTipos]");
             ps = dbConn.prepareStatement(sql);
             rs = ps.executeQuery();
@@ -197,7 +197,7 @@ public class TipoMarcaManualDAO extends BaseDAO{
                 + "to_char(update_datetime,'YYYY-MM-DD HH24:MI:SS') update_datetime "
                 + "FROM tipo_marca_manual ";
             sql += " order by display_order"; 
-            System.out.println("[TipoMarcaManualDAO.getHashTipos]Sql: " + sql);
+            System.out.println(WEB_NAME+"[TipoMarcaManualDAO.getHashTipos]Sql: " + sql);
             dbConn = dbLocator.getConnection(m_dbpoolName,"[TipoMarcaManualDAO.getHashTipos]");
             ps = dbConn.prepareStatement(sql);
             rs = ps.executeQuery();
@@ -316,7 +316,7 @@ public class TipoMarcaManualDAO extends BaseDAO{
             
             int rowAffected = psupdate.executeUpdate();
             if (rowAffected == 1){
-                System.out.println("[update]tipo_marca_manual"
+                System.out.println(WEB_NAME+"[update]tipo_marca_manual"
                     + ", code:" + _data.getCode()
                     + ", nombre:" + _data.getNombre()
                     + ", vigente?" + _data.getVigente()    
@@ -381,7 +381,7 @@ public class TipoMarcaManualDAO extends BaseDAO{
             
             int filasAfectadas = insert.executeUpdate();
             if (filasAfectadas == 1){
-                System.out.println("[TipoMarcaManualDAO.insert]"
+                System.out.println(WEB_NAME+"[TipoMarcaManualDAO.insert]"
                     + ", nombre:" +_data.getNombre()
                     + ", vigente?:" +_data.getVigente()
                     + ", ordenDisplay:" +_data.getOrden()

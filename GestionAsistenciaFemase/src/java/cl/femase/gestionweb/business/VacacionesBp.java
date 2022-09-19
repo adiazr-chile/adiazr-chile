@@ -34,7 +34,7 @@ import java.util.Locale;
  *
  * @author Alexander
  */
-public class VacacionesBp {
+public class VacacionesBp  extends BaseBp{
 
     public PropertiesVO props;
     /** para guardar los eventos de mantencion de informacion*/
@@ -126,7 +126,7 @@ public class VacacionesBp {
         DiasEfectivosVacacionesVO objDiasEfectivos = new DiasEfectivosVacacionesVO();
         String empresaID    = _newAusencia.getEmpresaId();
         String runEmpleado  = _newAusencia.getRutEmpleado();
-        System.out.println("[VacacionesBp."
+        System.out.println(WEB_NAME+"[VacacionesBp."
             + "getDesgloseDiasVacaciones]Calcular desglose (VBA/VP) "
             + "de dias de vacaciones a insertar. "
             + "EmpresaId: " + empresaID
@@ -140,7 +140,7 @@ public class VacacionesBp {
             double saldoVP = infoVacaciones.getSaldoDiasVP(); 
             double diasEfectivos = _newAusencia.getDiasEfectivosVacaciones();
             
-             System.out.println("[VacacionesBp."
+             System.out.println(WEB_NAME+"[VacacionesBp."
                 + "getDesgloseDiasVacaciones]"
                 + "Dias efectivos solicitados= " + diasEfectivos     
                 + ", vacaciones.saldoDias= " + infoVacaciones.getSaldoDias()
@@ -164,7 +164,7 @@ public class VacacionesBp {
                 diasEfectivosVBA = diasEfectivos;
             }
             
-            System.out.println("[VacacionesBp."
+            System.out.println(WEB_NAME+"[VacacionesBp."
                 + "getDesgloseDiasVacaciones]"
                 + "diasEfectivosVBA= " + diasEfectivosVBA
                 + ", diasEfectivosVP= " + diasEfectivosVP);
@@ -182,7 +182,7 @@ public class VacacionesBp {
             
             //objDiasEfectivos.setSaldoVPPostVacaciones(objDiasEfectivos.getSaldoVPPreVacaciones() - diasEfectivosVP);
             
-            System.out.println("[VacacionesBp."
+            System.out.println(WEB_NAME+"[VacacionesBp."
                 + "getDesgloseDiasVacaciones]Objeto a retornar. "
                 + "objDiasEfectivos: " + objDiasEfectivos.toString());
         }
@@ -323,7 +323,7 @@ public class VacacionesBp {
             HashMap<String, Double> _parametrosSistema, 
             boolean _desvinculados){
         
-        System.out.println("[VacacionesBp."
+        System.out.println(WEB_NAME+"[VacacionesBp."
             + "calculaDiasVacaciones]Calcular dias vacaciones "
             + "para todos los empleados del cenco."
             + "empresa_id: " + _empresaId
@@ -350,7 +350,7 @@ public class VacacionesBp {
                         0, 
                         "empleado.empl_rut");
                 }else{
-                    System.out.println("[VacacionesBp."
+                    System.out.println(WEB_NAME+"[VacacionesBp."
                         + "calculaDiasVacaciones]Calcular dias vacaciones "
                         + "para todos los empleados DESVINCULADOS del cenco."
                         + "empresa_id: " + _empresaId
@@ -362,7 +362,7 @@ public class VacacionesBp {
                 }
                 
                 if (listaEmpleados.isEmpty()){
-                    System.out.println("[VacacionesBp."
+                    System.out.println(WEB_NAME+"[VacacionesBp."
                         + "calculaDiasVacaciones]No hay empleados DESVINCULADOS del cenco."
                         + "empresa_id: " + _empresaId
                         + ", depto_id: " + _deptoId    
@@ -372,14 +372,14 @@ public class VacacionesBp {
                 Iterator<EmpleadoVO> it = listaEmpleados.iterator();
                 while(it.hasNext()){
                     EmpleadoVO empleado = it.next();
-                    System.out.println("[VacacionesBp."
+                    System.out.println(WEB_NAME+"[VacacionesBp."
                         + "calculaDiasVacaciones]Calcular dias vacaciones empleado. "
                         + "rut_empleado: " + empleado.getRut());
                     calculaDiasVacaciones(_username,
                         empleado.getEmpresaId(), 
                         empleado.getRut(), 
                         _parametrosSistema);
-                    System.out.println("[VacacionesBp."
+                    System.out.println(WEB_NAME+"[VacacionesBp."
                         + "calculaDiasVacaciones]"
                         + "Actualizar saldos de vacaciones "
                         + "en tabla detalle_ausencia "
@@ -441,7 +441,7 @@ public class VacacionesBp {
         VacacionesLogBp vacacionesLogBp = new VacacionesLogBp(null);
         VacacionesVO dataVacaciones     = new VacacionesVO();
         
-        System.out.println("[VacacionesBp."
+        System.out.println(WEB_NAME+"[VacacionesBp."
             + "calculaDiasVacaciones]"
             + "empresa_id: " + _empresaId
             +", rut_empleado: " + _runEmpleado);
@@ -466,7 +466,7 @@ public class VacacionesBp {
             this.getInfoVacaciones(_empresaId, 
                 _runEmpleado, -1, -1, -1, "vac.rut_empleado");
         if (infoVacaciones.isEmpty()){
-            System.out.println("[VacacionesBp."
+            System.out.println(WEB_NAME+"[VacacionesBp."
                 + "calculaDiasVacaciones]"
                 + "empresa_id: "+_empresaId
                 +", rut_empleado: " + _runEmpleado
@@ -483,13 +483,13 @@ public class VacacionesBp {
         // 1.- Calcular d�as normales (1.25 por mes, a partir de la fecha de ingreso del empleado) 
         Date fechaMesVencido = getFechaMesVencido(fechaInicioContrato, fechaDesvinculacion);
         
-        System.out.println("[VacacionesBp."
+        System.out.println(WEB_NAME+"[VacacionesBp."
             + "getFechaMesVencido]Calcular antiguedad entre:"
             + "Fecha inicio contrato: " + fechaInicioContrato
             +", fechaMesVencido: " + fechaMesVencido);
         DiferenciaEntreFechasVO difFechas = Utilidades.getDiferenciaEntreFechas(fechaInicioContrato, fechaMesVencido);
         BigDecimal bgMesesAntiguedad = new BigDecimal(difFechas.getMonths());
-        System.out.println("[VacacionesBp."
+        System.out.println(WEB_NAME+"[VacacionesBp."
             + "calculaDiasVacaciones]"
             + "rut_empleado: " + _runEmpleado
             + ", fecha inicio contrato: " + fechaInicioContrato    
@@ -502,7 +502,7 @@ public class VacacionesBp {
         if (_parametrosSistema.get("factor_vac_zona_extrema") == 0) paramFactorVacacionesZonaExtrema = 1.67;
         if (_parametrosSistema.get("factor_vac_especiales") == 0) paramFactorVacacionesEspeciales = 2.5;
                         
-        System.out.println("[VacacionesBp."
+        System.out.println(WEB_NAME+"[VacacionesBp."
             + "calculaDiasVacaciones]"
             + "paramFactorVacaciones: " + paramFactorVacaciones
             + ", paramMinMesesCotizando: " + paramMinMesesCotizando    
@@ -512,7 +512,7 @@ public class VacacionesBp {
         
         if (infoEmpleado.getCentroCosto().getZonaExtrema().compareTo("S") == 0){ 
             paramFactorVacaciones = paramFactorVacacionesZonaExtrema;
-            System.out.println("[VacacionesBp."
+            System.out.println(WEB_NAME+"[VacacionesBp."
                 + "calculaDiasVacaciones]"
                 + "rut_empleado: " + _runEmpleado
                 + ", cenco: " + infoEmpleado.getCentroCosto().getNombre()
@@ -520,7 +520,7 @@ public class VacacionesBp {
         }
         
         if (dataVacaciones.getDiasEspeciales().compareTo("S") == 0){
-            System.out.println("[VacacionesBp."
+            System.out.println(WEB_NAME+"[VacacionesBp."
                 + "calculaDiasVacaciones]"
                 + "rut_empleado: " + _runEmpleado
                 + ", cenco: " + infoEmpleado.getCentroCosto().getNombre()
@@ -530,7 +530,7 @@ public class VacacionesBp {
         bgMesesAntiguedad = new BigDecimal(bgMesesAntiguedad.intValue());
         BigDecimal bgDiasDiasAFavor = bgMesesAntiguedad.multiply(new BigDecimal(paramFactorVacaciones));
         double diasNormales = bgDiasDiasAFavor.doubleValue();
-        System.out.println("[VacacionesBp."
+        System.out.println(WEB_NAME+"[VacacionesBp."
             + "calculaDiasVacaciones]"
             + "rut_empleado: " + _runEmpleado
             + ", dias a favor(int): " + bgDiasDiasAFavor.intValue()
@@ -559,7 +559,7 @@ public class VacacionesBp {
             mensajeVP       = auxProgresivos.getMensajeVP();
             fechaBaseVP     = auxProgresivos.getFechaBaseVP();
         }       
-        System.out.println("[VacacionesBp." +
+        System.out.println(WEB_NAME+"[VacacionesBp." +
             "calculaDiasVacaciones]"
             + "fechaBaseVP: " + fechaBaseVP
             + ", mensajeVP: " + mensajeVP);
@@ -582,7 +582,7 @@ public class VacacionesBp {
         
         //********************************************************************************************************************
         //********************************************************************************************************************
-        System.out.println("[VacacionesBp." +
+        System.out.println(WEB_NAME+"[VacacionesBp." +
             "calculaDiasVacaciones]"
             + "Buscar todas las vacaciones existentes entre todas las "
             + "ausencias del tipo 'vacaciones' "
@@ -594,7 +594,7 @@ public class VacacionesBp {
             Iterator<DetalleAusenciaVO> it = vacaciones.iterator();
             while(it.hasNext()){
                 DetalleAusenciaVO auxVacacion = it.next();
-                System.out.println("[VacacionesBp." +
+                System.out.println(WEB_NAME+"[VacacionesBp." +
                     "calculaDiasVacaciones]Datos Vacacion mas reciente. "
                     + "Correlativo vacacion = " + auxVacacion.getCorrelativo() 
                     + ", dias_efectivos= " + auxVacacion.getDiasEfectivosVacaciones()
@@ -625,7 +625,7 @@ public class VacacionesBp {
                 iteracion++;
             }
         }
-        System.out.println("[VacacionesBp."
+        System.out.println(WEB_NAME+"[VacacionesBp."
             + "calculaDiasVacaciones]"
             + "inicio ultima vacacion(reciente): " + inicioVacacionReciente
             + ", fin ultima vacacion(reciente): " + finVacacionReciente
@@ -636,7 +636,7 @@ public class VacacionesBp {
         
         BigDecimal diasNormalesBigDecimal = new BigDecimal(String.valueOf(diasNormales));
         diasNormalesBigDecimal = diasNormalesBigDecimal.setScale(2,BigDecimal.ROUND_HALF_DOWN);
-        System.out.println("[VacacionesBp."
+        System.out.println(WEB_NAME+"[VacacionesBp."
             + "calculaDiasVacaciones]"
             + "rut_empleado: " + _runEmpleado
             + ", dias normales con decimales: " + diasNormalesBigDecimal.doubleValue());
@@ -644,7 +644,7 @@ public class VacacionesBp {
 //        double diasAFavor = diasNormalesBigDecimal.doubleValue() + diasProgresivos;
         double diasAFavor = diasNormalesBigDecimal.doubleValue();
         double nuevoSaldoDias = diasAFavor - diasVacacionesTomadas;
-        System.out.println("[VacacionesBp."
+        System.out.println(WEB_NAME+"[VacacionesBp."
             + "calculaDiasVacaciones]"
             + "diasAFavor (A): " + diasAFavor
             + ", diasVacacionesTomadas (B): " + diasVacacionesTomadas
@@ -657,13 +657,13 @@ public class VacacionesBp {
         if (inicioVacacionReciente != null && finVacacionReciente != null){
             saldoDiasVP = getDiasVP(inicioVacacionReciente, finVacacionReciente, diasProgresivos, saldoVPPostVacaciones);
         }
-        System.out.println("[VacacionesBp.calculaDiasVacaciones]saldoVP: " + saldoDiasVP);
+        System.out.println(WEB_NAME+"[VacacionesBp.calculaDiasVacaciones]saldoVP: " + saldoDiasVP);
         dataVacaciones.setSaldoDiasVP(saldoDiasVP);
 
         if (dataVacaciones.getSaldoDiasVBA() < 0) dataVacaciones.setSaldoDiasVBA(nuevoSaldoDias);
         if (dataVacaciones.getSaldoDiasVP() < 0) dataVacaciones.setSaldoDiasVP(diasProgresivos);
         
-        System.out.println("[VacacionesBp."
+        System.out.println(WEB_NAME+"[VacacionesBp."
             + "calculaDiasVacaciones]"
             + "rut_empleado: " + _runEmpleado
             + ", dias a favor: " + diasAFavor
@@ -693,14 +693,14 @@ public class VacacionesBp {
         */
         
         if (!insertar){
-            System.out.println("[VacacionesBp."
+            System.out.println(WEB_NAME+"[VacacionesBp."
                 + "calculaDiasVacaciones]"
                 + "empresa_id: "+_empresaId
                 +", rut_empleado: " + _runEmpleado
                 +". Actualizar informacion de vacaciones existente (update)...");
             vacacionesdao.updateFromCalculo(dataVacaciones);
         }else{
-            System.out.println("[VacacionesBp."
+            System.out.println(WEB_NAME+"[VacacionesBp."
                 + "calculaDiasVacaciones]"
                 + "empresa_id: "+_empresaId
                 +", rut_empleado: " + _runEmpleado
@@ -711,7 +711,7 @@ public class VacacionesBp {
             vacacionesdao.insert(dataVacaciones);
         }
         //if (inicioVacacionReciente != null){
-            System.out.println("[VacacionesBp."
+            System.out.println(WEB_NAME+"[VacacionesBp."
                 + "calculaDiasVacaciones]"
                 + "Actualizar fechas de ultimas vacaciones");
             dataVacaciones.setFechaInicioUltimasVacaciones(inicioVacacionReciente);
@@ -748,7 +748,7 @@ public class VacacionesBp {
         String fechaFinVacaciones;
         int diasEfectivos = 0;
         
-        System.out.println("[VacacionesBp."
+        System.out.println(WEB_NAME+"[VacacionesBp."
             + "getDiasEfectivos]"
             + "empresaId: " + _empresaId
             + ", Run empleado: " + _runEmpleado
@@ -765,7 +765,7 @@ public class VacacionesBp {
             fechaInicioVacaciones = Utilidades.getFechaYYYYmmdd(_inicioVacaciones);
             fechaFinVacaciones = Utilidades.getFechaYYYYmmdd(_finVacaciones);
         }
-        System.out.println("[VacacionesBp."
+        System.out.println(WEB_NAME+"[VacacionesBp."
             + "getDiasEfectivos]"
             + "Iterar fechas en el rango. "
             + "Inicio: " + fechaInicioVacaciones
@@ -792,14 +792,14 @@ public class VacacionesBp {
             fechaInicioVacaciones, fechaFinVacaciones);
         //aca son dias efectivos totales
         for (String itfecha : fechas) {
-            System.out.println("[VacacionesBp."
+            System.out.println(WEB_NAME+"[VacacionesBp."
                 + "getDiasEfectivos]"
                 + "Itera fecha= " + itfecha);
             if (_vacacionesEspeciales != null && _vacacionesEspeciales.compareTo("N") == 0){    
                 LocalDate localdate = Utilidades.getLocalDate(itfecha);
                 int diaSemana = localdate.getDayOfWeek().getValue();
                 if (diaSemana >= 1 && diaSemana <= 5){
-                    System.out.println("[VacacionesBp.getDiasEfectivos]Es dia de semana (Lu-Vi)");
+                    System.out.println(WEB_NAME+"[VacacionesBp.getDiasEfectivos]Es dia de semana (Lu-Vi)");
                     String strKey = _empresaId + "|" + _runEmpleado + "|" + itfecha;
                     InfoFeriadoVO infoFeriado = fechasCalendarioFeriados.get(strKey);
                     
@@ -808,21 +808,21 @@ public class VacacionesBp {
 //////                            _empresaId, 
 //////                            _runEmpleado);
                     boolean esFeriado = infoFeriado.isFeriado();
-                    System.out.println("[VacacionesBp.getDiasEfectivos]"
+                    System.out.println(WEB_NAME+"[VacacionesBp.getDiasEfectivos]"
                         + "Fecha " + itfecha + ", es feriado? " + esFeriado);
 ////                    boolean esFeriado = hashFeriados.containsKey(itfecha);
                     if (!esFeriado) {
                         diasEfectivos++;
                     }else{
-                        System.out.println("[VacacionesBp.getDiasEfectivos]-1-"
+                        System.out.println(WEB_NAME+"[VacacionesBp.getDiasEfectivos]-1-"
                             + "Fecha " + itfecha + ", no contabilizar dias efectivos");
                     }
                 }else{
-                    System.out.println("[VacacionesBp.getDiasEfectivos]-2-"
+                    System.out.println(WEB_NAME+"[VacacionesBp.getDiasEfectivos]-2-"
                         + "Fecha " + itfecha + ", no contabilizar dias efectivos (no es dia de semana)");
                 }
             }else {
-                System.out.println("[VacacionesBp."
+                System.out.println(WEB_NAME+"[VacacionesBp."
                     + "getDiasEfectivos]"
                     + "Empleado con vacaciones especiales. "
                     + "Fecha: "+itfecha + " contar dia corrido");
@@ -859,8 +859,8 @@ public class VacacionesBp {
             Date FECHA_INICIO_ULTIMA_VACACION = sdfFull.parse(_fechaInicioUltimaVacacion);
             Date FECHA_FIN_ULTIMA_VACACION = sdfFull.parse(_fechaFinUltimaVacacion);
                
-            System.out.println("[VacacionesBp.getDiasVP]---------------------------");
-            System.out.println("[VacacionesBp.getDiasVP]Inicio, parametros de entrada:");
+            System.out.println(WEB_NAME+"[VacacionesBp.getDiasVP]---------------------------");
+            System.out.println(WEB_NAME+"[VacacionesBp.getDiasVP]Inicio, parametros de entrada:");
             
             System.out.println( "[VacacionesBp.getDiasVP]FechaCalculo:\t\t\t\t"+ strFechaCalculo);
             System.out.println( "[VacacionesBp.getDiasVP]Fecha inicio ultima vacacion:\t\t" + _fechaInicioUltimaVacacion);
@@ -886,13 +886,13 @@ public class VacacionesBp {
             System.out.println( "[VacacionesBp.getDiasVP]Diferencia en anios:\t\t\t" + diferenciaFechas.getYears());
                         
             if (diferenciaFechas.getYears() > 1){
-                System.out.println("[VacacionesBp.getDiasVP]Vacacion antigua mas de un anio. Tomar saldo VP  calculado segun criterios definidos...");
+                System.out.println(WEB_NAME+"[VacacionesBp.getDiasVP]Vacacion antigua mas de un anio. Tomar saldo VP  calculado segun criterios definidos...");
                 VACACIONES_SALDO_DIAS_VP = saldo_resultante_calculo_VP;
             }else{
-                System.out.println("[VacacionesBp.getDiasVP]Vacacion reciente. Tomar saldo_vp_post_vacacion de la ultima vacacion...");
+                System.out.println(WEB_NAME+"[VacacionesBp.getDiasVP]Vacacion reciente. Tomar saldo_vp_post_vacacion de la ultima vacacion...");
                 VACACIONES_SALDO_DIAS_VP = saldoVP_post_ultimas_vacaciones;
             }
-            System.out.println("[VacacionesBp.getDiasVP]FINAL -----> Saldo VP: " + VACACIONES_SALDO_DIAS_VP);
+            System.out.println(WEB_NAME+"[VacacionesBp.getDiasVP]FINAL -----> Saldo VP: " + VACACIONES_SALDO_DIAS_VP);
                         
         } catch (ParseException ex) {
             System.err.println("[VacacionesBp.getDiasVP]Error: " + ex.toString());
@@ -926,7 +926,7 @@ public class VacacionesBp {
         bdmmc = bdmmc.setScale(0,BigDecimal.ROUND_HALF_DOWN);
         
         int numCotizaciones =  _dataVacaciones.getNumCotizaciones();         
-        System.out.println("[VacacionesBp."
+        System.out.println(WEB_NAME+"[VacacionesBp."
             + "calculaDiasProgresivos]"
             + "run_empleado: " + _dataVacaciones.getRutEmpleado()
             + ", afp_code: " + _dataVacaciones.getAfpCode()
@@ -936,7 +936,7 @@ public class VacacionesBp {
         BigDecimal bdmavp = new BigDecimal(_paramMesesAddVacProgresivas);
         bdmavp = bdmavp.setScale(0,BigDecimal.ROUND_HALF_DOWN);
         
-        System.out.println("[VacacionesBp."
+        System.out.println(WEB_NAME+"[VacacionesBp."
             + "calculaDiasProgresivos]"
             + "numCotizaciones(segun certificado afp): A= " + numCotizaciones
             + ", mesesAntiguedad en la empresa: B= " + _bgMesesAntiguedad.doubleValue()
@@ -961,7 +961,7 @@ public class VacacionesBp {
             Utilidades.getDiferenciaEntreFechas(fechaBaseVacProgresivas, fechaActual);
         BigDecimal bgMesesTranscurridos = new BigDecimal(difFechas2.getMonths());
 
-        System.out.println("[VacacionesBp.calculaDiasProgresivos]"
+        System.out.println(WEB_NAME+"[VacacionesBp.calculaDiasProgresivos]"
             + "numCotizaciones: " + numCotizaciones
             + ", meses antiguedad: " + _bgMesesAntiguedad.doubleValue()
             + ", minimo meses cotizando: " + bdmmc.intValue()
@@ -980,9 +980,9 @@ public class VacacionesBp {
                 + "Error al setear fecha vacaciones basicas: " + ex.toString());
         }
         
-        System.out.println("[VacacionesBp.calculaDiasProgresivos]"
+        System.out.println(WEB_NAME+"[VacacionesBp.calculaDiasProgresivos]"
             + "Validar si aplican DIAS PROGRESIVOS");
-        System.out.println("[VacacionesBp.calculaDiasProgresivos]"
+        System.out.println(WEB_NAME+"[VacacionesBp.calculaDiasProgresivos]"
             + "Fecha Actual= " + fechaActual
             + ", fechaBaseVacProgresivas: " + fechaBaseVacProgresivas
             + ", fechaCertificado: " + fechaCertificado
@@ -1006,44 +1006,44 @@ public class VacacionesBp {
                             mensajeVP = "La fecha de calculo de vacaciones: "
                                 + sdf3.format(fechaActual) 
                                 + ", es menor a la fecha de vacaciones basicas: " + sdf3.format(fechaVacacionesBasicas);
-                            System.out.println("[VacacionesBp.calculaDiasProgresivos]"
+                            System.out.println(WEB_NAME+"[VacacionesBp.calculaDiasProgresivos]"
                                 + mensajeVP);
                         }
                     }else{
                         mensajeVP = "La fecha de calculo de vacaciones: "
                             + sdf3.format(fechaActual) 
                             + ", es menor a la fecha de emision del certificado AFP u otro: " + sdf3.format(fechaCertificado);
-                        System.out.println("[VacacionesBp.calculaDiasProgresivos]"
+                        System.out.println(WEB_NAME+"[VacacionesBp.calculaDiasProgresivos]"
                             + mensajeVP);
                     }
                 }else{
                     mensajeVP = "La fecha de calculo de vacaciones "
                         + sdf3.format(fechaActual) 
                         + ", es menor a la fecha base de VP: " + sdf3.format(fechaBaseVacProgresivas);
-                    System.out.println("[VacacionesBp.calculaDiasProgresivos]"
+                    System.out.println(WEB_NAME+"[VacacionesBp.calculaDiasProgresivos]"
                         + mensajeVP);
                 }
             }else{
                 mensajeVP = "Los meses transcurridos entre la fecha base de VP "
                     + "y la fecha de calculo no es mayor al minimo para VP: " + bdmavp.intValue();
-                System.out.println("[VacacionesBp.calculaDiasProgresivos]"
+                System.out.println(WEB_NAME+"[VacacionesBp.calculaDiasProgresivos]"
                     + mensajeVP);
             }
         }else{
             mensajeVP = "No cumple con el minimo de " + bdmmc.intValue() + " cotizaciones "
                 + "para VP";
-            System.out.println("[VacacionesBp.calculaDiasProgresivos]"
+            System.out.println(WEB_NAME+"[VacacionesBp.calculaDiasProgresivos]"
                 + mensajeVP);
         }
         
         if (calcularVacacionesProgresivas) {
             mensajeVP = "Cumple requisitos para dias de vacaciones progresivas";
             diasProgresivos = bgMesesTranscurridos.intValue() / bdmavp.intValue();
-            System.out.println("[VacacionesBp."
+            System.out.println(WEB_NAME+"[VacacionesBp."
                 + "calculaDiasProgresivos]"
                 + "Dias de vacaciones progresivas calculados= " + diasProgresivos);
         }else{
-            System.out.println("[VacacionesBp."
+            System.out.println(WEB_NAME+"[VacacionesBp."
                 + "calculaDiasProgresivos]"
                 + "Run empleado: " + _dataVacaciones.getRutEmpleado() 
                 + " no cumple con requisito para dias progresivos");
@@ -1065,7 +1065,7 @@ public class VacacionesBp {
             int _numCotizaciones,
             double _paramMinMesesCotizando){
         
-        System.out.println("[VacacionesBp."
+        System.out.println(WEB_NAME+"[VacacionesBp."
             + "getFechaBaseVP]"
             + "fecha inicio contrato: = " + _fechaInicioContrato
             + ", fecha certificaco= " + _fechaCertificado
@@ -1157,7 +1157,7 @@ public class VacacionesBp {
         SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd");
         Calendar calHoy = Calendar.getInstance(new Locale("es","CL"));
         Date dateActual = calHoy.getTime();
-        System.out.println("[VacacionesBp."
+        System.out.println(WEB_NAME+"[VacacionesBp."
             + "getFechaMesVencido]"
             + "Fecha actual: " + dateFormat2.format(dateActual)
             + ", fecha inicio contrato: " + _fechaInicioContrato
@@ -1165,7 +1165,7 @@ public class VacacionesBp {
 //        if (_fechaDesvinculacion == null){
         if (_fechaDesvinculacion != null){
             dateActual = _fechaDesvinculacion;
-            System.out.println("[VacacionesBp."
+            System.out.println(WEB_NAME+"[VacacionesBp."
                 + "getFechaMesVencido]"
                 + "Fecha actual = fecha desvinculacion: " + dateFormat2.format(_fechaDesvinculacion));
         }
@@ -1192,7 +1192,7 @@ public class VacacionesBp {
                 calHoy.set(Calendar.MONTH, mesActual-1);
                 FMV = calHoy.getTime();//fecha mes vencido a usar
             } 
-            System.out.println("[VacacionesBp."
+            System.out.println(WEB_NAME+"[VacacionesBp."
                 + "getFechaMesVencido]"
                 + "FMV final a la fecha actual: " + dateFormat2.format(FMV));
         }catch(Exception ex){
@@ -1202,7 +1202,7 @@ public class VacacionesBp {
         }
 //        }else{
 //            FMV = _fechaDesvinculacion;
-//            System.out.println("[VacacionesBp."
+//            System.out.println(WEB_NAME+"[VacacionesBp."
 //                + "getFechaMesVencido]"
 //                + "FMV final = fecha desvinculacion: " + dateFormat2.format(FMV));
 //        }

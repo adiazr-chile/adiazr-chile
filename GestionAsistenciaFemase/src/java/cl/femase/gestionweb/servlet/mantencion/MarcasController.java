@@ -97,7 +97,7 @@ public class MarcasController extends BaseServlet {
         EmpleadosBp empleadosBp         = new EmpleadosBp(appProperties);
         
         if(request.getParameter("action") != null){
-            System.out.println("[MarcasController]"
+            System.out.println(WEB_NAME+"[MarcasController]"
                 + "action is: " + request.getParameter("action"));
             LinkedHashMap<String, MarcaVO> hashMarcas = new LinkedHashMap<String, MarcaVO>();
             String action=(String)request.getParameter("action");
@@ -118,7 +118,7 @@ public class MarcasController extends BaseServlet {
             String deptoId  = null;
             String cencoId  = "-1";
             String paramCencoID         = request.getParameter("cencoId");
-            System.out.println("[MarcasController]"
+            System.out.println(WEB_NAME+"[MarcasController]"
                 + "token param 'cencoID'= " + paramCencoID);
             if (paramCencoID != null && paramCencoID.compareTo("-1") != 0){
                 StringTokenizer tokenCenco  = new StringTokenizer(paramCencoID, "|");
@@ -143,7 +143,7 @@ public class MarcasController extends BaseServlet {
                 numRecordsPerPage   = Integer.parseInt(request.getParameter("jtPageSize"));
             if (request.getParameter("jtSorting") != null) 
                 jtSorting   = request.getParameter("jtSorting");
-            System.out.println("MarcasController." +
+            System.out.println(WEB_NAME+"MarcasController." +
                 " jtSorting: " + request.getParameter("jtSorting"));
             
             if (jtSorting.contains("codDispositivo")) jtSorting = jtSorting.replaceFirst("codDispositivo","cod_dispositivo");
@@ -151,7 +151,7 @@ public class MarcasController extends BaseServlet {
             else if (jtSorting.contains("rutEmpleado")) jtSorting = jtSorting.replaceFirst("rutEmpleado","rut_empleado");
             else if (jtSorting.contains("fechaHoraStr")) jtSorting = jtSorting.replaceFirst("fechaHoraStr","fecha_hora");
                                          
-//            System.out.println("[gestionweb.MarcasController]"
+//            System.out.println(WEB_NAME+"[gestionweb.MarcasController]"
 //                + " FechaHoraKey: " + request.getParameter("fechaHoraKey")
 //                + ", rutEmpleado: " + request.getParameter("rutEmpleado")
 //                + ", empresaCod: " + request.getParameter("empresaCod")
@@ -230,7 +230,7 @@ public class MarcasController extends BaseServlet {
             
             if (action.compareTo("list") == 0){
                 //probar con empleado con turno rotativo...
-                System.out.println("[MarcasController]"
+                System.out.println(WEB_NAME+"[MarcasController]"
                     + "mostrando marcas."+
                         "CencoId= " +cencoId
                         +", rutEmpleado= " +request.getParameter("rutEmpleado")
@@ -250,7 +250,7 @@ public class MarcasController extends BaseServlet {
                                 request.getParameter("rutEmpleado"));
                         boolean tieneTurnoRotativo=false;
                         if (idTurnoRotativo == infoEmpleado.getIdTurno()){
-                            System.out.println("[MarcasController.mostrarMarcas]"
+                            System.out.println(WEB_NAME+"[MarcasController.mostrarMarcas]"
                                 + "Empleado.rut: " + infoEmpleado.getRut()
                                 + ", nombres: " + infoEmpleado.getNombres()
                                 + ", Tiene turno rotativo");
@@ -346,7 +346,7 @@ public class MarcasController extends BaseServlet {
                 String keyPhrase = infomarca.getRutEmpleado()+infomarca.getFechaHora()+infomarca.getTipoMarca();
                 infomarca.setHashcode(Utilidades.getMD5EncryptedValue(keyPhrase));
                 
-                System.out.println("[MarcasController]Insertar marca. "
+                System.out.println(WEB_NAME+"[MarcasController]Insertar marca. "
                     + "Empresa: " + empresaId
                     + ", rut: " + infomarca.getRutEmpleado()
                     + ", fechaHora: " + infomarca.getFechaHora()
@@ -355,7 +355,7 @@ public class MarcasController extends BaseServlet {
                     + ", hashcode(md5: " + infomarca.getHashcode());
                     
                 MaintenanceVO doCreate = auxnegocio.insertWithLog(infomarca, resultado);
-                System.out.println("[MarcasController]Mensaje "
+                System.out.println(WEB_NAME+"[MarcasController]Mensaje "
                     + "del sp new_inserta_marca_manual: " + doCreate.getMsgFromSp());
                 //if (!doCreate.isThereError()){
                     informaCreacionMarca(doCreate.getMsgFromSp(), infomarca, userConnected, request);
@@ -383,7 +383,7 @@ public class MarcasController extends BaseServlet {
                 }
                 
             }else if (action.compareTo("update") == 0) {  
-                    System.out.println("[MarcasController]}"
+                    System.out.println(WEB_NAME+"[MarcasController]}"
                         + "Actualizar marca, "
                         + "rowKey: "+request.getParameter("rowKey")
                         + ", tipoMarca: " + infomarca.getTipoMarca());
@@ -402,7 +402,7 @@ public class MarcasController extends BaseServlet {
                         int tipoMarcaKey = Integer.parseInt(tokenKey.nextToken());
                         ////infomarca.setTipoMarca(tipoMarcaKey);
                         
-                        System.out.println("[MarcasController]update marca."
+                        System.out.println(WEB_NAME+"[MarcasController]update marca."
                             + "tipoMarcaKey: " + tipoMarcaKey
                             + ",fechaHoraKey: " + fechaHoraKey);
                          
@@ -412,7 +412,7 @@ public class MarcasController extends BaseServlet {
                             fechaHoraKey, tipoMarcaKey, false);
                         if (marcaOriginal != null){
                             //enviar correo
-                            System.out.println("[MarcasController]update marca."
+                            System.out.println(WEB_NAME+"[MarcasController]update marca."
                                 + "Marca Original. "
                                 + "Empresa: " + marcaOriginal.getEmpresaCod()
                                 + ", rut: " + marcaOriginal.getRutEmpleado()
@@ -421,7 +421,7 @@ public class MarcasController extends BaseServlet {
                                 + ", comentario: " + marcaOriginal.getComentario()    
                             );
                             infomarca.setFechaHora(newfechaHora);
-                            System.out.println("[MarcasController]update marca."
+                            System.out.println(WEB_NAME+"[MarcasController]update marca."
                                 + "Marca a modificar: "
                                 + "Empresa: " + infomarca.getEmpresaCod()
                                 + ", rut: " + infomarca.getRutEmpleado()
@@ -504,7 +504,7 @@ public class MarcasController extends BaseServlet {
                             MarcasEventosBp marcamodif= new MarcasEventosBp();
                             MarcasEventosVO aux = new MarcasEventosVO();
                             
-                            System.out.println("[MarcasController]inserta "
+                            System.out.println(WEB_NAME+"[MarcasController]inserta "
                                 + "marca evento: modificada.");
                             
                             aux.setCodDispositivo(marcaOriginal.getCodDispositivo());
@@ -546,7 +546,7 @@ public class MarcasController extends BaseServlet {
                         response.getWriter().print(error);
                     }
             }else if (action.compareTo("delete") == 0) {
-                    System.out.println("[MarcasController]}"
+                    System.out.println(WEB_NAME+"[MarcasController]}"
                         + "Eliminar marca, rowKey: "+request.getParameter("rowKey"));
                     StringTokenizer tokenKey = new StringTokenizer(request.getParameter("rowKey"), "|");
                     //emp01|15695517B|2018-01-15 08:34:00|1
@@ -557,7 +557,7 @@ public class MarcasController extends BaseServlet {
                     int tipoMarcaKey = Integer.parseInt(tokenKey.nextToken());
                     infomarca.setTipoMarca(tipoMarcaKey);
                     
-                    System.out.println("[MarcasController]}"
+                    System.out.println(WEB_NAME+"[MarcasController]}"
                         + "Eliminar marca,"
                         + " rut: " + infomarca.getRutEmpleado()
                         + ", fechaHora: " + infomarca.getFechaHora()
@@ -589,7 +589,7 @@ public class MarcasController extends BaseServlet {
                             MarcasEventosBp marcamodif= new MarcasEventosBp();
                             MarcasEventosVO aux = new MarcasEventosVO();
                             
-                            System.out.println("[MarcasController]inserta "
+                            System.out.println(WEB_NAME+"[MarcasController]inserta "
                                 + "marca evento: ELIMINACION.");
                             
                             aux.setCodDispositivo(marcaOriginal.getCodDispositivo());
@@ -668,7 +668,7 @@ public class MarcasController extends BaseServlet {
         resultado.setCencoId(empleado.getCencoId());
         resultado.setRutEmpleado(empleado.getRut());
         
-        System.out.println("[mantencionEvento]"
+        System.out.println(WEB_NAME+"[mantencionEvento]"
             + "EmpresaId: " + resultado.getEmpresaId()
             + ", deptoId: " + resultado.getDeptoId()
             + ", cencoId: " + resultado.getCencoId());

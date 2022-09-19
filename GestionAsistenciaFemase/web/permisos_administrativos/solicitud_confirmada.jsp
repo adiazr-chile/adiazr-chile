@@ -116,7 +116,7 @@ th, td {
 		MensajeUsuarioVO mensaje= mensajes.get(i);
 		String label = mensaje.getLabel();
 		String value = mensaje.getValue();
-		System.out.println("[solicitud_pa/vista_previa.jsp]label=" + label + ",value= " + value);
+		System.out.println("[GestionFemaseWeb]solicitud_pa/vista_previa.jsp]label=" + label + ",value= " + value);
             %>
             <tr>
               <th width="50%" align="right" class="label_tabla" scope="col"><%=label%></th>

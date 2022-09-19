@@ -62,7 +62,7 @@ public class AdmAccesosModuloPerfilServlet extends BaseServlet {
             resultado.setType("ABP");
             resultado.setEmpresaIdSource(userConnected.getEmpresaId());
             
-            System.out.println("[gestionFemase."
+            System.out.println(WEB_NAME+"[gestionFemase."
                 + "AdmAccesosModuloPerfilServlet]"
                 + "modo: " + request.getParameter("modo"));
             //lista de modulos
@@ -86,7 +86,7 @@ public class AdmAccesosModuloPerfilServlet extends BaseServlet {
             
             if (mode != null && mode.compareTo("startpage")==0){
                 //cargar lista de perfiles y modulos (inicial)
-                System.out.println("[gestionFemase."
+                System.out.println(WEB_NAME+"[gestionFemase."
                     + "AdmAccesosModuloPerfilServlet]cargar lista de perfiles y modulos (inicial)");
 
                 lstperfiles = perfilesBp.getPerfiles(null, 0, 0, "perfil_nombre");
@@ -104,7 +104,7 @@ public class AdmAccesosModuloPerfilServlet extends BaseServlet {
                 String perfil_id=request.getParameter("perfil_id");
                 String modulo_id=request.getParameter("modulo_id");
                                 
-                System.out.println("[gestionFemase.AdmAccesosModuloPerfilServlet]PerfilId: "+perfil_id+", moduloId: "+modulo_id);
+                System.out.println(WEB_NAME+"[gestionFemase.AdmAccesosModuloPerfilServlet]PerfilId: "+perfil_id+", moduloId: "+modulo_id);
                 /**
                  * cargar lista de accesos disponibles y lista de accesos seleccionados, ordenados por id
                  * Los accesos disponibles no deben aparacer en la lista de seleccionados
@@ -120,7 +120,7 @@ public class AdmAccesosModuloPerfilServlet extends BaseServlet {
 		while (accesoIterator.hasNext()) {
                     AccesoVO acceso=accesoIterator.next();
                     if (!lstAccesosKeyPerfilModulo.containsKey(""+acceso.getId())){
-                        System.out.println("[AdminAccesosPerfil]"
+                        System.out.println(WEB_NAME+"[AdminAccesosPerfil]"
                             + "add acceso disponible: "+acceso.getLabel());
                         lstAccesosDisponibles.put(""+acceso.getId(), acceso);
                     } 
@@ -142,7 +142,7 @@ public class AdmAccesosModuloPerfilServlet extends BaseServlet {
                     String[] accesos=request.getParameterValues("accesos_selected");
                     if (accesos!=null){
                         for (int x=0;x<accesos.length;x++){
-                            System.out.println("acceso seleccionado["+x+"] = "+accesos[x]);
+                            System.out.println(WEB_NAME+"acceso seleccionado["+x+"] = "+accesos[x]);
                             ModuloAccesoPerfilVO newAcceso=new ModuloAccesoPerfilVO();
                             newAcceso.setPerfilId(Integer.parseInt(perfil_id));
                             newAcceso.setModuloId(Integer.parseInt(modulo_id));
@@ -151,14 +151,14 @@ public class AdmAccesosModuloPerfilServlet extends BaseServlet {
                             newAcceso.setOrdenDespliegue(x+1);
                             accesosPerfilBp.insert(newAcceso, resultado);
                         }     
-                    }else System.out.println("No hay items");
+                    }else System.out.println(WEB_NAME+"No hay items");
             }
             
-            System.out.println("[gestionFemase."
+            System.out.println(WEB_NAME+"[gestionFemase."
                 + "AdmAccesosModuloPerfilServlet]"
                     + "cargar listas en request...");
             
-            System.out.println("[gestionFemase."
+            System.out.println(WEB_NAME+"[gestionFemase."
                 + "AdmAccesosModuloPerfilServlet]"
                     + "perfiles.size= "+lstperfiles.size());
                         

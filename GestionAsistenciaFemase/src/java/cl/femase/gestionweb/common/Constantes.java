@@ -165,5 +165,10 @@ public class Constantes {
     /**
     * Id parametro indica el numero maximo de dias de permiso administrativo anuales
     */
-    public static final String ID_PARAMETRO_MAXIMO_ANUAL_DIAS_PA = "maximo_anual_dias_pa";
+//    public static final String ID_PARAMETRO_MAXIMO_ANUAL_DIAS_PA = "maximo_anual_dias_pa";
+    
+    /**
+    * Id parametro indica el numero maximo de dias de permiso administrativo para un semestre
+    */
+    public static final String ID_PARAMETRO_MAXIMO_SEMESTRAL_DIAS_PA = "max_dias_pa_semestre";
 }

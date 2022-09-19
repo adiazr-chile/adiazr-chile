@@ -102,7 +102,7 @@ public class SolicitudVacacionesController extends BaseServlet {
         HashMap<String, Double> parametrosSistema = (HashMap<String, Double>)session.getAttribute("parametros_sistema");
         
         if(request.getParameter("action") != null){
-            System.out.println("[SolicitudVacacionesController]"
+            System.out.println(WEB_NAME+"[SolicitudVacacionesController]"
                 + "action is: " + request.getParameter("action"));
             List<SolicitudVacacionesVO> listaSolicitudes = new ArrayList<SolicitudVacacionesVO>();
             String action=(String)request.getParameter("action");
@@ -154,7 +154,7 @@ public class SolicitudVacacionesController extends BaseServlet {
             String paramDepto   = null;
             String cencoId      = "";
             
-            System.out.println("[SolicitudVacacionesController]"
+            System.out.println(WEB_NAME+"[SolicitudVacacionesController]"
                 + "token param 'cencoID'= " + paramCencoID);
             if (paramCencoID != null && paramCencoID.compareTo("-1") != 0){
                 StringTokenizer tokenCenco  = new StringTokenizer(paramCencoID, "|");
@@ -167,7 +167,7 @@ public class SolicitudVacacionesController extends BaseServlet {
                 }
             }
             
-            System.out.println("[SolicitudVacacionesController]"
+            System.out.println(WEB_NAME+"[SolicitudVacacionesController]"
                 + "empresaId: " + paramEmpresa
                 + ", rut empleado: " + request.getParameter("rutEmpleado"));
             if(request.getParameter("id") != null){
@@ -197,13 +197,13 @@ public class SolicitudVacacionesController extends BaseServlet {
                     runEmpleado = null;//userConnected.getRunEmpleado();
             }
             solicitud.setRutEmpleado(runEmpleado);
-            System.out.println("[SolicitudVacacionesController]"
+            System.out.println(WEB_NAME+"[SolicitudVacacionesController]"
                 + "action: " + action 
                 + ", set RunEmpleado: " + solicitud.getRutEmpleado());
                     
             if (action.compareTo("listPropias") == 0) {//**********************************************************************************
                 try{
-                    System.out.println("[SolicitudVacacionesController]"
+                    System.out.println(WEB_NAME+"[SolicitudVacacionesController]"
                         + "Mostrar lista de solicitudes propias del usuario. "
                         + "empresa: " + paramEmpresa
                         + ", usuario: " + userConnected.getUsername()
@@ -266,7 +266,7 @@ public class SolicitudVacacionesController extends BaseServlet {
                     
                     int intCencoId=-1;
                     if (cencoId.compareTo("") != 0) intCencoId = Integer.parseInt(cencoId); 
-                    System.out.println("[SolicitudVacacionesController]"
+                    System.out.println(WEB_NAME+"[SolicitudVacacionesController]"
                         + "Mostrar " + action + "lista de solicitudes. "
                         + "empresa: " + paramEmpresa
                         + ", cencoId: " + intCencoId
@@ -354,7 +354,7 @@ public class SolicitudVacacionesController extends BaseServlet {
                     solicitud.setEstadoLabel(Constantes.ESTADO_SOLICITUD_PENDIENTE_LABEL);
                     solicitud.setInicioVacaciones(reqDesde);
                     solicitud.setFinVacaciones(reqHasta);
-                    System.out.println("[SolicitudVacacionesController]"
+                    System.out.println(WEB_NAME+"[SolicitudVacacionesController]"
                         + "Vista previa antes de Insertar solicitud de vacaciones. "
                         + "Username: : " + userConnected.getUsername()
                         + ", empresaId: : " + solicitud.getEmpresaId()    
@@ -370,7 +370,7 @@ public class SolicitudVacacionesController extends BaseServlet {
                         vacacionesBp.getInfoVacaciones(userConnected.getEmpresaId(), 
                             solicitud.getRutEmpleado(), -1, -1, -1, "vac.rut_empleado");
                     if (infoVacaciones.isEmpty()){
-                         System.out.println("[SolicitudVacacionesController]"
+                         System.out.println(WEB_NAME+"[SolicitudVacacionesController]"
                         + "Vista previa antes de Insertar solicitud de vacaciones. "
                         + "el trabajador no tiene registro en la tabla 'vacaciones', Salir");
                          return;
@@ -378,7 +378,7 @@ public class SolicitudVacacionesController extends BaseServlet {
                         saldoVacaciones = infoVacaciones.get(0);
                     }
                     
-                    System.out.println("[SolicitudVacacionesController]"
+                    System.out.println(WEB_NAME+"[SolicitudVacacionesController]"
                         + "Vista previa antes de Insertar solicitud de vacaciones. "
                         + "Username: : " + userConnected.getUsername()
                         + ", empresaId: : " + solicitud.getEmpresaId()    
@@ -403,7 +403,7 @@ public class SolicitudVacacionesController extends BaseServlet {
                     }
                     
                     double saldoPostVacaciones = doubleSaldoVacaciones - diasEfectivosSolicitados;
-                    System.out.println("[SolicitudVacacionesController]"
+                    System.out.println(WEB_NAME+"[SolicitudVacacionesController]"
                         + ", empresaId: : " + solicitud.getEmpresaId()    
                         + ", rut_empleado: : " + solicitud.getRutEmpleado()
                         + ", saldo_vacaciones: : " + doubleSaldoVacaciones
@@ -419,7 +419,7 @@ public class SolicitudVacacionesController extends BaseServlet {
                             + "[" + destinatario.getEmail() + "],"
                             + "[" + destinatario.getCargo() + "],";
                         
-                        System.out.println("[SolicitudVacacionesController]"
+                        System.out.println(WEB_NAME+"[SolicitudVacacionesController]"
                             + "strDestinatarios: " + strDestinatarios);
                     }
                     if (!destinatarios.isEmpty()) strDestinatarios = strDestinatarios.substring(0, strDestinatarios.length()-1);
@@ -478,7 +478,7 @@ public class SolicitudVacacionesController extends BaseServlet {
                     solicitud.setEstadoLabel(Constantes.ESTADO_SOLICITUD_PENDIENTE_LABEL);
                     solicitud.setInicioVacaciones(reqDesde);
                     solicitud.setFinVacaciones(reqHasta);
-                    System.out.println("[SolicitudVacacionesController]"
+                    System.out.println(WEB_NAME+"[SolicitudVacacionesController]"
                         + "Insertar solicitud de vacaciones. "
                         + "Username: : " + userConnected.getUsername()
                         + ", empresaId: : " + solicitud.getEmpresaId()    
@@ -492,7 +492,7 @@ public class SolicitudVacacionesController extends BaseServlet {
                     resultado.setCencoId(infoEmpleado.getCentroCosto().getId());
                     
                     //***************************************************************
-                    System.out.println("[SolicitudVacacionesController]"
+                    System.out.println(WEB_NAME+"[SolicitudVacacionesController]"
                         + "Insertar registro en tabla notificaciones, "
                         + "para enviar mail");
                     NotificacionSolicitudVacacionesVO evento = notificaEventoSolicitud("INGRESO_SOLICITUD",
@@ -514,7 +514,7 @@ public class SolicitudVacacionesController extends BaseServlet {
                         strDestinatarios += destinatario.getNombre() 
                             + "[" + destinatario.getEmail() + "],"
                             + "[" + destinatario.getCargo() + "],";
-                        System.out.println("[SolicitudVacacionesController]"
+                        System.out.println(WEB_NAME+"[SolicitudVacacionesController]"
                             + "strDestinatarios: " + strDestinatarios);
                     }
                     if (!destinatarios.isEmpty()) strDestinatarios = strDestinatarios.substring(0, strDestinatarios.length()-1);
@@ -556,7 +556,7 @@ public class SolicitudVacacionesController extends BaseServlet {
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", new Locale("es","CL"));
                     String strFechaHoraActual = sdf.format(fechaActual);
                     String strAccion = request.getParameter("Accion");
-                    System.out.println("[SolicitudVacacionesController]"
+                    System.out.println(WEB_NAME+"[SolicitudVacacionesController]"
                         + "Modificar estado de solicitud de vacaciones. "
                         + "Id solicitud: : " + solicitud.getId()    
                         + ", username: : " + userConnected.getUsername()
@@ -599,7 +599,7 @@ public class SolicitudVacacionesController extends BaseServlet {
                     SolicitudVacacionesVO solicitudFromBd = 
                         solicitudesBp.getSolicitudByKey(solicitud.getId());
                     
-                    System.out.println("[SolicitudVacacionesController]"
+                    System.out.println(WEB_NAME+"[SolicitudVacacionesController]"
                         + "Aprobar/Rechazar solicitud de vacaciones. "
                         + "Id solicitud: : " + solicitud.getId()
                         + ", inicioVacaciones: " + solicitudFromBd.getInicioVacaciones()
@@ -633,7 +633,7 @@ public class SolicitudVacacionesController extends BaseServlet {
                             null, 
                             null);
                         if (ausenciasConflicto.isEmpty()){
-                            System.out.println("[SolicitudVacacionesController]"
+                            System.out.println(WEB_NAME+"[SolicitudVacacionesController]"
                                 + "No hay conflicto. "
                                 + "Aprobar solicitud de vacaciones "
                                 + "e Insertar vacacion...");
@@ -656,7 +656,7 @@ public class SolicitudVacacionesController extends BaseServlet {
                                 solicitudFromBd.getDiasEfectivosVacacionesSolicitadas());
                             
                             //*********************************************************
-                            System.out.println("[SolicitudVacacionesController]"
+                            System.out.println(WEB_NAME+"[SolicitudVacacionesController]"
                                 + "Aprobar solicitud de vacaciones. Insertar vacacion...");
                             
                             SolicitudVacacionesVO auxSolicitud = 
@@ -696,7 +696,7 @@ public class SolicitudVacacionesController extends BaseServlet {
                                     resultado);
                             solicitud.setEstadoId(Constantes.ESTADO_SOLICITUD_RECHAZADA);
                             solicitud.setEstadoLabel(Constantes.ESTADO_SOLICITUD_RECHAZADA_LABEL);
-                            System.out.println("[SolicitudVacacionesController]"
+                            System.out.println(WEB_NAME+"[SolicitudVacacionesController]"
                                 + "Rechazar solicitud de vacaciones. Dias solicitados: " + solicitud.getDiasEfectivosVacacionesSolicitadas());
                             notificaEventoSolicitud("SOLICITUD_RECHAZADA",
                                 "Solicitud de Vacaciones Rechazada", 
@@ -714,7 +714,7 @@ public class SolicitudVacacionesController extends BaseServlet {
                                 resultado);
                         solicitud.setEstadoId(Constantes.ESTADO_SOLICITUD_RECHAZADA);
                         solicitud.setEstadoLabel(Constantes.ESTADO_SOLICITUD_RECHAZADA_LABEL);
-                        System.out.println("[SolicitudVacacionesController]"
+                        System.out.println(WEB_NAME+"[SolicitudVacacionesController]"
                             + "Rechazar solicitud de vacaciones. Dias solicitados: " + solicitud.getDiasEfectivosVacacionesSolicitadas());
                         notificaEventoSolicitud("SOLICITUD_RECHAZADA",
                             "Solicitud de Vacaciones Rechazada", 
@@ -746,7 +746,7 @@ public class SolicitudVacacionesController extends BaseServlet {
             UsuarioVO _userConnected, 
             DetalleAusenciaVO _ausencia){
        
-        System.out.println("[SolicitudVacacionesController.insertarVacacion]"
+        System.out.println(WEB_NAME+"[SolicitudVacacionesController.insertarVacacion]"
             + "Insertar detalle ausencia (VACACION)");
         VacacionesBp vacaciones = new VacacionesBp(_appProperties);
         
@@ -771,7 +771,7 @@ public class SolicitudVacacionesController extends BaseServlet {
         resultado.setEmpresaIdSource(_userConnected.getEmpresaId());
                                         
         resultado.setRutEmpleado(_ausencia.getRutEmpleado());
-        System.out.println("[SolicitudVacacionesController.insertarVacacion]"
+        System.out.println(WEB_NAME+"[SolicitudVacacionesController.insertarVacacion]"
             + "Insertar detalle ausencia (VACACION)");
         MaintenanceVO doCreate = ausenciasBp.insertaVacacion(_ausencia, resultado);
         
@@ -779,7 +779,7 @@ public class SolicitudVacacionesController extends BaseServlet {
             mensajeFinal= "Error al insertar vacacion " + doCreate.getMsgError();
             doCreate.setMsg(mensajeFinal);
         }else{
-            System.out.println("[SolicitudVacacionesController."
+            System.out.println(WEB_NAME+"[SolicitudVacacionesController."
                 + "insertarVacacion]"
                 + "Actualizar saldos de vacaciones "
                 + "en tabla detalle_ausencia (usar nueva funcion setsaldodiasvacacionesasignadas). "
@@ -787,7 +787,7 @@ public class SolicitudVacacionesController extends BaseServlet {
             ausenciasBp.actualizaSaldosVacaciones(_ausencia.getRutEmpleado());
             
             //Actualizar saldos en tabla vacaciones: columnas saldo_dias_vba y saldo_dias_vp
-            System.out.println("[SolicitudVacacionesController."
+            System.out.println(WEB_NAME+"[SolicitudVacacionesController."
                 + "insertarVacacion]"
                 + "Actualizar saldos en tabla vacaciones: columnas saldo_dias_vba y saldo_dias_vp");
             VacacionesVO objVacaciones = new VacacionesVO();
@@ -798,7 +798,7 @@ public class SolicitudVacacionesController extends BaseServlet {
             vacaciones.updateSaldosVacacionesVBAyVP(objVacaciones);
             
         }
-        System.out.println("[SolicitudVacacionesController.insertarVacacion]"
+        System.out.println(WEB_NAME+"[SolicitudVacacionesController.insertarVacacion]"
             + "Saliendo del metodo OK.");
         return doCreate;
     }
@@ -823,7 +823,7 @@ public class SolicitudVacacionesController extends BaseServlet {
         CentroCostoBp cencosbp      = new CentroCostoBp(null);
         VacacionesBp vacacionesbp   = new VacacionesBp(null);
         
-        System.out.println("[SolicitudVacacionesController."
+        System.out.println(WEB_NAME+"[SolicitudVacacionesController."
             + "notificaEventoSolicitud]Invocar getEmpleado. "
             + "EmpresaId: " + _solicitud.getEmpresaId()
             + ", rutEmpleado: " + _solicitud.getRutEmpleado());
@@ -843,7 +843,7 @@ public class SolicitudVacacionesController extends BaseServlet {
         String fromMail         = m_properties.getKeyValue("mailFrom");
         String asuntoMail       = "Sistema de Gestion-" + _evento;
         String mailTo           = empleado.getEmail();
-        System.out.println("[SolicitudVacacionesController."
+        System.out.println(WEB_NAME+"[SolicitudVacacionesController."
             + "notificaEventoSolicitud]"
             + "Email por defecto: " + mailTo);
         String notaObservacion = _request.getParameter("notaObservacion");
@@ -860,7 +860,7 @@ public class SolicitudVacacionesController extends BaseServlet {
         
         if (_tipoEvento.compareTo("INGRESO_SOLICITUD") == 0){
             String cadenaEmails = "";
-            System.out.println("[SolicitudVacacionesController."
+            System.out.println(WEB_NAME+"[SolicitudVacacionesController."
                 + "notificaEventoSolicitud]"
                 + "Cargo empleado: " + empleado.getIdCargo()
                 + ", empresaId: " + empleado.getEmpresaId()
@@ -883,7 +883,7 @@ public class SolicitudVacacionesController extends BaseServlet {
                     mailTo      = cadenaEmails;
                     cadenaNombres = cadenaNombres.substring(0, cadenaNombres.length() - 1);
                 }else{
-                    System.out.println("[SolicitudVacacionesController."
+                    System.out.println(WEB_NAME+"[SolicitudVacacionesController."
                         + "notificaEventoSolicitud]No se encontraron "
                         + "empleados con Cargo 'DIRECTOR' para "
                         + "[empresa, depto, cencoId] = "
@@ -896,7 +896,7 @@ public class SolicitudVacacionesController extends BaseServlet {
                 }
             }else{
                 //Usuario con cargo Director, debe enviar solicitud a Gerencia en Admin Central (Cargo Jefe Técnico Nacional, ID 69 )
-                System.out.println("[SolicitudVacacionesController."
+                System.out.println(WEB_NAME+"[SolicitudVacacionesController."
                     + "notificaEventoSolicitud]Empleado con cargo Director, "
                     + "debe enviar solicitud a Gerencia en Admin Central (Cargo Jefe Técnico Nacional, ID 69 )");
                 EmpleadoVO filtroEmpleado = new EmpleadoVO();
@@ -909,7 +909,7 @@ public class SolicitudVacacionesController extends BaseServlet {
                 List<EmpleadoVO> listaJefesTecnicosNacional = 
                     empleadobp.getEmpleadosByFiltro(filtroEmpleado);
                 if (!listaJefesTecnicosNacional.isEmpty()){
-                    System.out.println("[SolicitudVacacionesController."
+                    System.out.println(WEB_NAME+"[SolicitudVacacionesController."
                         + "notificaEventoSolicitud]Rescatar emails del Jefe Tecnico Nacional");
                     for(EmpleadoVO itJefazos : listaJefesTecnicosNacional){
                         cadenaEmails += itJefazos.getEmail() + ",";
@@ -917,15 +917,15 @@ public class SolicitudVacacionesController extends BaseServlet {
                         if (itJefazos.getApePaterno() != null) cadenaNombres += " " + itJefazos.getApePaterno();
                         if (itJefazos.getApeMaterno() != null) cadenaNombres += " " + itJefazos.getApeMaterno();
                     }
-                    System.out.println("[SolicitudVacacionesController."
+                    System.out.println(WEB_NAME+"[SolicitudVacacionesController."
                         + "notificaEventoSolicitud]Emails Jefe Tecnico Nacional: " + cadenaEmails);
-                    System.out.println("[SolicitudVacacionesController."
+                    System.out.println(WEB_NAME+"[SolicitudVacacionesController."
                         + "notificaEventoSolicitud]Nombres Jefe Tecnico Nacional: " + cadenaNombres);
                     
                     cadenaEmails = cadenaEmails.substring(0, cadenaEmails.length() - 1);
                     mailTo      = cadenaEmails;
                 }else{
-                    System.out.println("[SolicitudVacacionesController."
+                    System.out.println(WEB_NAME+"[SolicitudVacacionesController."
                         + "notificaEventoSolicitud]No se encontraron "
                         + "empleados con Cargo 'JEFE TECNICO NACIONAL' ");
                     hayJefeNacional = false;
@@ -992,7 +992,7 @@ public class SolicitudVacacionesController extends BaseServlet {
         resultado.setCencoId(empleado.getCencoId());
         resultado.setRutEmpleado(empleado.getRut());
         
-        System.out.println("[SolicitudVacacionesController."
+        System.out.println(WEB_NAME+"[SolicitudVacacionesController."
             + "notificaEventoSolicitud]"
             + "EmpresaId: " + resultado.getEmpresaId()
             + ", deptoId: " + resultado.getDeptoId()
@@ -1047,7 +1047,7 @@ public class SolicitudVacacionesController extends BaseServlet {
         boolean hayJefeNacional     = true;
         boolean hayJefeDirecto      = true;
         
-        System.out.println("[SolicitudVacacionesController."
+        System.out.println(WEB_NAME+"[SolicitudVacacionesController."
             + "getDestinatarioSolicitud]"
             + "Cargo empleado: " + empleado.getIdCargo()
             + ", empresaId: " + empleado.getEmpresaId()
@@ -1064,7 +1064,7 @@ public class SolicitudVacacionesController extends BaseServlet {
                 strCargo    = itDirectores.getNombreCargo();
                 if (itDirectores.getApePaterno() != null) strNombre += " " + itDirectores.getApePaterno();
                 if (itDirectores.getApeMaterno() != null) strNombre += " " + itDirectores.getApeMaterno();
-                System.out.println("[SolicitudVacacionesController."
+                System.out.println(WEB_NAME+"[SolicitudVacacionesController."
                     + "getDestinatarioSolicitud]add destinatario. "
                     + "strNombre: " + strNombre
                     + ", strEmail: " + strEmail
@@ -1075,7 +1075,7 @@ public class SolicitudVacacionesController extends BaseServlet {
                 destinatarios.add(destinatario);
             }
             if (directoresCenco.isEmpty()){
-                System.out.println("[SolicitudVacacionesController."
+                System.out.println(WEB_NAME+"[SolicitudVacacionesController."
                     + "getDestinatarioSolicitud]No se encontraron "
                     + "empleados con Cargo 'DIRECTOR' para "
                     + "[empresa, depto, cencoId] = "
@@ -1088,7 +1088,7 @@ public class SolicitudVacacionesController extends BaseServlet {
             }
         }else{
             //Usuario con cargo Director, debe enviar solicitud a Gerencia en Admin Central (Cargo Jefe Técnico Nacional, ID 69 )
-            System.out.println("[SolicitudVacacionesController."
+            System.out.println(WEB_NAME+"[SolicitudVacacionesController."
                 + "getDestinatarioSolicitud]Usuario con cargo Director, "
                 + "debe enviar solicitud a Gerencia en Admin Central "
                 + "(Cargo Jefe Técnico Nacional, ID 69 )");
@@ -1112,7 +1112,7 @@ public class SolicitudVacacionesController extends BaseServlet {
                     destinatarios.add(destinatario);
                 }
             }else{
-                System.out.println("[SolicitudVacacionesController."
+                System.out.println(WEB_NAME+"[SolicitudVacacionesController."
                     + "getDestinatarioSolicitud]No se encontraron "
                     + "empleados con Cargo 'JEFE TECNICO NACIONAL' ");
                 hayJefeNacional = false;

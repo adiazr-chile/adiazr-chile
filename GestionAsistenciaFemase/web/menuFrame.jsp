@@ -58,11 +58,11 @@
                 while (itModulos.hasNext())
                 {
                     ModuloSistemaVO currentModulo = itModulos.next();
-                    //System.out.println("[menuFrame.jsp]get acciones para modulo: "+currentModulo.getModulo_id());
+                    //System.out.println("[GestionFemaseWeb]menuFrame.jsp]get acciones para modulo: "+currentModulo.getModulo_id());
                     LinkedHashMap<String, ModuloAccesoPerfilVO> listaAccesos 
                         = accesosModulo.get(""+currentModulo.getModulo_id());
                     /*
-                    System.out.println("[menuFrame.jsp]"
+                    System.out.println("[GestionFemaseWeb]menuFrame.jsp]"
                         + "total acciones para modulo: "+currentModulo.getModulo_id()
                         +", size= "+listaAccesos.size());*/
                     //actions = appModules.get(keyModuleId);//lista con acciones
@@ -79,7 +79,7 @@
                     Iterator<ModuloAccesoPerfilVO> actionsIterator = listaAccesos.values().iterator();
                     while (actionsIterator.hasNext()) {
                         ModuloAccesoPerfilVO theaction = actionsIterator.next();
-                        /* System.out.println("[menuFrame.jsp]"
+                        /* System.out.println("[GestionFemaseWeb]menuFrame.jsp]"
                         + "mostrar accion: "+theaction.getAccesoLabel()
                         +",url: "+theaction.getAccesoUrl());
                         */

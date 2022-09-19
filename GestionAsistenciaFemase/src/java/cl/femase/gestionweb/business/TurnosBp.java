@@ -21,7 +21,7 @@ import java.util.List;
  *
  * @author Alexander
  */
-public class TurnosBp {
+public class TurnosBp  extends BaseBp{
 
     /**
      *
@@ -37,13 +37,13 @@ public class TurnosBp {
         turnosDao = new cl.femase.gestionweb.dao.TurnosDAO(this.props);
     }
 
-    public List<TurnoVO> getTurnos(String _empresaId, String _nombre,
+    public List<TurnoVO> getTurnos(String _empresaId, String _nombre,int _estado,
             int _jtStartIndex, 
             int _jtPageSize, 
             String _jtSorting){
         
         List<TurnoVO> lista = 
-            turnosDao.getTurnos(_empresaId, _nombre, _jtStartIndex, 
+            turnosDao.getTurnos(_empresaId, _nombre, _estado,_jtStartIndex, 
                 _jtPageSize, _jtSorting);
 
         return lista;
@@ -185,11 +185,22 @@ public class TurnosBp {
         return insValues;
     }
     
-    public int getTurnosCount(String _empresaId, String _nombre){
-        return turnosDao.getTurnosCount(_empresaId, _nombre);
+    /**
+    * 
+    * @param _empresaId
+    * @param _nombre
+    * @param _estado
+    * @return 
+    */
+    public int getTurnosCount(String _empresaId, String _nombre, int _estado){
+        return turnosDao.getTurnosCount(_empresaId, _nombre, _estado);
     }
 
-   public void insertarAsignacionesCencos(ArrayList<TurnoCentroCostoVO> _asignaciones){
+    /**
+    * 
+    * @param _asignaciones
+    */
+    public void insertarAsignacionesCencos(ArrayList<TurnoCentroCostoVO> _asignaciones){
        try{
             turnosDao.insertarAsignacionesCencos(_asignaciones);
         } catch (SQLException ex) {

@@ -15,7 +15,7 @@ import java.util.List;
  *
  * @author Alexander
  */
-public class VacacionesLogBp {
+public class VacacionesLogBp  extends BaseBp{
 
     public PropertiesVO props;
     /** para guardar los eventos de mantencion de informacion*/

@@ -16,6 +16,8 @@ import java.util.Properties;
 * @author Alexander
 */
 public class GetPropertyValues {
+    public static String WEB_NAME = "[GestionFemaseWeb]";
+    
     String result = "";
 	InputStream inputStream;
     Properties m_prop = new Properties();    
@@ -43,7 +45,7 @@ public class GetPropertyValues {
     }
  
     public String getKeyValue(String _key){
-//        System.out.println("[GetPropertyValues.getKeyValue]"
+//        System.out.println(WEB_NAME+"[GetPropertyValues.getKeyValue]"
 //            + "key a buscar: " + _key);
         return m_prop.getProperty(_key);
     }
@@ -66,14 +68,14 @@ public class GetPropertyValues {
             String mailFrom = prop.getProperty("mailFrom");
             String dbpoolname = prop.getProperty("dbpoolname");
 
-            System.out.println("mailHost: " + mailHost
+            System.out.println(WEB_NAME+"mailHost: " + mailHost
                 + ", mailPort: " + mailPort
                 + ", mailFrom: " + mailFrom
                 + ", dbpoolname: " + dbpoolname);
 //            result = "Company List = " + company1 + ", " + company2 + ", " + company3;
 //            System.out.println(result + "\nProgram Ran on " + time + " by user=" + user);
         } catch (Exception e) {
-            System.out.println("Exception: " + e);
+            System.out.println(WEB_NAME+"Exception: " + e);
         } finally {
             inputStream.close();
         }

@@ -5,11 +5,11 @@
 <%
     Calendar calHoy = Calendar.getInstance(new Locale("es","CL"));
     Date fechaActual = calHoy.getTime();
-    System.out.println("[ShowClock]"
+    System.out.println("[GestionFemaseWeb]ShowClock]"
         + "fechaHoraActual: " + fechaActual);
     long timeInServer = fechaActual.getTime();
     String fecha = Utilidades.getDatePartAsString(new Date(), "yyyy-MM-dd");
-    System.out.println("[ShowClock]"
+    System.out.println("[GestionFemaseWeb]ShowClock]"
         + "solo fecha Actual: " + fecha);
 %>
 

@@ -79,7 +79,7 @@ public class PerfilUsuarioDAO extends BaseDAO{
             
             int rowAffected = psupdate.executeUpdate();
             if (rowAffected == 1){
-                System.out.println("[update]perfil_usuario "
+                System.out.println(WEB_NAME+"[update]perfil_usuario "
                     + ", id:" + _data.getId()
                     + ", nombre:" + _data.getNombre()
                     + ", estado_id:" + _data.getEstadoId()
@@ -135,7 +135,7 @@ public class PerfilUsuarioDAO extends BaseDAO{
             
             int filasAfectadas = insert.executeUpdate();
             if (filasAfectadas == 1){
-                System.out.println("[PerfilUsuarioDAO.insert perfil_usuario]"
+                System.out.println(WEB_NAME+"[PerfilUsuarioDAO.insert perfil_usuario]"
                     + ", nombre:" + _data.getNombre()
                     + ", estado:" + _data.getEstadoId()
                     + ", admin_empresa:" + _data.getAdminEmpresa()    

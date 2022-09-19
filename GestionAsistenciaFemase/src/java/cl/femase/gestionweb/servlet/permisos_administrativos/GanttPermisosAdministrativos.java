@@ -99,12 +99,12 @@ public class GanttPermisosAdministrativos extends BaseServlet {
         CentroCostoBp cencoBp   = new CentroCostoBp(appProperties);
         
         if(request.getParameter("action") != null){
-            System.out.println("[servlet.GanttPermisosAdministrativos]"
+            System.out.println(WEB_NAME+"[servlet.GanttPermisosAdministrativos]"
                 + "action is: " + request.getParameter("action"));
             String action=(String)request.getParameter("action");
             Gson gson = new Gson();
             if (action.compareTo("loadResult") == 0) {
-                System.out.println("[servlet.GanttPermisosAdministrativos]"
+                System.out.println(WEB_NAME+"[servlet.GanttPermisosAdministrativos]"
                     + "mostrar gantt de Permisos administrativos, generar json...");
                 String paramCencoID = request.getParameter("cencoId");
                 String paramAnio    = request.getParameter("paramAnio");
@@ -113,7 +113,7 @@ public class GanttPermisosAdministrativos extends BaseServlet {
                 String paramEmpresa = null;
                 String paramDepto   = null;
                 String cencoId      = "";
-                System.out.println("[servlet.GanttPermisosAdministrativos]"
+                System.out.println(WEB_NAME+"[servlet.GanttPermisosAdministrativos]"
                     + "token param 'cencoID'= " + paramCencoID);
                 if (paramCencoID != null && paramCencoID.compareTo("-1") != 0){
                     StringTokenizer tokenCenco  = new StringTokenizer(paramCencoID, "|");
@@ -128,7 +128,7 @@ public class GanttPermisosAdministrativos extends BaseServlet {
 //                VacacionesBp vacacionesBp = new VacacionesBp(appProperties);
                 DetalleAusenciaDAO detalleAusenciaBp = new DetalleAusenciaDAO(appProperties);
                                 
-                System.out.println("[servlet.GanttPermisosAdministrativos]"
+                System.out.println(WEB_NAME+"[servlet.GanttPermisosAdministrativos]"
                     + "Obtener permisos administrativos. "
                     + "empresa: " + paramEmpresa
                     + ", depto: " + paramDepto
@@ -168,7 +168,7 @@ public class GanttPermisosAdministrativos extends BaseServlet {
                     while(it.hasNext()){
                         EmpleadoVO empleado = it.next();
                         String fullName = empleado.getShortFullNameCapitalize();
-                        System.out.println("[servlet.GanttPermisosAdministrativos]"
+                        System.out.println(WEB_NAME+"[servlet.GanttPermisosAdministrativos]"
                             + "empleado name: " + fullName);
                         List<DetalleAusenciaVO> listaPA = 
                             ausenciasBp.getPermisosAdministrativosByAnioMesInicio(empleado.getRut(), 
@@ -195,7 +195,7 @@ public class GanttPermisosAdministrativos extends BaseServlet {
 //                                            saldoVacaciones.getDiasEspeciales(),
 //                                            paramEmpresa, 
 //                                            empleado.getRut());
-//                                    System.out.println("[servlet.GanttPermisosAdministrativos]"
+//                                    System.out.println(WEB_NAME+"[servlet.GanttPermisosAdministrativos]"
 //                                        + "Actualizar dias efectivos de vacaciones. "
 //                                        + "inicio: "+ ausencia.getFechaInicioAsStr()
 //                                        + ", fin: "+ ausencia.getFechaFinAsStr()
@@ -204,7 +204,7 @@ public class GanttPermisosAdministrativos extends BaseServlet {
 //                                }
 //                            }
                             String auxName = fullName + " / " + empleado.getRut() + " / " + ausencia.getDiasSolicitados() + " dias";
-                            System.out.println("[servlet.GanttPermisosAdministrativos]"
+                            System.out.println(WEB_NAME+"[servlet.GanttPermisosAdministrativos]"
                                 + "auxName: "+ auxName);
                             itValue.setName(auxName);
                             itValue.setStart(ausencia.getFechaInicioAsStr());
@@ -215,11 +215,11 @@ public class GanttPermisosAdministrativos extends BaseServlet {
                         //arbol.add(rama);
                     }
                     
-                    System.out.println("[servlet.GanttPermisosAdministrativos]"
+                    System.out.println(WEB_NAME+"[servlet.GanttPermisosAdministrativos]"
                         + "items a mostrar: "+ arbol.size());
                     
                     String arbolToJson = gson.toJson(arbol);
-                    System.out.println("[servlet.GanttPermisosAdministrativos]"
+                    System.out.println(WEB_NAME+"[servlet.GanttPermisosAdministrativos]"
                         + "Json string: " + arbolToJson);
                     request.setAttribute("jsonData", arbolToJson);
                     
@@ -229,8 +229,8 @@ public class GanttPermisosAdministrativos extends BaseServlet {
                     try {
                         Date dateAnioMes = sdf0.parse(anioMes);
                         labelAnioMes = sdf1.format(dateAnioMes);
-                        System.out.println("[servlet.GanttPermisosAdministrativos]fecha anio mes: "+ dateAnioMes);
-                        System.out.println("[servlet.GanttPermisosAdministrativos]anioMes: "+anioMes
+                        System.out.println(WEB_NAME+"[servlet.GanttPermisosAdministrativos]fecha anio mes: "+ dateAnioMes);
+                        System.out.println(WEB_NAME+"[servlet.GanttPermisosAdministrativos]anioMes: "+anioMes
                             + ", fmt1: " + labelAnioMes);
                         // uppercase first letter of each word
                         String output = Arrays.stream(labelAnioMes.split("\\s+"))

@@ -1,3 +1,5 @@
+<%@page import="cl.femase.gestionweb.common.Utilidades"%>
+<%@page import="java.util.Date"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="cl.femase.gestionweb.vo.PermisoAdministrativoVO"%>
 <%@page import="java.util.Locale"%>
@@ -33,7 +35,7 @@
         }    
         
         // -------------- ----------------- ---------------------------------------------------
-        System.out.println("[ingresar_solicitud_pa.jsp]"
+        System.out.println("[GestionFemaseWeb]ingresar_solicitud_pa.jsp]"
             + "Consultar saldos en tabla permiso_administrativo. "
             + "EmpresaId: " + userConnected.getEmpresaId()
             + ", Run empleado: "+ runEmpleado);
@@ -42,7 +44,7 @@
             daoPA.getResumenPermisosAdministrativos(userConnected.getEmpresaId(), 
                 runEmpleado, anioActual, -1, -1, -1, "pa.run_empleado");
         if (resumenPA.isEmpty()){
-            System.out.println("[ingresar_solicitud_pa.jsp]"
+            System.out.println("[GestionFemaseWeb]ingresar_solicitud_pa.jsp]"
                 + "EmpresaId: " + userConnected.getEmpresaId()
                 + ", rutEmpleado: " + userConnected.getUsername()
                 + ", No tiene info de Resumen de Permisos Administrativos (saldos)");
@@ -50,21 +52,25 @@
             msgSaldo = "Ud. no registra informacion de Permisos Administrativos<strong>. Comun&iacute;quese con su Jefe Directo.";
         }else{
             PermisoAdministrativoVO saldoPA = resumenPA.get(0);
+            Date currentDate = new Date();
+            int semestreActual = Utilidades.getSemestre(currentDate);
+            diasDisponibles = saldoPA.getDiasDisponiblesSemestre1();
+            diasUtilizados  = saldoPA.getDiasUtilizadosSemestre1();
             
-            ////doubleSaldoVacaciones = saldoVacaciones.getSaldoDias();//vacaciones.saldo_dias
-            ////progresivos = saldoVacaciones.getDiasProgresivos();//vacaciones.dias_progresivos
-            
-            diasDisponibles = saldoPA.getDiasDisponibles();
-            diasUtilizados  = saldoPA.getDiasUtilizados();
+            if (semestreActual == 2){
+                diasDisponibles = saldoPA.getDiasDisponiblesSemestre2();
+                diasUtilizados  = saldoPA.getDiasUtilizadosSemestre2();
+            }
             
             msgSaldo = "Dias disponibles: " + diasDisponibles;
             
-            System.out.println("[ingresar_solicitud_pa.jsp]"
+            System.out.println("[GestionFemaseWeb]ingresar_solicitud_pa.jsp]"
                 + "EmpresaId: " + userConnected.getEmpresaId()
                 + ", rutEmpleado: " + userConnected.getUsername()
+                + ", Semestre= " + semestreActual
                 + ", dias disponibles= " + diasDisponibles
                 + ", dias utilizados= " + diasUtilizados);
-
+            
         }
         if (diasDisponibles <= 0){
             haySaldo=false;
@@ -81,97 +87,46 @@
         
         <script type="text/javascript">
 			
-                <%if (!haySaldo){%>
-                    //No hay saldo
-                    $('#sinsaldo').removeClass('valid').addClass('invalid');
-                    $('.change_password').attr('disabled', 'disabled');
-                <%}%>
+            <%if (!haySaldo){%>
+                //No hay saldo
+                $('#sinsaldo').removeClass('valid').addClass('invalid');
+                $('.change_password').attr('disabled', 'disabled');
+            <%}%>
 
-                var strDesde = '';
-                var strHasta = '';
+            var strDesde = '';
+            var strHasta = '';
         	
             function validate(){
-				var jornada = document.getElementById("jornada").value;
-				strDesde = document.getElementById("fechaDesde").value;
-				strHasta = document.getElementById("fechaHasta").value;
-				if (jornada==='TODO_EL_DIA'){
-					if (strDesde !== '' && strHasta !== ''){	
-						document.getElementById("form1").submit();
-					}else{
-						alert('Seleccione fechas');	
-					}
-				}else if (jornada==='AM' || jornada==='PM'){
-					if (strDesde !== ''){	
-						document.getElementById("form1").submit();
-					}else{
-						alert('Seleccione fecha');	
-					}
-				}
-					
-				
-				  //alert('validar rango');	
-				  //if (strDesde !== '' && strHasta !== ''){				 
-					 // alert('strdesde: ' + strDesde + ', strhasta: ' + strHasta); 
-				 /*
-				  
-				  var auxDesde = strDesde.split("-");
-				  var year  = parseInt(auxDesde[0]);
-				  var month = parseInt(auxDesde[1]);
-				  var day   = parseInt(auxDesde[2]);
-				  month++; 
-				  var desde = new Date(year,month, day);
-				  
-				  var auxHasta = strHasta.split("-");
-				  year  = parseInt(auxHasta[0]);
-				  month = parseInt(auxHasta[1]);
-				  day   = parseInt(auxHasta[2]);
-				  month++; 
-				  var hasta = new Date(year,month, day);
-				  
-				 if (isNaN(desde.getTime()) && isNaN(hasta.getTime())) {
-				  // Date is unreal.
-				 } else {
-					 //alert('desde: ' + desde + ', hasta: ' + hasta);
-					 //if (strDesde !== '' && strHasta !== ''){
-						 if (desde <= hasta){
-							//alert('rango valido'); 
-							$('#range').removeClass('invalid').addClass('valid');
-							//$('.change_password').removeAttr('disabled');
-							document.getElementById("form1").submit();
-						 }else {
-							//alert('rango no valido');
-							$('#range').removeClass('valid').addClass('invalid');
-							//$('.change_password').attr('disabled', 'disabled');
-						 }
-					 //}
-				 } */
-				  //}//fin	
-				  
-				 
- 			}//fin function
+                var jornada = document.getElementById("jornada").value;
+                strDesde = document.getElementById("fechaDesde").value;
+                strHasta = document.getElementById("fechaHasta").value;
+                if (jornada==='TODO_EL_DIA'){
+                    if (strDesde !== '' && strHasta !== ''){	
+                        document.getElementById("form1").submit();
+                    }else{
+                        alert('Seleccione fechas');	
+                    }
+                }else if (jornada==='AM' || jornada==='PM'){
+                    if (strDesde !== ''){	
+                        document.getElementById("form1").submit();
+                    }else{
+                        alert('Seleccione fecha');	
+                    }
+                }
+
+            }//fin function
     	
-			function setFechaHasta(jornada){
-				if (jornada === 'AM' || jornada === 'PM'){
-					//habilitar fecha desde
-					//alert('Habilitar solo fecha desde');
-					$("#fechaDesde").attr("disabled", false);
-					$("#fechaHasta").attr("disabled", true);
-					//$('#fechaDesde').prop('readonly', false);
-					
-					//var fechaDesde = document.getElementById("fechaDesde").value;
-					//if (fechaDesde !== ''){
-					//	document.getElementById("fechaHasta").value = document.getElementById("fechaDesde").value;
-					//}
-				}else{
-					//habilitar ambas fechas
-					//alert('Habilitar ambas fechas');
-					$("#fechaDesde").attr("disabled", false);
-					$("#fechaHasta").attr("disabled", false);
-					
-				}
-			}
+            function setFechaHasta(jornada){
+                if (jornada === 'AM' || jornada === 'PM'){
+                    $("#fechaDesde").attr("disabled", false);
+                    $("#fechaHasta").attr("disabled", true);
+                }else{
+                    $("#fechaDesde").attr("disabled", false);
+                    $("#fechaHasta").attr("disabled", false);
+                }
+            }
         
-		</script>	
+        </script>	
         
         
         <link href="../jquery-plugins/datepicker/css/jquery.datepick.css"rel="stylesheet">

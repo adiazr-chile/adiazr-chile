@@ -69,7 +69,7 @@ public class DispositivoMovilDAO extends BaseDAO{
             
             int rowAffected = psupdate.executeUpdate();
             if (rowAffected == 1){
-                System.out.println("[DispositivoMovilDAO.update]Dispositivo movil."
+                System.out.println(WEB_NAME+"[DispositivoMovilDAO.update]Dispositivo movil."
                     + " Id:" + _data.getId()
                     + ", correlativo:" + _data.getCorrelativo()
                     + ", rut_director:" + _data.getDirectorRut()
@@ -153,7 +153,7 @@ public class DispositivoMovilDAO extends BaseDAO{
             if (_jtPageSize > 0){
                 sql += " limit "+_jtPageSize + " offset "+_jtStartIndex;
             }
-            System.out.println("[DispositivoMovilDAO."
+            System.out.println(WEB_NAME+"[DispositivoMovilDAO."
                 + "getDispositivosMoviles]Sql: "+ sql);    
             dbConn = dbLocator.getConnection(m_dbpoolName,
                 "[DispositivoMovilDAO.getDispositivosMoviles]");
@@ -220,7 +220,7 @@ public class DispositivoMovilDAO extends BaseDAO{
                     " inner join admingestionweb.empleado on (movil.rut_director = empleado.empl_rut) " +
                     " inner join admingestionweb.centro_costo cenco on (movil.cenco_director = cenco.ccosto_id) "
                 + "where (upper(movil_id) = '" + _id.toUpperCase() + "') ";
-            System.out.println("[DispositivoMovilDAO."
+            System.out.println(WEB_NAME+"[DispositivoMovilDAO."
                 + "getDispositivoById]Sql: " + sql);    
             dbConn = dbLocator.getConnection(m_dbpoolName,
                 "[DispositivoMovilDAO.getDispositivoById]");
@@ -282,7 +282,7 @@ public class DispositivoMovilDAO extends BaseDAO{
                 + "where dc.cenco_id = " + _cencoId 
                     + " and estado_disp_movil = 1";
                        
-            System.out.println("[DispositivoMovilDAO."
+            System.out.println(WEB_NAME+"[DispositivoMovilDAO."
                 + "getDispositivosByCencoId]Sql: "+ sql);    
             dbConn = dbLocator.getConnection(m_dbpoolName,
                 "[DispositivoMovilDAO.getDispositivosByCencoId]");

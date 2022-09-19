@@ -86,7 +86,7 @@ public class AfpsController extends BaseServlet {
         AfpBp auxnegocio=new AfpBp(appProperties);
 
         if(request.getParameter("action") != null){
-            System.out.println("[AfpsController]"
+            System.out.println(WEB_NAME+"[AfpsController]"
                 + "action is: " + request.getParameter("action"));
             List<AfpVO> listaObjetos = new ArrayList<AfpVO>();
             String action=(String)request.getParameter("action");
@@ -137,7 +137,7 @@ public class AfpsController extends BaseServlet {
             }
             
             if (action.compareTo("list")==0) {
-                System.out.println("[AfpsController]"
+                System.out.println(WEB_NAME+"[AfpsController]"
                     + "mostrar lista de AFPs...");
                 try{
                     listaObjetos = auxnegocio.getAfps(nombre, estado,
@@ -167,7 +167,7 @@ public class AfpsController extends BaseServlet {
                     ex.printStackTrace();
                 }   
             }else if (action.compareTo("create") == 0) {
-                    System.out.println("[AfpsController]Insertar AFP...");
+                    System.out.println(WEB_NAME+"[AfpsController]Insertar AFP...");
                     MaintenanceVO doCreate = auxnegocio.insert(auxdata, resultado);					
                     listaObjetos.add(auxdata);
 
@@ -177,7 +177,7 @@ public class AfpsController extends BaseServlet {
                     String listData="{\"Result\":\"OK\",\"Record\":"+json+"}";											
                     response.getWriter().print(listData);
             }else if (action.compareTo("update") == 0) {  
-                    System.out.println("[AfpsController]Actualizar AFP...");
+                    System.out.println(WEB_NAME+"[AfpsController]Actualizar AFP...");
                     try{
                         MaintenanceVO doUpdate = auxnegocio.update(auxdata, resultado);
                         listaObjetos.add(auxdata);

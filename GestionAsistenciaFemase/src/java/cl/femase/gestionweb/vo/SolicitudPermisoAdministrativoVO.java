@@ -20,6 +20,7 @@ public class SolicitudPermisoAdministrativoVO implements Serializable{
     private String empresaId;
     private String runEmpleado;
     private int anio;
+    private int semestre;
     private String estadoId;
     private String fechaInicioPA;
     private String fechaFinPA;
@@ -35,6 +36,33 @@ public class SolicitudPermisoAdministrativoVO implements Serializable{
     private String estadoLabel;
     private String nombreEmpleado;
     private String labelEmpleado;
+    
+    private String horaInicioPA_AMPM;
+    private String horaFinPA_AMPM;
+
+    public int getSemestre() {
+        return semestre;
+    }
+
+    public void setSemestre(int semestre) {
+        this.semestre = semestre;
+    }
+
+    public String getHoraInicioPA_AMPM() {
+        return horaInicioPA_AMPM;
+    }
+
+    public void setHoraInicioPA_AMPM(String horaInicioPA_AMPM) {
+        this.horaInicioPA_AMPM = horaInicioPA_AMPM;
+    }
+
+    public String getHoraFinPA_AMPM() {
+        return horaFinPA_AMPM;
+    }
+
+    public void setHoraFinPA_AMPM(String horaFinPA_AMPM) {
+        this.horaFinPA_AMPM = horaFinPA_AMPM;
+    }
 
     public int getId() {
         return id;

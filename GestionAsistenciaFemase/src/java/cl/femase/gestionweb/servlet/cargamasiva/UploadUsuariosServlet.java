@@ -72,7 +72,7 @@ public class UploadUsuariosServlet extends BaseServlet {
                         if(!item.isFormField()){
                             File auxfile = new File(item.getName());
                             String filename = auxfile.getName();
-                            System.out.println("[UploadUsuariosServlet]"
+                            System.out.println(WEB_NAME+"[UploadUsuariosServlet]"
                                 + "Filename: "+filename);
                             String extension = FilenameUtils.getExtension(filename);
                             String filePathLoaded= pathUploadedFiles + File.separator + filename;
@@ -92,7 +92,7 @@ public class UploadUsuariosServlet extends BaseServlet {
                                     "centro_costo_id").parse(in);
                                 
                                 for (CSVRecord record : records) {
-                                    System.out.println("[UploadUsuariosServlet]"
+                                    System.out.println(WEB_NAME+"[UploadUsuariosServlet]"
                                         + "Linea csv: "+record.toString());
                                     if (record.getRecordNumber()>1){
                                         String username = record.get("username");

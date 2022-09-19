@@ -16,7 +16,7 @@ import java.util.List;
  *
  * @author Alexander
  */
-public class CodigoErrorRechazoBp {
+public class CodigoErrorRechazoBp  extends BaseBp{
 
     /**
      *

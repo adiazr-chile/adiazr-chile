@@ -99,7 +99,7 @@ public class GanttVacaciones extends BaseServlet {
         CentroCostoBp cencoBp   = new CentroCostoBp(appProperties);
         
         if(request.getParameter("action") != null){
-            System.out.println("[GanttVacaciones]"
+            System.out.println(WEB_NAME+"[GanttVacaciones]"
                 + "action is: " + request.getParameter("action"));
             String action=(String)request.getParameter("action");
             Gson gson = new Gson();
@@ -116,7 +116,7 @@ public class GanttVacaciones extends BaseServlet {
 //                
 //            }else 
             if (action.compareTo("loadResult") == 0) {
-                System.out.println("[GanttVacaciones]"
+                System.out.println(WEB_NAME+"[GanttVacaciones]"
                     + "mostrar gantt vacaciones, generar json...");
                 String paramCencoID = request.getParameter("cencoId");
                 String paramAnio    = request.getParameter("paramAnio");
@@ -125,7 +125,7 @@ public class GanttVacaciones extends BaseServlet {
                 String paramEmpresa = null;
                 String paramDepto   = null;
                 String cencoId      = "";
-                System.out.println("[GanttVacaciones]"
+                System.out.println(WEB_NAME+"[GanttVacaciones]"
                     + "token param 'cencoID'= " + paramCencoID);
                 if (paramCencoID != null && paramCencoID.compareTo("-1") != 0){
                     StringTokenizer tokenCenco  = new StringTokenizer(paramCencoID, "|");
@@ -140,7 +140,7 @@ public class GanttVacaciones extends BaseServlet {
                 VacacionesBp vacacionesBp = new VacacionesBp(appProperties);
                 DetalleAusenciaDAO detalleAusenciaBp = new DetalleAusenciaDAO(appProperties);
                                 
-                System.out.println("[GanttVacaciones]"
+                System.out.println(WEB_NAME+"[GanttVacaciones]"
                     + "Listar info vacaciones. "
                     + "empresa: " + paramEmpresa
                     + ", depto: " + paramDepto
@@ -180,7 +180,7 @@ public class GanttVacaciones extends BaseServlet {
                     while(it.hasNext()){
                         EmpleadoVO empleado = it.next();
                         String fullName = empleado.getShortFullNameCapitalize();
-                        System.out.println("[GanttVacaciones]"
+                        System.out.println(WEB_NAME+"[GanttVacaciones]"
                             + "empleado name: " + fullName);
                         List<DetalleAusenciaVO> lstVacaciones = 
                             ausenciasBp.getVacacionesByAnioMesInicio(empleado.getRut(), 
@@ -207,7 +207,7 @@ public class GanttVacaciones extends BaseServlet {
                                             saldoVacaciones.getDiasEspeciales(),
                                             paramEmpresa, 
                                             empleado.getRut());
-                                    System.out.println("[GanttVacaciones]"
+                                    System.out.println(WEB_NAME+"[GanttVacaciones]"
                                         + "Actualizar dias efectivos de vacaciones. "
                                         + "inicio: "+ ausencia.getFechaInicioAsStr()
                                         + ", fin: "+ ausencia.getFechaFinAsStr()
@@ -225,11 +225,11 @@ public class GanttVacaciones extends BaseServlet {
                         //arbol.add(rama);
                     }
                     
-                    System.out.println("[GanttVacaciones]"
+                    System.out.println(WEB_NAME+"[GanttVacaciones]"
                         + "items a mostrar: "+ arbol.size());
                     
                     String arbolToJson = gson.toJson(arbol);
-                    System.out.println("[GanttVacaciones]"
+                    System.out.println(WEB_NAME+"[GanttVacaciones]"
                         + "Json string: " + arbolToJson);
                     request.setAttribute("jsonData", arbolToJson);
                     
@@ -239,8 +239,8 @@ public class GanttVacaciones extends BaseServlet {
                     try {
                         Date dateAnioMes = sdf0.parse(anioMes);
                         labelAnioMes = sdf1.format(dateAnioMes);
-                        System.out.println("fecha anio mes: "+ dateAnioMes);
-                        System.out.println("anioMes: "+anioMes
+                        System.out.println(WEB_NAME+"fecha anio mes: "+ dateAnioMes);
+                        System.out.println(WEB_NAME+"anioMes: "+anioMes
                             + ", fmt1: " + labelAnioMes);
                         // uppercase first letter of each word
                         String output = Arrays.stream(labelAnioMes.split("\\s+"))

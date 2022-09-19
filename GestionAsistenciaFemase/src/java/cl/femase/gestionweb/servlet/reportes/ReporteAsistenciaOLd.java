@@ -64,7 +64,7 @@ public class ReporteAsistenciaOLd extends BaseServlet {
         String startDateParam = request.getParameter("startDate");
         String endDateParam = request.getParameter("endDate");
         
-        System.out.println("cl.femase.gestionweb."
+        System.out.println(WEB_NAME+"cl.femase.gestionweb."
             + "servlet.reportes."
             + "ReporteAsistencia."
             + "processRequest(). "
@@ -86,9 +86,9 @@ public class ReporteAsistenciaOLd extends BaseServlet {
             cargo = Integer.parseInt(request.getParameter("cargo"));
         }
         
-        System.out.println("[GestionFemase.ReporteAsistencia]"
+        System.out.println(WEB_NAME+"[GestionFemase.ReporteAsistencia]"
             + "userConnected: " + userConnected);
-        System.out.println("[GestionFemase.ReporteAsistencia]"
+        System.out.println(WEB_NAME+"[GestionFemase.ReporteAsistencia]"
             + "empresa: " + empresa
             + ", depto: " + departamento
             + ", centrocosto: " + centro_costo
@@ -107,7 +107,7 @@ public class ReporteAsistenciaOLd extends BaseServlet {
                     || endDateParam.compareTo("") == 0){
                     endDateParam = startDateParam;
                 }
-                System.out.println("[cl.femase.gestionweb.servlet."
+                System.out.println(WEB_NAME+"[cl.femase.gestionweb.servlet."
                     + "reportes.ReporteAsistencia]"
                     + "processRequest(). "
                     + "invocando reporte. "
@@ -154,7 +154,7 @@ public class ReporteAsistenciaOLd extends BaseServlet {
             response.getOutputStream().close();
                 
             if (pointToFile.delete()){
-                System.out.println("[cl.femase.gestionweb."
+                System.out.println(WEB_NAME+"[cl.femase.gestionweb."
                     + "servlet.ReporteAsistencia]"
                     + "Archivo PDF eliminado con exito...");
             }
@@ -185,7 +185,7 @@ public class ReporteAsistenciaOLd extends BaseServlet {
         }else{
             session.setAttribute("mensaje", "Sesion de usuario "+request.getParameter("username")
                 +" no valida");
-            System.out.println("Sesion de usuario "+request.getParameter("username")
+            System.out.println(WEB_NAME+"Sesion de usuario "+request.getParameter("username")
                 +" no valida");
             request.getRequestDispatcher("/mensaje.jsp").forward(request, response);
         }
@@ -207,7 +207,7 @@ public class ReporteAsistenciaOLd extends BaseServlet {
 //    throws ServletException, IOException {
 //        HttpSession session = request.getSession(true);
 //        UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
-//        System.out.println("cl.femase.gestionweb.servlet."
+//        System.out.println(WEB_NAME+"cl.femase.gestionweb.servlet."
 //                + "reportes.ReporteAsistencia.doGet(). Formato: "+request.getParameter("formato"));
 //        if (request.getParameter("formato")!=null && 
 //            request.getParameter("formato").compareTo("csv")==0){
@@ -219,7 +219,7 @@ public class ReporteAsistenciaOLd extends BaseServlet {
 //            String formato      = request.getParameter("formato");
 //            int cargo = -1;
 //
-//            System.out.println("cl.femase.gestionweb."
+//            System.out.println(WEB_NAME+"cl.femase.gestionweb."
 //                + "servlet.reportes."
 //                + "ReporteAsistencia."
 //                + "doGet(). "
@@ -238,9 +238,9 @@ public class ReporteAsistenciaOLd extends BaseServlet {
 //                cargo = Integer.parseInt(request.getParameter("cargo"));
 //            }
 //        
-//            System.out.println("[GestionFemase.ReporteAsistencia]"
+//            System.out.println(WEB_NAME+"[GestionFemase.ReporteAsistencia]"
 //                + "userConnected: " + userConnected);
-//            System.out.println("[GestionFemase.ReporteAsistencia]"
+//            System.out.println(WEB_NAME+"[GestionFemase.ReporteAsistencia]"
 //                + "empresa: " + empresa
 //                + ", depto: " + departamento
 //                + ", centrocosto: " + centro_costo
@@ -311,7 +311,7 @@ public class ReporteAsistenciaOLd extends BaseServlet {
 //                response.getOutputStream().close();
 //                
 //                if (pointToFile.delete()){
-//                    System.out.println("cl.femase.gestionweb."
+//                    System.out.println(WEB_NAME+"cl.femase.gestionweb."
 //                        + "servlet.ReporteAsistencia."
 //                        + "Archivo PDF eliminado con exito...");
 //                }
@@ -354,10 +354,10 @@ public class ReporteAsistenciaOLd extends BaseServlet {
 ////                new InstrumentosManager(appProperties);
 ////        strpriceformat =  nemosManager.getFormatoPrecio(_symbol, true);
 ////        
-////        System.out.println("[Certificados]Formato precio instrumento "
+////        System.out.println(WEB_NAME+"[Certificados]Formato precio instrumento "
 ////                +strpriceformat);
 ////        
-////        System.out.println("[Certificados]Excel de salida: "
+////        System.out.println(WEB_NAME+"[Certificados]Excel de salida: "
 ////                +_outputfilename);
 ////        
 ////        SitrelFormatter sformat = new SitrelFormatter(strpriceformat);
@@ -476,7 +476,7 @@ public class ReporteAsistenciaOLd extends BaseServlet {
 ////            filePath = appProperties.getPathExportedFiles()+
 ////                    File.separator+
 ////                    userConnected.getUsername()+"_empleados.csv";
-////            System.out.println("cl.femase.gestionweb.servlet."
+////            System.out.println(WEB_NAME+"cl.femase.gestionweb.servlet."
 ////                + "DataExportServlet.exportEmpleadosToCSV(). filePath:" + filePath);
 ////            FileWriter filewriter = new FileWriter(filePath);
 ////

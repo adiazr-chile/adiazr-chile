@@ -46,7 +46,8 @@ import java.util.logging.Logger;
 import javax.servlet.http.HttpSession;
 
 public class PdfUtilWriter {
-   // private StringUtils strutil = new StringUtils();
+    public static String WEB_NAME = "[GestionFemaseWeb]";
+    // private StringUtils strutil = new StringUtils();
     HttpSession m_session;
     
     public PdfUtilWriter(HttpSession _session) {
@@ -209,7 +210,7 @@ public class PdfUtilWriter {
                          
             //-------------- Texto encabezado del certificado ----------------
             String fullname = "";//_signer.getNombres() + " " + _signer.getApePaterno()+ " " + _signer.getApeMaterno();
-            System.out.println("Signer Fullname: "+fullname);
+            System.out.println(WEB_NAME+"Signer Fullname: "+fullname);
             String headerText=_textheader;
            
             /** parseando texto header como html*/
@@ -268,7 +269,7 @@ public class PdfUtilWriter {
             document.close();
             file.close();
  
-            System.out.println("Pdf created successfully..");
+            System.out.println(WEB_NAME+"Pdf created successfully..");
  
         } catch (Exception e) {
             isOk    = false;
@@ -478,7 +479,7 @@ public class PdfUtilWriter {
                          
             //-------------- Texto encabezado del certificado ----------------
             String fullname = "";//_signer.getNombres() + " " + _signer.getApePaterno()+ " " + _signer.getApeMaterno();
-            System.out.println("Signer Fullname: "+fullname);
+            System.out.println(WEB_NAME+"Signer Fullname: "+fullname);
             String headerText=_textheader;
            
             /** parseando texto header como html*/
@@ -537,7 +538,7 @@ public class PdfUtilWriter {
             document.close();
             file.close();
  
-            System.out.println("Pdf created successfully..");
+            System.out.println(WEB_NAME+"Pdf created successfully..");
  
         } catch (Exception e) {
             isOk    = false;
@@ -656,7 +657,7 @@ public class PdfUtilWriter {
                          
             //-------------- Texto encabezado del certificado ----------------
             String fullname = "";//_signer.getNombres() + " " + _signer.getApePaterno()+ " " + _signer.getApeMaterno();
-            System.out.println("Signer Fullname: "+fullname);
+            System.out.println(WEB_NAME+"Signer Fullname: "+fullname);
             String headerText=_textheader;
            
             /** parseando texto header como html*/
@@ -714,7 +715,7 @@ public class PdfUtilWriter {
             document.close();
             file.close();
  
-            System.out.println("Pdf created successfully..");
+            System.out.println(WEB_NAME+"Pdf created successfully..");
  
         } catch (Exception e) {
             isOk    = false;
@@ -912,7 +913,7 @@ public class PdfUtilWriter {
             document.close();
             file.close();
  
-            System.out.println("Pdf created successfully..");
+            System.out.println(WEB_NAME+"Pdf created successfully..");
  
         } catch (Exception e) {
             isOk    = false;
@@ -1133,7 +1134,7 @@ public class PdfUtilWriter {
             document.close();
             file.close();
  
-            System.out.println("Pdf created successfully..");
+            System.out.println(WEB_NAME+"Pdf created successfully..");
  
         } catch (Exception e) {
             isOk    = false;

@@ -100,7 +100,7 @@ public class TurnoRotativoDetalleDAO extends BaseDAO{
             psupdate.setInt(7,  _detalle.getMes());
             int rowAffected = psupdate.executeUpdate();
             if (rowAffected == 1){
-                System.out.println("[TurnoRotativoDetalleDAO.updateDetalleTurnoEmpleado]"
+                System.out.println(WEB_NAME+"[TurnoRotativoDetalleDAO.updateDetalleTurnoEmpleado]"
                     + "rut:" + _detalle.getRutEmpleado()
                     + ", empresaId= "+_detalle.getEmpresaId()
                     + ", idTurno= "+_detalle.getId()
@@ -176,7 +176,7 @@ public class TurnoRotativoDetalleDAO extends BaseDAO{
             
             int filasAfectadas = insert.executeUpdate();
             if (filasAfectadas == 1){
-                System.out.println("[TurnoRotativoDetalleDAO.insert turno_rotativo_detalle]"
+                System.out.println(WEB_NAME+"[TurnoRotativoDetalleDAO.insert turno_rotativo_detalle]"
                     + "Empresa: " + _detalle.getEmpresaId()
                     + ", rut: " + _detalle.getRutEmpleado()
                     + ", idTurno: " + _detalle.getId()
@@ -246,7 +246,7 @@ public class TurnoRotativoDetalleDAO extends BaseDAO{
             
             int filasAfectadas = deletestmt.executeUpdate();
             if (filasAfectadas == 1){
-                System.out.println("[TurnoRotativoDetalleDAO.delete "
+                System.out.println(WEB_NAME+"[TurnoRotativoDetalleDAO.delete "
                     + "turno_rotativo_detalle]"
                     + "Empresa: " + _detalle.getEmpresaId()
                     + ", rut: " + _detalle.getRutEmpleado()
@@ -311,7 +311,7 @@ public class TurnoRotativoDetalleDAO extends BaseDAO{
                 + "and mes = "+_detalle.getMes();
            
             sql += " order by anio desc,mes desc";
-            System.out.println("[TurnoRotativoDetalleDAO.getDetalleTurno]Sql: "+sql);
+            System.out.println(WEB_NAME+"[TurnoRotativoDetalleDAO.getDetalleTurno]Sql: "+sql);
             dbConn = dbLocator.getConnection(m_dbpoolName,"[TurnoRotativoDetalleDAO.getDetalleTurno]");
             ps = dbConn.prepareStatement(sql);
             rs = ps.executeQuery();
@@ -384,7 +384,7 @@ public class TurnoRotativoDetalleDAO extends BaseDAO{
                     + " and d.mes=" + _mes
                     + " and d.dias_laborales like '%" + _fecha + "%'";
             
-            System.out.println("[TurnoRotativoDetalleDAO."
+            System.out.println(WEB_NAME+"[TurnoRotativoDetalleDAO."
                 + "getDetalleTurnoLaboralByFecha]Sql: "+sql);
             dbConn = dbLocator.getConnection(m_dbpoolName,"[TurnoRotativoDetalleDAO.getDetalleTurnoLaboralByFecha]");
             ps = dbConn.prepareStatement(sql);
@@ -402,7 +402,7 @@ public class TurnoRotativoDetalleDAO extends BaseDAO{
                 DiferenciaHorasVO diferenciaInicial = 
                     Utilidades.getTimeDifference(m_sdf.format(new Date()) + " " + data.getHoraEntrada(), 
                                           m_sdf.format(new Date())+" 23:59:59");
-                System.out.println("[TRD]horaEntrada: " 
+                System.out.println(WEB_NAME+"[TRD]horaEntrada: " 
                     + data.getHoraEntrada()
                     +", diferencia en horas con las 23:59:59= " 
                     + diferenciaInicial.getIntDiferenciaHoras());
@@ -410,8 +410,8 @@ public class TurnoRotativoDetalleDAO extends BaseDAO{
                     //fecha salida = dia siguiente
                     dteSalida = Utilidades.sumaRestarFecha(new Date(), 1, "DAYS");
                 }
-                System.out.println("[TRD]fechaSalida: " + dteSalida);
-                System.out.println("[TRD]Resta entrada-salida turno rotativo."
+                System.out.println(WEB_NAME+"[TRD]fechaSalida: " + dteSalida);
+                System.out.println(WEB_NAME+"[TRD]Resta entrada-salida turno rotativo."
                     + "fecha hora entrada: "+m_sdf.format(new Date()) + " " + data.getHoraEntrada()
                     + ",fecha hora salida: "+m_sdf.format(dteSalida)+" " + data.getHoraSalida());
                 
@@ -476,7 +476,7 @@ public class TurnoRotativoDetalleDAO extends BaseDAO{
                     + " and d.mes=" + _mes
                     + " and d.dias_libres like '%" + _fecha + "%'";
             
-            System.out.println("[TurnoRotativoDetalleDAO."
+            System.out.println(WEB_NAME+"[TurnoRotativoDetalleDAO."
                 + "getDetalleTurnoLibreByFecha]Sql: "+sql);
             dbConn = dbLocator.getConnection(m_dbpoolName,"[TurnoRotativoDetalleDAO.getDetalleTurnoLibreByFecha]");
             ps = dbConn.prepareStatement(sql);
@@ -519,7 +519,7 @@ public class TurnoRotativoDetalleDAO extends BaseDAO{
             PreparedStatement statement = dbConn.prepareStatement(SQL_INSERT);
         ) {
             int i = 0;
-            System.out.println("[TurnoRotativoDetalleDAO.saveDetailList]"
+            System.out.println(WEB_NAME+"[TurnoRotativoDetalleDAO.saveDetailList]"
                 + "items a insertar: "+_detalles.size());
             for (TurnoRotativoDetalleVO entity : _detalles) {
                 statement.setString(1,  entity.getEmpresaId());
@@ -536,7 +536,7 @@ public class TurnoRotativoDetalleDAO extends BaseDAO{
 
                 if (i % 50 == 0 || i == _detalles.size()) {
                     int[] rowsAffected = statement.executeBatch(); // Execute every 1000 items.
-                    System.out.println("[TurnoRotativoDetalleDAO."
+                    System.out.println(WEB_NAME+"[TurnoRotativoDetalleDAO."
                         + "saveList]filas afectadas= "+rowsAffected.length);
                 }
             }

@@ -191,7 +191,7 @@ public class EstadoEjecucionCalculoAsistenciaDAO extends BaseDAO{
                     + "and depto_id='" + _deptoId + "' "
                     + "and cenco_id= " + _cencoId;
  
-            System.out.println("[Dao Estado Ejecucion]sql: " + sql);
+            System.out.println(WEB_NAME+"[Dao Estado Ejecucion]sql: " + sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,"[EstadoEjecucionCalculoAsistenciaDAO.getCurrentStatus]");
             ps = dbConn.prepareStatement(sql);

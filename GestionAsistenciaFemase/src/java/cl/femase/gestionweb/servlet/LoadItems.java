@@ -75,7 +75,7 @@ public class LoadItems extends BaseServlet {
         UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
         
         String type = request.getParameter("type");
-        //System.out.println("[LoadItems]Type: "+type);
+        //System.out.println(WEB_NAME+"[LoadItems]Type: "+type);
         String listData = "{\"Result\":\"OK\",\"Options\":["; 
         if (type.compareTo("estados") == 0) {
             LinkedHashMap<String,String> estados = 
@@ -111,7 +111,7 @@ public class LoadItems extends BaseServlet {
               String label = tipos.get(key);
               listData += "{\"DisplayText\":\""+label+"\",\"Value\":\""+key+"\"},";
             }
-            System.out.println("[LoadItems]json tipos marcas: "+listData);
+            System.out.println(WEB_NAME+"[LoadItems]json tipos marcas: "+listData);
         }else if (type.compareTo("tipo_feriado_1") == 0){
                 LinkedHashMap<String,String> tipos = new LinkedHashMap<>();
                 tipos.put("Civil", "Civil");
@@ -143,7 +143,7 @@ public class LoadItems extends BaseServlet {
                 }
         }else if (type.compareTo("horasTope") == 0){
                 String auxHHmm = request.getParameter("hhmm");
-                System.out.println("[LoadItems.horasTope]hhmm: "+auxHHmm);
+                System.out.println(WEB_NAME+"[LoadItems.horasTope]hhmm: "+auxHHmm);
                 StringTokenizer tokenhhmm = new StringTokenizer(auxHHmm, ":");
                 String soloHoras = tokenhhmm.nextToken();
                 int intHoras    = Integer.parseInt(soloHoras);
@@ -207,7 +207,7 @@ public class LoadItems extends BaseServlet {
                     String label = "["+comunaObj.getRegionShortName()+"] " + comunaObj.getNombre();
                     listData += "{\"DisplayText\":\""+label+"\",\"Value\":\""+comunaObj.getId()+"\"},";
                 }
-                //System.out.println("Comunas-JSON: " + listData);
+                //System.out.println(WEB_NAME+"Comunas-JSON: " + listData);
         }else if (type.compareTo("comunas_feriados") == 0) {
                 ComunaBp comunasbp=new ComunaBp(appProperties);
                 String strRegionParam = request.getParameter("regionId");
@@ -229,9 +229,9 @@ public class LoadItems extends BaseServlet {
                     listData += "{\"DisplayText\":\""+label+"\",\"Value\":\""+comunaObj.getId()+"\"},";
                 }
                 
-                //System.out.println("Comunas-JSON: " + listData);
+                //System.out.println(WEB_NAME+"Comunas-JSON: " + listData);
         }else if (type.compareTo("moviles") == 0) {
-                System.out.println("[LoadItems]Cargando lista de moviles...");
+                System.out.println(WEB_NAME+"[LoadItems]Cargando lista de moviles...");
                 String strCencoId = request.getParameter("cencoId");
                 int intCencoId = (strCencoId != null)?Integer.parseInt(strCencoId):-1;
                 DispositivoMovilDAO movilesDao = new DispositivoMovilDAO(appProperties);
@@ -246,7 +246,7 @@ public class LoadItems extends BaseServlet {
                     }
                 }
         }else if (type.compareTo("empresas") == 0) {
-                System.out.println("[LoadItems]Cargando lista de empresas...");
+                System.out.println(WEB_NAME+"[LoadItems]Cargando lista de empresas...");
                 List<EmpresaVO> empresas = (List<EmpresaVO>)session.getAttribute("empresas");//empresasbp.getEmpresas(null, 0, 0, "empresa_nombre");
                 Iterator<EmpresaVO> iterator = empresas.iterator();
                 while (iterator.hasNext()) {
@@ -254,7 +254,7 @@ public class LoadItems extends BaseServlet {
                     listData += "{\"DisplayText\":\""+auxobj.getNombre()+"\",\"Value\":\""+auxobj.getId()+"\"},";
                 }
         }else if (type.compareTo("afps") == 0) {
-                System.out.println("[LoadItems]Cargando lista de afps...");
+                System.out.println(WEB_NAME+"[LoadItems]Cargando lista de afps...");
                 HashMap<String, AfpVO> hashAfps = (HashMap<String, AfpVO>)session.getAttribute("afps");
                 for (Map.Entry mapElement : hashAfps.entrySet()) { 
                     String key = (String)mapElement.getKey(); 
@@ -304,7 +304,7 @@ public class LoadItems extends BaseServlet {
                 Iterator<TurnoVO> iterTurnos = auxturnos.iterator();
                 while (iterTurnos.hasNext()) {
                     TurnoVO auxobj = iterTurnos.next();
-                    System.out.println("[LoadItems]"
+                    System.out.println(WEB_NAME+"[LoadItems]"
                         + "itera turno id: " + auxobj.getId() 
                         + ", nombre:  " + auxobj.getNombre() );
                     listData += "{\"DisplayText\":\""+auxobj.getNombre()+"\",\"Value\":\""+auxobj.getId()+"\"},";
@@ -382,12 +382,12 @@ public class LoadItems extends BaseServlet {
                     
                     listData += "{\"DisplayText\":\""+auxobj.getNombre()+"\",\"Value\":\""+auxobj.getId()+"\"},";
                 }
-//                System.out.println("cl.femase.gestionweb.servlet."
+//                System.out.println(WEB_NAME+"cl.femase.gestionweb.servlet."
 //                        + "LoadItems.processRequest(). Cargos: "+listData);
         }else if (type.compareTo("usuarios") == 0) {
-                System.out.println("[LoadItems]Cargando lista de usuarios...");
+                System.out.println(WEB_NAME+"[LoadItems]Cargando lista de usuarios...");
                 List<UsuarioVO> listaUsuarios =(List<UsuarioVO>)session.getAttribute("usuarios"); 
-                System.out.println("[LoadItems]Numero de usuarios= "+listaUsuarios.size());
+                System.out.println(WEB_NAME+"[LoadItems]Numero de usuarios= "+listaUsuarios.size());
                 Iterator<UsuarioVO> iterUsuarios = listaUsuarios.iterator();
                 while (iterUsuarios.hasNext()) {
                     UsuarioVO auxobj = iterUsuarios.next();
@@ -403,7 +403,7 @@ public class LoadItems extends BaseServlet {
                     listData += "{\"DisplayText\":\""+auxobj.getNombre()+"\",\"Value\":\""+auxobj.getId()+"\"},";
                 }
         }else if (type.compareTo("tpmarcamanual") == 0) {
-                //System.out.println("[LoadItems]Cargar lista de tipos de marcas manuales...");
+                //System.out.println(WEB_NAME+"[LoadItems]Cargar lista de tipos de marcas manuales...");
                 List<TipoMarcaManualVO> auxtipos = (List<TipoMarcaManualVO>)session.getAttribute("tiposMarcasManuales");
                 Iterator<TipoMarcaManualVO> iterTipos = auxtipos.iterator();
                 while (iterTipos.hasNext()) {
@@ -412,7 +412,7 @@ public class LoadItems extends BaseServlet {
                             + "\",\"Value\":\"" + auxobj.getCode() + "\"},";
                     
                 }
-                //System.out.println("[LoadItems]json tipos marcas manuales: "+listData);
+                //System.out.println(WEB_NAME+"[LoadItems]json tipos marcas manuales: "+listData);
         }else if (type.compareTo("codErrorRechazo") == 0) {
                 List<CodigoErrorRechazoVO> erroresRechazos = 
                     (List<CodigoErrorRechazoVO>)session.getAttribute("errores_rechazos");
@@ -424,7 +424,7 @@ public class LoadItems extends BaseServlet {
         }else if (type.compareTo("acciones_solicitud") == 0) {
                 String estadoSolicitud  = request.getParameter("estadoSolicitud");//estado actual de la solicitud
                 String userSolicita     = request.getParameter("userSolicita");
-                System.out.println("[servlet.LoadItems]"
+                System.out.println(WEB_NAME+"[servlet.LoadItems]"
                     + "estadoSolicitud: " + estadoSolicitud
                     + ", userSolicita: " + userSolicita);
                 /**
@@ -444,7 +444,7 @@ public class LoadItems extends BaseServlet {
                 LinkedHashMap<String,String> estados = 
                     new LinkedHashMap<>();
                 if (userConnected.getIdPerfil() == Constantes.ID_PERFIL_DIRECTOR) {
-                        System.out.println("[servlet.LoadItems]Perfil Director...");
+                        System.out.println(WEB_NAME+"[servlet.LoadItems]Perfil Director...");
                         //Si es Director
                         if (userSolicita != null && userConnected.getUsername().compareTo(userSolicita) != 0){    
                             if (estadoSolicitud.compareTo(Constantes.ESTADO_SOLICITUD_PENDIENTE) == 0){
@@ -453,13 +453,13 @@ public class LoadItems extends BaseServlet {
                             }else estados.put("-1", "Ninguna");
                         }else estados.put("C", "Cancelar");
                 }else if (userConnected.getIdPerfil() == Constantes.ID_PERFIL_EMPLEADO){
-                        System.out.println("[servlet.LoadItems]Perfil Empleado...");
+                        System.out.println(WEB_NAME+"[servlet.LoadItems]Perfil Empleado...");
                         //Si es Empleado
                         if (estadoSolicitud.compareTo(Constantes.ESTADO_SOLICITUD_PENDIENTE) == 0){
                             estados.put("C", "Cancelar");
                         }else estados.put("-1", "Ninguna");
                 }else if (userConnected.getIdPerfil() == Constantes.ID_PERFIL_ADMIN){
-                        System.out.println("[servlet.LoadItems]Perfil Admin, Si es Admin no muestra elementos en el combo");
+                        System.out.println(WEB_NAME+"[servlet.LoadItems]Perfil Admin, Si es Admin no muestra elementos en el combo");
                         estados.put("-1", "Ninguna");
                 }
                 
@@ -470,7 +470,7 @@ public class LoadItems extends BaseServlet {
         }else if (type.compareTo("acciones_aprobar_rechazar") == 0) {
                 String estadoSolicitud  = request.getParameter("estadoSolicitud");//estado actual de la solicitud
                 String userSolicita     = request.getParameter("userSolicita");
-                System.out.println("[servlet.LoadItems]"
+                System.out.println(WEB_NAME+"[servlet.LoadItems]"
                     + "estadoSolicitud: " + estadoSolicitud
                     + ", userSolicita: " + userSolicita
                     + ", username_conectado: " + userConnected.getUsername()
@@ -478,7 +478,7 @@ public class LoadItems extends BaseServlet {
                 LinkedHashMap<String,String> estados = 
                     new LinkedHashMap<>();
                 //if (userConnected.getIdPerfil() == Constantes.ID_PERFIL_DIRECTOR) {
-                        //System.out.println("[servlet.LoadItems]Perfil Director...");
+                        //System.out.println(WEB_NAME+"[servlet.LoadItems]Perfil Director...");
                         //Si es Director
                         if (userSolicita != null && userConnected.getUsername().compareTo(userSolicita) != 0){    
                             if (estadoSolicitud.compareTo(Constantes.ESTADO_SOLICITUD_PENDIENTE) == 0){
@@ -496,7 +496,7 @@ public class LoadItems extends BaseServlet {
        
         listData    = listData.substring(0, listData.length()-1);
         listData    += "]}";//fin lineas
-        //System.out.println("[LoadItems]listData final: "+listData);
+        //System.out.println(WEB_NAME+"[LoadItems]listData final: "+listData);
         //response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json;charset=utf-8");
         response.getWriter().print(listData);

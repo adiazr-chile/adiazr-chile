@@ -123,7 +123,7 @@ public class DetalleAusenciaController extends BaseServlet {
         VacacionesBp vacacionesBp = new VacacionesBp(appProperties);
         String source = request.getParameter("source");
         if(request.getParameter("action") != null){
-            System.out.println("[DetalleAusenciaController]"
+            System.out.println(WEB_NAME+"[DetalleAusenciaController]"
                 + "action is: " + request.getParameter("action"));
             List<DetalleAusenciaVO> listaObjetos = new ArrayList<>();
             String action=(String)request.getParameter("action");
@@ -245,7 +245,7 @@ public class DetalleAusenciaController extends BaseServlet {
                 auxdata.setSaldoDiasVacacionesAsignadas(Integer.parseInt(request.getParameter("saldoDiasVacacionesAsignadas")));
             }
             
-            System.out.println("[DetalleAusenciaController]-ANTES-"
+            System.out.println(WEB_NAME+"[DetalleAusenciaController]-ANTES-"
                 + "diasAcumuladosVacacionesAsignadas: " + auxdata.getDiasAcumuladosVacacionesAsignadas()
                 + ", saldoDiasVacacionesAsignadas: " + auxdata.getSaldoDiasVacacionesAsignadas());
             
@@ -269,7 +269,7 @@ public class DetalleAusenciaController extends BaseServlet {
                 }
             }
             
-            System.out.println("gestionwebfemase."
+            System.out.println(WEB_NAME+"gestionwebfemase."
                 + "DetalleAusenciaController. "
                 + "Filtros de busqueda:"
                 + "Empresa: " + request.getParameter("empresaId")
@@ -301,7 +301,7 @@ public class DetalleAusenciaController extends BaseServlet {
                 if (intHour < 10) strHour = "0" + intHour;
                 if (intMins < 10) strMins = "0" + intMins;
                 fullHoraFin = strHour + ":" + strMins;
-                System.out.println("[DetalleAusenciaController]"
+                System.out.println(WEB_NAME+"[DetalleAusenciaController]"
                     + "fullHoraInicio: " + fullHoraInicio
                     + ",fullHoraFin: " + fullHoraFin);
                 auxdata.setHoraInicioFullAsStr(fullHoraInicio);
@@ -312,7 +312,7 @@ public class DetalleAusenciaController extends BaseServlet {
             String paramCencoID         = request.getParameter("cencoId");
             String paramEmpresa=request.getParameter("empresaId");
             String paramDepto=request.getParameter("deptoId");
-            System.out.println("[DetalleAusenciaController]"
+            System.out.println(WEB_NAME+"[DetalleAusenciaController]"
                 + "token param 'cencoID'= " + paramCencoID);
             if (paramCencoID != null && paramCencoID.compareTo("-1") != 0){
                 StringTokenizer tokenCenco  = new StringTokenizer(paramCencoID, "|");
@@ -327,11 +327,11 @@ public class DetalleAusenciaController extends BaseServlet {
             auxdata.setEmpresaId(paramEmpresa);
                 
             if (action.compareTo("list") == 0) {
-                System.out.println("[DetalleAusenciaController]"
+                System.out.println(WEB_NAME+"[DetalleAusenciaController]"
                     + " mostrando detalles ausencias...");
                 int intCenco = -1;
                 
-                System.out.println("[DetalleAusenciaController]Mostrar ausencias."
+                System.out.println(WEB_NAME+"[DetalleAusenciaController]Mostrar ausencias."
                     + "empresa: " + paramEmpresa
                     + ", depto: " + paramDepto
                     + ", cenco: " + cencoId
@@ -428,7 +428,7 @@ public class DetalleAusenciaController extends BaseServlet {
                             =new ArrayList<>();
                         if (auxdata.getPermiteHora()!=null && 
                             auxdata.getPermiteHora().compareTo("N") == 0){
-                            System.out.println("[DetalleAusenciaController](insert) - "
+                            System.out.println(WEB_NAME+"[DetalleAusenciaController](insert) - "
                                 + "Ausencia x dias."
                                 + " Validar ausencias conflicto.");
                             //validar ausencias conflicto
@@ -440,7 +440,7 @@ public class DetalleAusenciaController extends BaseServlet {
                                     null, 
                                     null);
                         }else if (auxdata.getPermiteHora().compareTo("S")==0){
-                                    System.out.println("[DetalleAusenciaController] (insert) - "
+                                    System.out.println(WEB_NAME+"[DetalleAusenciaController] (insert) - "
                                         + "Ausencia x horas."
                                         + " Validar ausencias conflicto.");
                                     ausenciasConflicto = 
@@ -461,7 +461,7 @@ public class DetalleAusenciaController extends BaseServlet {
                                         appProperties,
                                         userConnected,
                                         request);
-                                System.out.println("[DetalleAusenciaController]post create. dias efectivos tomados: "
+                                System.out.println(WEB_NAME+"[DetalleAusenciaController]post create. dias efectivos tomados: "
                                     + saldoVacaciones.getDiasEfectivos());
                                 auxdata.setDiasEfectivosVacaciones(saldoVacaciones.getDiasEfectivos());
                             }
@@ -470,7 +470,7 @@ public class DetalleAusenciaController extends BaseServlet {
                                 auxdata.setAusenciaAutorizada("S");
                                 mensajeFinal = "Datos ingresados exitosamente.";
                                 if (auxdata.getIdAusencia() != Constantes.ID_AUSENCIA_VACACIONES){
-                                    System.out.println("[DetalleAusenciaController] - "
+                                    System.out.println(WEB_NAME+"[DetalleAusenciaController] - "
                                         + "Insertar detalle ausencia (NO Vacacion)...");
                                     MaintenanceVO doCreate = detAusenciaBp.insert(auxdata, resultado);	
                                     if (doCreate.isThereError()){
@@ -478,7 +478,7 @@ public class DetalleAusenciaController extends BaseServlet {
                                             + doCreate.getMsgError();
                                     }
                                 }else {//VACACIONES
-                                    System.out.println("[DetalleAusenciaController]"
+                                    System.out.println(WEB_NAME+"[DetalleAusenciaController]"
                                         + "Insertar detalle ausencia (Vacacion)...");
                                     //Insertar vacacion
                                     DetalleAusenciaVO newAusencia;
@@ -488,7 +488,7 @@ public class DetalleAusenciaController extends BaseServlet {
                                     newAusencia.setFechaInicioAsStr(auxdata.getFechaInicioAsStr());
                                     newAusencia.setFechaFinAsStr(auxdata.getFechaFinAsStr());
                                     newAusencia.setRutAutorizador(auxdata.getRutAutorizador());
-                                    System.out.println("[DetalleAusenciaController]"
+                                    System.out.println(WEB_NAME+"[DetalleAusenciaController]"
                                         + "Rut autorizador: " + newAusencia.getRutAutorizador());
                                     //fijos
                                     newAusencia.setIdAusencia(Constantes.ID_AUSENCIA_VACACIONES);
@@ -503,7 +503,7 @@ public class DetalleAusenciaController extends BaseServlet {
                                             auxdata.getRutEmpleado(), -1, -1, -1, "vac.rut_empleado");
                                     saldoVacaciones = infoVacaciones.get(0);
                                         
-//                                        System.out.println("[servlet."
+//                                        System.out.println(WEB_NAME+"[servlet."
 //                                            + "DetalleAusenciasController."
 //                                            + "processRequest]Insertar vacaciones."
 //                                            + "Recalcular saldo dias de vacaciones "
@@ -514,7 +514,7 @@ public class DetalleAusenciaController extends BaseServlet {
 //                                            auxdata.getEmpresaId(), auxdata.getRutEmpleado(), 
 //                                            parametrosSistema);
 //                                        
-//                                        System.out.println("[servlet."
+//                                        System.out.println(WEB_NAME+"[servlet."
 //                                            + "DetalleAusenciasController."
 //                                            + "processRequest]"
 //                                            + "Actualizar saldos de vacaciones "
@@ -563,7 +563,7 @@ public class DetalleAusenciaController extends BaseServlet {
                         }else{ 
                             DetalleAusenciaVO detalleActual = 
                                 detAusenciaBp.getDetalleAusenciaByCorrelativo(auxdata.getCorrelativo());
-                            System.out.println("[DetalleAusenciaController]update - "
+                            System.out.println(WEB_NAME+"[DetalleAusenciaController]update - "
                                 + "Datos existentes:"
                                 + "rutEmpleado: " + detalleActual.getRutEmpleado()
                                 + ", correlativo: " + auxdata.getCorrelativo()
@@ -578,7 +578,7 @@ public class DetalleAusenciaController extends BaseServlet {
                             try{
                                 Date dteFecFinAusencia = sdf3.parse(detalleActual.getFechaFinAsStr());
                                 if (dteFecFinAusencia.before(fechaActual)){
-                                    System.out.println("[DetalleAusenciaController]"
+                                    System.out.println(WEB_NAME+"[DetalleAusenciaController]"
                                         + "Fecha fin ausencia pasada, no se puede modificar...");
                                     sePuedeModificar = false;
                                 }
@@ -593,7 +593,7 @@ public class DetalleAusenciaController extends BaseServlet {
                                         =new ArrayList<>();
                                     if (auxdata.getPermiteHora()!=null && 
                                         auxdata.getPermiteHora().compareTo("N") == 0){
-                                        System.out.println("[DetalleAusenciaController]"
+                                        System.out.println(WEB_NAME+"[DetalleAusenciaController]"
                                             + "Mantenedor - "
                                             + "Detalle Ausencias (update) - "
                                             + "Ausencia x dias."
@@ -607,7 +607,7 @@ public class DetalleAusenciaController extends BaseServlet {
                                                 null,
                                                 null);
                                     }else if (auxdata.getPermiteHora().compareTo("S")==0){
-                                                System.out.println("[DetalleAusenciaController]"
+                                                System.out.println(WEB_NAME+"[DetalleAusenciaController]"
                                                     + "Mantenedor - "
                                                     + "Detalle Ausencias (update) - Ausencia x horas."
                                                     + " Validar ausencias conflicto.");
@@ -632,7 +632,7 @@ public class DetalleAusenciaController extends BaseServlet {
                                         VacacionesVO saldoVacaciones = new VacacionesVO();
                                         if (auxdata.getIdAusencia() == 1){//VACACIONES
                                             //saldo_vacaciones = saldo_actual - ( dias_efectivos vacaciones que se estan modificando ) 
-                                            System.out.println("[DetalleAusenciaController]"
+                                            System.out.println(WEB_NAME+"[DetalleAusenciaController]"
                                                 + "Actualizar Vacacion existente. "
                                                 + "Correlativo ausencia: " + detalleActual.getCorrelativo()
                                                 + ", diasEfectivos actuales: " + detalleActual.getDiasEfectivosVacaciones());
@@ -645,11 +645,11 @@ public class DetalleAusenciaController extends BaseServlet {
                                             auxdata.setDiasEfectivosVacaciones(saldoVacaciones.getDiasEfectivos());
                                         }
 
-                                        System.out.println("[DetalleAusenciaController]"
+                                        System.out.println(WEB_NAME+"[DetalleAusenciaController]"
                                             + "Admin detalle Ausencias - Actualizar "
                                             + ". Msg Validacion vacaciones: "  + saldoVacaciones.getMensajeValidacion());
                                         if (saldoVacaciones.getMensajeValidacion() == null){
-                                            System.out.println("[DetalleAusenciaController]"
+                                            System.out.println(WEB_NAME+"[DetalleAusenciaController]"
                                                 + "Mantenedor - Detalle "
                                                 + "Ausencias - Actualizar "
                                                 + "detalle ausencia, "
@@ -664,7 +664,7 @@ public class DetalleAusenciaController extends BaseServlet {
                                             if (!doUpdate.isThereError() 
                                                 && auxdata.getIdAusencia() == 1){//VACACIONES
                                                 //no setea dias efectivos al update
-                                                System.out.println("[DetalleAusenciaController]"
+                                                System.out.println(WEB_NAME+"[DetalleAusenciaController]"
                                                     + "Update vacaciones."
                                                     + "ReCalcular saldo dias de vacaciones "
                                                     + "para empleado. "
@@ -673,7 +673,7 @@ public class DetalleAusenciaController extends BaseServlet {
                                                 vacacionesBp.calculaDiasVacaciones(userConnected.getUsername(), 
                                                     auxdata.getEmpresaId(), auxdata.getRutEmpleado(), 
                                                     parametrosSistema);
-                                                System.out.println("[DetalleAusenciaController]"
+                                                System.out.println(WEB_NAME+"[DetalleAusenciaController]"
                                                     + "Actualizar saldos de vacaciones "
                                                     + "en tabla detalle_ausencia "
                                                     + "(usar nueva funcion setsaldodiasvacacionesasignadas). "
@@ -686,7 +686,7 @@ public class DetalleAusenciaController extends BaseServlet {
                                             DetalleAusenciaVO ausenciaPostUpdate = 
                                                 detAusenciaBp.getDetalleAusenciaByCorrelativo(auxdata.getCorrelativo());
                                             
-                                            System.out.println("[DetalleAusenciaController]"
+                                            System.out.println(WEB_NAME+"[DetalleAusenciaController]"
                                                 + "Despues de Actualizar ausencia: "
                                                 + "RUN: " + auxdata.getRutEmpleado()
                                                 + ", correlativo: " + auxdata.getCorrelativo()
@@ -700,7 +700,7 @@ public class DetalleAusenciaController extends BaseServlet {
                                             if (!horasOk) listData = "{\"Result\":\"ERROR\",\"Message\":"+aux2+"}";
                                             System.err.println("-->listData: "+listData);
                                         }else{
-                                            System.out.println("[DetalleAusenciaController]"
+                                            System.out.println(WEB_NAME+"[DetalleAusenciaController]"
                                                 + "Mantenedor.DetalleAusencias - Actualizar "
                                                 + "Hay conflicto con el saldo de dias de vacaciones");
                                             //guardar en log de eventos
@@ -710,7 +710,7 @@ public class DetalleAusenciaController extends BaseServlet {
                                             listData = "{\"Result\":\"ERROR\",\"Message\":"+mensajeFinalUpd+"}";
                                         }    
                                     }else{
-                                        System.out.println("[DetalleAusenciaController]"
+                                        System.out.println(WEB_NAME+"[DetalleAusenciaController]"
                                             + "Mantenedor.DetalleAusencias - Actualizar "
                                             + "Hay conflicto con ausencia existentes");
                                         mensajeFinalUpd= "\""+"Hay conflicto con ausencias existentes..."+"\"";
@@ -729,7 +729,7 @@ public class DetalleAusenciaController extends BaseServlet {
                                 listData = "{\"Result\":\"ERROR\",\"Message\":"+mensajeFinalUpd+"}";
                             }
                         }      
-                        System.out.println("[DetalleAusenciaController]"
+                        System.out.println(WEB_NAME+"[DetalleAusenciaController]"
                             + "Update."
                             + " mensaje json a retornar: "+listData);
                         response.getWriter().print(listData);
@@ -738,7 +738,7 @@ public class DetalleAusenciaController extends BaseServlet {
                         if (!horasOk){
                             listData = "{\"Result\":\"ERROR\",\"Message\":"+"Horas de inicio/fin no validas"+"}";
                         }else{ 
-                            System.out.println("Mantenedor - Detalle "
+                            System.out.println(WEB_NAME+"Mantenedor - Detalle "
                                 + "Ausencias - Eliminar "
                                 + "detalle ausencia, correlativo: " + auxdata.getCorrelativo());
                                 
@@ -747,14 +747,14 @@ public class DetalleAusenciaController extends BaseServlet {
                             
                             MaintenanceVO doDelete = detAusenciaBp.delete(detalle, resultado);
                             listaObjetos.add(auxdata);
-                            System.out.println("[servlet."
+                            System.out.println(WEB_NAME+"[servlet."
                                 + "DetalleAusenciasController."
                                 + "processRequest]Delete vacacion. "
                                 + "doDelete.isThereError()? "+doDelete.isThereError()
                                 +", idAusencia: "+detalle.getIdAusencia());
                             if (!doDelete.isThereError() 
                                 && detalle.getIdAusencia() == 1){//VACACIONES
-                                    System.out.println("[servlet."
+                                    System.out.println(WEB_NAME+"[servlet."
                                         + "DetalleAusenciaController."
                                         + "processRequest]Delete vacacion."
                                         + "Recalcular saldo dias de vacaciones "
@@ -764,7 +764,7 @@ public class DetalleAusenciaController extends BaseServlet {
                                 vacacionesBp.calculaDiasVacaciones(userConnected.getUsername(), 
                                     detalle.getEmpresaId(), detalle.getRutEmpleado(), 
                                     parametrosSistema);
-                                System.out.println("[servlet."
+                                System.out.println(WEB_NAME+"[servlet."
                                     + "DetalleAusenciaController."
                                     + "processRequest]"
                                     + "Actualizar saldos de vacaciones "
@@ -890,7 +890,7 @@ public class DetalleAusenciaController extends BaseServlet {
             vacacionesBp.getInfoVacaciones(_datosAusencia.getEmpresaId(), 
                 _datosAusencia.getRutEmpleado(), -1, -1, -1, "vac.rut_empleado");
         
-        System.out.println("[servlet."
+        System.out.println(WEB_NAME+"[servlet."
             + "DetalleAusenciaController.validarVacaciones]"
             + "EmpresaId: " + _datosAusencia.getEmpresaId()
             + ", rutEmpleado: " + _datosAusencia.getRutEmpleado()
@@ -898,7 +898,7 @@ public class DetalleAusenciaController extends BaseServlet {
             + ", fecha fin: " + _datosAusencia.getFechaFinAsStr());
 
         if (infoVacaciones.isEmpty()){
-            System.out.println("[servlet."
+            System.out.println(WEB_NAME+"[servlet."
                 + "DetalleAusenciaController.validarVacaciones]"
                 + "EmpresaId: " + _datosAusencia.getEmpresaId()
                 + ", rutEmpleado: " + _datosAusencia.getRutEmpleado()
@@ -919,7 +919,7 @@ public class DetalleAusenciaController extends BaseServlet {
                 fechaFinVacaciones = Utilidades.getFechaYYYYmmdd(_datosAusencia.getFechaFinAsStr());
             }
                         
-            System.out.println("[servlet."
+            System.out.println(WEB_NAME+"[servlet."
                 + "DetalleAusenciaController.validarVacaciones]"
                 + "Iterar fechas en el rango. "
                 + "Inicio: " + fechaInicioVacaciones
@@ -938,7 +938,7 @@ public class DetalleAusenciaController extends BaseServlet {
                     _datosAusencia.getRutEmpleado());
             double nuevoSaldoDias = saldoDias + diasEfectivosActuales;
             
-            System.out.println("[servlet."
+            System.out.println(WEB_NAME+"[servlet."
                 + "DetalleAusenciaController.validarVacaciones]"
                 + "EmpresaId: " + _datosAusencia.getEmpresaId()
                 + ", rutEmpleado: " + _datosAusencia.getRutEmpleado()
@@ -949,7 +949,7 @@ public class DetalleAusenciaController extends BaseServlet {
      
             //2020-03-15. Se deshabilita validacion de dias solicitados vs el saldo actual.
             if (diasSolicitados > nuevoSaldoDias) {
-                System.out.println("[servlet."
+                System.out.println(WEB_NAME+"[servlet."
                     + "DetalleAusenciaController.validarVacaciones]"
                     + "EmpresaId: " + _datosAusencia.getEmpresaId()
                     + ", rutEmpleado: " + _datosAusencia.getRutEmpleado()
@@ -961,7 +961,7 @@ public class DetalleAusenciaController extends BaseServlet {
                     + "de dias disponibles: " + nuevoSaldoDias);
                 //enviar correo al director?
             }else{
-                System.out.println("[servlet."
+                System.out.println(WEB_NAME+"[servlet."
                     + "DetalleAusenciaController.validarVacaciones]"
                     + "EmpresaId: " + _datosAusencia.getEmpresaId()
                     + ", rutEmpleado: " + _datosAusencia.getRutEmpleado()
@@ -974,7 +974,7 @@ public class DetalleAusenciaController extends BaseServlet {
                 saldoVacaciones.setFechaInicioUltimasVacaciones(fechaInicioVacaciones);
                 saldoVacaciones.setFechaFinUltimasVacaciones(fechaFinVacaciones);
                 vacacionesBp.updateSaldoYUltimasVacaciones(saldoVacaciones, resultado);
-                System.out.println("[servlet."
+                System.out.println(WEB_NAME+"[servlet."
                     + "DetalleAusenciaController.validarVacaciones]"
                     + "EmpresaId: " + _datosAusencia.getEmpresaId()
                     + ", rutEmpleado: " + _datosAusencia.getRutEmpleado()
@@ -994,7 +994,7 @@ public class DetalleAusenciaController extends BaseServlet {
             UsuarioVO _userConnected, 
             DetalleAusenciaVO _ausencia){
        
-        System.out.println("[DetalleAusenciaController.insertarVacacion]"
+        System.out.println(WEB_NAME+"[DetalleAusenciaController.insertarVacacion]"
             + "Insertar detalle ausencia (VACACION)");
         VacacionesBp vacaciones = new VacacionesBp(_appProperties);
         
@@ -1019,7 +1019,7 @@ public class DetalleAusenciaController extends BaseServlet {
         resultado.setEmpresaIdSource(_userConnected.getEmpresaId());
                                         
         resultado.setRutEmpleado(_ausencia.getRutEmpleado());
-        System.out.println("[DetalleAusenciaController.insertarVacacion]"
+        System.out.println(WEB_NAME+"[DetalleAusenciaController.insertarVacacion]"
             + "Insertar detalle ausencia (VACACION)");
         MaintenanceVO doCreate = ausenciasBp.insertaVacacion(_ausencia, resultado);
         
@@ -1027,14 +1027,14 @@ public class DetalleAusenciaController extends BaseServlet {
             mensajeFinal= "Error al insertar vacacion " + doCreate.getMsgError();
             doCreate.setMsg(mensajeFinal);
         }else{
-            System.out.println("[DetalleAusenciaController."
+            System.out.println(WEB_NAME+"[DetalleAusenciaController."
                 + "insertarVacacion]"
                 + "Actualizar saldos de vacaciones "
                 + "en tabla detalle_ausencia (usar nueva funcion setsaldodiasvacacionesasignadas). "
                 + "Run: "+ _ausencia.getRutEmpleado());
             ausenciasBp.actualizaSaldosVacaciones(_ausencia.getRutEmpleado());
             
-            System.out.println("[DetalleAusenciaController."
+            System.out.println(WEB_NAME+"[DetalleAusenciaController."
                 + "insertarVacacion]"
                 + "Actualizar saldos de vacaciones "
                 + "en tabla detalle_ausencia (usar nueva funcion setsaldodiasvacacionesasignadas_vba). "
@@ -1042,7 +1042,7 @@ public class DetalleAusenciaController extends BaseServlet {
             ausenciasBp.actualizaSaldosVacacionesVBA(_ausencia.getRutEmpleado());
                         
             //Actualizar saldos en tabla vacaciones: columnas saldo_dias_vba y saldo_dias_vp
-            System.out.println("[DetalleAusenciaController."
+            System.out.println(WEB_NAME+"[DetalleAusenciaController."
                 + "insertarVacacion]"
                 + "Actualizar saldos en tabla vacaciones: columnas saldo_dias_vba y saldo_dias_vp");
             VacacionesVO objVacaciones = new VacacionesVO();
@@ -1053,7 +1053,7 @@ public class DetalleAusenciaController extends BaseServlet {
             vacaciones.updateSaldosVacacionesVBAyVP(objVacaciones);
             
         }
-        System.out.println("[DetalleAusenciaController.insertarVacacion]"
+        System.out.println(WEB_NAME+"[DetalleAusenciaController.insertarVacacion]"
             + "Saliendo del metodo OK.");
         return doCreate;
     }

@@ -16,7 +16,7 @@ import java.util.List;
  * @author Alexander
  * @deprecated 
  */
-public class PersonalEmpresaBp {
+public class PersonalEmpresaBp  extends BaseBp{
 
     public PropertiesVO props;
     /** para guardar los eventos de mantencion de informacion*/

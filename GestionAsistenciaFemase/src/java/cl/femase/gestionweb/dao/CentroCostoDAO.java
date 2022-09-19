@@ -112,7 +112,7 @@ public class CentroCostoDAO extends BaseDAO{
             
             int rowAffected = psupdate.executeUpdate();
             if (rowAffected == 1){
-                System.out.println("[update]centro costo"
+                System.out.println(WEB_NAME+"[update]centro costo"
                     + ", id:" +_data.getId()
                     + ", deptoId:" +_data.getDeptoId()    
                     + ", nombre:" +_data.getNombre()
@@ -201,7 +201,7 @@ public class CentroCostoDAO extends BaseDAO{
             
             int filasAfectadas = insert.executeUpdate();
             if (filasAfectadas == 1){
-                System.out.println("[insert centro de costo]"
+                System.out.println(WEB_NAME+"[insert centro de costo]"
                     + ", nombre:" +_data.getNombre()
                     + ", id:" +_data.getId()
                     + ", deptoId:" +_data.getDeptoId()
@@ -316,7 +316,7 @@ public class CentroCostoDAO extends BaseDAO{
                 data.setDeptoNombre(rs.getString("depto_nombre"));
                 data.setEmailNotificacion(rs.getString("email_notificacion"));
                 data.setZonaExtrema(rs.getString("es_zona_extrema"));
-                //System.out.println("rescatar dispositivos asignados a cencoId= "+data.getId());
+                //System.out.println(WEB_NAME+"rescatar dispositivos asignados a cencoId= "+data.getId());
                 //data.setDispositivos(this.getDispositivosAsignados(data.getId()));
                 
                 lista.add(data);
@@ -425,7 +425,7 @@ public class CentroCostoDAO extends BaseDAO{
                     + "inner join comuna on (centro_costo.id_comuna = comuna.comuna_id ) "
                 + "where depto_id = '" + _deptoId + "' and ccosto_id = " + _cencoId;
             
-            System.out.println("[CentroCostoDAO.getCentroCostoByKey]"
+            System.out.println(WEB_NAME+"[CentroCostoDAO.getCentroCostoByKey]"
                 + "Sql: " + sql);
              
             dbConn = dbLocator.getConnection(m_dbpoolName,"[CentroCostoDAO.getCentroCostoByKey]");
@@ -549,7 +549,7 @@ public class CentroCostoDAO extends BaseDAO{
                 data.setDeptoId(rs.getString("depto_id"));
                 data.setDeptoNombre(rs.getString("depto_nombre"));
                 data.setZonaExtrema(rs.getString("es_zona_extrema"));
-                //System.out.println("rescatar dispositivos asignados a cencoId= "+data.getId());
+                //System.out.println(WEB_NAME+"rescatar dispositivos asignados a cencoId= "+data.getId());
                 //data.setDispositivos(this.getDispositivosAsignados(data.getId()));
                 
                 lista.add(data);
@@ -662,7 +662,7 @@ public class CentroCostoDAO extends BaseDAO{
             String strcencos = "-1";
             List cencos = _usuario.getCencos();
             
-            System.out.println("cl.femase.gestionweb."
+            System.out.println(WEB_NAME+"cl.femase.gestionweb."
                 + "service.CentroCostoDAO."
                 + "getCentrosCosto. "
                 + "Cencos usuario.size= " + cencos.size());
@@ -718,7 +718,7 @@ public class CentroCostoDAO extends BaseDAO{
                 sql += " limit "+_jtPageSize + " offset "+_jtStartIndex;
             }
        
-            System.out.println("cl.femase.gestionweb."
+            System.out.println(WEB_NAME+"cl.femase.gestionweb."
                 + "service.CentroCostoDAO."
                 + "getCentrosCosto. SQL: " + sql);
             dbConn = dbLocator.getConnection(m_dbpoolName,"[CentroCostoDAO.getCentrosCosto]");
@@ -742,7 +742,7 @@ public class CentroCostoDAO extends BaseDAO{
                 data.setDeptoId(rs.getString("depto_id"));
                 data.setDeptoNombre(rs.getString("depto_nombre"));
                 data.setZonaExtrema(rs.getString("es_zona_extrema"));
-//                System.out.println("rescatar dispositivos asignados a cencoId= "+data.getId());
+//                System.out.println(WEB_NAME+"rescatar dispositivos asignados a cencoId= "+data.getId());
                 //data.setDispositivos(this.getDispositivosAsignados(data.getId()));
                 
                 lista.add(data);
@@ -807,7 +807,7 @@ public class CentroCostoDAO extends BaseDAO{
                 + "departamento.depto_id,"
                 + "centro_costo.ccosto_nombre";
                     
-            System.out.println("CentroCostoDAO]"
+            System.out.println(WEB_NAME+"CentroCostoDAO]"
                 + "getCentrosCostoEmpresa. "
                 + "SQL: " + sql);
             dbConn = dbLocator.getConnection(m_dbpoolName,
@@ -880,7 +880,7 @@ public class CentroCostoDAO extends BaseDAO{
             if (_estado != -1){        
                 strSql += " and cc.estado_id = "+_estado;
             }
-            System.out.println("cl.femase.gestionweb.service."
+            System.out.println(WEB_NAME+"cl.femase.gestionweb.service."
                 + "CentroCostoDAO.getCentrosCostoCount(). sql: "+strSql);
                         
             rs = statement.executeQuery(strSql);		
@@ -930,7 +930,7 @@ public class CentroCostoDAO extends BaseDAO{
                     + " and dispositivo.estado = 1 "
                 + "order by asignacion.device_id";
             
-////            System.out.println("cl.femase.gestionweb.service."
+////            System.out.println(WEB_NAME+"cl.femase.gestionweb.service."
 ////                + "CentroCostoDAO.getDispositivosAsignados() "
 ////                + "cencoId: "+_cencoId);  
             rs = statement.executeQuery(sql);		
@@ -1000,7 +1000,7 @@ public class CentroCostoDAO extends BaseDAO{
                 + "get_empresa_json"
                     + "('" + _empresaId + "') strjson";
             }
-            System.out.println("[CentroCostoDAO."
+            System.out.println(WEB_NAME+"[CentroCostoDAO."
                 + "getEmpresaDeptoCencoJson]Sql: "+sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,

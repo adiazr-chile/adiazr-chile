@@ -12,9 +12,8 @@ import cl.femase.gestionweb.business.EmpresaBp;
 import cl.femase.gestionweb.common.Constantes;
 import cl.femase.gestionweb.common.DatabaseException;
 import cl.femase.gestionweb.common.DatabaseLocator;
+import cl.femase.gestionweb.common.Utilidades;
 import cl.femase.gestionweb.dao.PermisosAdministrativosDAO;
-//import cl.femase.gestionweb.common.DbDirectConnection;
-//import cl.femase.gestionweb.common.DbConnectionPool;
 import cl.femase.gestionweb.vo.AsistenciaTotalesVO;
 import cl.femase.gestionweb.vo.EmpleadoVO;
 import cl.femase.gestionweb.vo.EmpresaVO;
@@ -28,12 +27,10 @@ import java.io.OutputStream;
 import java.sql.Connection;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -94,21 +91,21 @@ public class PermisosAdministrativosReport extends BaseServlet {
                 + "PermisosAdministrativosReport.processRequestRut]"
                 + "Error: "+ex.toString());
         }
-        System.out.println("[PermisosAdministrativosReport.processRequestRut]"
+        System.out.println(WEB_NAME+"[PermisosAdministrativosReport.processRequestRut]"
             + "Abrir conexion a la BD. Datasource: " + m_dbpoolName);
-        System.out.println("[servlet.reportes."
+        System.out.println(WEB_NAME+"[servlet.reportes."
             + "PermisosAdministrativosReport.processRequestRut]tipoParam: "+tipoParam);
         if (tipoParam.compareTo("1") == 0){
             if (_rutParam==null) return null;
             String jasperfile= "permisos_administrativos.jasper";
-            System.out.println("[servlet.reportes."
+            System.out.println(WEB_NAME+"[servlet.reportes."
                 + "PermisosAdministrativosReport]"
                 + "tipo: " + tipoParam
                 + ", formato: " + formato);
             fileName = "pa_" + _rutParam + "." + formato;
             
             String jasperFileName = appProperties.getReportesPath() + File.separator +jasperfile;
-            System.out.println("[servlet.reportes."
+            System.out.println(WEB_NAME+"[servlet.reportes."
                 + "PermisosAdministrativosReport.processRequestRut]"
                 + "jasperfile: " + jasperFileName
                 +", datasource a usar: "+m_dbpoolName);
@@ -125,7 +122,7 @@ public class PermisosAdministrativosReport extends BaseServlet {
                         + "processRequestRut]Error: "+ex.toString());
                 }
                 if (formato.compareTo("pdf") == 0){
-                    System.out.println("[servlet.reportes."
+                    System.out.println(WEB_NAME+"[servlet.reportes."
                         + "PermisosAdministrativosReport.processRequestRut]"
                         + "Generar PDF."
                         + " fileName: " + fileName);
@@ -163,17 +160,17 @@ public class PermisosAdministrativosReport extends BaseServlet {
         EmpleadosBp empleadosBp     = new EmpleadosBp(appProperties);
         EmpresaBp empresaBp         = new EmpresaBp(appProperties);
         SimpleDateFormat sdfyyyy_MM_dd = new SimpleDateFormat("yyyy-MM-dd");
-        //Calendar mycal = Calendar.getInstance(new Locale("es","CL"));
-        //int anioActual = mycal.get(Calendar.YEAR);
+        Date currentDate = new Date();
+        int semestreActual = Utilidades.getSemestre(currentDate);
                     
-        System.out.println("[servlet.reportes."
+        System.out.println(WEB_NAME+"[servlet.reportes."
             + "PermisosAdministrativosReport.getParameters]Inicio...");
         String empresaParam = _request.getParameter("empresa");
         int anioParam = Integer.parseInt(_request.getParameter("paramAnio"));
         
         HashMap parameters = new HashMap();
                 
-        System.out.println("[servlet.reportes."
+        System.out.println(WEB_NAME+"[servlet.reportes."
             + "PermisosAdministrativosReport.getParameters]. "
             + "Param rut= " + _rutEmpleado);
         EmpleadoVO infoEmpleado = empleadosBp.getEmpleado(empresaParam, _rutEmpleado);
@@ -181,7 +178,7 @@ public class PermisosAdministrativosReport extends BaseServlet {
         Date fechaDesvinculacion = infoEmpleado.getFechaDesvinculacion();
         HashMap<String, Double> parametrosSistema = (HashMap<String, Double>)session.getAttribute("parametros_sistema");
         
-        System.out.println("[servlet.reportes."
+        System.out.println(WEB_NAME+"[servlet.reportes."
             + "PermisosAdministrativosReport.getParameters]"
             + "Obtener Info resumen Permisos Administrativos (tabla 'permiso_administrativo')");
         double diasDisponibles  = 0;
@@ -194,15 +191,19 @@ public class PermisosAdministrativosReport extends BaseServlet {
         PermisoAdministrativoVO saldoPA = new PermisoAdministrativoVO();
         if (!infoPA.isEmpty()){
             saldoPA = infoPA.get(0);
-            diasDisponibles = saldoPA.getDiasDisponibles();
-            diasUtilizados  = saldoPA.getDiasUtilizados();
+            diasDisponibles = saldoPA.getDiasDisponiblesSemestre1();
+            diasUtilizados  = saldoPA.getDiasUtilizadosSemestre1();
+            if (semestreActual == 2){
+                diasDisponibles = saldoPA.getDiasDisponiblesSemestre2();
+                diasUtilizados  = saldoPA.getDiasUtilizadosSemestre2();
+            }
         }
-        double MAXIMO_ANUAL_DIAS_PA = parametrosSistema.get(Constantes.ID_PARAMETRO_MAXIMO_ANUAL_DIAS_PA);
-        if (MAXIMO_ANUAL_DIAS_PA == 0) MAXIMO_ANUAL_DIAS_PA = 6;
+        double MAXIMO_SEMESTRAL_DIAS_PA = parametrosSistema.get(Constantes.ID_PARAMETRO_MAXIMO_SEMESTRAL_DIAS_PA);
+        if (MAXIMO_SEMESTRAL_DIAS_PA == 0) MAXIMO_SEMESTRAL_DIAS_PA = 3;
         
-        System.out.println("[servlet.reportes."
+        System.out.println(WEB_NAME+"[servlet.reportes."
             + "PermisosAdministrativosReport.getParameters]Datos en resumen de permisos Administrativos."
-            + "Dias acumuladosde vacaciones asignados: " + MAXIMO_ANUAL_DIAS_PA
+            + " Num maximo de dias PA x semestre: " + MAXIMO_SEMESTRAL_DIAS_PA
             + ", dias utilizados: " + diasUtilizados        
             + ", dias disponibles: " + diasDisponibles
             + ", zona extrema?: " + infoEmpleado.getCentroCosto().getZonaExtrema());
@@ -221,7 +222,7 @@ public class PermisosAdministrativosReport extends BaseServlet {
         
         //**********************
         parameters.put("es_zona_extrema", infoEmpleado.getCentroCosto().getZonaExtrema());
-        parameters.put("dias_acumulados", MAXIMO_ANUAL_DIAS_PA);
+        parameters.put("dias_acumulados", MAXIMO_SEMESTRAL_DIAS_PA);
         
         //Dias que restan (-)
         parameters.put("dias_utilizados", diasUtilizados);
@@ -238,7 +239,7 @@ public class PermisosAdministrativosReport extends BaseServlet {
         //parameters.put("startDate", startDateParam);
         parameters.put("anio", anioParam);
             
-        System.out.println("[servlet.reportes."
+        System.out.println(WEB_NAME+"[servlet.reportes."
             + "PermisosAdministrativosReport.getParameters]Fin.");
         
         return parameters;
@@ -253,7 +254,7 @@ public class PermisosAdministrativosReport extends BaseServlet {
         LinkedHashMap<String, AsistenciaTotalesVO>  totalesAsistencia 
             = new LinkedHashMap<>();
         EmpleadosBp empleadosBp = new EmpleadosBp(new PropertiesVO());
-        System.out.println("[servlet.reportes."
+        System.out.println(WEB_NAME+"[servlet.reportes."
             + "PermisosAdministrativosReport.getEmpleados]"
             + "empresaId: " + _empresaId
             + ",deptoId: " + _deptoId    
@@ -277,7 +278,7 @@ public class PermisosAdministrativosReport extends BaseServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(true);
-        System.out.println("[PermisosAdministrativosReport.doGet]entrando...");
+        System.out.println(WEB_NAME+"[PermisosAdministrativosReport.doGet]entrando...");
         if (session!=null) session.removeAttribute("mensaje");else session = request.getSession();
         UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
 //
@@ -289,7 +290,7 @@ public class PermisosAdministrativosReport extends BaseServlet {
         }else{
             session.setAttribute("mensaje", "Sesion de usuario "+request.getParameter("username")
                 +" no valida");
-            System.out.println("Sesion de usuario "+request.getParameter("username")
+            System.out.println(WEB_NAME+"Sesion de usuario "+request.getParameter("username")
                 +" no valida");
             request.getRequestDispatcher("/mensaje.jsp").forward(request, response);
         }
@@ -324,7 +325,7 @@ public class PermisosAdministrativosReport extends BaseServlet {
         DetalleAusenciaBp detAusenciasBp = new DetalleAusenciaBp(appProperties);
         
         m_parametrosSistema = (HashMap<String, Double>)session.getAttribute("parametros_sistema");
-        System.out.println("[PermisosAdministrativosReport.doPost]"
+        System.out.println(WEB_NAME+"[PermisosAdministrativosReport.doPost]"
             + "empresaId: " + empresaId
             + ", deptoId: " + deptoId
             + ", strCencoId: " + strCencoId
@@ -344,7 +345,7 @@ public class PermisosAdministrativosReport extends BaseServlet {
                 && tipoParam.compareTo("3") != 0){
             //generar informes por centro de costo.
             LinkedHashMap<String, String> archivosGenerados = new LinkedHashMap<>();
-            System.out.println("[PermisosAdministrativosReport.doPost]"
+            System.out.println(WEB_NAME+"[PermisosAdministrativosReport.doPost]"
                 + "Generar informes para todos los empleados de "
                 + "empresaId: " + empresaId
                 +", deptoId: " + deptoId
@@ -354,7 +355,7 @@ public class PermisosAdministrativosReport extends BaseServlet {
             FileGeneratedVO archivoGenerado;
             String nombreCenco="";
             for (EmpleadoVO empleado : listaEmpleados) {
-                System.out.println("[PermisosAdministrativosReport.doPost]"
+                System.out.println(WEB_NAME+"[PermisosAdministrativosReport.doPost]"
                     + "Generar informe para empleado rut: " + empleado.getRut()
                     +", nombre: " + empleado.getNombreCompleto());
                 //List<DetalleAusenciaVO> ausencias = detAusenciasBp.getDetallesAusencias(empleado.getRut(), 
@@ -363,7 +364,7 @@ public class PermisosAdministrativosReport extends BaseServlet {
                     if (nombreCenco.compareTo("") == 0) nombreCenco = empleado.getCencoNombre();
                     archivoGenerado = processRequestRut(request, response, empleado.getRut());
                     if (archivoGenerado != null){
-                        System.out.println("[PermisosAdministrativosReport.doPost]Add "
+                        System.out.println(WEB_NAME+"[PermisosAdministrativosReport.doPost]Add "
                             + "archivo generado: " + archivoGenerado.getFileName());
                         archivosGenerados.put(empleado.getRut(), archivoGenerado.getFilePath());
                     }
@@ -380,11 +381,11 @@ public class PermisosAdministrativosReport extends BaseServlet {
             }
             
         }else{
-            System.out.println("[PermisosAdministrativosReport.doPost]"
+            System.out.println(WEB_NAME+"[PermisosAdministrativosReport.doPost]"
                 + "Generar reporte asistencia solo para el rut: " + rutParam);
             FileGeneratedVO filegenerated=processRequestRut(request, response, rutParam);
             if (filegenerated != null){
-                System.out.println("[PermisosAdministrativosReport.doPost]Add "
+                System.out.println(WEB_NAME+"[PermisosAdministrativosReport.doPost]Add "
                     + "archivo generado: " + filegenerated.getFileName());
                 showFileToDownload(filegenerated, tipoParam, formato, response);
                 File auxpdf=new File(filegenerated.getFilePath());
@@ -406,7 +407,7 @@ public class PermisosAdministrativosReport extends BaseServlet {
         File auxFile = new File(_fileGenerated.getFilePath());
         int length   = 0;
         //pdf
-        System.out.println("[PermisosAdministrativosReport.showFileToDownload]Generar PDF."
+        System.out.println(WEB_NAME+"[PermisosAdministrativosReport.showFileToDownload]Generar PDF."
             + " fileName: " + _fileGenerated.getFileName());
         try{
             File pointToFile = new File(_fileGenerated.getFilePath());
@@ -460,7 +461,7 @@ public class PermisosAdministrativosReport extends BaseServlet {
             + "_"+_cencoNombre + "_todos.pdf");
 
         archivoGenerado=new FileGeneratedVO(mergedFile.getName(), mergedFile.getAbsolutePath());
-        System.out.println("\n[servlet.reportes."
+        System.out.println(WEB_NAME+"[servlet.reportes."
             + "PermisosAdministrativosReport.mergePdfFiles]"
             + "uniendo archivos en uno solo. "
             + "Path: " + mergedFile.getAbsolutePath());
@@ -471,7 +472,7 @@ public class PermisosAdministrativosReport extends BaseServlet {
             for( String key : _archivos.keySet() ){
                 String pathFile = _archivos.get(key);
                 File itFile = new File(pathFile);
-                System.out.println("[servlet.reportes."
+                System.out.println(WEB_NAME+"[servlet.reportes."
                     + "PermisosAdministrativosReport.mergePdfFiles]itera archivo " + pathFile);
                 
                 mergePdf.addSource(itFile);
@@ -483,7 +484,7 @@ public class PermisosAdministrativosReport extends BaseServlet {
             for( String key : _archivos.keySet() ){
                 String pathFile2 = _archivos.get(key);
                 File itFile2 = new File(pathFile2);
-                System.out.println("[servlet.reportes."
+                System.out.println(WEB_NAME+"[servlet.reportes."
                     + "PermisosAdministrativosReport.mergePdfFiles]Eliminando archivo " + pathFile2);
                 itFile2.delete();
             }
