@@ -541,8 +541,15 @@ public class VacacionesBp  extends BaseBp{
         boolean tieneCertifAFP = false;
         String mensajeVP    = "";
         String fechaBaseVP = null;
+        
+        System.out.println(WEB_NAME + "[VacacionesBp.calculaDiasVacaciones]"
+            + "AFP Code: " + dataVacaciones.getAfpCode()
+            + ", fecha CertifVacacionesProgresivas: " + dataVacaciones.getFechaCertifVacacionesProgresivas());
+        
         if (dataVacaciones.getAfpCode()!=null && dataVacaciones.getAfpCode().compareTo("NINGUNA") != 0 &&
                 dataVacaciones.getFechaCertifVacacionesProgresivas() != null){
+            
+            System.out.println(WEB_NAME + "[VacacionesBp.calculaDiasVacaciones]Inicia calculo de dias progresivos (VP)");
             
             /**
             * 2.- Calcular dias progresivos segun formula
@@ -558,6 +565,8 @@ public class VacacionesBp  extends BaseBp{
             tieneCertifAFP  = auxProgresivos.isTieneCertifAFP();
             mensajeVP       = auxProgresivos.getMensajeVP();
             fechaBaseVP     = auxProgresivos.getFechaBaseVP();
+        }else{
+            System.out.println(WEB_NAME + "[VacacionesBp.calculaDiasVacaciones]No cumple para calculo de dias progresivos (VP)");
         }       
         System.out.println(WEB_NAME+"[VacacionesBp." +
             "calculaDiasVacaciones]"
@@ -953,7 +962,21 @@ public class VacacionesBp  extends BaseBp{
             System.err.println("Error al parsear fecha certif vac progresivas: " + pex.toString());
         }
         
+        System.out.println(WEB_NAME+"[VacacionesBp."
+            + "calculaDiasProgresivos]Calcular fecha base para Vacaciones progresivas (Fecha base VP)...");
+        
         Date fechaInicioContrato = _infoEmpleado.getFechaInicioContrato();
+        System.out.println(WEB_NAME+"[VacacionesBp."
+            + "calculaDiasProgresivos]"
+            + "Tiene marca de continuidad laboral? " + _infoEmpleado.getContinuidadLaboral()
+            + ", nueva fecha inicio contrato: " + _infoEmpleado.getNuevaFechaIniContratoAsStr());
+        if (_infoEmpleado.getContinuidadLaboral().compareTo("S") == 0){
+            fechaInicioContrato = _infoEmpleado.getNuevaFechaIniContrato();
+            System.out.println(WEB_NAME+"[VacacionesBp."
+                + "calculaDiasProgresivos]Set Fecha inicio contrato = "
+                + "Nueva Fecha inicio contrato = " + fechaInicioContrato);
+        }
+                
         Date fechaBaseVacProgresivas = 
             getFechaBaseVP(fechaInicioContrato, fechaCertificado, numCotizaciones, _paramMinMesesCotizando);
         
@@ -967,7 +990,7 @@ public class VacacionesBp  extends BaseBp{
             + ", minimo meses cotizando: " + bdmmc.intValue()
             + ", minimo num de meses para sumar dia progresivo= " + bdmavp.intValue()
             + ", meses entre fecha base de vac progresivas y la fecha actual: " + bgMesesTranscurridos.intValue()
-            + ", fechaBaseVacProgresivas: " + fechaBaseVacProgresivas);
+            + ", Fecha base Vacaciones Progresivas (fecha base VP): " + fechaBaseVacProgresivas);
         
         Date fechaVacacionesBasicas = null;
         try{
@@ -1066,8 +1089,8 @@ public class VacacionesBp  extends BaseBp{
             double _paramMinMesesCotizando){
         
         System.out.println(WEB_NAME+"[VacacionesBp."
-            + "getFechaBaseVP]"
-            + "fecha inicio contrato: = " + _fechaInicioContrato
+            + "getFechaBaseVP]Inicio calculo. "
+            + "Fecha inicio contrato: = " + _fechaInicioContrato
             + ", fecha certificaco= " + _fechaCertificado
             + ", _numCotizaciones: " + _numCotizaciones    
             + ", paramMinMesesCotizando: " + _paramMinMesesCotizando);

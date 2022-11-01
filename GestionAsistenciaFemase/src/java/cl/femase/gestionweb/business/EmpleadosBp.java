@@ -741,7 +741,7 @@ public class EmpleadosBp  extends BaseBp{
             updValues = empleadosDao.update(_empleadoToUpdate);
             //if (_empleadoToUpdate.getEstado() == Constantes.ESTADO_NO_VIGENTE){
                 System.out.println(WEB_NAME+"[EmpleadosBp.update]"
-                    + "Actualizar estado del usuario (Vigente/No Vigente).");
+                    + "Modificar estado del usuario (Vigente/No Vigente).");
                 UsersDAO usuarioDao = new UsersDAO(null);
                 String codInterno = _empleadoToUpdate.getCodInterno();
                 if (_empleadoToUpdate.getCodInternoCaracterAdicional() != null 

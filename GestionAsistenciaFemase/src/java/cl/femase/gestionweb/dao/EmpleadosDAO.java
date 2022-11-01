@@ -88,7 +88,7 @@ public class EmpleadosDAO extends BaseDAO{
         PreparedStatement psupdate = null;
         int result=0;
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String msgError = "Error al actualizar "
+        String msgError = "Error al modificar "
             + "empleado, "
             + "rut: "+_data.getRut()
             + ", nombres: "+_data.getNombres()
@@ -108,7 +108,7 @@ public class EmpleadosDAO extends BaseDAO{
             if (_data.getFechaTerminoContrato() != null){
                 ffin = sdf.format(_data.getFechaTerminoContrato());
             }
-            String msgFinal = " Actualiza empleado:"
+            String msgFinal = " Modifica empleado:"
                 + "rut(PK)[" + _data.getRut() + "]" 
                 + ", numFicha(cod_interno) [" + _data.getCodInterno() + "]"    
                 + ", nombres [" + _data.getNombres() + "]"
@@ -167,14 +167,10 @@ public class EmpleadosDAO extends BaseDAO{
                 + "cod_interno = ?,"
                 + "clave_marcacion = ? ";
             
-            //if (_data.getEstado() == Constantes.ESTADO_NO_VIGENTE){
-                sql += ", fecha_desvinculacion = ? ";
-            //}
-            //if (_data.isModificarEmpresaDeptoCenco()){
-                sql += ",empresa_id = ?, "
-                     + "depto_id = ?, "
-                     + "cenco_id = ? ";
-            //}
+            sql += ", fecha_desvinculacion = ? ";
+            sql += ",empresa_id = ?, "
+                + "depto_id = ?, "
+                + "cenco_id = ?, continuidad_laboral = ?, new_fecha_inicio_contrato = ? ";
             sql+= " WHERE empl_rut = ?";
 
             System.out.println(WEB_NAME+"[updateEmpleado]Sql= " + sql);
@@ -220,7 +216,15 @@ public class EmpleadosDAO extends BaseDAO{
                 psupdate.setString(23,  _data.getEmpresa().getId());
                 psupdate.setString(24,  _data.getDepartamento().getId());
                 psupdate.setInt(25,  _data.getCentroCosto().getId());
-                psupdate.setString(26,  _data.getCodInterno());
+                
+                psupdate.setString(26,  _data.getContinuidadLaboral());
+                 if (_data.getContinuidadLaboral().compareTo("S") == 0){
+                    psupdate.setDate(27,  new java.sql.Date(_data.getNuevaFechaIniContrato().getTime()));
+                }else{
+                    psupdate.setDate(27,  null);
+                }
+                 
+                psupdate.setString(28,  _data.getCodInterno());
                 
             }else{
                 System.out.println(WEB_NAME+"[update empleado]no actualiza foto...");
@@ -256,11 +260,17 @@ public class EmpleadosDAO extends BaseDAO{
                 psupdate.setString(22,  _data.getEmpresa().getId());
                 psupdate.setString(23,  _data.getDepartamento().getId());
                 psupdate.setInt(24,  _data.getCentroCosto().getId());
-                psupdate.setString(25,  _data.getCodInterno());
-                    
-                //}else{
-                //    psupdate.setString(21,  _data.getCodInterno());
-                //}
+                
+                //oct 2022
+                psupdate.setString(25,  _data.getContinuidadLaboral());
+                 if (_data.getContinuidadLaboral().compareTo("S") == 0){
+                    psupdate.setDate(26,  new java.sql.Date(_data.getNuevaFechaIniContrato().getTime()));
+                }else{
+                    psupdate.setDate(26,  null);
+                }
+                                
+                psupdate.setString(27,  _data.getCodInterno());
+                
             }
             int rowAffected = psupdate.executeUpdate();
             if (rowAffected == 1){
@@ -273,7 +283,9 @@ public class EmpleadosDAO extends BaseDAO{
                     + ", deptoId: "+_data.getDepartamento().getId()
                     + ", cencoId: "+_data.getCentroCosto().getId()
                     + ", tieneContratoIndef? "+_data.isContratoIndefinido()
-                    + ", fechaFinContrato: "+_data.getFechaTerminoContratoAsStr()    
+                    + ", fechaFinContrato: "+_data.getFechaTerminoContratoAsStr()
+                    + ", continuidad laboral? "+_data.getContinuidadLaboral()
+                    + ", nueva fecha inicio Contrato: "+_data.getNuevaFechaIniContratoAsStr()    
                     +"  - actualizado OK!");
             }else{
                 System.out.println(WEB_NAME+"[update]empleado. No se actualizo empleado!!");
@@ -566,38 +578,41 @@ public class EmpleadosDAO extends BaseDAO{
         
         try{
             String sql = "SELECT "
-                + "empl.empl_rut,"
-                + "empl.empl_nombres,"
-                + "empl.empl_ape_paterno,"
-                + "empl.empl_ape_materno,"
-                + "empl.empl_fecha_nacimiento,"
-                + "empl.empl_direccion direccion,"
-                + "empl.empl_email email,"
-                + "empl.empl_fec_ini_contrato,"
-                + "empl.fecha_desvinculacion,"
-                + "coalesce(empl.empl_fec_fin_contrato,'3000-12-31') empl_fec_fin_contrato,"
-                + "empl.empl_estado,"
-                + "empl.empl_path_foto,"
-                + "empl.empl_sexo,"
-                + "coalesce(empl.empl_fono_fijo,'') empl_fono_fijo,"
-                + "coalesce(empl.empl_fono_movil,'') empl_fono_movil,"
-                + "empl.id_comuna,"
-                + "comuna.comuna_nombre,"
-                + "comuna.region_id,"
-                + "region.region_nombre,"
-                + "empl.empresa_id,"
-                + "empresa.empresa_nombre,"
-                + "empresa.empresa_rut,"
-                + "empl.depto_id,"
-                + "depto.depto_nombre,"
-                + "empl.cenco_id,"
-                + "cenco.ccosto_nombre,"
-                + "empl_id_turno,"
-                + "autoriza_ausencia,"
-                + "coalesce(empl_id_cargo,-1) empl_id_cargo,"
-                + "contrato_indefinido,"
-                + "art_22,"
-                + "cod_interno,clave_marcacion "
+                    + "empl.empl_rut,"
+                    + "empl.empl_nombres,"
+                    + "empl.empl_ape_paterno,"
+                    + "empl.empl_ape_materno,"
+                    + "empl.empl_fecha_nacimiento,"
+                    + "empl.empl_direccion direccion,"
+                    + "empl.empl_email email,"
+                    + "empl.empl_fec_ini_contrato,"
+                    + "empl.fecha_desvinculacion,"
+                    + "coalesce(empl.empl_fec_fin_contrato,'3000-12-31') empl_fec_fin_contrato,"
+                    + "empl.empl_estado,"
+                    + "empl.empl_path_foto,"
+                    + "empl.empl_sexo,"
+                    + "coalesce(empl.empl_fono_fijo,'') empl_fono_fijo,"
+                    + "coalesce(empl.empl_fono_movil,'') empl_fono_movil,"
+                    + "empl.id_comuna,"
+                    + "comuna.comuna_nombre,"
+                    + "comuna.region_id,"
+                    + "region.region_nombre,"
+                    + "empl.empresa_id,"
+                    + "empresa.empresa_nombre,"
+                    + "empresa.empresa_rut,"
+                    + "empl.depto_id,"
+                    + "depto.depto_nombre,"
+                    + "empl.cenco_id,"
+                    + "cenco.ccosto_nombre,"
+                    + "empl_id_turno,"
+                    + "autoriza_ausencia,"
+                    + "coalesce(empl_id_cargo,-1) empl_id_cargo,"
+                    + "contrato_indefinido,"
+                    + "art_22,"
+                    + "cod_interno,"
+                    + "clave_marcacion, "
+                    + "coalesce(continuidad_laboral,'N') continuidad_laboral,"
+                    + "new_fecha_inicio_contrato "
                 + "FROM "
                 + "empleado empl,"
                 + "comuna,"
@@ -714,6 +729,12 @@ public class EmpleadosDAO extends BaseDAO{
                 if (data.getFechaDesvinculacion() != null){
                     data.setFechaDesvinculacionAsStr(sdf.format(data.getFechaDesvinculacion()));
                 }else data.setFechaDesvinculacionAsStr("");
+                
+                data.setContinuidadLaboral(rs.getString("continuidad_laboral"));
+                data.setNuevaFechaIniContrato(rs.getDate("new_fecha_inicio_contrato"));
+                if (data.getNuevaFechaIniContrato() != null){
+                    data.setNuevaFechaIniContratoAsStr(sdf.format(data.getNuevaFechaIniContrato()));
+                }else data.setNuevaFechaIniContratoAsStr("");
                 
                 lista.add(data);
             }
@@ -1726,6 +1747,12 @@ public class EmpleadosDAO extends BaseDAO{
         return lista;
     }
     
+    /**
+    * 
+    * @param _empresaId
+    * @param _codInterno
+    * @return 
+    */
     public EmpleadoVO getEmpleado(String _empresaId, 
             String _codInterno){
         
@@ -1767,7 +1794,9 @@ public class EmpleadosDAO extends BaseDAO{
                 + "empleado.empl_fec_ini_contrato fecha_inicio_contrato,"
                 + "empleado.fecha_desvinculacion,"    
                 + "to_char(empl_fec_ini_contrato,'dd/MM/yyyy') fechainicontrato,"
-                + "clave_marcacion "
+                + "clave_marcacion, "
+                + "coalesce(continuidad_laboral,'N') continuidad_laboral,"
+                + "new_fecha_inicio_contrato "
                 + "FROM "
                 + "empleado,"
                 + "centro_costo,"
@@ -1848,20 +1877,26 @@ public class EmpleadosDAO extends BaseDAO{
                 data.setCentroCosto(auxCenco);
                 
                 data.setClaveMarcacion(rs.getString("clave_marcacion"));
+                
+                data.setContinuidadLaboral(rs.getString("continuidad_laboral"));
+                data.setNuevaFechaIniContrato(rs.getDate("new_fecha_inicio_contrato"));
+                if (data.getNuevaFechaIniContrato() != null){
+                    data.setNuevaFechaIniContratoAsStr(sdf.format(data.getNuevaFechaIniContrato()));
+                }else data.setNuevaFechaIniContratoAsStr("");
             }
 
             ps.close();
             rs.close();
             dbLocator.freeConnection(dbConn);
         }catch(SQLException|DatabaseException sqle){
-            m_logger.error("Error: "+sqle.toString());
+            m_logger.error("Error: " + sqle.toString());
         }finally{
             try {
                 if (ps != null) ps.close();
                 if (rs != null) rs.close();
                 dbLocator.freeConnection(dbConn);
             } catch (SQLException ex) {
-                System.err.println("Error: "+ex.toString());
+                System.err.println("Error: " + ex.toString());
             }
         }
         
@@ -1912,6 +1947,13 @@ public class EmpleadosDAO extends BaseDAO{
         return result;
     }
     
+    /**
+    * 
+    * @param _empresaId
+    * @param _codInterno
+    * @param _turnoId
+    * @return 
+    */
     public EmpleadoVO getEmpleado(String _empresaId, 
             String _codInterno, 
             int _turnoId){
@@ -1951,7 +1993,9 @@ public class EmpleadosDAO extends BaseDAO{
                 + "empleado.cod_interno,"
                 + "empleado.empl_fec_ini_contrato fecha_inicio_contrato,"
                 + "to_char(empl_fec_ini_contrato,'dd/MM/yyyy') fechainicontrato,"
-                + "clave_marcacion "
+                + "clave_marcacion, "
+                + "coalesce(continuidad_laboral,'N') continuidad_laboral,"
+                + "new_fecha_inicio_contrato "    
                 + "FROM "
                 + "empleado,"
                 + "centro_costo,"
@@ -2023,6 +2067,12 @@ public class EmpleadosDAO extends BaseDAO{
                 data.setCentroCosto(auxCenco);
                 
                 data.setClaveMarcacion(rs.getString("clave_marcacion"));
+                
+                data.setContinuidadLaboral(rs.getString("continuidad_laboral"));
+                data.setNuevaFechaIniContrato(rs.getDate("new_fecha_inicio_contrato"));
+                if (data.getNuevaFechaIniContrato() != null){
+                    data.setNuevaFechaIniContratoAsStr(sdf.format(data.getNuevaFechaIniContrato()));
+                }else data.setNuevaFechaIniContratoAsStr("");
             }
 
             ps.close();

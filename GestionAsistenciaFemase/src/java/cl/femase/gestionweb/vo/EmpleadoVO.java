@@ -103,6 +103,37 @@ public class EmpleadoVO implements Serializable{
 
     private Date fechaDesvinculacion;
     private String fechaDesvinculacionAsStr;
+    
+    /**
+    * Req Continuidad laboral: desde la versión 4.4.5 (oct 2022)
+    */
+    private String continuidadLaboral = "N";
+    private Date nuevaFechaIniContrato;
+    private String nuevaFechaIniContratoAsStr;
+
+    public String getContinuidadLaboral() {
+        return continuidadLaboral;
+    }
+
+    public void setContinuidadLaboral(String continuidadLaboral) {
+        this.continuidadLaboral = continuidadLaboral;
+    }
+
+    public Date getNuevaFechaIniContrato() {
+        return nuevaFechaIniContrato;
+    }
+
+    public void setNuevaFechaIniContrato(Date nuevaFechaIniContrato) {
+        this.nuevaFechaIniContrato = nuevaFechaIniContrato;
+    }
+
+    public String getNuevaFechaIniContratoAsStr() {
+        return nuevaFechaIniContratoAsStr;
+    }
+
+    public void setNuevaFechaIniContratoAsStr(String nuevaFechaIniContratoAsStr) {
+        this.nuevaFechaIniContratoAsStr = nuevaFechaIniContratoAsStr;
+    }
 
     public Date getFechaDesvinculacion() {
         return fechaDesvinculacion;

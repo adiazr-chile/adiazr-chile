@@ -90,6 +90,9 @@ public class EmpleadosController extends BaseServlet {
         }
     }
 
+    /**
+    * 
+    */
     @Override
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -378,7 +381,7 @@ public class EmpleadosController extends BaseServlet {
                     String newFechaInicioContrato = sdf.format(auxdata.getFechaInicioContrato());
                     String oldFechaInicioContrato = sdf.format(currentEmpleado.getFechaInicioContrato());
                     System.out.println(WEB_NAME+"[GestionFemase.EmpleadosController]"
-                        + "Actualizar Empleado. "
+                        + "Modificar datos del Empleado. "
                         + "RUN (PK): " + auxdata.getRut()
                         + ", empresaId: " + currentEmpleado.getEmpresaId()   
                         + ", fechaInicioContratoNEW: " + newFechaInicioContrato
@@ -395,9 +398,11 @@ public class EmpleadosController extends BaseServlet {
                         + ", fechaFinContratoStr: " + auxdata.getFechaTerminoContratoAsStr()
                         + ", fechaFinContratoDate: " + auxdata.getFechaTerminoContrato()
                         + ", fechaInicioContratoStr (new): " + auxdata.getFechaInicioContratoAsStr()
-                        + ", fechaInicioContratoDate (new): " + auxdata.getFechaInicioContrato()    
+                        + ", fechaInicioContratoDate (new): " + auxdata.getFechaInicioContrato()
+                        + ", continuidadLaboral: " + auxdata.getContinuidadLaboral()
+                        + ", nueva fecha inicio contrato: " + auxdata.getNuevaFechaIniContratoAsStr()    
                     );
-                    String strMsg = "Empleado actualizado correctamente.";
+                    String strMsg = "Empleado modificado correctamente.";
                     try{
                         resultado.setUsername(userConnected.getUsername());
                         resultado.setDatetime(new Date());
@@ -722,10 +727,23 @@ public class EmpleadosController extends BaseServlet {
                 }
                 auxdata.setContratoIndefinido(contratoIndefinido);
             }
-                
+            
+            
+            if (_request.getParameter("continuidadLaboral") != null){
+                auxdata.setContinuidadLaboral(_request.getParameter("continuidadLaboral"));
+                if (_request.getParameter("continuidadLaboral").compareTo("N") == 0){
+                    auxdata.setNuevaFechaIniContrato(null);
+                    auxdata.setNuevaFechaIniContratoAsStr("");
+                }else{
+                    if (_request.getParameter("nuevaFechaIniContratoAsStr") != null && _request.getParameter("nuevaFechaIniContratoAsStr").compareTo("") != 0){
+                        auxdata.setNuevaFechaIniContratoAsStr(_request.getParameter("nuevaFechaIniContratoAsStr"));
+                    }
+                }
+            }
+            
             System.out.println(WEB_NAME+"[EmpleadosController.getFormValues]"
-                + "contratoIndefinido?: " + auxdata.isContratoIndefinido()
-                + ",fechaFinContrato?: " + auxdata.getFechaTerminoContratoAsStr()    
+                + "continuidad laboral (S/N)?: " + auxdata.getContinuidadLaboral()
+                + ",nueva fecha inicio contrato: " + auxdata.getNuevaFechaIniContratoAsStr()    
             );
 
             if (_request.getParameter("modificar") != null ){
@@ -772,9 +790,11 @@ public class EmpleadosController extends BaseServlet {
 ////        return paramValue;
 ////    }
     
+    
     /**
-     * Permite subir un archivo al servidor
-     */
+    * 
+    * Permite subir un archivo al servidor
+    */
     private EmpleadoVO guardarFotoEmpleado(HttpServletRequest _request, 
             String _rutEmpleado, PropertiesVO _appProperties){
         boolean isMultipart = ServletFileUpload.isMultipartContent(_request);
@@ -944,26 +964,38 @@ public class EmpleadosController extends BaseServlet {
                                 auxdata.setModificarEmpresaDeptoCenco(modificarEDC);
                                 break;
                             case "fechaDesvinculacionAsStr":
-                                {
-                                    Date auxDate = null;
-                                    try{
-                                        auxDate = fechaFormat.parse(fieldValue);
-                                        auxdata.setFechaDesvinculacion(auxDate);
-                                    }catch(ParseException pex){
-                                        System.err.println("[EmpleadosController.guardarFotoEmpleado]"
-                                                + "error al parsear fecha desvinculacion: " + pex.toString());
-                                    }   
-                                    break;
-                                }    
+                            {
+                                Date auxDate = null;
+                                try{
+                                    auxDate = fechaFormat.parse(fieldValue);
+                                    auxdata.setFechaDesvinculacion(auxDate);
+                                }catch(ParseException pex){
+                                    System.err.println("[EmpleadosController.guardarFotoEmpleado]"
+                                            + "error al parsear fecha desvinculacion: " + pex.toString());
+                                }   
+                                break;
+                            }
+                            case "continuidadLaboral":
+                                auxdata.setContinuidadLaboral(fieldValue);
+                                break;
+                            case "nuevaFechaIniContratoAsStr":
+                            {
+                                Date auxDate = null;
+                                try{
+                                    auxDate = fechaFormat.parse(fieldValue);
+                                    auxdata.setNuevaFechaIniContrato(auxDate);
+                                }catch(ParseException pex){
+                                    System.err.println("[EmpleadosController.guardarFotoEmpleado]"
+                                        + "error al parsear Nueva fecha inicio contrato: " + pex.toString());
+                                }   
+                                break;
+                            }    
                         }        
                         //fin procesar campos normales    
                     }else{
                         System.out.println(WEB_NAME+"[EmpleadosController.guardarFotoEmpleado]procesar campo file."
                             + "Guardar foto como archivo (upload)");
-                        //String normalFieldName = item.getFieldName();
                         String fileName = item.getName();
-                        //String contentType = item.getContentType();
-                        //boolean isInMemory = item.isInMemory();
                         long sizeInBytes = item.getSize();
                         File uploadedFile = new File(pathUploadedFiles + File.separator + fileName);
                         item.write(uploadedFile);
