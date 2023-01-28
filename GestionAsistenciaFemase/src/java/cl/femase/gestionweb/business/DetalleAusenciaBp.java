@@ -6,7 +6,7 @@
 package cl.femase.gestionweb.business;
 
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.DetalleAusenciaVO;
 import cl.femase.gestionweb.vo.EmpleadoVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
@@ -206,16 +206,16 @@ public class DetalleAusenciaBp  extends BaseBp{
     }
     
     
-    public MaintenanceVO updateDiasEfectivosVacaciones(DetalleAusenciaVO _objToUpdate, 
+    public ResultCRUDVO updateDiasEfectivosVacaciones(DetalleAusenciaVO _objToUpdate, 
             MaintenanceEventVO _eventdata){
-        MaintenanceVO updValues = detAusenciaDao.updateDiasEfectivosVacaciones(_objToUpdate);
+        ResultCRUDVO updValues = detAusenciaDao.updateDiasEfectivosVacaciones(_objToUpdate);
         
         return updValues;
     }
     
-    public MaintenanceVO update(DetalleAusenciaVO _objToUpdate, 
+    public ResultCRUDVO update(DetalleAusenciaVO _objToUpdate, 
             MaintenanceEventVO _eventdata){
-        MaintenanceVO updValues = detAusenciaDao.update(_objToUpdate);
+        ResultCRUDVO updValues = detAusenciaDao.update(_objToUpdate);
         System.out.println(WEB_NAME+"[DetalleAusenciaBp.update]"
             + "rutEmpleado: " + _objToUpdate.getRutEmpleado());
         EmpleadoVO empleado = empleadosDao.getEmpleado(null, _objToUpdate.getRutEmpleado());
@@ -235,9 +235,9 @@ public class DetalleAusenciaBp  extends BaseBp{
         return updValues;
     }
     
-    public MaintenanceVO delete(DetalleAusenciaVO _objToDelete, 
+    public ResultCRUDVO delete(DetalleAusenciaVO _objToDelete, 
             MaintenanceEventVO _eventdata){
-        MaintenanceVO deleteValues = detAusenciaDao.delete(_objToDelete);
+        ResultCRUDVO deleteValues = detAusenciaDao.delete(_objToDelete);
         
         EmpleadoVO empleado = empleadosDao.getEmpleado(null, _objToDelete.getRutEmpleado());
         _eventdata.setEmpresaId(empleado.getEmpresa().getId());
@@ -261,10 +261,10 @@ public class DetalleAusenciaBp  extends BaseBp{
     * @param _eventdata
     * @return 
     */
-    public MaintenanceVO insert(DetalleAusenciaVO _objToInsert, 
+    public ResultCRUDVO insert(DetalleAusenciaVO _objToInsert, 
             MaintenanceEventVO _eventdata){
         
-        MaintenanceVO insValues = detAusenciaDao.insert(_objToInsert);
+        ResultCRUDVO insValues = detAusenciaDao.insert(_objToInsert);
         
         EmpleadoVO empleado = empleadosDao.getEmpleado(null, _objToInsert.getRutEmpleado());
         _eventdata.setEmpresaId(empleado.getEmpresa().getId());
@@ -289,10 +289,10 @@ public class DetalleAusenciaBp  extends BaseBp{
     * @param _eventdata
     * @return 
     */
-    public MaintenanceVO insertaVacacion(DetalleAusenciaVO _newAusencia, 
+    public ResultCRUDVO insertaVacacion(DetalleAusenciaVO _newAusencia, 
             MaintenanceEventVO _eventdata){
         
-        MaintenanceVO insValues = detAusenciaDao.insertaVacacion(_newAusencia);
+        ResultCRUDVO insValues = detAusenciaDao.insertaVacacion(_newAusencia);
         
         EmpleadoVO empleado = empleadosDao.getEmpleado(null, _newAusencia.getRutEmpleado());
         _eventdata.setEmpresaId(empleado.getEmpresa().getId());
@@ -317,10 +317,10 @@ public class DetalleAusenciaBp  extends BaseBp{
     * @param _eventdata
     * @return 
     */
-    public MaintenanceVO insertaPermisoAdministrativo(DetalleAusenciaVO _newAusencia, 
+    public ResultCRUDVO insertaPermisoAdministrativo(DetalleAusenciaVO _newAusencia, 
             MaintenanceEventVO _eventdata){
         
-        MaintenanceVO insValues = detAusenciaDao.insertaPermisoAdministrativo(_newAusencia);
+        ResultCRUDVO insValues = detAusenciaDao.insertaPermisoAdministrativo(_newAusencia);
         
         EmpleadoVO empleado = empleadosDao.getEmpleado(null, _newAusencia.getRutEmpleado());
         _eventdata.setEmpresaId(empleado.getEmpresa().getId());
@@ -344,8 +344,8 @@ public class DetalleAusenciaBp  extends BaseBp{
     * @param _runEmpleado
     * @return 
     */
-    public MaintenanceVO actualizaSaldosVacaciones(String _runEmpleado){
-        MaintenanceVO updValues = detAusenciaDao.actualizaSaldosVacaciones(_runEmpleado);
+    public ResultCRUDVO actualizaSaldosVacaciones(String _runEmpleado){
+        ResultCRUDVO updValues = detAusenciaDao.actualizaSaldosVacaciones(_runEmpleado);
         return updValues;
     }
     
@@ -354,8 +354,8 @@ public class DetalleAusenciaBp  extends BaseBp{
     * @param _runEmpleado
     * @return 
     */
-    public MaintenanceVO actualizaSaldosVacacionesVBA(String _runEmpleado){
-        MaintenanceVO updValues = detAusenciaDao.actualizaSaldosVacacionesVBA(_runEmpleado);
+    public ResultCRUDVO actualizaSaldosVacacionesVBA(String _runEmpleado){
+        ResultCRUDVO updValues = detAusenciaDao.actualizaSaldosVacacionesVBA(_runEmpleado);
         return updValues;
     }
     
@@ -370,9 +370,9 @@ public class DetalleAusenciaBp  extends BaseBp{
     }
     
     /*
-    public MaintenanceVO delete(ContractRelationVO _relationToDelete, 
+    public ResultCRUDVO delete(ContractRelationVO _relationToDelete, 
             MaintenanceEventVO _eventdata){
-        MaintenanceVO insValues = contractRelService.delete(_relationToDelete);
+        ResultCRUDVO insValues = contractRelService.delete(_relationToDelete);
         
         //if (!updValues.isThereError()){
             String msgFinal = insValues.getMsg();

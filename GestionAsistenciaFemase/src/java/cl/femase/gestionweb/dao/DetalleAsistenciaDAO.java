@@ -7,7 +7,7 @@ package cl.femase.gestionweb.dao;
 
 import cl.femase.gestionweb.common.DatabaseException;
 import cl.femase.gestionweb.common.Utilidades;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.CalculoHorasVO;
 import cl.femase.gestionweb.vo.DetalleAsistenciaToInsertVO;
 import cl.femase.gestionweb.vo.DetalleAsistenciaVO;
@@ -140,9 +140,9 @@ public class DetalleAsistenciaDAO extends BaseDAO{
 //     * @param _fechaMarca
 //     * @return 
 //     */
-//    public MaintenanceVO delete(String _rutEmpleado,
+//    public ResultCRUDVO delete(String _rutEmpleado,
 //            String _fechaMarca){
-//        MaintenanceVO objresultado = new MaintenanceVO();
+//        ResultCRUDVO objresultado = new ResultCRUDVO();
 //        PreparedStatement psupdate = null;
 //        int result=0;
 //        String msgError = "Error al eliminar "
@@ -199,12 +199,12 @@ public class DetalleAsistenciaDAO extends BaseDAO{
      * @param _hhmmExtrasAutorizadas
      * @return 
      */
-    public MaintenanceVO update(String _rutEmpleado,
+    public ResultCRUDVO update(String _rutEmpleado,
             String _fechaMarca,
             String _authAtraso,
             String _authHextras,
             String _hhmmExtrasAutorizadas){
-        MaintenanceVO objresultado = new MaintenanceVO();
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         PreparedStatement psupdate = null;
         int result=0;
         String msgError = "Error al actualizar "
@@ -280,8 +280,8 @@ public class DetalleAsistenciaDAO extends BaseDAO{
     * @param _detalle
     * @return 
     */
-    public MaintenanceVO insert(DetalleAsistenciaVO _detalle){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO insert(DetalleAsistenciaVO _detalle){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         int result=0;
         String msgError = "Error al insertar "
             + "Detalle Asistencia. "

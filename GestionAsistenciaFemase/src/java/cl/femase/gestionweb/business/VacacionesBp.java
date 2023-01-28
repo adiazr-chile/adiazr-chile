@@ -13,7 +13,7 @@ import cl.femase.gestionweb.vo.DiferenciaEntreFechasVO;
 import cl.femase.gestionweb.vo.EmpleadoVO;
 import cl.femase.gestionweb.vo.InfoFeriadoVO;
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import cl.femase.gestionweb.vo.VacacionesVO;
 import java.math.BigDecimal;
@@ -195,8 +195,8 @@ public class VacacionesBp  extends BaseBp{
     * @param _data
     * @return 
     */
-    public MaintenanceVO updateSaldosVacacionesVBAyVP(VacacionesVO _data){
-        MaintenanceVO updValues = vacacionesdao.updateSaldosVacacionesVBAyVP(_data);
+    public ResultCRUDVO updateSaldosVacacionesVBAyVP(VacacionesVO _data){
+        ResultCRUDVO updValues = vacacionesdao.updateSaldosVacacionesVBAyVP(_data);
         
         return updValues;
     }
@@ -207,9 +207,9 @@ public class VacacionesBp  extends BaseBp{
     * @param _eventdata
     * @return 
     */
-    public MaintenanceVO update(VacacionesVO _objectToUpdate, 
+    public ResultCRUDVO update(VacacionesVO _objectToUpdate, 
             MaintenanceEventVO _eventdata){
-        MaintenanceVO updValues = vacacionesdao.update(_objectToUpdate);
+        ResultCRUDVO updValues = vacacionesdao.update(_objectToUpdate);
         
         //if (!updValues.isThereError()){
             String msgFinal = updValues.getMsg();
@@ -228,9 +228,9 @@ public class VacacionesBp  extends BaseBp{
     * @param _eventdata
     * @return 
     */
-    public MaintenanceVO updateSaldoYUltimasVacaciones(VacacionesVO _objectToUpdate, 
+    public ResultCRUDVO updateSaldoYUltimasVacaciones(VacacionesVO _objectToUpdate, 
             MaintenanceEventVO _eventdata){
-        MaintenanceVO updValues = vacacionesdao.updateSaldoYUltimasVacaciones(_objectToUpdate);
+        ResultCRUDVO updValues = vacacionesdao.updateSaldoYUltimasVacaciones(_objectToUpdate);
         
         //if (!updValues.isThereError()){
             String msgFinal = updValues.getMsg();
@@ -249,9 +249,9 @@ public class VacacionesBp  extends BaseBp{
     * @return 
     * 
     */
-    public MaintenanceVO delete(VacacionesVO _objectToUpdate, 
+    public ResultCRUDVO delete(VacacionesVO _objectToUpdate, 
             MaintenanceEventVO _eventdata){
-        MaintenanceVO updValues = vacacionesdao.delete(_objectToUpdate);
+        ResultCRUDVO updValues = vacacionesdao.delete(_objectToUpdate);
         
         //if (!updValues.isThereError()){
             String msgFinal = updValues.getMsg();
@@ -270,9 +270,9 @@ public class VacacionesBp  extends BaseBp{
     * @param _eventdata
     * @return 
     */
-    public MaintenanceVO insertVacacionesFaltantes(String _empresaId, 
+    public ResultCRUDVO insertVacacionesFaltantes(String _empresaId, 
             MaintenanceEventVO _eventdata){
-        MaintenanceVO insValues = vacacionesdao.insertVacacionesFaltantes(_empresaId);
+        ResultCRUDVO insValues = vacacionesdao.insertVacacionesFaltantes(_empresaId);
         
         String msgFinal = insValues.getMsg();
         insValues.setMsg(msgFinal);
@@ -290,10 +290,10 @@ public class VacacionesBp  extends BaseBp{
     * @param _eventdata
     * @return 
     */
-    public MaintenanceVO insert(VacacionesVO _objToInsert, 
+    public ResultCRUDVO insert(VacacionesVO _objToInsert, 
             MaintenanceEventVO _eventdata){
         
-        MaintenanceVO insValues = vacacionesdao.insert(_objToInsert);
+        ResultCRUDVO insValues = vacacionesdao.insert(_objToInsert);
         
         //if (!updValues.isThereError()){
             String msgFinal = insValues.getMsg();
@@ -477,7 +477,6 @@ public class VacacionesBp  extends BaseBp{
         }else{
             dataVacaciones = infoVacaciones.get(0);
         }        
-        
         Date fechaInicioContrato = infoEmpleado.getFechaInicioContrato();
         Date fechaDesvinculacion = infoEmpleado.getFechaDesvinculacion();
         // 1.- Calcular d�as normales (1.25 por mes, a partir de la fecha de ingreso del empleado) 
@@ -970,12 +969,14 @@ public class VacacionesBp  extends BaseBp{
             + "calculaDiasProgresivos]"
             + "Tiene marca de continuidad laboral? " + _infoEmpleado.getContinuidadLaboral()
             + ", nueva fecha inicio contrato: " + _infoEmpleado.getNuevaFechaIniContratoAsStr());
-        if (_infoEmpleado.getContinuidadLaboral().compareTo("S") == 0){
-            fechaInicioContrato = _infoEmpleado.getNuevaFechaIniContrato();
-            System.out.println(WEB_NAME+"[VacacionesBp."
-                + "calculaDiasProgresivos]Set Fecha inicio contrato = "
-                + "Nueva Fecha inicio contrato = " + fechaInicioContrato);
-        }
+        
+
+////        if (_infoEmpleado.getContinuidadLaboral().compareTo("S") == 0){
+////            fechaInicioContrato = _infoEmpleado.getNuevaFechaIniContrato();
+////            System.out.println(WEB_NAME+"[VacacionesBp."
+////                + "calculaDiasProgresivos]Set Fecha inicio contrato = "
+////                + "Nueva Fecha inicio contrato = " + fechaInicioContrato);
+////        }
                 
         Date fechaBaseVacProgresivas = 
             getFechaBaseVP(fechaInicioContrato, fechaCertificado, numCotizaciones, _paramMinMesesCotizando);

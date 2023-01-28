@@ -15,10 +15,12 @@ import cl.femase.gestionweb.business.TurnosBp;
 import cl.femase.gestionweb.common.Constantes;
 import cl.femase.gestionweb.common.ExcelReportWriter;
 import cl.femase.gestionweb.common.Utilidades;
+import cl.femase.gestionweb.common.freemarker.PdfGenerator;
 import cl.femase.gestionweb.vo.DetalleAsistenciaVO;
 import cl.femase.gestionweb.vo.DetalleTurnoVO;
 import cl.femase.gestionweb.vo.EmpleadoVO;
 import cl.femase.gestionweb.vo.FiltroBusquedaJsonVO;
+import cl.femase.gestionweb.vo.FreemarkerTemplateVO;
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import cl.femase.gestionweb.vo.ReportDetailHeaderVO;
@@ -71,6 +73,7 @@ public class ReporteHorasExtras extends BaseServlet {
     static String REPORT_NAME_CSV = "_reporte_exceso_jornada.csv";
     static String REPORT_NAME_XLS = "_reporte_exceso_jornada.xls";
     static String REPORT_NAME_XML = "_reporte_exceso_jornada.xml";
+    static String REPORT_NAME_PDF = "_reporte_exceso_jornada.pdf";
     static String REPORT_LABEL = "Reporte de Exceso de Jornada";
     ExcelReportWriter excelReportWriter = new ExcelReportWriter();
     
@@ -162,6 +165,12 @@ public class ReporteHorasExtras extends BaseServlet {
                     paramDepto, intCencoId, 
                     startDate, endDate, intTurno, 
                     listaEmpleados);
+        }else if (paramFormato.compareTo("pdf") == 0){
+            fileName = userConnected.getUsername() + REPORT_NAME_PDF;
+            fullFilePath = 
+                writePDFFile(request, paramEmpresa, 
+                    paramDepto, intCencoId, 
+                    startDate, endDate, intTurno, listaEmpleados);
         }
         
         FileGeneratedVO fileGenerated = new FileGeneratedVO(fileName,fullFilePath);
@@ -515,6 +524,185 @@ public class ReporteHorasExtras extends BaseServlet {
         }
 
         return excelFilePath;
+    }
+    
+    /**
+    * Genera archivo PDF con los datos obtenidos
+    * 
+    * @param _request
+    * @param _empresaId
+    * @param _deptoId
+    * @param _cencoId
+    * @param _startDate
+    * @param _endDate
+    * @param _idTurno
+    * @param _listaEmpleados
+    * @return 
+    * @throws javax.servlet.ServletException 
+    * @throws java.io.IOException 
+    */
+    protected String writePDFFile(HttpServletRequest _request,
+        String _empresaId,
+        String _deptoId, 
+        int _cencoId,
+        String _startDate,
+        String _endDate,
+        int _idTurno,
+        ArrayList<EmpleadoVO> _listaEmpleados)
+    throws ServletException, IOException {
+        
+        String outputFilePath = "";
+        
+        try {
+            ServletContext application = this.getServletContext();
+            PropertiesVO appProperties=(PropertiesVO)application.getAttribute("appProperties");
+            HttpSession session = _request.getSession(true);
+            UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
+            System.out.println(WEB_NAME+"[servlet.ReporteHorasExtras.writePDFFile]"
+                + "empresaId: " + _empresaId
+                + ", deptoId: " + _deptoId
+                + ", cencoId: " + _cencoId
+                + ", startDate: " + _startDate    
+                + ", endDate: " + _endDate
+                + ", idTurno: " + _idTurno);
+            CentroCostoBp cencoBp   = new CentroCostoBp(appProperties);
+            EmpleadosBp empleadoBp  = new EmpleadosBp(appProperties);
+            TurnosBp turnoBp        = new TurnosBp(appProperties);
+            TurnoRotativoBp turnoRotBp = new TurnoRotativoBp(appProperties);
+                        
+            DetalleAsistenciaBp detalleAsistenciaBp = new DetalleAsistenciaBp(appProperties);
+            LinkedHashMap<String,List<DetalleAsistenciaVO>> listaDetalles = 
+                detalleAsistenciaBp.getDetallesInforme(_listaEmpleados, 
+                    _startDate, _endDate, _idTurno);
+            String jsonOutput = cencoBp.getEmpresaDeptoCencoJson(_empresaId, _deptoId, _cencoId);
+            FiltroBusquedaJsonVO labelsFiltro = 
+                (FiltroBusquedaJsonVO)new Gson().fromJson(jsonOutput, FiltroBusquedaJsonVO.class);
+            int idTurnoRotativo = turnoBp.getTurnoRotativo(_empresaId);
+            Calendar calNow = Calendar.getInstance(new Locale("es", "CL"));
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            NumberFormat nf = NumberFormat.getNumberInstance(new Locale("es", "ES"));
+            Utilidades utils=new Utilidades();
+            
+            EmpleadoVO infoEmpleado = 
+                empleadoBp.getEmpleado(_empresaId, _listaEmpleados.get(0).getRut());
+            
+            ReportHeaderVO header = new ReportHeaderVO();
+            ReportDetailHeaderVO headersDetail = new ReportDetailHeaderVO();
+            ArrayList<ReportDetailVO> detalles = new ArrayList<>();
+
+            header.setReportLabelHeader("Tipo reporte");
+            header.setReportLabel(REPORT_LABEL);
+            
+            header.setFechaReporteHeader("Fecha reporte");
+            header.setFechaReporte(sdf.format(calNow.getTime()));
+            
+            header.setRutTrabajadorHeader("Rut trabajador");
+            header.setRutTrabajador(infoEmpleado.getRut());
+            
+            header.setNombreTrabajadorHeader("Nombre trabajador");
+            header.setNombreTrabajador(infoEmpleado.getNombreCompleto());
+            
+            header.setEmpresaHeader("Empresa");
+            header.setEmpresaLabel(labelsFiltro.getEmpresanombre());
+            
+            header.setDeptoHeader("Departamento");
+            header.setDeptoLabel(labelsFiltro.getDeptonombre());
+            
+            header.setCencoHeader("Centro de costo");
+            header.setCencoLabel(labelsFiltro.getCenconombre());
+            
+            header.setFechaInicioHeader("Fecha inicio");
+            header.setFechaInicio(_startDate);
+            
+            header.setFechaFinHeader("Fecha fin");
+            header.setFechaFin(_endDate);
+            
+            //cabeceras del detalle
+            headersDetail.setFechaHeader("Fecha");
+            headersDetail.setLabelTurnoHeader("Turno");
+            headersDetail.setHoraEntradaHeader("Hora entrada");
+            headersDetail.setHoraSalidaHeader("Hora salida");
+            headersDetail.setPresenciaHeader("Presencia");
+            headersDetail.setHorasExtrasHeader("Horas extras");
+            
+            if (listaDetalles != null && !listaDetalles.isEmpty()){
+                Set<String> keys = listaDetalles.keySet();
+                for(String k:keys){
+                    System.out.println(WEB_NAME+"[servlet.ReporteHorasExtras.writePDFFile]"
+                        + "key empleado: " + k);
+                    if (k != null && k.compareTo("")!=0){    
+                        List<DetalleAsistenciaVO> details = listaDetalles.get(k);
+                        for (DetalleAsistenciaVO detail: details) {
+                            String labelTurno="";
+                            if (idTurnoRotativo == infoEmpleado.getIdTurno()){
+                                System.out.println(WEB_NAME+"[servlet."
+                                    + "ReporteHorasExtras.writePDFFile]"
+                                    + "Empleado.rut: " + infoEmpleado.getRut()
+                                    + ", nombres: " + infoEmpleado.getNombres()
+                                    + ", Tiene turno rotativo");
+                                DetalleTurnoVO detalleTurno = 
+                                    turnoRotBp.getAsignacionTurnoByFecha(_empresaId, 
+                                    detail.getRut(), detail.getFechaEntradaMarca());
+                                labelTurno = "(" + detalleTurno.getIdTurno()+") "+
+                                    detalleTurno.getNombreTurno();
+                            }else{
+                                labelTurno = "(" + infoEmpleado.getIdTurno()+") "+
+                                    infoEmpleado.getNombreTurno();
+                            }
+                            //****se lineas de detalle
+                            ReportDetailVO detailReport = new ReportDetailVO();
+                            detailReport.setFecha(detail.getLabelFechaEntradaMarca());
+                            detailReport.setLabelTurno(labelTurno);
+                            detailReport.setHoraEntrada(detail.getHoraEntrada());
+                            detailReport.setHoraSalida(detail.getHoraSalida());
+                            detailReport.setPresencia(detail.getHrsPresenciales());
+                            detailReport.setHorasExtras(detail.getHoraMinsExtras());
+                            detalles.add(detailReport);
+                        }    
+                    }
+                }
+            }else{
+                System.out.println(WEB_NAME+"[servlet."
+                    + "ReporteHorasExtras.writePDFFile]set datos por defecto. "
+                    + Constantes.NO_HAY_INFO_ASISTENCIA);
+                ReportDetailVO detailReport = new ReportDetailVO();
+                detailReport.setFecha(Constantes.SIN_DATOS);
+                detailReport.setLabelTurno(Constantes.SIN_DATOS);
+                detailReport.setHorasTrabajadas(Constantes.SIN_DATOS);
+                detailReport.setHoraEntrada(Constantes.SIN_DATOS);
+                detailReport.setHoraSalida(Constantes.SIN_DATOS);
+                detailReport.setPresencia(Constantes.SIN_DATOS);
+                detailReport.setHorasExtras(Constantes.SIN_DATOS);
+                detalles.add(detailReport);
+            }
+                       
+            for (int i = 0; i < detalles.size(); i++) {
+                ReportDetailVO detail = detalles.get(i);
+                System.out.println("[Reporte de hrs extras]Detalle.data: " + detalles.get(i).toString());
+            }
+            
+            ReportVO reportData = new ReportVO();
+            reportData.setHeader(header);
+            reportData.setHeadersDetail(headersDetail);
+            reportData.setDetalle(detalles);
+            
+            //set datos del template freemarker
+            FreemarkerTemplateVO template = new FreemarkerTemplateVO();
+            template.setReportTitle("Reporte de Exceso de Jornada");
+            template.setReportAbrev("reporte_exceso_jornada");
+            template.setReportLogo("logo_fundacion_01.png");
+            template.setTemplateName("reporte_exceso_jornada.ftl");
+            PdfGenerator pdfGenerator=new PdfGenerator(appProperties, template);
+            outputFilePath = pdfGenerator.generateReport(reportData);
+            System.out.println(WEB_NAME+"[servlet."
+                + "ReporteHorasExtras.writePDFFile]"
+                + "outputFilePath (PDF):" + outputFilePath);
+               
+        } finally {
+            //if (outfile!=null) outfile.close();
+        }
+
+        return outputFilePath;
     }
     
     /**

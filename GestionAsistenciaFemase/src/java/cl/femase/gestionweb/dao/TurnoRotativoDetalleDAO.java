@@ -9,7 +9,7 @@ import cl.femase.gestionweb.common.DatabaseException;
 import cl.femase.gestionweb.common.Utilidades;
 import cl.femase.gestionweb.vo.DetalleTurnoVO;
 import cl.femase.gestionweb.vo.DiferenciaHorasVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.TurnoRotativoDetalleVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import java.sql.PreparedStatement;
@@ -53,8 +53,8 @@ public class TurnoRotativoDetalleDAO extends BaseDAO{
      * @param _detalle
      * @return 
      */
-    public MaintenanceVO updateDetalleTurnoEmpleado(TurnoRotativoDetalleVO _detalle){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO updateDetalleTurnoEmpleado(TurnoRotativoDetalleVO _detalle){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         PreparedStatement psupdate = null;
         int result=0;
         String msgError = "Error al actualizar "
@@ -133,8 +133,8 @@ public class TurnoRotativoDetalleDAO extends BaseDAO{
      * @param _detalle
      * @return 
      */
-    public MaintenanceVO insertDetalleTurnoEmpleado(TurnoRotativoDetalleVO _detalle){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO insertDetalleTurnoEmpleado(TurnoRotativoDetalleVO _detalle){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         int result=0;
         String msgError = "Error al insertar "
             + "detalle Turno rotativo empleado. "
@@ -209,8 +209,8 @@ public class TurnoRotativoDetalleDAO extends BaseDAO{
      * @param _detalle
      * @return 
      */
-    public MaintenanceVO deleteDetalleTurnoEmpleado(TurnoRotativoDetalleVO _detalle){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO deleteDetalleTurnoEmpleado(TurnoRotativoDetalleVO _detalle){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         int result=0;
         String msgError = "Error al eliminar "
             + "detalle Turno rotativo empleado. "

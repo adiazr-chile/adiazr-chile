@@ -6,7 +6,7 @@
 package cl.femase.gestionweb.business;
 
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import cl.femase.gestionweb.vo.MarcacionVirtualVO;
 import java.sql.SQLException;
@@ -63,10 +63,10 @@ public class MarcacionVirtualBp  extends BaseBp{
     * @return 
     *  
     */
-    public MaintenanceVO delete(MarcacionVirtualVO _asignacion, 
+    public ResultCRUDVO delete(MarcacionVirtualVO _asignacion, 
             MaintenanceEventVO _eventdata){
             
-        MaintenanceVO delValues = 
+        ResultCRUDVO delValues = 
             marcacionvirtualDao.delete(_asignacion);
         if (_asignacion.isInsertaEvento()){
             String msgFinal = delValues.getMsg();
@@ -86,10 +86,10 @@ public class MarcacionVirtualBp  extends BaseBp{
     * @return 
     *  
     */
-    public MaintenanceVO insert(MarcacionVirtualVO _asignacion, 
+    public ResultCRUDVO insert(MarcacionVirtualVO _asignacion, 
             MaintenanceEventVO _eventdata){
             
-        MaintenanceVO delValues = 
+        ResultCRUDVO delValues = 
             marcacionvirtualDao.insert(_asignacion);
 
         String msgFinal = delValues.getMsg();

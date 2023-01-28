@@ -9,7 +9,7 @@ import cl.femase.gestionweb.dao.TraspasoHistoricoDAO;
 import cl.femase.gestionweb.vo.CentroCostoVO;
 import cl.femase.gestionweb.vo.DepartamentoVO;
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.EmpleadoVO;
 import cl.femase.gestionweb.vo.EmpresaVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
@@ -309,7 +309,7 @@ public class EmpleadosController extends BaseServlet {
                         + "Rut= " + auxdata.getRut()
                         +", valido? "+rutValido);
                     String strMsg = "Empleado creado correctamente...";
-                    MaintenanceVO doCreate=null;
+                    ResultCRUDVO doCreate=null;
                     if (rutValido){
                         auxdata.setPathFoto(auxdata.getPathFoto());
                         //insertar empleado
@@ -414,7 +414,7 @@ public class EmpleadosController extends BaseServlet {
                         resultado.setDeptoId(auxdata.getDepartamento().getId());
                         resultado.setCencoId(auxdata.getCentroCosto().getId());
                         
-                        MaintenanceVO doUpdate = empleadoBp.update(auxdata, resultado);
+                        ResultCRUDVO doUpdate = empleadoBp.update(auxdata, resultado);
                         request.setAttribute("action","ok");
                         if (doUpdate.isThereError()){
                             strMsg = doUpdate.getMsgError();
@@ -434,7 +434,7 @@ public class EmpleadosController extends BaseServlet {
                                     + " sera movida a tablas historicas "
                                     + "(marcas, ausencias, marcas rechazadas "
                                     + "y registros de asistencia).");
-                                HashMap<String, MaintenanceVO> hashHist = 
+                                HashMap<String, ResultCRUDVO> hashHist = 
                                     traspasoHistorico(currentEmpleado.getEmpresaId(), 
                                         newFechaInicioContrato, auxdata.getCodInterno());
                                 strMsg += " Registros movidos a tablas historicas.";
@@ -506,7 +506,7 @@ public class EmpleadosController extends BaseServlet {
     /**
     * 
     */
-    private HashMap<String, MaintenanceVO> traspasoHistorico(String _empresaId, 
+    private HashMap<String, ResultCRUDVO> traspasoHistorico(String _empresaId, 
             String _fecha, 
             String _runEmpleado){
         TraspasoHistoricoDAO historicosDao = new TraspasoHistoricoDAO();
@@ -518,9 +518,9 @@ public class EmpleadosController extends BaseServlet {
         
         _runEmpleado = "'" + _runEmpleado + "'";
         
-        HashMap<String, MaintenanceVO> hashFilasAfectadas = new HashMap<>();
+        HashMap<String, ResultCRUDVO> hashFilasAfectadas = new HashMap<>();
         
-        MaintenanceVO resultado = historicosDao.insertMarcasHistoricas(_empresaId, _fecha, _runEmpleado);
+        ResultCRUDVO resultado = historicosDao.insertMarcasHistoricas(_empresaId, _fecha, _runEmpleado);
         int affectedRows = resultado.getFilasAfectadas();
         System.out.println(WEB_NAME+"[EmpleadosController.traspasoHistorico]"
             + "marcas traspasadas a historico: " + affectedRows);

@@ -6,7 +6,7 @@
 package cl.femase.gestionweb.business;
 
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.AccesoVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import java.util.List;
@@ -43,9 +43,9 @@ public class AccesoBp  extends BaseBp{
         return lista;
     }
 
-    public MaintenanceVO update(AccesoVO _accesoToUpdate, 
+    public ResultCRUDVO update(AccesoVO _accesoToUpdate, 
             MaintenanceEventVO _eventdata){
-        MaintenanceVO updValues = accesosService.update(_accesoToUpdate);
+        ResultCRUDVO updValues = accesosService.update(_accesoToUpdate);
         
         //if (!updValues.isThereError()){
             String msgFinal = updValues.getMsg();
@@ -58,9 +58,9 @@ public class AccesoBp  extends BaseBp{
         return updValues;
     }
     
-    public MaintenanceVO delete(AccesoVO _accesoToDelete, 
+    public ResultCRUDVO delete(AccesoVO _accesoToDelete, 
             MaintenanceEventVO _eventdata){
-        MaintenanceVO updValues = accesosService.delete(_accesoToDelete);
+        ResultCRUDVO updValues = accesosService.delete(_accesoToDelete);
         
         //if (!updValues.isThereError()){
             String msgFinal = updValues.getMsg();
@@ -73,10 +73,10 @@ public class AccesoBp  extends BaseBp{
         return updValues;
     }    
     
-    public MaintenanceVO insert(AccesoVO _accesoToInsert, 
+    public ResultCRUDVO insert(AccesoVO _accesoToInsert, 
             MaintenanceEventVO _eventdata){
         
-        MaintenanceVO insValues = accesosService.insert(_accesoToInsert);
+        ResultCRUDVO insValues = accesosService.insert(_accesoToInsert);
         
         //if (!updValues.isThereError()){
             String msgFinal = insValues.getMsg();
@@ -90,9 +90,9 @@ public class AccesoBp  extends BaseBp{
     }
     
     /*
-    public MaintenanceVO delete(ContractRelationVO _relationToDelete, 
+    public ResultCRUDVO delete(ContractRelationVO _relationToDelete, 
             MaintenanceEventVO _eventdata){
-        MaintenanceVO insValues = contractRelService.delete(_relationToDelete);
+        ResultCRUDVO insValues = contractRelService.delete(_relationToDelete);
         
         //if (!updValues.isThereError()){
             String msgFinal = insValues.getMsg();

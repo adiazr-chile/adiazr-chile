@@ -8,7 +8,7 @@ package cl.femase.gestionweb.dao;
 import cl.femase.gestionweb.common.DatabaseException;
 import cl.femase.gestionweb.vo.CentroCostoVO;
 import cl.femase.gestionweb.vo.DepartamentoVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.OrganizacionEmpresaVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import java.sql.Connection;
@@ -271,8 +271,8 @@ public class OrganizacionEmpresaDAO extends BaseDAO{
      * @param _data
      * @return 
      */
-    public MaintenanceVO insert(OrganizacionEmpresaVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO insert(OrganizacionEmpresaVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         int result=0;
         String msgError = "Error al insertar "
             + "organizacion_empresa. "
@@ -325,8 +325,8 @@ public class OrganizacionEmpresaDAO extends BaseDAO{
      * @param _data
      * @return 
      */
-    public MaintenanceVO delete(OrganizacionEmpresaVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO delete(OrganizacionEmpresaVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         int result=0;
         String msgError = "Error al eliminar "
             + "organizacion_empresa. "

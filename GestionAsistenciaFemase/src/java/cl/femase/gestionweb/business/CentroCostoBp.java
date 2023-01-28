@@ -10,7 +10,7 @@ import cl.femase.gestionweb.vo.CentroCostoVO;
 import cl.femase.gestionweb.vo.DispositivoVO;
 import cl.femase.gestionweb.vo.EmpleadoVO;
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import cl.femase.gestionweb.vo.UsuarioCentroCostoVO;
 import cl.femase.gestionweb.vo.UsuarioVO;
@@ -132,9 +132,9 @@ public class CentroCostoBp  extends BaseBp{
         return listaFinal;
     }
 
-    public MaintenanceVO update(CentroCostoVO _objectToUpdate, 
+    public ResultCRUDVO update(CentroCostoVO _objectToUpdate, 
             MaintenanceEventVO _eventdata){
-        MaintenanceVO updValues = centrocostoDao.update(_objectToUpdate);
+        ResultCRUDVO updValues = centrocostoDao.update(_objectToUpdate);
         
         //if (!updValues.isThereError()){
             String msgFinal = updValues.getMsg();
@@ -147,10 +147,10 @@ public class CentroCostoBp  extends BaseBp{
         return updValues;
     }
     
-    public MaintenanceVO insert(CentroCostoVO _objToInsert, 
+    public ResultCRUDVO insert(CentroCostoVO _objToInsert, 
             MaintenanceEventVO _eventdata){
         
-        MaintenanceVO insValues = centrocostoDao.insert(_objToInsert);
+        ResultCRUDVO insValues = centrocostoDao.insert(_objToInsert);
         
         //if (!updValues.isThereError()){
             String msgFinal = insValues.getMsg();
@@ -164,9 +164,9 @@ public class CentroCostoBp  extends BaseBp{
     }
     
     /*
-    public MaintenanceVO delete(ContractRelationVO _relationToDelete, 
+    public ResultCRUDVO delete(ContractRelationVO _relationToDelete, 
             MaintenanceEventVO _eventdata){
-        MaintenanceVO insValues = contractRelService.delete(_relationToDelete);
+        ResultCRUDVO insValues = contractRelService.delete(_relationToDelete);
         
         //if (!updValues.isThereError()){
             String msgFinal = insValues.getMsg();

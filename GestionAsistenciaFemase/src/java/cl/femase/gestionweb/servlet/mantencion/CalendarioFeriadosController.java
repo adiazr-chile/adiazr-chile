@@ -4,7 +4,7 @@ import cl.femase.gestionweb.servlet.BaseServlet;
 import cl.femase.gestionweb.business.CalendarioFeriadoBp;
 import cl.femase.gestionweb.vo.CalendarioFeriadoVO;
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import cl.femase.gestionweb.vo.UsuarioVO;
 import java.io.IOException;
@@ -202,7 +202,7 @@ public class CalendarioFeriadosController extends BaseServlet {
             }else if (action.compareTo("create") == 0) {
                     System.out.println(WEB_NAME+"[CalendarioFeriadosController]"
                         + "Insertar feriado...");
-                    MaintenanceVO doCreate = feriadosBp.insert(auxdata, resultado);					
+                    ResultCRUDVO doCreate = feriadosBp.insert(auxdata, resultado);					
                     listaObjetos.add(auxdata);
 
                     //Convert Java Object to Json
@@ -214,7 +214,7 @@ public class CalendarioFeriadosController extends BaseServlet {
                     System.out.println(WEB_NAME+"[CalendarioFeriadosController]"
                         + "Actualizar Feriado, rowKey: " + request.getParameter("rowKey"));
                     try{
-                        MaintenanceVO doUpdate = feriadosBp.update(auxdata, resultado);
+                        ResultCRUDVO doUpdate = feriadosBp.update(auxdata, resultado);
                         listaObjetos.add(auxdata);
 
                         //Convert Java Object to Json
@@ -230,7 +230,7 @@ public class CalendarioFeriadosController extends BaseServlet {
                     System.out.println(WEB_NAME+"[CalendarioFeriadosController]"
                         + "Eliminar Feriado...");
                     try{
-                        MaintenanceVO doDelete = feriadosBp.delete(auxdata.getRowKey(), resultado);
+                        ResultCRUDVO doDelete = feriadosBp.delete(auxdata.getRowKey(), resultado);
                         String listData="{\"Result\":\"OK\"}";
                         response.getWriter().print(listData);
                     }catch(IOException ex){

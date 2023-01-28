@@ -9,7 +9,7 @@ import cl.femase.gestionweb.common.Constantes;
 import cl.femase.gestionweb.common.DatabaseException;
 import cl.femase.gestionweb.common.Utilidades;
 import cl.femase.gestionweb.vo.DetalleAusenciaVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import cl.femase.gestionweb.vo.VacacionesVO;
 import com.google.gson.Gson;
@@ -60,8 +60,8 @@ public class VacacionesDAO extends BaseDAO{
     * @param _data
     * @return 
     */
-    public MaintenanceVO update(VacacionesVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO update(VacacionesVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         PreparedStatement psupdate = null;
         int result=0;
         String msgError = "Error al actualizar "
@@ -164,8 +164,8 @@ public class VacacionesDAO extends BaseDAO{
     * @param _data
     * @return 
     */
-    public MaintenanceVO updateSaldoYUltimasVacaciones(VacacionesVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO updateSaldoYUltimasVacaciones(VacacionesVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         PreparedStatement psupdate = null;
         int result=0;
         String msgError = "Error al actualizar "
@@ -241,8 +241,8 @@ public class VacacionesDAO extends BaseDAO{
     * @param _data
     * @return 
     */
-    public MaintenanceVO updateSaldosVacacionesVBAyVP(VacacionesVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO updateSaldosVacacionesVBAyVP(VacacionesVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         PreparedStatement psupdate = null;
         int result=0;
         String msgError = "Error al actualizar "
@@ -309,8 +309,8 @@ public class VacacionesDAO extends BaseDAO{
     * @param _data
     * @return 
     */
-    public MaintenanceVO updateUltimasVacaciones(VacacionesVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO updateUltimasVacaciones(VacacionesVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         PreparedStatement psupdate = null;
         int result=0;
         String msgError = "Error al actualizar "
@@ -390,8 +390,8 @@ public class VacacionesDAO extends BaseDAO{
     * @param _data
     * @return 
     */
-    public MaintenanceVO updateFromCalculo(VacacionesVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO updateFromCalculo(VacacionesVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         PreparedStatement psupdate = null;
         int result=0;
         String msgError = "Error al actualizar "
@@ -495,8 +495,8 @@ public class VacacionesDAO extends BaseDAO{
     * @param _data
     * @return 
     */
-    public MaintenanceVO insert(VacacionesVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO insert(VacacionesVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         int result=0;
         String msgError = "Error al insertar "
             + "Info de Vacaciones, "
@@ -624,8 +624,8 @@ public class VacacionesDAO extends BaseDAO{
     * @param _empresaId
     * @return 
     */
-    public MaintenanceVO insertVacacionesFaltantes(String _empresaId){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO insertVacacionesFaltantes(String _empresaId){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         int result=0;
         String msgError = "Error al insertar "
             + "carga de registros faltantes en tabla vacaciones."
@@ -690,8 +690,8 @@ public class VacacionesDAO extends BaseDAO{
      * @param _data
      * @return 
      */
-    public MaintenanceVO delete(VacacionesVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO delete(VacacionesVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         int result=0;
         String msgError = "Error al eliminar "
             + "info de vacaciones, empresaId: "+_data.getEmpresaId()

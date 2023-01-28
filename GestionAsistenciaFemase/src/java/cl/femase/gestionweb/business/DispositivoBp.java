@@ -8,7 +8,7 @@ package cl.femase.gestionweb.business;
 import cl.femase.gestionweb.vo.DispositivoEmpresaVO;
 import cl.femase.gestionweb.vo.DispositivoVO;
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import java.util.List;
 
@@ -60,9 +60,9 @@ public class DispositivoBp  extends BaseBp{
         return lista;
     }
 
-    public MaintenanceVO update(DispositivoVO _dispositivoToUpdate, 
+    public ResultCRUDVO update(DispositivoVO _dispositivoToUpdate, 
             MaintenanceEventVO _eventdata){
-        MaintenanceVO updValues = dispositivosDao.update(_dispositivoToUpdate);
+        ResultCRUDVO updValues = dispositivosDao.update(_dispositivoToUpdate);
         
         //if (!updValues.isThereError()){
             String msgFinal = updValues.getMsg();
@@ -75,10 +75,10 @@ public class DispositivoBp  extends BaseBp{
         return updValues;
     }
     
-    public MaintenanceVO insert(DispositivoVO _objToInsert, 
+    public ResultCRUDVO insert(DispositivoVO _objToInsert, 
             MaintenanceEventVO _eventdata){
         
-        MaintenanceVO insValues = dispositivosDao.insert(_objToInsert);
+        ResultCRUDVO insValues = dispositivosDao.insert(_objToInsert);
         
         //insertar asignacion empresa
         DispositivoEmpresaVO asignacionEmpresa = 

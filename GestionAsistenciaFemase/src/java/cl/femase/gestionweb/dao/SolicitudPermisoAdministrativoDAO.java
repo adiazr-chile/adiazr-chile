@@ -8,7 +8,7 @@ package cl.femase.gestionweb.dao;
 import cl.femase.gestionweb.common.Constantes;
 import cl.femase.gestionweb.common.DatabaseException;
 import cl.femase.gestionweb.vo.SolicitudPermisoAdministrativoVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.UsuarioCentroCostoVO;
 import cl.femase.gestionweb.vo.UsuarioVO;
 import java.sql.PreparedStatement;
@@ -597,8 +597,8 @@ public class SolicitudPermisoAdministrativoDAO extends BaseDAO{
     * @param _data
     * @return 
     */
-    public MaintenanceVO insert(SolicitudPermisoAdministrativoVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO insert(SolicitudPermisoAdministrativoVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         int result=0;
         String msgError = "Error al insertar "
             + "Solicitud de Permiso Administrativo (PA). "
@@ -721,9 +721,9 @@ public class SolicitudPermisoAdministrativoDAO extends BaseDAO{
     * @param _fechaHoraCancelacion
     * @return 
     */
-    public MaintenanceVO cancelarSolicitud(int _idSolicitud, 
+    public ResultCRUDVO cancelarSolicitud(int _idSolicitud, 
             String _username, String _fechaHoraCancelacion){
-        MaintenanceVO objresultado = new MaintenanceVO();
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         PreparedStatement psupdate = null;
         int result=0;
         String msgError = "Error al cancelar solicitud de permiso administrativo. "
@@ -786,11 +786,11 @@ public class SolicitudPermisoAdministrativoDAO extends BaseDAO{
      * @param _notaObservacion
     * @return 
     */
-    public MaintenanceVO aprobarSolicitud(int _idSolicitud, 
+    public ResultCRUDVO aprobarSolicitud(int _idSolicitud, 
             String _usernameAprueba, 
             String _fechaHoraAprobacion,
             String _notaObservacion){
-        MaintenanceVO objresultado = new MaintenanceVO();
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         PreparedStatement psupdate = null;
         int result=0;
         String msgError = "Error al aprobar solicitud de permiso administrativo. "
@@ -855,11 +855,11 @@ public class SolicitudPermisoAdministrativoDAO extends BaseDAO{
     * @param _notaObservacion
     * @return 
     */
-    public MaintenanceVO rechazarSolicitud(int _idSolicitud, 
+    public ResultCRUDVO rechazarSolicitud(int _idSolicitud, 
             String _usernameRechaza, 
             String _fechaHoraRechazo, 
             String _notaObservacion){
-        MaintenanceVO objresultado = new MaintenanceVO();
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         PreparedStatement psupdate = null;
         int result=0;
         String msgError = "Error al rechazar solicitud de permiso administrativo. "

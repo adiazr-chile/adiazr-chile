@@ -10,7 +10,7 @@ import cl.femase.gestionweb.common.Utilidades;
 import cl.femase.gestionweb.dao.ParametroDAO;
 import cl.femase.gestionweb.dao.PermisosAdministrativosDAO;
 import cl.femase.gestionweb.dao.ProcesosDAO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.ParametroVO;
 import cl.femase.gestionweb.vo.ProcesoEjecucionVO;
 import java.text.SimpleDateFormat;
@@ -106,14 +106,14 @@ public class ResetSemestralDiasAdministrativosFMCJob extends BaseJobs implements
             System.out.println(WEB_NAME+"[GestionFemase.ResetSemestralDiasAdministrativosFMCJob]Reset 1er Semestre. anio " + CURRENT_YEAR);
             boolean deleteRows = daoPA.deleteResumenPAAnio(empresaId, CURRENT_YEAR);
             if (deleteRows){
-                MaintenanceVO resultado = daoPA.resetearDiasAdministrativosSemestre(empresaId, MAXIMO_SEMESTRAL_DIAS_PA, CURRENT_YEAR, semestreActual);
+                ResultCRUDVO resultado = daoPA.resetearDiasAdministrativosSemestre(empresaId, MAXIMO_SEMESTRAL_DIAS_PA, CURRENT_YEAR, semestreActual);
                 
                 if (resultado.isThereError()) result+= " Error: " + resultado.getMsgError();
                 else result += " Exitoso."; 
             }
             
         }else{
-            MaintenanceVO resultadoUpdate = daoPA.updateDiasAdministrativosSemestre(empresaId, CURRENT_YEAR, semestreActual, MAXIMO_SEMESTRAL_DIAS_PA);
+            ResultCRUDVO resultadoUpdate = daoPA.updateDiasAdministrativosSemestre(empresaId, CURRENT_YEAR, semestreActual, MAXIMO_SEMESTRAL_DIAS_PA);
             if (resultadoUpdate.isThereError()) result += " Error: " + resultadoUpdate.getMsgError();
             else result += " Exitoso."; 
         }

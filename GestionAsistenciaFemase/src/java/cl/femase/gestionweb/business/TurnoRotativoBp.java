@@ -11,7 +11,7 @@ import cl.femase.gestionweb.vo.DuracionVO;
 import cl.femase.gestionweb.vo.EmpleadoVO;
 import cl.femase.gestionweb.vo.TurnoRotativoVO;
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import cl.femase.gestionweb.vo.TurnoCentroCostoVO;
 import java.sql.SQLException;
@@ -81,9 +81,9 @@ public class TurnoRotativoBp  extends BaseBp{
         return lista;
     }
     
-    public MaintenanceVO update(TurnoRotativoVO _turnoToUpdate, 
+    public ResultCRUDVO update(TurnoRotativoVO _turnoToUpdate, 
             MaintenanceEventVO _eventdata){
-        MaintenanceVO updValues = turnosRotativosDao.update(_turnoToUpdate);
+        ResultCRUDVO updValues = turnosRotativosDao.update(_turnoToUpdate);
         
         //if (!updValues.isThereError()){
             String msgFinal = updValues.getMsg();
@@ -103,10 +103,10 @@ public class TurnoRotativoBp  extends BaseBp{
      * @param _eventdata
      * @return
      */
-    public MaintenanceVO updateTurnoEmpleado(String _rutEmpleado,int _idTurno, 
+    public ResultCRUDVO updateTurnoEmpleado(String _rutEmpleado,int _idTurno, 
             MaintenanceEventVO _eventdata){
         
-        MaintenanceVO insValues = turnosRotativosDao.updateTurnoEmpleado(_rutEmpleado, _idTurno);
+        ResultCRUDVO insValues = turnosRotativosDao.updateTurnoEmpleado(_rutEmpleado, _idTurno);
         
         //if (!updValues.isThereError()){
             String msgFinal = insValues.getMsg();
@@ -159,10 +159,10 @@ public class TurnoRotativoBp  extends BaseBp{
         }
     }
     
-    public MaintenanceVO insert(TurnoRotativoVO _objToInsert, 
+    public ResultCRUDVO insert(TurnoRotativoVO _objToInsert, 
             MaintenanceEventVO _eventdata){
         
-        MaintenanceVO insValues = turnosRotativosDao.insert(_objToInsert);
+        ResultCRUDVO insValues = turnosRotativosDao.insert(_objToInsert);
         
         //if (!updValues.isThereError()){
             String msgFinal = insValues.getMsg();
@@ -175,11 +175,11 @@ public class TurnoRotativoBp  extends BaseBp{
         return insValues;
     }
     
-    public MaintenanceVO modifyAsignacion(AsignacionTurnoRotativoVO _currentAsignacion, 
+    public ResultCRUDVO modifyAsignacion(AsignacionTurnoRotativoVO _currentAsignacion, 
             AsignacionTurnoRotativoVO _updatedAsignacion, 
             MaintenanceEventVO _eventdata){
         
-        MaintenanceVO updatedValues = turnosRotativosDao.modifyAsignacion(_currentAsignacion, _updatedAsignacion);
+        ResultCRUDVO updatedValues = turnosRotativosDao.modifyAsignacion(_currentAsignacion, _updatedAsignacion);
         
         //if (!updValues.isThereError()){
             String msgFinal = updatedValues.getMsg();
@@ -255,9 +255,9 @@ public class TurnoRotativoBp  extends BaseBp{
         return turnosRotativosDao.getDuraciones();
     }
  
-    public MaintenanceVO insertAsignacion(AsignacionTurnoRotativoVO _objToInsert, 
+    public ResultCRUDVO insertAsignacion(AsignacionTurnoRotativoVO _objToInsert, 
             MaintenanceEventVO _eventdata){
-        MaintenanceVO insValues = turnosRotativosDao.insertAsignacion(_objToInsert);
+        ResultCRUDVO insValues = turnosRotativosDao.insertAsignacion(_objToInsert);
         
         //if (!updValues.isThereError()){
             String msgFinal = insValues.getMsg();
@@ -270,9 +270,9 @@ public class TurnoRotativoBp  extends BaseBp{
         return insValues;
     }
     
-    public MaintenanceVO deleteAsignacion(AsignacionTurnoRotativoVO _objToDelete, 
+    public ResultCRUDVO deleteAsignacion(AsignacionTurnoRotativoVO _objToDelete, 
             MaintenanceEventVO _eventdata){
-        MaintenanceVO deletedValues = turnosRotativosDao.deleteAsignacion(_objToDelete);
+        ResultCRUDVO deletedValues = turnosRotativosDao.deleteAsignacion(_objToDelete);
         
         //if (!updValues.isThereError()){
             String msgFinal = deletedValues.getMsg();

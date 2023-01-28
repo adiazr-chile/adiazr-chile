@@ -37,6 +37,16 @@ public class PropertiesVO {
 
     HashMap<String, Double> parametrosSistema= new HashMap<>();
 
+    private String freemarkerTemplatesPath;
+
+    public String getFreemarkerTemplatesPath() {
+        return freemarkerTemplatesPath;
+    }
+
+    public void setFreemarkerTemplatesPath(String freemarkerTemplatesPath) {
+        this.freemarkerTemplatesPath = freemarkerTemplatesPath;
+    }
+    
     public HashMap<String, Double> getParametrosSistema() {
         return parametrosSistema;
     }

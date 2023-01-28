@@ -15,7 +15,7 @@ import cl.femase.gestionweb.vo.DetalleAusenciaVO;
 import cl.femase.gestionweb.vo.DiasEfectivosVacacionesVO;
 import cl.femase.gestionweb.vo.EmpleadoVO;
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.MensajeUsuarioVO;
 import cl.femase.gestionweb.vo.NotificacionSolicitudVacacionesVO;
 import cl.femase.gestionweb.vo.NotificacionVO;
@@ -502,7 +502,7 @@ public class SolicitudVacacionesController extends BaseServlet {
                     String mensajeFinal = evento.getMensajeFinal();
                     session.setAttribute("mensaje", "Solicitud de vacaciones ingresada exitosamente."
                         + "<p>" + mensajeFinal);
-                    MaintenanceVO doCreate = solicitudesBp.insert(solicitud, resultado);					
+                    ResultCRUDVO doCreate = solicitudesBp.insert(solicitud, resultado);					
                     listaSolicitudes.add(solicitud);
                     //************************************************************
                     //************************************************************
@@ -569,7 +569,7 @@ public class SolicitudVacacionesController extends BaseServlet {
                     resultado.setEmpresaId(infoEmpleado.getEmpresa().getId());
                     resultado.setDeptoId(infoEmpleado.getDepartamento().getId());
                     resultado.setCencoId(infoEmpleado.getCentroCosto().getId());
-                    MaintenanceVO doCreate = new MaintenanceVO();
+                    ResultCRUDVO doCreate = new ResultCRUDVO();
                     if (strAccion.compareTo(Constantes.ESTADO_SOLICITUD_CANCELADA) == 0){
                         solicitud.setFechaHoraCancela(strFechaHoraActual);
                         doCreate = 
@@ -618,7 +618,7 @@ public class SolicitudVacacionesController extends BaseServlet {
                     resultado.setEmpresaId(infoEmpleado.getEmpresa().getId());
                     resultado.setDeptoId(infoEmpleado.getDepartamento().getId());
                     resultado.setCencoId(infoEmpleado.getCentroCosto().getId());
-                    MaintenanceVO doCreate = new MaintenanceVO();
+                    ResultCRUDVO doCreate = new ResultCRUDVO();
                     String usernameApruebaRechaza = userConnected.getUsername();
                     if (strAccion.compareTo(Constantes.ESTADO_SOLICITUD_APROBADA) == 0){
                         /**
@@ -674,7 +674,7 @@ public class SolicitudVacacionesController extends BaseServlet {
                             newAusencia.setAusenciaAutorizada("S");
                             newAusencia.setPermiteHora("N");
                             newAusencia.setDiasEfectivosVacaciones(solicitud.getDiasEfectivosVacacionesSolicitadas());
-                            MaintenanceVO insertResult = new MaintenanceVO();
+                            ResultCRUDVO insertResult = new ResultCRUDVO();
                             insertResult = insertarVacacion(request, appProperties, parametrosSistema, userConnected, newAusencia);
                             
                         }else{
@@ -740,7 +740,7 @@ public class SolicitudVacacionesController extends BaseServlet {
     /**
     * Insertar ausencia=Vacacion
     */
-    private MaintenanceVO insertarVacacion(HttpServletRequest _request,
+    private ResultCRUDVO insertarVacacion(HttpServletRequest _request,
             PropertiesVO _appProperties,
             HashMap<String, Double> _parametrosSistema,
             UsuarioVO _userConnected, 
@@ -773,7 +773,7 @@ public class SolicitudVacacionesController extends BaseServlet {
         resultado.setRutEmpleado(_ausencia.getRutEmpleado());
         System.out.println(WEB_NAME+"[SolicitudVacacionesController.insertarVacacion]"
             + "Insertar detalle ausencia (VACACION)");
-        MaintenanceVO doCreate = ausenciasBp.insertaVacacion(_ausencia, resultado);
+        ResultCRUDVO doCreate = ausenciasBp.insertaVacacion(_ausencia, resultado);
         
         if (doCreate.isThereError()){
             mensajeFinal= "Error al insertar vacacion " + doCreate.getMsgError();

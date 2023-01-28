@@ -7,7 +7,7 @@ package cl.femase.gestionweb.dao;
 
 import cl.femase.gestionweb.common.DatabaseException;
 import cl.femase.gestionweb.vo.ComunaVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -152,8 +152,8 @@ public class ComunaDAO extends BaseDAO{
     * @param _data
     * @return 
     */
-    public MaintenanceVO insert(ComunaVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO insert(ComunaVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         int result=0;
         String msgError = "Error al insertar "
             + "Comuna. "
@@ -207,8 +207,8 @@ public class ComunaDAO extends BaseDAO{
     * @param _data
     * @return 
     */
-    public MaintenanceVO update(ComunaVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO update(ComunaVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         PreparedStatement psupdate = null;
         int result=0;
         String msgError = "Error al actualizar "

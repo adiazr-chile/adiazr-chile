@@ -4,7 +4,7 @@ import cl.femase.gestionweb.servlet.BaseServlet;
 import cl.femase.gestionweb.business.ComunaBp;
 import cl.femase.gestionweb.vo.ComunaVO;
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import cl.femase.gestionweb.vo.UsuarioVO;
 import java.io.IOException;
@@ -180,7 +180,7 @@ public class ComunasController extends BaseServlet {
                 }   
             }else if (action.compareTo("create") == 0) {
                     System.out.println(WEB_NAME+"[ComunasController]Insertar comuna.");
-                    MaintenanceVO doCreate = comunabp.insert(auxdata, resultado);					
+                    ResultCRUDVO doCreate = comunabp.insert(auxdata, resultado);					
                     listaObjetos.add(auxdata);
 
                     //Convert Java Object to Json
@@ -191,7 +191,7 @@ public class ComunasController extends BaseServlet {
             }else if (action.compareTo("update") == 0) {  
                     System.out.println(WEB_NAME+"[ComunasController]Modificar comuna...");
                     try{
-                        MaintenanceVO doUpdate = comunabp.update(auxdata, resultado);
+                        ResultCRUDVO doUpdate = comunabp.update(auxdata, resultado);
                         listaObjetos.add(auxdata);
 
                         //Convert Java Object to Json

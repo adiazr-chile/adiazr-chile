@@ -7,7 +7,7 @@ package cl.femase.gestionweb.business;
 
 import cl.femase.gestionweb.vo.ComunaVO;
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import java.util.List;
 
@@ -50,9 +50,9 @@ public class ComunaBp  extends BaseBp{
     * @param _eventdata
     * @return 
     */
-    public MaintenanceVO update(ComunaVO _objectToUpdate, 
+    public ResultCRUDVO update(ComunaVO _objectToUpdate, 
             MaintenanceEventVO _eventdata){
-        MaintenanceVO updValues = comunasService.update(_objectToUpdate);
+        ResultCRUDVO updValues = comunasService.update(_objectToUpdate);
         
         //if (!updValues.isThereError()){
             String msgFinal = updValues.getMsg();
@@ -71,10 +71,10 @@ public class ComunaBp  extends BaseBp{
     * @param _eventdata
     * @return 
     */
-    public MaintenanceVO insert(ComunaVO _objToInsert, 
+    public ResultCRUDVO insert(ComunaVO _objToInsert, 
             MaintenanceEventVO _eventdata){
         
-        MaintenanceVO insValues = comunasService.insert(_objToInsert);
+        ResultCRUDVO insValues = comunasService.insert(_objToInsert);
         
         //if (!updValues.isThereError()){
             String msgFinal = insValues.getMsg();

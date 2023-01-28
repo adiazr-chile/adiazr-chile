@@ -3,7 +3,7 @@ package cl.femase.gestionweb.servlet.mantencion;
 import cl.femase.gestionweb.servlet.BaseServlet;
 import cl.femase.gestionweb.business.ParametroBp;
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.ParametroVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import cl.femase.gestionweb.vo.UsuarioVO;
@@ -178,7 +178,7 @@ public class ParametrosController extends BaseServlet {
                         + ", param_code: " + parametro.getParamCode()
                         + ", param_label: " + parametro.getParamLabel());
                     
-                    MaintenanceVO doCreate = parametrosbp.insert(parametro, resultado);					
+                    ResultCRUDVO doCreate = parametrosbp.insert(parametro, resultado);					
                     listaObjetos.add(parametro);
 
                     //Convert Java Object to Json
@@ -189,7 +189,7 @@ public class ParametrosController extends BaseServlet {
             }else if (action.compareTo("update") == 0) {  
                     System.out.println(WEB_NAME+"[ParametrosController]Modificar parametro...");
                     try{
-                        MaintenanceVO doUpdate = parametrosbp.update(parametro, resultado);
+                        ResultCRUDVO doUpdate = parametrosbp.update(parametro, resultado);
                         listaObjetos.add(parametro);
 
                         //Convert Java Object to Json

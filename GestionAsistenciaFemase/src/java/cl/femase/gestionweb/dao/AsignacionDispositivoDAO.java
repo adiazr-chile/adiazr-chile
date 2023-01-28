@@ -9,7 +9,7 @@ import cl.femase.gestionweb.common.DatabaseException;
 import cl.femase.gestionweb.vo.DispositivoCentroCostoVO;
 import cl.femase.gestionweb.vo.DispositivoDepartamentoVO;
 import cl.femase.gestionweb.vo.DispositivoEmpresaVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -39,8 +39,8 @@ public class AsignacionDispositivoDAO extends BaseDAO{
 //     * @param _data
 //     * @return 
 //     */
-//    public MaintenanceVO update(DispositivoVO _data){
-//        MaintenanceVO objresultado = new MaintenanceVO();
+//    public ResultCRUDVO update(DispositivoVO _data){
+//        ResultCRUDVO objresultado = new ResultCRUDVO();
 //        PreparedStatement psupdate = null;
 //        int result=0;
 //        String msgError = "Error al actualizar "
@@ -100,8 +100,8 @@ public class AsignacionDispositivoDAO extends BaseDAO{
      * @param _data
      * @return 
      */
-    public MaintenanceVO insertAsignacionEmpresa(DispositivoEmpresaVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO insertAsignacionEmpresa(DispositivoEmpresaVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         int result=0;
         String msgError = "Error al insertar "
             + "dispositivo-empresa. "
@@ -159,8 +159,8 @@ public class AsignacionDispositivoDAO extends BaseDAO{
      * @param _data
      * @return 
      */
-    public MaintenanceVO insertAsignacionDepartamento(DispositivoDepartamentoVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO insertAsignacionDepartamento(DispositivoDepartamentoVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         int result=0;
         String msgError = "Error al insertar "
             + "dispositivo-departamento. "
@@ -215,8 +215,8 @@ public class AsignacionDispositivoDAO extends BaseDAO{
         return objresultado;
     }
     
-    public MaintenanceVO deleteAsignacionesDepartamento(String _deviceId){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO deleteAsignacionesDepartamento(String _deviceId){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         int result=0;
         String msgError = "Error al eliminar asignacion "
             + "dispositivo-departamento. "
@@ -264,8 +264,8 @@ public class AsignacionDispositivoDAO extends BaseDAO{
         return objresultado;
     }
     
-    public MaintenanceVO deleteAsignacionesCentroCosto(String _deviceId){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO deleteAsignacionesCentroCosto(String _deviceId){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         int result=0;
         String msgError = "Error al eliminar asignacion "
             + "dispositivo-centroCosto. "
@@ -313,8 +313,8 @@ public class AsignacionDispositivoDAO extends BaseDAO{
         return objresultado;
     }
     
-    public MaintenanceVO deleteAsignacionesEmpresa(String _deviceId){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO deleteAsignacionesEmpresa(String _deviceId){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         int result=0;
         String msgError = "Error al eliminar asignacion "
             + "dispositivo-empresa. "
@@ -366,8 +366,8 @@ public class AsignacionDispositivoDAO extends BaseDAO{
      * @param _data
      * @return 
     */
-    public MaintenanceVO insertAsignacionCentroCosto(DispositivoCentroCostoVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO insertAsignacionCentroCosto(DispositivoCentroCostoVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         int result=0;
         String msgError = "Error al insertar "
             + "dispositivo-centro costo. "

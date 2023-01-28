@@ -15,7 +15,7 @@ import cl.femase.gestionweb.dao.ProcesosDAO;
 import cl.femase.gestionweb.vo.DetalleAsistenciaVO;
 import cl.femase.gestionweb.vo.EmpleadoVO;
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.MarcaVO;
 import cl.femase.gestionweb.vo.ProcesoEjecucionVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
@@ -193,7 +193,7 @@ public class DetalleAsistenciaController extends BaseServlet {
                 + ",endDate=" + endDate);
 
           if (request.getParameter("action").compareTo("calcular") == 0){
-              MaintenanceVO resultadoCalculo = new MaintenanceVO();
+              ResultCRUDVO resultadoCalculo = new ResultCRUDVO();
               CalculoAsistenciaBp calculoBp=new CalculoAsistenciaBp(appProperties);
               if (filtroEmpresa.compareTo("-1") != 0 
                         && filtroDepto.compareTo("-1") != 0
@@ -482,7 +482,7 @@ public class DetalleAsistenciaController extends BaseServlet {
                          * autoriza_hrsextras
                          * 
                          */
-                        MaintenanceVO doUpdate = detalleAsistenciaBp.update(rut,
+                        ResultCRUDVO doUpdate = detalleAsistenciaBp.update(rut,
                             fecha,
                             authAtraso,
                             authHextras,

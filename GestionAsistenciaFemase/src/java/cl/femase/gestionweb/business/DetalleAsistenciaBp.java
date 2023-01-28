@@ -14,7 +14,7 @@ import cl.femase.gestionweb.vo.DetalleAsistenciaVO;
 import cl.femase.gestionweb.vo.EmpleadoVO;
 import cl.femase.gestionweb.vo.LogErrorVO;
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -89,10 +89,10 @@ public class DetalleAsistenciaBp  extends BaseBp{
         return lista;
     }
 
-//    public MaintenanceVO delete(String _rutEmpleado,
+//    public ResultCRUDVO delete(String _rutEmpleado,
 //            String _fechaMarca, 
 //            MaintenanceEventVO _eventdata){
-//        MaintenanceVO deletedValues = calculoHorasService.delete(_rutEmpleado,_fechaMarca);
+//        ResultCRUDVO deletedValues = calculoHorasService.delete(_rutEmpleado,_fechaMarca);
 //        
 //        //if (!updValues.isThereError()){
 //            String msgFinal = deletedValues.getMsg();
@@ -105,13 +105,13 @@ public class DetalleAsistenciaBp  extends BaseBp{
 //        return deletedValues;
 //    }
     
-    public MaintenanceVO update(String _rutEmpleado,
+    public ResultCRUDVO update(String _rutEmpleado,
             String _fechaMarca,
             String _authAtraso,
             String _authHextras,
             String _hhmmExtrasAutorizadas, 
             MaintenanceEventVO _eventdata){
-        MaintenanceVO updatedValues = 
+        ResultCRUDVO updatedValues = 
             calculoHorasService.update(_rutEmpleado,
                 _fechaMarca,
                 _authAtraso,
@@ -174,10 +174,10 @@ public class DetalleAsistenciaBp  extends BaseBp{
         }
     }
     
-    public MaintenanceVO insert(DetalleAsistenciaVO _detalle, 
+    public ResultCRUDVO insert(DetalleAsistenciaVO _detalle, 
             MaintenanceEventVO _eventdata){
         
-        MaintenanceVO insValues = calculoHorasService.insert(_detalle);
+        ResultCRUDVO insValues = calculoHorasService.insert(_detalle);
         
         //if (!updValues.isThereError()){
             String msgFinal = insValues.getMsg();

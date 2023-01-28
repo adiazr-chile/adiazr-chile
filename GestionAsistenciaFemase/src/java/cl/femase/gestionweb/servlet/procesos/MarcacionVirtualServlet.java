@@ -16,7 +16,7 @@ import cl.femase.gestionweb.common.GetPropertyValues;
 import cl.femase.gestionweb.common.Utilidades;
 import cl.femase.gestionweb.vo.EmpleadoVO;
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.MarcaVO;
 import cl.femase.gestionweb.vo.NotificacionVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
@@ -193,7 +193,7 @@ public class MarcacionVirtualServlet extends BaseServlet {
             + ", TipoMarca: " + infomarca.getTipoMarca()
             + ", hashcode(md5: " + infomarca.getHashcode());
 
-        MaintenanceVO doCreate = marcasBp.insertWithLog(infomarca, resultado);
+        ResultCRUDVO doCreate = marcasBp.insertWithLog(infomarca, resultado);
         System.out.println(WEB_NAME+"[GestionFemase.MarcacionVirtualServlet]Mensaje "
             + "del sp new_inserta_marca_manual: " + doCreate.getMsgFromSp());
         //if (!doCreate.isThereError()){

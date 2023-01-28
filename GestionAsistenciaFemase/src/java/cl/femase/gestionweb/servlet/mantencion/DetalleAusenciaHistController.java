@@ -411,7 +411,7 @@ public class DetalleAusenciaHistController extends BaseServlet {
                                 + "Insertar detalle ausencia...");
                             resultado.setRutEmpleado(auxdata.getRutEmpleado());
 
-                            MaintenanceVO doCreate = auxnegocio.insert(auxdata, resultado);					
+                            ResultCRUDVO doCreate = auxnegocio.insert(auxdata, resultado);					
                             listaObjetos.add(auxdata);
 
                             //Convert Java Object to Json
@@ -463,7 +463,7 @@ public class DetalleAusenciaHistController extends BaseServlet {
                                     auxnegocio.getDetalleAusenciaByCorrelativo(auxdata.getCorrelativo());
                                 auxdata.setRutEmpleado(detalle.getRutEmpleado());
                                 
-                                MaintenanceVO doUpdate = auxnegocio.update(auxdata, resultado);
+                                ResultCRUDVO doUpdate = auxnegocio.update(auxdata, resultado);
                                 listaObjetos.add(auxdata);
 
                                 //Convert Java Object to Json
@@ -487,7 +487,7 @@ public class DetalleAusenciaHistController extends BaseServlet {
                                 DetalleAusenciaVO detalle = 
                                     auxnegocio.getDetalleAusenciaByCorrelativo(auxdata.getCorrelativo());
                             
-                                MaintenanceVO doUpdate = auxnegocio.delete(detalle, resultado);
+                                ResultCRUDVO doUpdate = auxnegocio.delete(detalle, resultado);
                                 listaObjetos.add(auxdata);
 
                                 //Convert Java Object to Json

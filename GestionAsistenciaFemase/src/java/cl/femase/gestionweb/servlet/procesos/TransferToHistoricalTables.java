@@ -7,7 +7,7 @@ package cl.femase.gestionweb.servlet.procesos;
 
 import cl.femase.gestionweb.dao.TraspasoHistoricoDAO;
 import cl.femase.gestionweb.servlet.BaseServlet;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import cl.femase.gestionweb.vo.RegistroHistoricoVO;
 import cl.femase.gestionweb.vo.UsuarioVO;
@@ -92,7 +92,7 @@ public class TransferToHistoricalTables extends BaseServlet {
                 + "Ejecutar traspaso a historico");
             String startDate    = request.getParameter("startDate");
             String endDate      = request.getParameter("endDate");
-            MaintenanceVO resultado = new MaintenanceVO();
+            ResultCRUDVO resultado = new ResultCRUDVO();
             int filasEliminadas = 0;
             switch (tabla){
                 case "marca":

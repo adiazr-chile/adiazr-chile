@@ -6,7 +6,7 @@
 package cl.femase.gestionweb.dao;
 
 import cl.femase.gestionweb.common.DatabaseException;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.CodigoErrorRechazoVO;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -29,8 +29,8 @@ public class CodigoErrorRechazoDAO extends BaseDAO{
      * @param _data
      * @return 
      */
-    public MaintenanceVO update(CodigoErrorRechazoVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO update(CodigoErrorRechazoVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         PreparedStatement psupdate = null;
         int result=0;
         String msgError = "Error al actualizar "
@@ -89,8 +89,8 @@ public class CodigoErrorRechazoDAO extends BaseDAO{
      * @param _data
      * @return 
      */
-    public MaintenanceVO insert(CodigoErrorRechazoVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO insert(CodigoErrorRechazoVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         int result=0;
         String msgError = "Error al insertar "
             + "cod_error_rechazo. "
@@ -148,8 +148,8 @@ public class CodigoErrorRechazoDAO extends BaseDAO{
     * @param _data
     * @return 
     */
-    public MaintenanceVO delete(CodigoErrorRechazoVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO delete(CodigoErrorRechazoVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         int result=0;
         String msgError = "Error al eliminar "
             + "un codigo_error_rechazo, codigo: "+_data.getCodigo();

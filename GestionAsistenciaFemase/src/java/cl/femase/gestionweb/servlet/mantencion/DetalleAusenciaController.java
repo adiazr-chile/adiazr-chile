@@ -13,7 +13,7 @@ import cl.femase.gestionweb.common.Constantes;
 import cl.femase.gestionweb.common.Utilidades;
 import cl.femase.gestionweb.vo.AusenciaVO;
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.DetalleAusenciaVO;
 import cl.femase.gestionweb.vo.DiasEfectivosVacacionesVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
@@ -472,7 +472,7 @@ public class DetalleAusenciaController extends BaseServlet {
                                 if (auxdata.getIdAusencia() != Constantes.ID_AUSENCIA_VACACIONES){
                                     System.out.println(WEB_NAME+"[DetalleAusenciaController] - "
                                         + "Insertar detalle ausencia (NO Vacacion)...");
-                                    MaintenanceVO doCreate = detAusenciaBp.insert(auxdata, resultado);	
+                                    ResultCRUDVO doCreate = detAusenciaBp.insert(auxdata, resultado);	
                                     if (doCreate.isThereError()){
                                         mensajeFinal= "Error al crear registro "
                                             + doCreate.getMsgError();
@@ -495,7 +495,7 @@ public class DetalleAusenciaController extends BaseServlet {
                                     newAusencia.setAusenciaAutorizada("S");
                                     newAusencia.setPermiteHora("N");
                                     newAusencia.setDiasEfectivosVacaciones(saldoVacaciones.getDiasEfectivos());
-                                    MaintenanceVO insertResult = new MaintenanceVO();
+                                    ResultCRUDVO insertResult = new ResultCRUDVO();
                                     insertResult = insertarVacacion(request, appProperties, parametrosSistema, userConnected, newAusencia);
 
                                     List<VacacionesVO> infoVacaciones = 
@@ -657,7 +657,7 @@ public class DetalleAusenciaController extends BaseServlet {
                                                 + ", tipoAusencia: " + auxdata.getNombreAusencia());
 
                                             auxdata.setAusenciaAutorizada("S");
-                                            MaintenanceVO doUpdate = detAusenciaBp.update(auxdata, resultado);
+                                            ResultCRUDVO doUpdate = detAusenciaBp.update(auxdata, resultado);
                                             mensajeFinalUpd = "Datos actualizados exitosamente.";
                                             listaObjetos.add(auxdata);
 
@@ -745,7 +745,7 @@ public class DetalleAusenciaController extends BaseServlet {
                             DetalleAusenciaVO detalle = 
                                 detAusenciaBp.getDetalleAusenciaByCorrelativo(auxdata.getCorrelativo());
                             
-                            MaintenanceVO doDelete = detAusenciaBp.delete(detalle, resultado);
+                            ResultCRUDVO doDelete = detAusenciaBp.delete(detalle, resultado);
                             listaObjetos.add(auxdata);
                             System.out.println(WEB_NAME+"[servlet."
                                 + "DetalleAusenciasController."
@@ -988,7 +988,7 @@ public class DetalleAusenciaController extends BaseServlet {
     /**
     * Insertar ausencia=Vacacion
     */
-    private MaintenanceVO insertarVacacion(HttpServletRequest _request,
+    private ResultCRUDVO insertarVacacion(HttpServletRequest _request,
             PropertiesVO _appProperties,
             HashMap<String, Double> _parametrosSistema,
             UsuarioVO _userConnected, 
@@ -1021,7 +1021,7 @@ public class DetalleAusenciaController extends BaseServlet {
         resultado.setRutEmpleado(_ausencia.getRutEmpleado());
         System.out.println(WEB_NAME+"[DetalleAusenciaController.insertarVacacion]"
             + "Insertar detalle ausencia (VACACION)");
-        MaintenanceVO doCreate = ausenciasBp.insertaVacacion(_ausencia, resultado);
+        ResultCRUDVO doCreate = ausenciasBp.insertaVacacion(_ausencia, resultado);
         
         if (doCreate.isThereError()){
             mensajeFinal= "Error al insertar vacacion " + doCreate.getMsgError();

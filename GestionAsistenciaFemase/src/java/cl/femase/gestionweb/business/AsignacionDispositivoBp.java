@@ -9,7 +9,7 @@ import cl.femase.gestionweb.vo.DispositivoCentroCostoVO;
 import cl.femase.gestionweb.vo.DispositivoDepartamentoVO;
 import cl.femase.gestionweb.vo.DispositivoEmpresaVO;
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 
 /**
@@ -33,10 +33,10 @@ public class AsignacionDispositivoBp  extends BaseBp{
         asignacionDispositivoService = new cl.femase.gestionweb.dao.AsignacionDispositivoDAO(this.props);
     }
 
-    public MaintenanceVO insertAsignacionEmpresa(DispositivoEmpresaVO _data, 
+    public ResultCRUDVO insertAsignacionEmpresa(DispositivoEmpresaVO _data, 
             MaintenanceEventVO _eventdata){
         
-        MaintenanceVO insValues = asignacionDispositivoService.insertAsignacionEmpresa(_data);
+        ResultCRUDVO insValues = asignacionDispositivoService.insertAsignacionEmpresa(_data);
         
         //if (!updValues.isThereError()){
             String msgFinal = insValues.getMsg();
@@ -49,10 +49,10 @@ public class AsignacionDispositivoBp  extends BaseBp{
         return insValues;
     }
     
-    public MaintenanceVO insertAsignacionDepartamento(DispositivoDepartamentoVO _data, 
+    public ResultCRUDVO insertAsignacionDepartamento(DispositivoDepartamentoVO _data, 
             MaintenanceEventVO _eventdata){
         
-        MaintenanceVO insValues = asignacionDispositivoService.insertAsignacionDepartamento(_data);
+        ResultCRUDVO insValues = asignacionDispositivoService.insertAsignacionDepartamento(_data);
         
         //if (!updValues.isThereError()){
             String msgFinal = insValues.getMsg();
@@ -65,10 +65,10 @@ public class AsignacionDispositivoBp  extends BaseBp{
         return insValues;
     }
     
-    public MaintenanceVO insertAsignacionCentroCosto(DispositivoCentroCostoVO _data, 
+    public ResultCRUDVO insertAsignacionCentroCosto(DispositivoCentroCostoVO _data, 
             MaintenanceEventVO _eventdata){
         
-        MaintenanceVO insValues = asignacionDispositivoService.insertAsignacionCentroCosto(_data);
+        ResultCRUDVO insValues = asignacionDispositivoService.insertAsignacionCentroCosto(_data);
         
         //if (!updValues.isThereError()){
             String msgFinal = insValues.getMsg();
@@ -81,10 +81,10 @@ public class AsignacionDispositivoBp  extends BaseBp{
         return insValues;
     }
     
-    public MaintenanceVO deleteAsignacionesCentroCosto(String _deviceId, 
+    public ResultCRUDVO deleteAsignacionesCentroCosto(String _deviceId, 
             MaintenanceEventVO _eventdata){
         
-        MaintenanceVO insValues = asignacionDispositivoService.deleteAsignacionesCentroCosto(_deviceId);
+        ResultCRUDVO insValues = asignacionDispositivoService.deleteAsignacionesCentroCosto(_deviceId);
         
         //if (!updValues.isThereError()){
             String msgFinal = insValues.getMsg();
@@ -97,10 +97,10 @@ public class AsignacionDispositivoBp  extends BaseBp{
         return insValues;
     }
     
-    public MaintenanceVO deleteAsignacionesDepartamento(String _deviceId, 
+    public ResultCRUDVO deleteAsignacionesDepartamento(String _deviceId, 
             MaintenanceEventVO _eventdata){
         
-        MaintenanceVO insValues = asignacionDispositivoService.deleteAsignacionesDepartamento(_deviceId);
+        ResultCRUDVO insValues = asignacionDispositivoService.deleteAsignacionesDepartamento(_deviceId);
         
         //if (!updValues.isThereError()){
             String msgFinal = insValues.getMsg();
@@ -113,10 +113,10 @@ public class AsignacionDispositivoBp  extends BaseBp{
         return insValues;
     }
     
-    public MaintenanceVO deleteAsignacionesEmpresa(String _deviceId, 
+    public ResultCRUDVO deleteAsignacionesEmpresa(String _deviceId, 
             MaintenanceEventVO _eventdata){
         
-        MaintenanceVO insValues = asignacionDispositivoService.deleteAsignacionesEmpresa(_deviceId);
+        ResultCRUDVO insValues = asignacionDispositivoService.deleteAsignacionesEmpresa(_deviceId);
         
         //if (!updValues.isThereError()){
             String msgFinal = insValues.getMsg();

@@ -6,7 +6,7 @@
 package cl.femase.gestionweb.business;
 
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import cl.femase.gestionweb.vo.SolicitudPermisoAdministrativoVO;
 
@@ -36,10 +36,10 @@ public class SolicitudPermisoAdministrativoBp  extends BaseBp{
     * @param _eventdata
     * @return 
     */
-    public MaintenanceVO insert(SolicitudPermisoAdministrativoVO _objToInsert, 
+    public ResultCRUDVO insert(SolicitudPermisoAdministrativoVO _objToInsert, 
             MaintenanceEventVO _eventdata){
         
-        MaintenanceVO insValues = solicitudPADao.insert(_objToInsert);
+        ResultCRUDVO insValues = solicitudPADao.insert(_objToInsert);
         
         //if (!updValues.isThereError()){
             String msgFinal = insValues.getMsg();
@@ -60,10 +60,10 @@ public class SolicitudPermisoAdministrativoBp  extends BaseBp{
     * @param _eventdata
     * @return 
     */
-    public MaintenanceVO cancelarSolicitud(int _idSolicitud, 
+    public ResultCRUDVO cancelarSolicitud(int _idSolicitud, 
             String _username, String _fechaHoraCancelacion, 
             MaintenanceEventVO _eventdata){
-        MaintenanceVO updValues = 
+        ResultCRUDVO updValues = 
             solicitudPADao.cancelarSolicitud(_idSolicitud, 
                 _username, 
                 _fechaHoraCancelacion);
@@ -88,12 +88,12 @@ public class SolicitudPermisoAdministrativoBp  extends BaseBp{
     * @param _eventdata
     * @return 
     */
-    public MaintenanceVO aprobarSolicitud(int _idSolicitud, 
+    public ResultCRUDVO aprobarSolicitud(int _idSolicitud, 
             String _usernameAprueba, 
             String _fechaHoraAprobacion,
             String _notaObservacion,
              MaintenanceEventVO _eventdata){
-        MaintenanceVO updValues = 
+        ResultCRUDVO updValues = 
             solicitudPADao.aprobarSolicitud(_idSolicitud, 
                 _usernameAprueba, 
                 _fechaHoraAprobacion, _notaObservacion);
@@ -118,12 +118,12 @@ public class SolicitudPermisoAdministrativoBp  extends BaseBp{
     * @param _eventdata
     * @return 
     */
-    public MaintenanceVO rechazarSolicitud(int _idSolicitud, 
+    public ResultCRUDVO rechazarSolicitud(int _idSolicitud, 
             String _usernameRechaza,
             String _fechaHoraRechazo,
             String _motivoRechazo,
              MaintenanceEventVO _eventdata){
-        MaintenanceVO updValues = 
+        ResultCRUDVO updValues = 
             solicitudPADao.rechazarSolicitud(_idSolicitud, 
                 _usernameRechaza, 
                 _fechaHoraRechazo, 

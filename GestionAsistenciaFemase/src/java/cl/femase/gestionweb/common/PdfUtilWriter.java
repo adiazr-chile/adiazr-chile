@@ -11,6 +11,9 @@ import cl.femase.gestionweb.vo.CargoVO;
 import cl.femase.gestionweb.vo.DetalleAusenciaVO;
 import cl.femase.gestionweb.vo.DetalleAsistenciaVO;
 import cl.femase.gestionweb.vo.EmpleadoVO;
+import cl.femase.gestionweb.vo.ReportDetailHeaderVO;
+import cl.femase.gestionweb.vo.ReportHeaderVO;
+import cl.femase.gestionweb.vo.ReportVO;
 import cl.femase.gestionweb.vo.UsuarioVO;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Chunk;
@@ -923,6 +926,9 @@ public class PdfUtilWriter {
         return isOk;
     }
     
+    /**
+    * 
+    */
     public boolean doReporteDetalleAusencias(List<DetalleAusenciaVO> _lista,
             String _headerimagepath,
             String _textheader, 

@@ -22,7 +22,7 @@ import cl.femase.gestionweb.vo.DiferenciaHorasVO;
 import cl.femase.gestionweb.vo.EstadoVO;
 import cl.femase.gestionweb.vo.InfoFeriadoVO;
 import cl.femase.gestionweb.vo.LogErrorVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -513,13 +513,13 @@ public class CalculoAsistenciaBp  extends BaseBp{
      * @return 
      * 
      **/
-    public MaintenanceVO calculaAsistencia(String _empresaId,
+    public ResultCRUDVO calculaAsistencia(String _empresaId,
             String _deptoId, 
             int _cencoId,
             List<String> _listaRutsEmpleados,
             String _startDate, 
             String _endDate){
-        MaintenanceVO resultado=new MaintenanceVO();
+        ResultCRUDVO resultado=new ResultCRUDVO();
         Gson gson = new Gson();     
         System.out.println(WEB_NAME+"[GestionFemase."
             + "CalculoAsistenciaBp]calculaAsistencia."

@@ -20,7 +20,7 @@ import cl.femase.gestionweb.vo.DetalleAusenciaVO;
 import cl.femase.gestionweb.vo.EmpleadoVO;
 import cl.femase.gestionweb.vo.EmpresaVO;
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import cl.femase.gestionweb.vo.ResultadoCargaCsvVO;
 import cl.femase.gestionweb.vo.ResultadoCargaDataCsvVO;
@@ -216,7 +216,7 @@ public class UploadVacacionesServlet extends BaseServlet {
                                                     + "dias efectivos tomados: "
                                                     + saldoVacaciones.getDiasEfectivos());
                                                 data.setDiasEfectivosVacaciones(saldoVacaciones.getDiasEfectivos());
-                                                MaintenanceVO insertResult = new MaintenanceVO();
+                                                ResultCRUDVO insertResult = new ResultCRUDVO();
                                                 if (vacacionFutura){
                                                     //validar saldo de vacaciones para ingreso de vacacion con fecha futura
                                                     if (saldoVacaciones.getMensajeValidacion() == null){
@@ -346,7 +346,7 @@ public class UploadVacacionesServlet extends BaseServlet {
     /**
     * Insertar ausencia=Vacacion
     */
-    private MaintenanceVO insertarVacacion(HttpServletRequest _request,
+    private ResultCRUDVO insertarVacacion(HttpServletRequest _request,
             PropertiesVO _appProperties,
             HashMap<String, Double> _parametrosSistema,
             UsuarioVO _userConnected, 
@@ -367,7 +367,7 @@ public class UploadVacacionesServlet extends BaseServlet {
         resultado.setEmpresaIdSource(_userConnected.getEmpresaId());
                                         
         resultado.setRutEmpleado(_ausencia.getRutEmpleado());
-        MaintenanceVO doCreate = ausenciasBp.insert(_ausencia, resultado);
+        ResultCRUDVO doCreate = ausenciasBp.insert(_ausencia, resultado);
         
 ////        if (!doCreate.isThereError()){
 ////            System.out.println(WEB_NAME+"[UploadVacacionesServlet.insertarVacacion]"

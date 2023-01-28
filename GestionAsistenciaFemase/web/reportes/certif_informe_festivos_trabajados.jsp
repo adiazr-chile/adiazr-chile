@@ -275,6 +275,7 @@
                         <option value="csv" selected>CSV</option>
                         <option value="xls">Excel(xls)</option>
                         <option value="xml">XML</option>
+                        <option value="pdf">PDF</option>
                     </select>
                 </div>
             </div> 

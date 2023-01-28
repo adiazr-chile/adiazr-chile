@@ -6,7 +6,7 @@
 package cl.femase.gestionweb.dao;
 
 import cl.femase.gestionweb.common.DatabaseException;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.TiempoExtraVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import java.sql.PreparedStatement;
@@ -42,8 +42,8 @@ public class TiempoExtraDAO extends BaseDAO{
      * @param _data
      * @return 
      */
-    public MaintenanceVO update(TiempoExtraVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO update(TiempoExtraVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         PreparedStatement psupdate = null;
         int result=0;
         String msgError = "Error al actualizar "
@@ -104,8 +104,8 @@ public class TiempoExtraDAO extends BaseDAO{
      * @param _data
      * @return 
      */
-    public MaintenanceVO delete(TiempoExtraVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO delete(TiempoExtraVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         PreparedStatement psupdate = null;
         int result=0;
         String msgError = "Error al eliminar "
@@ -158,8 +158,8 @@ public class TiempoExtraDAO extends BaseDAO{
      * @param _data
      * @return 
      */
-    public MaintenanceVO insert(TiempoExtraVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO insert(TiempoExtraVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         PreparedStatement psinsert = null;
         int result=0;
         String msgError = "Error al ainsertar "

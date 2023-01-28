@@ -28,10 +28,14 @@
     List<AusenciaVO> ausencias = 
         (List<AusenciaVO>)session.getAttribute("ausencias");
     boolean readOnly = false;
-    //perfil empleado y fiscalizador solo pueden ver
-    if (theUser.getIdPerfil() == Constantes.ID_PERFIL_FISCALIZADOR || theUser.getIdPerfil() == Constantes.ID_PERFIL_EMPLEADO){
+    //perfil fiscalizador NO puede modificar una solicitud realizada
+    if (theUser.getIdPerfil() == Constantes.ID_PERFIL_FISCALIZADOR){
         readOnly = true;
     }
+    
+    System.out.println("[FemaseWeb.permisos_administrativos.solicitud.jsp]"
+        + "usuario.perfil " + theUser.getIdPerfil()
+        +", readOnly: " + readOnly);
 %>
 
 <!DOCTYPE html>

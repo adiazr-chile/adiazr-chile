@@ -1,12 +1,14 @@
 package cl.femase.gestionweb.servlet.mantencion;
 
+import cl.femase.gestionweb.business.CalculoVacacionesBp;
 import cl.femase.gestionweb.business.DetalleAusenciaBp;
 import cl.femase.gestionweb.servlet.BaseServlet;
 import cl.femase.gestionweb.business.EmpleadosBp;
 import cl.femase.gestionweb.business.VacacionesBp;
+import cl.femase.gestionweb.common.Constantes;
 import cl.femase.gestionweb.vo.EmpleadoVO;
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import cl.femase.gestionweb.vo.UsuarioVO;
 import cl.femase.gestionweb.vo.VacacionesVO;
@@ -302,7 +304,7 @@ public class VacacionesController extends BaseServlet {
                     resultado.setDeptoId(infoEmpleado.getDepartamento().getId());
                     resultado.setCencoId(infoEmpleado.getCentroCosto().getId());
                     
-                    MaintenanceVO doCreate = vacacionesBp.insert(infoVacacion, resultado);					
+                    ResultCRUDVO doCreate = vacacionesBp.insert(infoVacacion, resultado);					
                     listaObjetos.add(infoVacacion);
 
                     //Convert Java Object to Json
@@ -328,7 +330,49 @@ public class VacacionesController extends BaseServlet {
                         + "empresa_id: " + infoVacacion.getEmpresaId()
                         + ", rutEmpleado: " + infoVacacion.getRutEmpleado());
                     try{
-                        MaintenanceVO doUpdate = vacacionesBp.update(infoVacacion, resultado);
+                        ////ResultCRUDVO doUpdate = vacacionesBp.update(infoVacacion, resultado);
+                        /**
+                        * Usar funiones
+                        */
+                        System.out.println(WEB_NAME+"[VacacionesController]"
+                            + "Invocar la funcion 'set_fecha_base_vacacion_progresiva'");
+                        CalculoVacacionesBp calculoVacacionesBp = new CalculoVacacionesBp(appProperties);
+                        
+                        String empresaId                    = infoVacacion.getEmpresaId(); 
+                        String runEmpleado                  = infoVacacion.getRutEmpleado(); 
+                        String fechaEmisionCertificadoAFP   = infoVacacion.getFechaCertifVacacionesProgresivas(); 
+                        int numCotizaciones                 = infoVacacion.getNumCotizaciones();
+                        String diasEspeciales               = infoVacacion.getDiasEspeciales();
+                        int diasAdicionales = 0;
+                        try{
+                            BigDecimal bd = new BigDecimal(infoVacacion.getDiasAdicionales());
+                            diasAdicionales = bd.intValue();
+                        }catch(Exception ex){
+                            System.err.println(WEB_NAME+"[VacacionesController]"
+                                + "Error al rescatar param dias_adicionales: " + ex.toString());
+                            diasAdicionales = 0;
+                        }
+                        String afpCode                      = infoVacacion.getAfpCode();
+                        
+                        ResultCRUDVO fnExec = calculoVacacionesBp.setFechaBaseVP(empresaId, 
+                                runEmpleado, 
+                                fechaEmisionCertificadoAFP, 
+                                numCotizaciones, 
+                                diasEspeciales, 
+                                diasAdicionales, 
+                                afpCode, 
+                                resultado);
+                        System.out.println(WEB_NAME + "[VacacionesController]"
+                            + "Filas afectadas, post ejecucion de la funcion " + Constantes.fnSET_FECHA_BASE_VP
+                            + ": " + fnExec.getFilasAfectadasObj().toString());
+                        
+//                        ArrayList<String> warningMsgs = fnExec.getWarningMessages();
+//                        for (int x = 0; x < warningMsgs.size(); x++) {
+//                            String message = warningMsgs.get(x);
+//                            System.out.println(WEB_NAME + "[VacacionesController]"
+//                                + "Function message: " + message);
+//                        }
+                                                
                         listaObjetos.add(infoVacacion);
 
                         //Convert Java Object to Json
@@ -338,6 +382,9 @@ public class VacacionesController extends BaseServlet {
                         response.getWriter().print(listData);
 
                     }catch(Exception ex){
+                        System.out.println(WEB_NAME+"[VacacionesController]"
+                            + "Error: " + ex.toString());
+                        ex.printStackTrace();
                         String error="{\"Result\":\"ERROR\",\"Message\":"+ex.getStackTrace().toString()+"}";
                         response.getWriter().print(error);
                     }
@@ -357,7 +404,7 @@ public class VacacionesController extends BaseServlet {
                         + "empresa_id: " + infoVacacion.getEmpresaId()
                         + ", rutEmpleado: " + infoVacacion.getRutEmpleado());
                     try{
-                        MaintenanceVO doDelete = vacacionesBp.delete(infoVacacion, resultado);
+                        ResultCRUDVO doDelete = vacacionesBp.delete(infoVacacion, resultado);
                         
                         //Convert Java Object to Json
                         String json=gson.toJson(infoVacacion);					
@@ -369,114 +416,116 @@ public class VacacionesController extends BaseServlet {
                         String error="{\"Result\":\"ERROR\",\"Message\":"+ex.getStackTrace().toString()+"}";
                         response.getWriter().print(error);
                     }
-            }else if (action.compareTo("calcula_saldo") == 0) {
-                    String paramEmpresa = request.getParameter("empresa_id");
-                    String paramDeptoId = request.getParameter("depto_id");
-                    String paramCencoId = request.getParameter("cenco_id");
-                    String rutEmpleado = request.getParameter("rutEmpleado");
-                    System.out.println(WEB_NAME+"[DetalleAusenciaController]"
-                        + "Calcular saldo dias de vacaciones. "
-                        + "empresa_id= " + paramEmpresa
-                        + ", depto_id= " + paramDeptoId
-                        + ", cenco_id= " + paramCencoId
-                        + ", rut_empleado= " + rutEmpleado);
-                    int intCencoId=-1;
-                    if (paramCencoId.compareTo("") != 0)
-                        intCencoId = Integer.parseInt(paramCencoId); 
-                    
-                    System.out.println(WEB_NAME+"[VacacionesController]"
-                        + "Calcular saldo dias de vacaciones. "
-                        + "empresa_id: " + paramEmpresa
-                        + ", cencoId: " + paramCencoId     
-                        + ", rutEmpleado: " + rutEmpleado);
-                    if (rutEmpleado != null && rutEmpleado.compareTo("-1") != 0){
-                        System.out.println(WEB_NAME+"[VacacionesController]"
-                            + "Calcular saldo dias de vacaciones "
-                            + "para un solo empleado.");
-                        vacacionesBp.calculaDiasVacaciones(userConnected.getUsername(),
-                            paramEmpresa, 
-                            rutEmpleado, 
-                            parametrosSistema);
-                        
-                        DetalleAusenciaBp detAusenciaBp = new DetalleAusenciaBp(appProperties);
-                        
-                        System.out.println(WEB_NAME+"[VacacionesController]"
-                            + "Actualizar saldos de vacaciones "
-                            + "en tabla detalle_ausencia "
-                            + "(usar nueva funcion setsaldodiasvacacionesasignadas). "
-                            + "Run: "+ rutEmpleado);
-                        detAusenciaBp.actualizaSaldosVacaciones(rutEmpleado);
-                        
-                    }else{
-                        System.out.println(WEB_NAME+"[VacacionesController]"
-                            + "Calcular saldo dias de vacaciones "
-                            + "para todos los empleados del centro de costo. "
-                            + "empresa_id: " + paramEmpresa
-                            + ", deptoId: " + paramDeptoId    
-                            + ", cencoId: " + paramCencoId);
-                        vacacionesBp.calculaDiasVacaciones(userConnected.getUsername(),
-                            paramEmpresa, 
-                            paramDeptoId, 
-                            intCencoId, 
-                            parametrosSistema, 
-                            false);
-                    }
-                    response.sendRedirect(request.getContextPath()
-                        +"/vacaciones/info_vacaciones.jsp");
-            }else if (action.compareTo("calcula_vacaciones_desvincula2") == 0) {
-                    String paramEmpresa = request.getParameter("empresa_id");
-                    String paramDeptoId = request.getParameter("depto_id");
-                    String paramCencoId = request.getParameter("cenco_id");
-                    String rutEmpleado = request.getParameter("rutEmpleado");
-                    System.out.println(WEB_NAME+"[DetalleAusenciaController]"
-                        + "Calcular vacaciones para empleados desvinculados. "
-                        + "empresa_id= " + paramEmpresa
-                        + ", depto_id= " + paramDeptoId
-                        + ", cenco_id= " + paramCencoId
-                        + ", rut_empleado= " + rutEmpleado);
-                    int intCencoId=-1;
-                    if (paramCencoId.compareTo("") != 0)
-                        intCencoId = Integer.parseInt(paramCencoId); 
-                    
-                    System.out.println(WEB_NAME+"[VacacionesController]"
-                        + "Calcular vacaciones (desvinculado). "
-                        + "empresa_id: " + paramEmpresa
-                        + ", cencoId: " + paramCencoId     
-                        + ", rutEmpleado: " + rutEmpleado);
-                    if (rutEmpleado != null && rutEmpleado.compareTo("-1") != 0){
-                        System.out.println(WEB_NAME+"[VacacionesController]"
-                            + "Calcular vacaciones "
-                            + "para un solo empleado desvinculado.");
-                        vacacionesBp.calculaDiasVacaciones(userConnected.getUsername(),
-                            paramEmpresa, 
-                            rutEmpleado, 
-                            parametrosSistema);
-                        DetalleAusenciaBp detAusenciaBp = new DetalleAusenciaBp(appProperties);
-                        
-                        System.out.println(WEB_NAME+"[VacacionesController]"
-                            + "Actualizar saldos de vacaciones "
-                            + "en tabla detalle_ausencia "
-                            + "(usar nueva funcion setsaldodiasvacacionesasignadas). "
-                            + "Run: "+ rutEmpleado);
-                        detAusenciaBp.actualizaSaldosVacaciones(rutEmpleado);
-                        
-                    }else{
-                        System.out.println(WEB_NAME+"[VacacionesController]"
-                            + "Calcular saldo dias de vacaciones "
-                            + "para todos los empleados DESVINCULADOS del centro de costo. "
-                            + "empresa_id: " + paramEmpresa
-                            + ", deptoId: " + paramDeptoId    
-                            + ", cencoId: " + paramCencoId);
-                        vacacionesBp.calculaDiasVacaciones(userConnected.getUsername(),
-                            paramEmpresa,   
-                            paramDeptoId, 
-                            intCencoId, 
-                            parametrosSistema, 
-                            true);
-                    }
-                    response.sendRedirect(request.getContextPath()
-                        + "/vacaciones/calculo_vacaciones_desvincula2.jsp");
             }
+//            else if (action.compareTo("calcula_saldo") == 0) {
+//                    String paramEmpresa = request.getParameter("empresa_id");
+//                    String paramDeptoId = request.getParameter("depto_id");
+//                    String paramCencoId = request.getParameter("cenco_id");
+//                    String rutEmpleado = request.getParameter("rutEmpleado");
+//                    System.out.println(WEB_NAME+"[DetalleAusenciaController]"
+//                        + "Calcular saldo dias de vacaciones. "
+//                        + "empresa_id= " + paramEmpresa
+//                        + ", depto_id= " + paramDeptoId
+//                        + ", cenco_id= " + paramCencoId
+//                        + ", rut_empleado= " + rutEmpleado);
+//                    int intCencoId=-1;
+//                    if (paramCencoId.compareTo("") != 0)
+//                        intCencoId = Integer.parseInt(paramCencoId); 
+//                    
+//                    System.out.println(WEB_NAME+"[VacacionesController]"
+//                        + "Calcular saldo dias de vacaciones. "
+//                        + "empresa_id: " + paramEmpresa
+//                        + ", cencoId: " + paramCencoId     
+//                        + ", rutEmpleado: " + rutEmpleado);
+//                    if (rutEmpleado != null && rutEmpleado.compareTo("-1") != 0){
+//                        System.out.println(WEB_NAME+"[VacacionesController]"
+//                            + "Calcular saldo dias de vacaciones "
+//                            + "para un solo empleado.");
+//                        vacacionesBp.calculaDiasVacaciones(userConnected.getUsername(),
+//                            paramEmpresa, 
+//                            rutEmpleado, 
+//                            parametrosSistema);
+//                        
+//                        DetalleAusenciaBp detAusenciaBp = new DetalleAusenciaBp(appProperties);
+//                        
+//                        System.out.println(WEB_NAME+"[VacacionesController]"
+//                            + "Actualizar saldos de vacaciones "
+//                            + "en tabla detalle_ausencia "
+//                            + "(usar nueva funcion setsaldodiasvacacionesasignadas). "
+//                            + "Run: "+ rutEmpleado);
+//                        detAusenciaBp.actualizaSaldosVacaciones(rutEmpleado);
+//                        
+//                    }else{
+//                        System.out.println(WEB_NAME+"[VacacionesController]"
+//                            + "Calcular saldo dias de vacaciones "
+//                            + "para todos los empleados del centro de costo. "
+//                            + "empresa_id: " + paramEmpresa
+//                            + ", deptoId: " + paramDeptoId    
+//                            + ", cencoId: " + paramCencoId);
+//                        vacacionesBp.calculaDiasVacaciones(userConnected.getUsername(),
+//                            paramEmpresa, 
+//                            paramDeptoId, 
+//                            intCencoId, 
+//                            parametrosSistema, 
+//                            false);
+//                    }
+//                    response.sendRedirect(request.getContextPath()
+//                        +"/vacaciones/info_vacaciones.jsp");
+//            }else 
+//            if (action.compareTo("calcula_vacaciones_desvincula2") == 0) {
+//                    String paramEmpresa = request.getParameter("empresa_id");
+//                    String paramDeptoId = request.getParameter("depto_id");
+//                    String paramCencoId = request.getParameter("cenco_id");
+//                    String rutEmpleado = request.getParameter("rutEmpleado");
+//                    System.out.println(WEB_NAME+"[DetalleAusenciaController]"
+//                        + "Calcular vacaciones para empleados desvinculados. "
+//                        + "empresa_id= " + paramEmpresa
+//                        + ", depto_id= " + paramDeptoId
+//                        + ", cenco_id= " + paramCencoId
+//                        + ", rut_empleado= " + rutEmpleado);
+//                    int intCencoId=-1;
+//                    if (paramCencoId.compareTo("") != 0)
+//                        intCencoId = Integer.parseInt(paramCencoId); 
+//                    
+//                    System.out.println(WEB_NAME+"[VacacionesController]"
+//                        + "Calcular vacaciones (desvinculado). "
+//                        + "empresa_id: " + paramEmpresa
+//                        + ", cencoId: " + paramCencoId     
+//                        + ", rutEmpleado: " + rutEmpleado);
+//                    if (rutEmpleado != null && rutEmpleado.compareTo("-1") != 0){
+//                        System.out.println(WEB_NAME+"[VacacionesController]"
+//                            + "Calcular vacaciones "
+//                            + "para un solo empleado desvinculado.");
+//                        vacacionesBp.calculaDiasVacaciones(userConnected.getUsername(),
+//                            paramEmpresa, 
+//                            rutEmpleado, 
+//                            parametrosSistema);
+//                        DetalleAusenciaBp detAusenciaBp = new DetalleAusenciaBp(appProperties);
+//                        
+//                        System.out.println(WEB_NAME+"[VacacionesController]"
+//                            + "Actualizar saldos de vacaciones "
+//                            + "en tabla detalle_ausencia "
+//                            + "(usar nueva funcion setsaldodiasvacacionesasignadas). "
+//                            + "Run: "+ rutEmpleado);
+//                        detAusenciaBp.actualizaSaldosVacaciones(rutEmpleado);
+//                        
+//                    }else{
+//                        System.out.println(WEB_NAME+"[VacacionesController]"
+//                            + "Calcular saldo dias de vacaciones "
+//                            + "para todos los empleados DESVINCULADOS del centro de costo. "
+//                            + "empresa_id: " + paramEmpresa
+//                            + ", deptoId: " + paramDeptoId    
+//                            + ", cencoId: " + paramCencoId);
+//                        vacacionesBp.calculaDiasVacaciones(userConnected.getUsername(),
+//                            paramEmpresa,   
+//                            paramDeptoId, 
+//                            intCencoId, 
+//                            parametrosSistema, 
+//                            true);
+//                    }
+//                    response.sendRedirect(request.getContextPath()
+//                        + "/vacaciones/calculo_vacaciones_desvincula2.jsp");
+//            }
             
       }
     }

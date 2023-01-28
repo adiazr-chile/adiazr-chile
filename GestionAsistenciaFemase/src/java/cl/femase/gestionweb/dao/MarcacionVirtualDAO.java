@@ -7,7 +7,7 @@ package cl.femase.gestionweb.dao;
 
 import cl.femase.gestionweb.common.DatabaseException;
 import cl.femase.gestionweb.common.Utilidades;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.MarcacionVirtualVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import java.sql.PreparedStatement;
@@ -62,8 +62,8 @@ public class MarcacionVirtualDAO extends BaseDAO{
 //    * @param _data
 //    * @return 
 //    */
-//    public MaintenanceVO insert(MarcacionVirtualVO _data){
-//        MaintenanceVO objresultado = new MaintenanceVO();
+//    public ResultCRUDVO insert(MarcacionVirtualVO _data){
+//        ResultCRUDVO objresultado = new ResultCRUDVO();
 //        int result=0;
 //        String msgError = "Error al insertar "
 //            + "registro tabla marcacion_virtual, "
@@ -201,8 +201,8 @@ public class MarcacionVirtualDAO extends BaseDAO{
     * 
     * @return 
     */
-    public MaintenanceVO delete(MarcacionVirtualVO _asignacion){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO delete(MarcacionVirtualVO _asignacion){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         int result=0;
         String msgError = "Error al eliminar "
             + "registro tabla marcacion_virtual, "
@@ -262,8 +262,8 @@ public class MarcacionVirtualDAO extends BaseDAO{
     * 
     * @return 
     */
-    public MaintenanceVO insert(MarcacionVirtualVO _asignacion){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO insert(MarcacionVirtualVO _asignacion){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         int result=0;
         String msgError = "Error al insertar "
             + "registro tabla marcacion_virtual, "

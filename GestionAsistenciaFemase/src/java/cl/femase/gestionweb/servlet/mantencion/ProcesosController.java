@@ -3,7 +3,7 @@ package cl.femase.gestionweb.servlet.mantencion;
 import cl.femase.gestionweb.servlet.BaseServlet;
 import cl.femase.gestionweb.business.ProcesosBp;
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.ProcesoFiltroVO;
 import cl.femase.gestionweb.vo.ProcesoProgramacionVO;
 import cl.femase.gestionweb.vo.ProcesoVO;
@@ -198,7 +198,7 @@ public class ProcesosController extends BaseServlet {
                         +", empresaId: "+auxdata.getEmpresaId()
                         +", idproceso: "+auxdata.getId());
                     logEvento.setEmpresaId(auxdata.getEmpresaId());
-                    MaintenanceVO doCreate = auxnegocio.insert(auxdata, logEvento);					
+                    ResultCRUDVO doCreate = auxnegocio.insert(auxdata, logEvento);					
                     listaObjetos.add(auxdata);
 
                     //Convert Java Object to Json
@@ -213,7 +213,7 @@ public class ProcesosController extends BaseServlet {
                             +", empresaId: " + auxdata.getEmpresaId()
                             +", idproceso: " + auxdata.getId());
                         logEvento.setEmpresaId(auxdata.getEmpresaId());
-                        MaintenanceVO doUpdate = auxnegocio.update(auxdata, logEvento);
+                        ResultCRUDVO doUpdate = auxnegocio.update(auxdata, logEvento);
                         listaObjetos.add(auxdata);
 
                         //Convert Java Object to Json
@@ -272,7 +272,7 @@ public class ProcesosController extends BaseServlet {
                            programacion.setCodDia(codDia);
                         }         
                         //sino se especifica el dia, se elimina toda la programacion del proceso
-                        MaintenanceVO deleteProg = auxnegocio.deleteProgramacion(programacion, logEvento);
+                        ResultCRUDVO deleteProg = auxnegocio.deleteProgramacion(programacion, logEvento);
                         if (!deleteProg.isThereError()){
                             if (codDia != -1 && horasSelected != null){
                                 System.out.println(WEB_NAME+"[ProcesosController]"

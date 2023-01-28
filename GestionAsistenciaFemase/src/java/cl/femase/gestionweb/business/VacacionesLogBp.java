@@ -5,7 +5,7 @@
 
 package cl.femase.gestionweb.business;
 
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import cl.femase.gestionweb.vo.VacacionesVO;
 import java.text.SimpleDateFormat;
@@ -61,9 +61,9 @@ public class VacacionesLogBp  extends BaseBp{
     * @param _objToInsert
     * @return 
     */
-    public MaintenanceVO insert(VacacionesVO _objToInsert){
+    public ResultCRUDVO insert(VacacionesVO _objToInsert){
         
-        MaintenanceVO insValues = vacacioneslogdao.insert(_objToInsert);
+        ResultCRUDVO insValues = vacacioneslogdao.insert(_objToInsert);
         
 //        //if (!updValues.isThereError()){
 //            String msgFinal = insValues.getMsg();

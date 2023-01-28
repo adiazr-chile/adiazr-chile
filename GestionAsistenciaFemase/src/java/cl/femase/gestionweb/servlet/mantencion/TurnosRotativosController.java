@@ -9,7 +9,7 @@ import cl.femase.gestionweb.vo.DetalleFechasTurnoRotativoVO;
 import cl.femase.gestionweb.vo.EmpleadoVO;
 import cl.femase.gestionweb.vo.FechaVO;
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import cl.femase.gestionweb.vo.TurnoRotativoDetalleVO;
 import cl.femase.gestionweb.vo.TurnoRotativoVO;
@@ -239,7 +239,7 @@ public class TurnosRotativosController extends BaseServlet {
                 }   
             }else if (action.compareTo("create") == 0) {
                     System.out.println(WEB_NAME+"Mantenedor - Turnos Rotativos- Insertar Turno...");
-                    MaintenanceVO doCreate = turnoRotativoBp.insert(turnoRotativoVO, resultado);					
+                    ResultCRUDVO doCreate = turnoRotativoBp.insert(turnoRotativoVO, resultado);					
                     
                     //enviar correo informando el evento de creacion de marca
                     
@@ -255,7 +255,7 @@ public class TurnosRotativosController extends BaseServlet {
                         + "Actualizar Turno Rotativo ID: "+ turnoRotativoVO.getId());
                     try{
                         
-                        MaintenanceVO doUpdate = turnoRotativoBp.update(turnoRotativoVO, resultado);
+                        ResultCRUDVO doUpdate = turnoRotativoBp.update(turnoRotativoVO, resultado);
                         if (turnoRotativoVO.getAplicarTodos().compareTo("S") == 0){
                             turnoRotativoBp.updateTodos(turnoRotativoVO);
                         }
@@ -450,7 +450,7 @@ public class TurnosRotativosController extends BaseServlet {
 //                    try{
 //                       // get info del turno
 //                        TurnoRotativoVO detalleTurno = turnoRotativoBp.getTurno(idTurno);
-////                        MaintenanceVO doUpdate = auxnegocio.update(auxdata, resultado);
+////                        ResultCRUDVO doUpdate = auxnegocio.update(auxdata, resultado);
 ////                        String listData="{\"Result\":\"OK\"}";
 ////                        response.getWriter().print(listData);
 //                        request.setAttribute("turno_selected", detalleTurno);
@@ -467,7 +467,7 @@ public class TurnosRotativosController extends BaseServlet {
 //                    try{
 //                       // get info del turno
 //                        TurnoRotativoVO detalleTurno = turnoRotativoBp.getTurno(idTurno);
-////                        MaintenanceVO doUpdate = auxnegocio.update(auxdata, resultado);
+////                        ResultCRUDVO doUpdate = auxnegocio.update(auxdata, resultado);
 ////                        String listData="{\"Result\":\"OK\"}";
 ////                        response.getWriter().print(listData);
 //                        request.setAttribute("turno_selected", detalleTurno);

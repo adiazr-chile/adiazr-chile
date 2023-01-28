@@ -6,7 +6,7 @@
 package cl.femase.gestionweb.dao;
 
 import cl.femase.gestionweb.common.DatabaseException;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.NotificacionVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import java.sql.PreparedStatement;
@@ -30,8 +30,8 @@ public class NotificacionDAO extends BaseDAO{
     * @param _data
     * @return 
     */
-    public MaintenanceVO insert(NotificacionVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO insert(NotificacionVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         int result=0;
         String msgError = "Error al insertar "
             + "notificacion. "

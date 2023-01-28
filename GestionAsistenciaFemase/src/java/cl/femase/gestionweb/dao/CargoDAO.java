@@ -6,7 +6,7 @@
 package cl.femase.gestionweb.dao;
 
 import cl.femase.gestionweb.common.DatabaseException;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.CargoVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import java.sql.PreparedStatement;
@@ -90,8 +90,8 @@ public class CargoDAO extends BaseDAO{
     * @param _data
     * @return 
     */
-    public MaintenanceVO update(CargoVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO update(CargoVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         PreparedStatement psupdate = null;
         int result=0;
         String msgError = "Error al actualizar "
@@ -154,8 +154,8 @@ public class CargoDAO extends BaseDAO{
      * @param _data
      * @return 
      */
-    public MaintenanceVO insert(CargoVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO insert(CargoVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         int result=0;
         String msgError = "Error al insertar "
             + "Cargo. "

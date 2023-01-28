@@ -8,7 +8,6 @@ package cl.femase.gestionweb.servlet.cargamasiva;
 import cl.femase.gestionweb.servlet.BaseServlet;
 import cl.femase.gestionweb.business.EmpleadosBp;
 import cl.femase.gestionweb.common.ClientInfo;
-import cl.femase.gestionweb.common.Constantes;
 import cl.femase.gestionweb.dao.MaintenanceEventsDAO;
 import cl.femase.gestionweb.vo.CentroCostoVO;
 import cl.femase.gestionweb.vo.DepartamentoVO;

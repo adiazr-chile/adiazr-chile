@@ -14,7 +14,7 @@ import cl.femase.gestionweb.dao.ProcesosDAO;
 import cl.femase.gestionweb.vo.CentroCostoVO;
 import cl.femase.gestionweb.vo.DepartamentoVO;
 import cl.femase.gestionweb.vo.EmpleadoVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.ProcesoEjecucionVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import cl.femase.gestionweb.vo.UsuarioVO;
@@ -101,7 +101,7 @@ public class CalculaAsistenciaFMCJob extends BaseJobs implements Job {
                 for (int j = 0; j < cencos.size(); j++) {
                     CentroCostoVO itCenco = cencos.get(j);
 
-                    MaintenanceVO resultadoCalculo = new MaintenanceVO();
+                    ResultCRUDVO resultadoCalculo = new ResultCRUDVO();
                     if (itCenco.getId() != -1){
                         System.out.println(WEB_NAME+"[GestionFemase."
                             + "CalculaAsistenciaFMCJob]INICIO Calculo para Cenco: " + itCenco.getId()

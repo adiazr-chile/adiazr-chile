@@ -3,7 +3,7 @@ package cl.femase.gestionweb.servlet.mantencion;
 import cl.femase.gestionweb.servlet.BaseServlet;
 import cl.femase.gestionweb.business.RegionBp;
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.RegionVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import cl.femase.gestionweb.vo.UsuarioVO;
@@ -166,7 +166,7 @@ public class RegionesController extends BaseServlet {
                 }   
             }else if (action.compareTo("create") == 0) {
                     System.out.println(WEB_NAME+"[RegionesController]Insertar Region.");
-                    MaintenanceVO doCreate = regionbp.insert(auxdata, resultado);					
+                    ResultCRUDVO doCreate = regionbp.insert(auxdata, resultado);					
                     listaObjetos.add(auxdata);
 
                     //Convert Java Object to Json
@@ -177,7 +177,7 @@ public class RegionesController extends BaseServlet {
             }else if (action.compareTo("update") == 0) {  
                     System.out.println(WEB_NAME+"[RegionesController]Modificar region...");
                     try{
-                        MaintenanceVO doUpdate = regionbp.update(auxdata, resultado);
+                        ResultCRUDVO doUpdate = regionbp.update(auxdata, resultado);
                         listaObjetos.add(auxdata);
 
                         //Convert Java Object to Json

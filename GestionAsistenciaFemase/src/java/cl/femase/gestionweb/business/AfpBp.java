@@ -7,7 +7,7 @@ package cl.femase.gestionweb.business;
 
 import cl.femase.gestionweb.vo.AfpVO;
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import java.util.List;
 
@@ -46,9 +46,9 @@ public class AfpBp  extends BaseBp{
     * @param _eventdata
     * @return 
     */
-    public MaintenanceVO update(AfpVO _objectToUpdate, 
+    public ResultCRUDVO update(AfpVO _objectToUpdate, 
             MaintenanceEventVO _eventdata){
-        MaintenanceVO updValues = afpService.update(_objectToUpdate);
+        ResultCRUDVO updValues = afpService.update(_objectToUpdate);
         
         //if (!updValues.isThereError()){
             String msgFinal = updValues.getMsg();
@@ -67,10 +67,10 @@ public class AfpBp  extends BaseBp{
     * @param _eventdata
     * @return 
     */
-    public MaintenanceVO insert(AfpVO _objToInsert, 
+    public ResultCRUDVO insert(AfpVO _objToInsert, 
             MaintenanceEventVO _eventdata){
         
-        MaintenanceVO insValues = afpService.insert(_objToInsert);
+        ResultCRUDVO insValues = afpService.insert(_objToInsert);
         
         //if (!updValues.isThereError()){
             String msgFinal = insValues.getMsg();

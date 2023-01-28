@@ -3,7 +3,7 @@ package cl.femase.gestionweb.servlet.mantencion;
 import cl.femase.gestionweb.servlet.BaseServlet;
 import cl.femase.gestionweb.business.OrganizacionEmpresaBp;
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.OrganizacionEmpresaVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import cl.femase.gestionweb.vo.UsuarioVO;
@@ -193,7 +193,7 @@ public class OrganizacionEmpresaController extends BaseServlet {
                 }   
             }else if (action.compareTo("create") == 0) {
                     System.out.println(WEB_NAME+"Mantenedor - Organizacion - Insertar...");
-                    MaintenanceVO doCreate = auxnegocio.insert(auxdata, resultado);					
+                    ResultCRUDVO doCreate = auxnegocio.insert(auxdata, resultado);					
                     listaObjetos.add(auxdata);
 
                     //Convert Java Object to Json

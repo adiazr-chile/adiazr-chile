@@ -4,7 +4,7 @@ import cl.femase.gestionweb.servlet.BaseServlet;
 import cl.femase.gestionweb.dao.MaintenanceEventsDAO;
 import cl.femase.gestionweb.dao.ProveedorCorreoDAO;
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.ProveedorCorreoVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import cl.femase.gestionweb.vo.UsuarioVO;
@@ -167,7 +167,7 @@ public class ProveedorCorreoController extends BaseServlet {
             }else if (action.compareTo("create") == 0) {
                         System.out.println(WEB_NAME+"[ProveedorCorreoController."
                             + "processRequest]Insertar proveedor de correo...");
-                        MaintenanceVO doCreate = dao.insert(proveedor);
+                        ResultCRUDVO doCreate = dao.insert(proveedor);
                         
                         String msgFinal = doCreate.getMsg();
                         doCreate.setMsg(msgFinal);
@@ -186,7 +186,7 @@ public class ProveedorCorreoController extends BaseServlet {
                         System.out.println(WEB_NAME+"[ProveedorCorreoController."
                             + "processRequest]"
                             + "Modificar proveedor de correo, code = " + key);
-                        MaintenanceVO doUpdate = dao.update(proveedor);
+                        ResultCRUDVO doUpdate = dao.update(proveedor);
                         
                         proveedor = dao.getProveedorByCode(key);
                         
@@ -209,7 +209,7 @@ public class ProveedorCorreoController extends BaseServlet {
                         + "processRequest]Eliminar proveedor de correo, "
                         + "code: " + proveedor.getCode());
                     try{
-                        MaintenanceVO doDelete = dao.delete(proveedor.getCode());
+                        ResultCRUDVO doDelete = dao.delete(proveedor.getCode());
                         
                         String msgFinal = doDelete.getMsg();
                         doDelete.setMsg(msgFinal);

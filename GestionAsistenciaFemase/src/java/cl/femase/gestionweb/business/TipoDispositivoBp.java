@@ -6,7 +6,7 @@
 package cl.femase.gestionweb.business;
 
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.TipoDispositivoVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import java.util.List;
@@ -40,9 +40,9 @@ public class TipoDispositivoBp  extends BaseBp{
         return lista;
     }
 
-    public MaintenanceVO update(TipoDispositivoVO _objToUpdate, 
+    public ResultCRUDVO update(TipoDispositivoVO _objToUpdate, 
             MaintenanceEventVO _eventdata){
-        MaintenanceVO updValues = tiposDispositivosService.update(_objToUpdate);
+        ResultCRUDVO updValues = tiposDispositivosService.update(_objToUpdate);
         
         //if (!updValues.isThereError()){
             String msgFinal = updValues.getMsg();
@@ -55,9 +55,9 @@ public class TipoDispositivoBp  extends BaseBp{
         return updValues;
     }
     
-    public MaintenanceVO delete(TipoDispositivoVO _objToDelete, 
+    public ResultCRUDVO delete(TipoDispositivoVO _objToDelete, 
             MaintenanceEventVO _eventdata){
-        MaintenanceVO updValues = tiposDispositivosService.delete(_objToDelete);
+        ResultCRUDVO updValues = tiposDispositivosService.delete(_objToDelete);
         
         //if (!updValues.isThereError()){
             String msgFinal = updValues.getMsg();
@@ -70,10 +70,10 @@ public class TipoDispositivoBp  extends BaseBp{
         return updValues;
     }    
     
-    public MaintenanceVO insert(TipoDispositivoVO _objToInsert, 
+    public ResultCRUDVO insert(TipoDispositivoVO _objToInsert, 
             MaintenanceEventVO _eventdata){
         
-        MaintenanceVO insValues = tiposDispositivosService.insert(_objToInsert);
+        ResultCRUDVO insValues = tiposDispositivosService.insert(_objToInsert);
         
         //if (!updValues.isThereError()){
             String msgFinal = insValues.getMsg();

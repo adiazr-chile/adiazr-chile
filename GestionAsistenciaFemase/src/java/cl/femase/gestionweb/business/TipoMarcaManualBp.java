@@ -6,7 +6,7 @@
 package cl.femase.gestionweb.business;
 
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.TipoMarcaManualVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import java.util.HashMap;
@@ -53,10 +53,10 @@ public class TipoMarcaManualBp  extends BaseBp{
         return tpmanualDao.getTiposCount(_nombre, _vigente);
     }
     
-    public MaintenanceVO insert(TipoMarcaManualVO _objToInsert, 
+    public ResultCRUDVO insert(TipoMarcaManualVO _objToInsert, 
             MaintenanceEventVO _eventdata){
         
-        MaintenanceVO insValues = tpmanualDao.insert(_objToInsert);
+        ResultCRUDVO insValues = tpmanualDao.insert(_objToInsert);
         
         //if (!updValues.isThereError()){
             String msgFinal = insValues.getMsg();
@@ -69,9 +69,9 @@ public class TipoMarcaManualBp  extends BaseBp{
         return insValues;
     }
     
-    public MaintenanceVO update(TipoMarcaManualVO _objectToUpdate, 
+    public ResultCRUDVO update(TipoMarcaManualVO _objectToUpdate, 
             MaintenanceEventVO _eventdata){
-        MaintenanceVO updValues = tpmanualDao.update(_objectToUpdate);
+        ResultCRUDVO updValues = tpmanualDao.update(_objectToUpdate);
         
         //if (!updValues.isThereError()){
             String msgFinal = updValues.getMsg();

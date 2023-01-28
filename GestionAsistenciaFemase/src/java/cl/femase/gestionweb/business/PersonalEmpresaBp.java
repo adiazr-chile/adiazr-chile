@@ -6,7 +6,7 @@
 package cl.femase.gestionweb.business;
 
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.PersonalEmpresaVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import java.util.List;
@@ -50,9 +50,9 @@ public class PersonalEmpresaBp  extends BaseBp{
         return lista;
     }
 
-    public MaintenanceVO delete(PersonalEmpresaVO _personalToUpdate, 
+    public ResultCRUDVO delete(PersonalEmpresaVO _personalToUpdate, 
             MaintenanceEventVO _eventdata){
-        MaintenanceVO updValues = personaEmpresaService.delete(_personalToUpdate);
+        ResultCRUDVO updValues = personaEmpresaService.delete(_personalToUpdate);
         
         //if (!updValues.isThereError()){
             String msgFinal = updValues.getMsg();
@@ -65,9 +65,9 @@ public class PersonalEmpresaBp  extends BaseBp{
         return updValues;
     }
     
-//    public MaintenanceVO delete(PersonalEmpresaVO _personalToDelete, 
+//    public ResultCRUDVO delete(PersonalEmpresaVO _personalToDelete, 
 //            MaintenanceEventVO _eventdata){
-//        MaintenanceVO updValues = personaEmpresaService.delete(_personalToDelete);
+//        ResultCRUDVO updValues = personaEmpresaService.delete(_personalToDelete);
 //        
 //        //if (!updValues.isThereError()){
 //            String msgFinal = updValues.getMsg();
@@ -80,10 +80,10 @@ public class PersonalEmpresaBp  extends BaseBp{
 //        return updValues;
 //    }    
     
-    public MaintenanceVO insert(PersonalEmpresaVO _personalToInsert, 
+    public ResultCRUDVO insert(PersonalEmpresaVO _personalToInsert, 
             MaintenanceEventVO _eventdata){
         
-        MaintenanceVO insValues = personaEmpresaService.insert(_personalToInsert);
+        ResultCRUDVO insValues = personaEmpresaService.insert(_personalToInsert);
         
         //if (!updValues.isThereError()){
             String msgFinal = insValues.getMsg();
@@ -97,9 +97,9 @@ public class PersonalEmpresaBp  extends BaseBp{
     }
     
     /*
-    public MaintenanceVO delete(ContractRelationVO _relationToDelete, 
+    public ResultCRUDVO delete(ContractRelationVO _relationToDelete, 
             MaintenanceEventVO _eventdata){
-        MaintenanceVO insValues = contractRelService.delete(_relationToDelete);
+        ResultCRUDVO insValues = contractRelService.delete(_relationToDelete);
         
         //if (!updValues.isThereError()){
             String msgFinal = insValues.getMsg();

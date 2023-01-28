@@ -8,7 +8,7 @@ package cl.femase.gestionweb.business;
 import cl.femase.gestionweb.vo.CentroCostoVO;
 import cl.femase.gestionweb.vo.DepartamentoVO;
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.OrganizacionEmpresaVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import java.util.List;
@@ -75,10 +75,10 @@ public class OrganizacionEmpresaBp  extends BaseBp{
         return organizacionService.getOrganizacionCount(_empresaId, _deptoId, _cencoId);
     }
     
-     public MaintenanceVO insert(OrganizacionEmpresaVO _objToInsert, 
+     public ResultCRUDVO insert(OrganizacionEmpresaVO _objToInsert, 
             MaintenanceEventVO _eventdata){
         
-        MaintenanceVO insValues = organizacionService.insert(_objToInsert);
+        ResultCRUDVO insValues = organizacionService.insert(_objToInsert);
         
         //if (!updValues.isThereError()){
             String msgFinal = insValues.getMsg();
@@ -91,10 +91,10 @@ public class OrganizacionEmpresaBp  extends BaseBp{
         return insValues;
     }
     
-     public MaintenanceVO delete(OrganizacionEmpresaVO _objToDelete, 
+     public ResultCRUDVO delete(OrganizacionEmpresaVO _objToDelete, 
             MaintenanceEventVO _eventdata){
         
-        MaintenanceVO deleteValues = organizacionService.delete(_objToDelete);
+        ResultCRUDVO deleteValues = organizacionService.delete(_objToDelete);
         
         //if (!updValues.isThereError()){
             String msgFinal = deleteValues.getMsg();

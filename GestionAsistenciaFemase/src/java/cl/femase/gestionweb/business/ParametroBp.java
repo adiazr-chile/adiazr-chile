@@ -6,7 +6,7 @@
 package cl.femase.gestionweb.business;
 
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.ParametroVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import java.util.HashMap;
@@ -82,9 +82,9 @@ public class ParametroBp  extends BaseBp{
     * @param _eventdata
     * @return 
     */
-    public MaintenanceVO update(ParametroVO _objectToUpdate, 
+    public ResultCRUDVO update(ParametroVO _objectToUpdate, 
             MaintenanceEventVO _eventdata){
-        MaintenanceVO updValues = parametrosService.update(_objectToUpdate);
+        ResultCRUDVO updValues = parametrosService.update(_objectToUpdate);
         
         //if (!updValues.isThereError()){
             String msgFinal = updValues.getMsg();
@@ -103,10 +103,10 @@ public class ParametroBp  extends BaseBp{
     * @param _eventdata
     * @return 
     */
-    public MaintenanceVO insert(ParametroVO _objToInsert, 
+    public ResultCRUDVO insert(ParametroVO _objToInsert, 
             MaintenanceEventVO _eventdata){
         
-        MaintenanceVO insValues = parametrosService.insert(_objToInsert);
+        ResultCRUDVO insValues = parametrosService.insert(_objToInsert);
         
         //if (!updValues.isThereError()){
             String msgFinal = insValues.getMsg();

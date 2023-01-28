@@ -7,7 +7,7 @@ package cl.femase.gestionweb.jobs;
         
 import cl.femase.gestionweb.dao.ProcesosDAO;
 import cl.femase.gestionweb.dao.VacacionesDAO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.ProcesoEjecucionVO;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -55,7 +55,7 @@ public class CargaVacacionesFMCJob extends BaseJobs implements Job {
             + "CargaVacacionesFMCJob]Inicia carga de registros faltantes en tabla vacaciones."
             + "Empresa:" + empresaId+", id_proceso= " + procesoId);
        
-        MaintenanceVO resultado = daoVacaciones.insertVacacionesFaltantes(empresaId);
+        ResultCRUDVO resultado = daoVacaciones.insertVacacionesFaltantes(empresaId);
         
         String result="Carga de registros faltantes de vacaciones= OK. " + resultado.getMsg();
         if (resultado.isThereError()) result="Error al Carga de registros faltantes de vacaciones";

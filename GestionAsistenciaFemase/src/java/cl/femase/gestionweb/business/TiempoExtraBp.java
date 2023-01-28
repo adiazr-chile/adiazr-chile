@@ -6,7 +6,7 @@
 package cl.femase.gestionweb.business;
 
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import cl.femase.gestionweb.vo.TiempoExtraVO;
 import java.util.HashMap;
@@ -44,9 +44,9 @@ public class TiempoExtraBp  extends BaseBp{
         return data;
     }
     
-    public MaintenanceVO update(TiempoExtraVO _objectToUpdate, 
+    public ResultCRUDVO update(TiempoExtraVO _objectToUpdate, 
             MaintenanceEventVO _eventdata){
-        MaintenanceVO updValues = texService.update(_objectToUpdate);
+        ResultCRUDVO updValues = texService.update(_objectToUpdate);
         
         //if (!updValues.isThereError()){
             String msgFinal = updValues.getMsg();
@@ -59,10 +59,10 @@ public class TiempoExtraBp  extends BaseBp{
         return updValues;
     }
     
-    public MaintenanceVO insert(TiempoExtraVO _objToInsert, 
+    public ResultCRUDVO insert(TiempoExtraVO _objToInsert, 
             MaintenanceEventVO _eventdata){
         
-        MaintenanceVO insValues = texService.insert(_objToInsert);
+        ResultCRUDVO insValues = texService.insert(_objToInsert);
         
         //if (!updValues.isThereError()){
             String msgFinal = insValues.getMsg();
@@ -75,10 +75,10 @@ public class TiempoExtraBp  extends BaseBp{
         return insValues;
     }
     
-    public MaintenanceVO delete(TiempoExtraVO _objToInsert, 
+    public ResultCRUDVO delete(TiempoExtraVO _objToInsert, 
             MaintenanceEventVO _eventdata){
         
-        MaintenanceVO insValues = texService.delete(_objToInsert);
+        ResultCRUDVO insValues = texService.delete(_objToInsert);
         
         //if (!updValues.isThereError()){
             String msgFinal = insValues.getMsg();

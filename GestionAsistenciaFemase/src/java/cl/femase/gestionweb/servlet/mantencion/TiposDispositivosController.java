@@ -3,7 +3,7 @@ package cl.femase.gestionweb.servlet.mantencion;
 import cl.femase.gestionweb.servlet.BaseServlet;
 import cl.femase.gestionweb.business.TipoDispositivoBp;
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.TipoDispositivoVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import cl.femase.gestionweb.vo.UsuarioVO;
@@ -161,7 +161,7 @@ public class TiposDispositivosController extends BaseServlet {
             }else if (action.compareTo("create") == 0) {
                     System.out.println(WEB_NAME+"[TiposDispositivosController]"
                         + "Mantenedor - Tipos Dispositivos - Insertar...");
-                    MaintenanceVO doCreate = auxnegocio.insert(auxdata, resultado);					
+                    ResultCRUDVO doCreate = auxnegocio.insert(auxdata, resultado);					
                     listaObjetos.add(auxdata);
 
                     //Convert Java Object to Json
@@ -173,7 +173,7 @@ public class TiposDispositivosController extends BaseServlet {
                     System.out.println(WEB_NAME+"[TiposDispositivosController]"
                         + "Mantenedor - Tipos Dispositivos - Actualizar...");
                     try{
-                        MaintenanceVO doUpdate = auxnegocio.update(auxdata, resultado);
+                        ResultCRUDVO doUpdate = auxnegocio.update(auxdata, resultado);
                         listaObjetos.add(auxdata);
 
                         //Convert Java Object to Json
@@ -191,7 +191,7 @@ public class TiposDispositivosController extends BaseServlet {
                         + "Eliminar tipo ID= "+auxdata.getId());
                     
                     try{
-                        MaintenanceVO doUpdate = auxnegocio.delete(auxdata, resultado);
+                        ResultCRUDVO doUpdate = auxnegocio.delete(auxdata, resultado);
                         String listData="{\"Result\":\"OK\"}";
                         response.getWriter().print(listData);
                         

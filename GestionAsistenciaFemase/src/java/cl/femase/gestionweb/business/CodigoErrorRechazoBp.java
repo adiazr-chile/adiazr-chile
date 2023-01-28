@@ -7,7 +7,7 @@ package cl.femase.gestionweb.business;
 
 import cl.femase.gestionweb.dao.CodigoErrorRechazoDAO;
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.CodigoErrorRechazoVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import java.util.List;
@@ -58,9 +58,9 @@ public class CodigoErrorRechazoBp  extends BaseBp{
     * @param _eventdata
     * @return 
     */
-    public MaintenanceVO update(CodigoErrorRechazoVO _codigoToUpdate, 
+    public ResultCRUDVO update(CodigoErrorRechazoVO _codigoToUpdate, 
             MaintenanceEventVO _eventdata){
-        MaintenanceVO updValues = codErrorRechazoDao.update(_codigoToUpdate);
+        ResultCRUDVO updValues = codErrorRechazoDao.update(_codigoToUpdate);
         
         //if (!updValues.isThereError()){
             String msgFinal = updValues.getMsg();
@@ -79,9 +79,9 @@ public class CodigoErrorRechazoBp  extends BaseBp{
     * @param _eventdata
     * @return 
     */
-    public MaintenanceVO delete(CodigoErrorRechazoVO _codigoToDelete, 
+    public ResultCRUDVO delete(CodigoErrorRechazoVO _codigoToDelete, 
             MaintenanceEventVO _eventdata){
-        MaintenanceVO updValues = codErrorRechazoDao.delete(_codigoToDelete);
+        ResultCRUDVO updValues = codErrorRechazoDao.delete(_codigoToDelete);
         
         //if (!updValues.isThereError()){
             String msgFinal = updValues.getMsg();
@@ -100,10 +100,10 @@ public class CodigoErrorRechazoBp  extends BaseBp{
     * @param _eventdata
     * @return 
     */
-    public MaintenanceVO insert(CodigoErrorRechazoVO _codigoToInsert, 
+    public ResultCRUDVO insert(CodigoErrorRechazoVO _codigoToInsert, 
             MaintenanceEventVO _eventdata){
         
-        MaintenanceVO insValues = codErrorRechazoDao.insert(_codigoToInsert);
+        ResultCRUDVO insValues = codErrorRechazoDao.insert(_codigoToInsert);
         
         //if (!updValues.isThereError()){
             String msgFinal = insValues.getMsg();

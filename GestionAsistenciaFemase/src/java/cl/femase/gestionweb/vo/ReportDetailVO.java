@@ -66,8 +66,6 @@ public class ReportDetailVO {
         this.descripcion = descripcion;
     }
     
-    
-    
     public String getAsistencia() {
         return asistencia;
     }
@@ -140,6 +138,11 @@ public class ReportDetailVO {
 
     public void setHorasTrabajadas(String horasTrabajadas) {
         this.horasTrabajadas = horasTrabajadas;
+    }
+
+    @Override
+    public String toString() {
+        return "ReportDetailVO{" + "fecha=" + fecha + ", labelTurno=" + labelTurno + ", horasTrabajadas=" + horasTrabajadas + ", horaEntrada=" + horaEntrada + ", horaSalida=" + horaSalida + ", presencia=" + presencia + ", horasExtras=" + horasExtras + ", asistencia=" + asistencia + ", justificacion=" + justificacion + ", horario=" + horario + ", fechaAsignacionTurno=" + fechaAsignacionTurno + ", nuevoHorario=" + nuevoHorario + ", descripcion=" + descripcion + ", observacion=" + observacion + '}';
     }
     
     

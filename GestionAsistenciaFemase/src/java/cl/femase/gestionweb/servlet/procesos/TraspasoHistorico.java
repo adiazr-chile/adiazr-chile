@@ -13,7 +13,7 @@ import cl.femase.gestionweb.servlet.BaseServlet;
 import cl.femase.gestionweb.vo.CentroCostoVO;
 import cl.femase.gestionweb.vo.DepartamentoVO;
 import cl.femase.gestionweb.vo.EmpleadoVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import cl.femase.gestionweb.vo.UsuarioVO;
 import java.io.IOException;
@@ -92,9 +92,9 @@ public class TraspasoHistorico extends BaseServlet {
             + "servlet.TraspasoHistorico.processRequest]"
             + "cadenaRuts: " + cadenaRuts);
         
-        HashMap<String, MaintenanceVO> hashFilasAfectadas = new HashMap<>();
+        HashMap<String, ResultCRUDVO> hashFilasAfectadas = new HashMap<>();
         int affectedRows = 0;
-        MaintenanceVO resultado = new MaintenanceVO();
+        ResultCRUDVO resultado = new ResultCRUDVO();
         System.out.println(WEB_NAME+"[GestionFemase."
             + "servlet.TraspasoHistorico.processRequest]"
             + "Obtener num registros antes de realizar el traspaso historico.");

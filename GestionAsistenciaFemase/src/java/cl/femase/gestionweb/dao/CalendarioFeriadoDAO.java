@@ -6,7 +6,7 @@
 package cl.femase.gestionweb.dao;
 
 import cl.femase.gestionweb.common.DatabaseException;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.CalendarioFeriadoVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import java.sql.PreparedStatement;
@@ -47,8 +47,8 @@ public class CalendarioFeriadoDAO extends BaseDAO{
      * @param _data
      * @return 
      */
-    public MaintenanceVO update(CalendarioFeriadoVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO update(CalendarioFeriadoVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         PreparedStatement psupdate = null;
         int result=0;
         //llave para realizar el update
@@ -147,8 +147,8 @@ public class CalendarioFeriadoDAO extends BaseDAO{
      * @param _data
      * @return 
      */
-    public MaintenanceVO insert(CalendarioFeriadoVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO insert(CalendarioFeriadoVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         int result=0;
         String msgError = "Error al insertar "
             + "CalendarioFeriado, "
@@ -241,8 +241,8 @@ public class CalendarioFeriadoDAO extends BaseDAO{
     * 
     * @return 
     */
-    public MaintenanceVO delete(String _rowKey){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO delete(String _rowKey){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         int result=0;
         
         //llave para realizar el delete

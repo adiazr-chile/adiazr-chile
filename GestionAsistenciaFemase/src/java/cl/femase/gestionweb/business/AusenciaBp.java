@@ -6,7 +6,7 @@
 package cl.femase.gestionweb.business;
 
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.AusenciaVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import java.util.HashMap;
@@ -71,9 +71,9 @@ public class AusenciaBp  extends BaseBp{
         return ausenciasService.getAusencias();
     }
 
-    public MaintenanceVO update(AusenciaVO _ausenciaToUpdate, 
+    public ResultCRUDVO update(AusenciaVO _ausenciaToUpdate, 
             MaintenanceEventVO _eventdata){
-        MaintenanceVO updValues = ausenciasService.update(_ausenciaToUpdate);
+        ResultCRUDVO updValues = ausenciasService.update(_ausenciaToUpdate);
         
         //if (!updValues.isThereError()){
             String msgFinal = updValues.getMsg();
@@ -86,10 +86,10 @@ public class AusenciaBp  extends BaseBp{
         return updValues;
     }
     
-    public MaintenanceVO insert(AusenciaVO _ausenciaToInsert, 
+    public ResultCRUDVO insert(AusenciaVO _ausenciaToInsert, 
             MaintenanceEventVO _eventdata){
         
-        MaintenanceVO insValues = ausenciasService.insert(_ausenciaToInsert);
+        ResultCRUDVO insValues = ausenciasService.insert(_ausenciaToInsert);
         
         //if (!updValues.isThereError()){
             String msgFinal = insValues.getMsg();
@@ -103,9 +103,9 @@ public class AusenciaBp  extends BaseBp{
     }
     
     /*
-    public MaintenanceVO delete(ContractRelationVO _relationToDelete, 
+    public ResultCRUDVO delete(ContractRelationVO _relationToDelete, 
             MaintenanceEventVO _eventdata){
-        MaintenanceVO insValues = contractRelService.delete(_relationToDelete);
+        ResultCRUDVO insValues = contractRelService.delete(_relationToDelete);
         
         //if (!updValues.isThereError()){
             String msgFinal = insValues.getMsg();

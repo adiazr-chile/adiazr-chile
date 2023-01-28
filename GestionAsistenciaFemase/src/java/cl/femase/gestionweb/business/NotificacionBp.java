@@ -6,7 +6,7 @@
 package cl.femase.gestionweb.business;
 
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.NotificacionVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import java.util.List;
@@ -31,10 +31,10 @@ public class NotificacionBp  extends BaseBp{
         notificacionService = new cl.femase.gestionweb.dao.NotificacionDAO(this.props);
     }
             
-    public MaintenanceVO insert(NotificacionVO _objToInsert, 
+    public ResultCRUDVO insert(NotificacionVO _objToInsert, 
             MaintenanceEventVO _eventdata){
         
-        MaintenanceVO insValues = notificacionService.insert(_objToInsert);
+        ResultCRUDVO insValues = notificacionService.insert(_objToInsert);
         
         //if (!updValues.isThereError()){
             String msgFinal = insValues.getMsg();

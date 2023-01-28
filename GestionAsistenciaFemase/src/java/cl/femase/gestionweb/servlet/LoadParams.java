@@ -136,6 +136,8 @@ public class LoadParams extends BaseServlet {
         appProperties.setDbPoolName(m_properties.getKeyValue("dbpoolname"));
         appProperties.setUploadsPath(m_properties.getKeyValue("uploadsPath"));
         appProperties.setReportesPath(m_properties.getKeyValue("reportesPath"));
+        appProperties.setFreemarkerTemplatesPath(m_properties.getKeyValue("freemarkerTemplatesPath"));
+        
         System.out.println(WEB_NAME+"[GestionFemase.LoadParams.init]"
             + "reportesPath= "+appProperties.getReportesPath()
             + ",uploadsPath= "+appProperties.getUploadsPath()

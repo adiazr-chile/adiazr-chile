@@ -7,7 +7,7 @@ package cl.femase.gestionweb.business;
 
 import cl.femase.gestionweb.vo.DepartamentoVO;
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import cl.femase.gestionweb.vo.UsuarioVO;
 import java.util.List;
@@ -60,9 +60,9 @@ public class DepartamentoBp  extends BaseBp{
         return lista;
     }
 
-    public MaintenanceVO update(DepartamentoVO _accesoToUpdate, 
+    public ResultCRUDVO update(DepartamentoVO _accesoToUpdate, 
             MaintenanceEventVO _eventdata){
-        MaintenanceVO updValues = deptosDao.update(_accesoToUpdate);
+        ResultCRUDVO updValues = deptosDao.update(_accesoToUpdate);
         
         //if (!updValues.isThereError()){
             String msgFinal = updValues.getMsg();
@@ -75,9 +75,9 @@ public class DepartamentoBp  extends BaseBp{
         return updValues;
     }
     
-    public MaintenanceVO delete(DepartamentoVO _objToDelete, 
+    public ResultCRUDVO delete(DepartamentoVO _objToDelete, 
             MaintenanceEventVO _eventdata){
-        MaintenanceVO updValues = deptosDao.delete(_objToDelete);
+        ResultCRUDVO updValues = deptosDao.delete(_objToDelete);
         
         //if (!updValues.isThereError()){
             String msgFinal = updValues.getMsg();
@@ -90,10 +90,10 @@ public class DepartamentoBp  extends BaseBp{
         return updValues;
     }    
     
-    public MaintenanceVO insert(DepartamentoVO _objToInsert, 
+    public ResultCRUDVO insert(DepartamentoVO _objToInsert, 
             MaintenanceEventVO _eventdata){
         
-        MaintenanceVO insValues = deptosDao.insert(_objToInsert);
+        ResultCRUDVO insValues = deptosDao.insert(_objToInsert);
         
         //if (!updValues.isThereError()){
             String msgFinal = insValues.getMsg();

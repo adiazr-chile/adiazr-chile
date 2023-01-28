@@ -6,7 +6,7 @@ import cl.femase.gestionweb.servlet.BaseServlet;
 import cl.femase.gestionweb.dao.DispositivoMovilDAO;
 import cl.femase.gestionweb.dao.MaintenanceEventsDAO;
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.DispositivoMovilVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import cl.femase.gestionweb.vo.UsuarioVO;
@@ -235,7 +235,7 @@ public class DispositivoMovilController extends BaseServlet {
                         resultado.setDeptoId(pDeptoId);
                         resultado.setCencoId(pCencoId);
                             
-                        MaintenanceVO updValues = dao.update(device);
+                        ResultCRUDVO updValues = dao.update(device);
                         daoDispositivo.updateEstadoDispositivo(device.getId(), device.getEstado());
                         
                         /** Refrescar lista de dispositivos en sesion */

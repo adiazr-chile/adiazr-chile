@@ -12,7 +12,7 @@ import cl.femase.gestionweb.vo.DetalleTurnoVO;
 import cl.femase.gestionweb.vo.DiferenciaHorasVO;
 import cl.femase.gestionweb.vo.DuracionVO;
 import cl.femase.gestionweb.vo.EmpleadoVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.TurnoRotativoVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import cl.femase.gestionweb.vo.TurnoCentroCostoVO;
@@ -47,8 +47,8 @@ public class TurnoRotativoDAO extends BaseDAO{
      * @param _idTurno
      * @return 
      */
-    public MaintenanceVO updateTurnoEmpleado(String _rutEmpleado,int _idTurno){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO updateTurnoEmpleado(String _rutEmpleado,int _idTurno){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         PreparedStatement psupdate = null;
         int result=0;
         String msgError = "Error al actualizar "
@@ -149,8 +149,8 @@ public class TurnoRotativoDAO extends BaseDAO{
      * @param _data
      * @return 
      */
-    public MaintenanceVO update(TurnoRotativoVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO update(TurnoRotativoVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         PreparedStatement psupdate = null;
         int result=0;
         String msgError = "Error al actualizar "
@@ -236,8 +236,8 @@ public class TurnoRotativoDAO extends BaseDAO{
      * @param _data
      * @return 
      */
-    public MaintenanceVO insert(TurnoRotativoVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO insert(TurnoRotativoVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         int result=0;
         String msgError = "Error al insertar "
             + "turno rotativo. "
@@ -1360,8 +1360,8 @@ public class TurnoRotativoDAO extends BaseDAO{
      * @param _data
      * @return 
      */
-    public MaintenanceVO insertAsignacion(AsignacionTurnoRotativoVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO insertAsignacion(AsignacionTurnoRotativoVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         int result=0;
         String msgError = "Error al insertar "
             + "asignacion de turno rotativo. "
@@ -1432,8 +1432,8 @@ public class TurnoRotativoDAO extends BaseDAO{
      * @param _data
      * @return 
      */
-    public MaintenanceVO deleteAsignacion(AsignacionTurnoRotativoVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO deleteAsignacion(AsignacionTurnoRotativoVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         int result=0;
         String msgError = "Error al eliminar "
             + "asignacion de turno rotativo. "
@@ -1505,9 +1505,9 @@ public class TurnoRotativoDAO extends BaseDAO{
      * @param _updatedAsignacion
      * @return 
      */
-    public MaintenanceVO modifyAsignacion(AsignacionTurnoRotativoVO _currentAsignacion, 
+    public ResultCRUDVO modifyAsignacion(AsignacionTurnoRotativoVO _currentAsignacion, 
             AsignacionTurnoRotativoVO _updatedAsignacion){
-        MaintenanceVO objresultado = new MaintenanceVO();
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         int result=0;
         String msgError = "Error al modificar "
             + "asignacion de turno rotativo. "

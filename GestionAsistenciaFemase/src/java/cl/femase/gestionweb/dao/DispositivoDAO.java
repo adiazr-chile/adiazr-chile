@@ -9,7 +9,7 @@ import cl.femase.gestionweb.common.DatabaseException;
 import cl.femase.gestionweb.vo.DispositivoCentroCostoVO;
 import cl.femase.gestionweb.vo.DispositivoDepartamentoVO;
 import cl.femase.gestionweb.vo.DispositivoEmpresaVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.DispositivoVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import java.sql.PreparedStatement;
@@ -46,9 +46,9 @@ public class DispositivoDAO extends BaseDAO{
     * @param _estado
     * @return 
     */
-    public MaintenanceVO updateEstadoDispositivo(String _idDispositivo, 
+    public ResultCRUDVO updateEstadoDispositivo(String _idDispositivo, 
             int _estado){
-        MaintenanceVO objresultado = new MaintenanceVO();
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         PreparedStatement psupdate = null;
         int result=0;
         String msgError = "Error al actualizar "
@@ -110,8 +110,8 @@ public class DispositivoDAO extends BaseDAO{
      * @param _data
      * @return 
      */
-    public MaintenanceVO update(DispositivoVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO update(DispositivoVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         PreparedStatement psupdate = null;
         int result=0;
         String msgError = "Error al actualizar "
@@ -200,8 +200,8 @@ public class DispositivoDAO extends BaseDAO{
      * @param _data
      * @return 
      */
-    public MaintenanceVO insert(DispositivoVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO insert(DispositivoVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         int result=0;
         String msgError = "Error al insertar "
             + "dispositivo. "

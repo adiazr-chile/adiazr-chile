@@ -8,7 +8,7 @@ package cl.femase.gestionweb.business;
 import cl.femase.gestionweb.vo.EmpleadoVO;
 import cl.femase.gestionweb.vo.TurnoVO;
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import cl.femase.gestionweb.vo.TurnoCentroCostoVO;
 import cl.femase.gestionweb.vo.UsuarioCentroCostoVO;
@@ -138,9 +138,9 @@ public class TurnosBp  extends BaseBp{
      * @param _eventdata
      * @return
      */
-    public MaintenanceVO update(TurnoVO _turnoToUpdate, 
+    public ResultCRUDVO update(TurnoVO _turnoToUpdate, 
             MaintenanceEventVO _eventdata){
-        MaintenanceVO updValues = turnosDao.update(_turnoToUpdate);
+        ResultCRUDVO updValues = turnosDao.update(_turnoToUpdate);
         
         //if (!updValues.isThereError()){
             String msgFinal = updValues.getMsg();
@@ -153,10 +153,10 @@ public class TurnosBp  extends BaseBp{
         return updValues;
     }
     
-    public MaintenanceVO updateTurnoEmpleado(String _rutEmpleado,int _idTurno, 
+    public ResultCRUDVO updateTurnoEmpleado(String _rutEmpleado,int _idTurno, 
             MaintenanceEventVO _eventdata){
         
-        MaintenanceVO insValues = turnosDao.updateTurnoEmpleado(_rutEmpleado, _idTurno);
+        ResultCRUDVO insValues = turnosDao.updateTurnoEmpleado(_rutEmpleado, _idTurno);
         
         //if (!updValues.isThereError()){
             String msgFinal = insValues.getMsg();
@@ -169,10 +169,10 @@ public class TurnosBp  extends BaseBp{
         return insValues;
     }
             
-    public MaintenanceVO insert(TurnoVO _objToInsert, 
+    public ResultCRUDVO insert(TurnoVO _objToInsert, 
             MaintenanceEventVO _eventdata){
         
-        MaintenanceVO insValues = turnosDao.insert(_objToInsert);
+        ResultCRUDVO insValues = turnosDao.insert(_objToInsert);
         
         //if (!updValues.isThereError()){
             String msgFinal = insValues.getMsg();

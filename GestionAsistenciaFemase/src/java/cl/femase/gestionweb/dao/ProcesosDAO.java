@@ -7,7 +7,7 @@ package cl.femase.gestionweb.dao;
 
 import cl.femase.gestionweb.common.DatabaseException;
 import cl.femase.gestionweb.common.Utilidades;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.ProcesoEjecucionVO;
 import cl.femase.gestionweb.vo.ProcesoFiltroVO;
 import cl.femase.gestionweb.vo.ProcesoProgramacionVO;
@@ -398,8 +398,8 @@ public class ProcesosDAO extends BaseDAO{
      * @param _data
      * @return 
      */
-    public MaintenanceVO update(ProcesoVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO update(ProcesoVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         PreparedStatement psupdate = null;
         int result=0;
         String msgError = "Error al actualizar "
@@ -465,8 +465,8 @@ public class ProcesosDAO extends BaseDAO{
      * @param _data
      * @return 
      */
-    public MaintenanceVO insert(ProcesoVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO insert(ProcesoVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         int result=0;
         String msgError = "Error al insertar "
             + "proceso. "
@@ -663,8 +663,8 @@ public class ProcesosDAO extends BaseDAO{
      * @param _data
      * @return 
      */
-    public MaintenanceVO insertProgramacion(ProcesoProgramacionVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO insertProgramacion(ProcesoProgramacionVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         int result=0;
         String msgError = "Error al insertar "
             + "programacion proceso. "
@@ -723,8 +723,8 @@ public class ProcesosDAO extends BaseDAO{
      * @param _data
      * @return 
      */
-    public MaintenanceVO insertItinerario(ProcesoEjecucionVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO insertItinerario(ProcesoEjecucionVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         int result=0;
         String msgError = "Error al insertar "
             + "itinerario ejecucion proceso. "
@@ -806,8 +806,8 @@ public class ProcesosDAO extends BaseDAO{
      * @param _programacion
      * @return 
      */
-    public MaintenanceVO deleteProgramacion(ProcesoProgramacionVO _programacion){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO deleteProgramacion(ProcesoProgramacionVO _programacion){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         int result=0;
         String msgError = "Error al eliminar "
             + "programacion_proceso, "

@@ -6,7 +6,7 @@
 package cl.femase.gestionweb.dao;
 
 import cl.femase.gestionweb.common.DatabaseException;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.ModuloAccesoPerfilVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import java.sql.PreparedStatement;
@@ -40,8 +40,8 @@ public class ModuloAccesoPerfilDAO extends BaseDAO{
 //     * @param _data
 //     * @return 
 //     */
-//    public MaintenanceVO update(ModuloAccesoPerfilVO _data){
-//        MaintenanceVO objresultado = new MaintenanceVO();
+//    public ResultCRUDVO update(ModuloAccesoPerfilVO _data){
+//        ResultCRUDVO objresultado = new ResultCRUDVO();
 //        PreparedStatement psupdate = null;
 //        int result=0;
 //        String msgError = "Error al actualizar "
@@ -108,8 +108,8 @@ public class ModuloAccesoPerfilDAO extends BaseDAO{
      * @param _data
      * @return 
      */
-    public MaintenanceVO insert(ModuloAccesoPerfilVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO insert(ModuloAccesoPerfilVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         int result=0;
         String msgError = "Error al insertar "
             + "modulo acceso perfil-usuario. "
@@ -174,8 +174,8 @@ public class ModuloAccesoPerfilDAO extends BaseDAO{
      * @param _data
      * @return 
      */
-    public MaintenanceVO delete(ModuloAccesoPerfilVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO delete(ModuloAccesoPerfilVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         int result=0;
         String msgError = "Error al eliminar "
             + "accesos para perfilId: "+_data.getPerfilId()

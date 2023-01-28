@@ -4,7 +4,7 @@ import cl.femase.gestionweb.servlet.BaseServlet;
 import cl.femase.gestionweb.business.TurnosBp;
 import cl.femase.gestionweb.vo.EmpleadoVO;
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import cl.femase.gestionweb.vo.TurnoVO;
 import cl.femase.gestionweb.vo.UsuarioVO;
@@ -221,7 +221,7 @@ public class TurnosController extends BaseServlet {
                 }   
             }else if (action.compareTo("create") == 0) {
                     System.out.println(WEB_NAME+"Mantenedor - Turnos - Insertar Turno...");
-                    MaintenanceVO doCreate = auxnegocio.insert(auxdata, resultado);					
+                    ResultCRUDVO doCreate = auxnegocio.insert(auxdata, resultado);					
                     listaObjetos.add(auxdata);
 
                     //Convert Java Object to Json
@@ -232,7 +232,7 @@ public class TurnosController extends BaseServlet {
             }else if (action.compareTo("update") == 0) {  
                     System.out.println(WEB_NAME+"Mantenedor - Turnos - Actualizar Turno...");
                     try{
-                        MaintenanceVO doUpdate = auxnegocio.update(auxdata, resultado);
+                        ResultCRUDVO doUpdate = auxnegocio.update(auxdata, resultado);
                         listaObjetos.add(auxdata);
 
                         //Convert Java Object to Json

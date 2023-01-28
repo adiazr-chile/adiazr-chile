@@ -6,7 +6,7 @@
 package cl.femase.gestionweb.dao;
 
 import cl.femase.gestionweb.common.DatabaseException;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.ModuloSistemaVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import java.sql.PreparedStatement;
@@ -41,8 +41,8 @@ public class ModulosSistemaDAO extends BaseDAO{
      * @param _data
      * @return 
      */
-    public MaintenanceVO update(ModuloSistemaVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO update(ModuloSistemaVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         PreparedStatement psupdate = null;
         int result=0;
         String msgError = "Error al actualizar "
@@ -121,8 +121,8 @@ public class ModulosSistemaDAO extends BaseDAO{
      * @param _data
      * @return 
      */
-    public MaintenanceVO insert(ModuloSistemaVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO insert(ModuloSistemaVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         int result=0;
         String msgError = "Error al insertar "
             + "modulo sistema. "
@@ -196,8 +196,8 @@ public class ModulosSistemaDAO extends BaseDAO{
      * @param _data
      * @return 
      */
-//    public MaintenanceVO delete(ModuloSistemaVO _data){
-//        MaintenanceVO objresultado = new MaintenanceVO();
+//    public ResultCRUDVO delete(ModuloSistemaVO _data){
+//        ResultCRUDVO objresultado = new ResultCRUDVO();
 //        int result=0;
 //        String msgError = "Error al eliminar "
 //                + "conversion de contratos, symbol: "+_data.getSymbol()

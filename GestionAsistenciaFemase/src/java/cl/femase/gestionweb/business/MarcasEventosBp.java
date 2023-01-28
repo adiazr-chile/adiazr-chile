@@ -6,7 +6,7 @@
 package cl.femase.gestionweb.business;
 
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.MarcasEventosVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import java.util.List;
@@ -113,10 +113,10 @@ public class MarcasEventosBp  extends BaseBp{
      * @param _eventdata
      * @return 
      */
-    public MaintenanceVO insert(MarcasEventosVO _objToInsert, 
+    public ResultCRUDVO insert(MarcasEventosVO _objToInsert, 
             MaintenanceEventVO _eventdata){
         
-        MaintenanceVO insValues = marcasEventosService.insert(_objToInsert);
+        ResultCRUDVO insValues = marcasEventosService.insert(_objToInsert);
         
         if (!insValues.isThereError()){
             String msgFinal = insValues.getMsg();

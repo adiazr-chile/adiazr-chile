@@ -7,7 +7,7 @@ package cl.femase.gestionweb.dao;
 
 import cl.femase.gestionweb.common.DatabaseException;
 import cl.femase.gestionweb.vo.EmpleadoVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.TurnoVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import cl.femase.gestionweb.vo.TurnoCentroCostoVO;
@@ -39,8 +39,8 @@ public class TurnosDAO extends BaseDAO{
      * @param _idTurno
      * @return 
      */
-    public MaintenanceVO updateTurnoEmpleado(String _rutEmpleado,int _idTurno){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO updateTurnoEmpleado(String _rutEmpleado,int _idTurno){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         PreparedStatement psupdate = null;
         int result=0;
         String msgError = "Error al actualizar "
@@ -95,8 +95,8 @@ public class TurnosDAO extends BaseDAO{
      * @param _data
      * @return 
      */
-    public MaintenanceVO update(TurnoVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO update(TurnoVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         PreparedStatement psupdate = null;
         int result=0;
         String msgError = "Error al actualizar "
@@ -162,8 +162,8 @@ public class TurnosDAO extends BaseDAO{
      * @param _data
      * @return 
      */
-    public MaintenanceVO insert(TurnoVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO insert(TurnoVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         int result=0;
         String msgError = "Error al insertar "
             + "turno. "

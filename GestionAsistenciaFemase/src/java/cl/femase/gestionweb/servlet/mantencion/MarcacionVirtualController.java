@@ -6,7 +6,7 @@ import cl.femase.gestionweb.business.MarcacionVirtualBp;
 import cl.femase.gestionweb.common.ClientInfo;
 import cl.femase.gestionweb.vo.EmpleadoVO;
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import cl.femase.gestionweb.vo.UsuarioVO;
 import cl.femase.gestionweb.vo.MarcacionVirtualVO;
@@ -296,7 +296,7 @@ public class MarcacionVirtualController extends BaseServlet {
                         //System.out.println(WEB_NAME+"[MarcacionVirtualController]"
                         //    + "Insertar:" + insertar);    
                         try{
-                            MaintenanceVO evento;
+                            ResultCRUDVO evento;
                             resultado.setRutEmpleado(asignacion.getRutEmpleado());
                             //if (insertar){
                                 System.out.println(WEB_NAME+"[MarcacionVirtualController]"

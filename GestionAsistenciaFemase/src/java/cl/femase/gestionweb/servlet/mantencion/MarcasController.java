@@ -11,7 +11,7 @@ import cl.femase.gestionweb.common.Constantes;
 import cl.femase.gestionweb.common.Utilidades;
 import cl.femase.gestionweb.vo.EmpleadoVO;
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.MarcasEventosVO;
 import cl.femase.gestionweb.vo.MarcaVO;
 import cl.femase.gestionweb.vo.NotificacionVO;
@@ -354,7 +354,7 @@ public class MarcasController extends BaseServlet {
                     + ", TipoMarca: " + infomarca.getTipoMarca()
                     + ", hashcode(md5: " + infomarca.getHashcode());
                     
-                MaintenanceVO doCreate = auxnegocio.insertWithLog(infomarca, resultado);
+                ResultCRUDVO doCreate = auxnegocio.insertWithLog(infomarca, resultado);
                 System.out.println(WEB_NAME+"[MarcasController]Mensaje "
                     + "del sp new_inserta_marca_manual: " + doCreate.getMsgFromSp());
                 //if (!doCreate.isThereError()){
@@ -493,7 +493,7 @@ public class MarcasController extends BaseServlet {
                         }
                         
                         //actualiza la marca
-                        MaintenanceVO doUpdate = auxnegocio.update(infomarca, marcaOriginal, resultado);
+                        ResultCRUDVO doUpdate = auxnegocio.update(infomarca, marcaOriginal, resultado);
                         
                         if (!doUpdate.isThereError()){
                             //enviar mail con info de marca original y marca modificada...
@@ -577,7 +577,7 @@ public class MarcasController extends BaseServlet {
                             infomarca.getRutEmpleado(),
                             fechaHoraKey, tipoMarcaKey, false);
                         
-                        MaintenanceVO doDelete = auxnegocio.delete(infomarca, resultado);
+                        ResultCRUDVO doDelete = auxnegocio.delete(infomarca, resultado);
                         infomarca.setRowKey(infomarca.getEmpresaCod()
                             + "|" + infomarca.getRutEmpleado()
                             + "|" + infomarca.getFechaHora()

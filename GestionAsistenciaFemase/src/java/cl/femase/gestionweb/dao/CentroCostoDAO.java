@@ -7,7 +7,7 @@ package cl.femase.gestionweb.dao;
 
 import cl.femase.gestionweb.common.Constantes;
 import cl.femase.gestionweb.common.DatabaseException;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.CentroCostoVO;
 import cl.femase.gestionweb.vo.DispositivoVO;
 import cl.femase.gestionweb.vo.EmpleadoVO;
@@ -50,8 +50,8 @@ public class CentroCostoDAO extends BaseDAO{
      * @param _data
      * @return 
      */
-    public MaintenanceVO update(CentroCostoVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO update(CentroCostoVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         PreparedStatement psupdate = null;
         int result=0;
         String msgError = "Error al actualizar "
@@ -145,8 +145,8 @@ public class CentroCostoDAO extends BaseDAO{
      * @param _data
      * @return 
      */
-    public MaintenanceVO insert(CentroCostoVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO insert(CentroCostoVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         int result=0;
         String msgError = "Error al insertar "
             + "centro de costo. "

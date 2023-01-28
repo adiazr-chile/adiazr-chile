@@ -6,7 +6,7 @@
 package cl.femase.gestionweb.dao;
 
 import cl.femase.gestionweb.common.DatabaseException;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import cl.femase.gestionweb.vo.TipoMarcaManualVO;
 import java.sql.PreparedStatement;
@@ -281,8 +281,8 @@ public class TipoMarcaManualDAO extends BaseDAO{
      * @param _data
      * @return 
      */
-    public MaintenanceVO update(TipoMarcaManualVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO update(TipoMarcaManualVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         PreparedStatement psupdate = null;
         int result=0;
         String msgError = "Error al actualizar "
@@ -348,8 +348,8 @@ public class TipoMarcaManualDAO extends BaseDAO{
      * @param _data
      * @return 
      */
-    public MaintenanceVO insert(TipoMarcaManualVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO insert(TipoMarcaManualVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         int result=0;
         String msgError = "Error al insertar "
             + "tipo marca manual. "

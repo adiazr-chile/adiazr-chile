@@ -196,7 +196,7 @@
 <body>
     
         <div style="position:relative">
-            <h4>Reporte de Jornada
+            <h4>Reporte de modificaciones y/o alteraciones de turnos
             </h4><br>
             
         </div>
@@ -276,6 +276,7 @@
                         <option value="csv" selected>CSV</option>
                         <option value="xls">Excel(xls)</option>
                         <option value="xml">XML</option>
+                        <option value="pdf">PDF</option>
                     </select>
                 </div>
             </div> 

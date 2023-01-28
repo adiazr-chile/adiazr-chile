@@ -9,7 +9,7 @@ import cl.femase.gestionweb.servlet.BaseServlet;
 import cl.femase.gestionweb.business.DepartamentoBp;
 import cl.femase.gestionweb.vo.DepartamentoVO;
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import cl.femase.gestionweb.vo.UsuarioVO;
 import java.io.File;
@@ -107,7 +107,7 @@ public class UploadDepartamentosServlet extends BaseServlet {
                                         resultado.setType("ADE");
                                         resultado.setEmpresaIdSource(userConnected.getEmpresaId());
                                         
-                                        MaintenanceVO insertDepto = 
+                                        ResultCRUDVO insertDepto = 
                                             deptoBp.insert(data, resultado);
                                         if (!insertDepto.isThereError()){
                                             deptosOk.put(data.getNombre(), data);

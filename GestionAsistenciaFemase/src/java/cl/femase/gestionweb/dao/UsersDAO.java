@@ -8,7 +8,7 @@ package cl.femase.gestionweb.dao;
 import cl.femase.gestionweb.common.Constantes;
 import cl.femase.gestionweb.common.DatabaseException;
 import cl.femase.gestionweb.vo.CentroCostoVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.ModuloAccesoPerfilVO;
 import cl.femase.gestionweb.vo.ModuloSistemaVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
@@ -66,8 +66,8 @@ public class UsersDAO extends BaseDAO{
     * @param _data
     * @return 
     */
-    public MaintenanceVO update(UsuarioVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO update(UsuarioVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         PreparedStatement psupdate = null;
         int result=0;
         String msgError = "Error al actualizar "
@@ -178,8 +178,8 @@ public class UsersDAO extends BaseDAO{
     * @param _estado
     * @return 
     */
-    public MaintenanceVO setEstadoUsuario(String _username, int _estado){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO setEstadoUsuario(String _username, int _estado){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         PreparedStatement psupdate = null;
         int result=0;
         String msgError = "Error al actualizar "
@@ -289,8 +289,8 @@ public class UsersDAO extends BaseDAO{
      * @param _data
      * @return 
      */
-    public MaintenanceVO setConnectionStatus(UsuarioVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO setConnectionStatus(UsuarioVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         PreparedStatement psupdate = null;
         int result=0;
         String msgError = "Error al actualizar "
@@ -356,8 +356,8 @@ public class UsersDAO extends BaseDAO{
      * @param _data
      * @return 
      */
-    public MaintenanceVO insertCenco(UsuarioCentroCostoVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO insertCenco(UsuarioCentroCostoVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         int result=0;
         String msgError = "Error al insertar "
             + "usuario-ccosto, "
@@ -429,8 +429,8 @@ public class UsersDAO extends BaseDAO{
      * @param _data
      * @return 
      */
-    public MaintenanceVO insert(UsuarioVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO insert(UsuarioVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         int result=0;
         String msgError = "Error al insertar "
             + "usuario, "
@@ -511,8 +511,8 @@ public class UsersDAO extends BaseDAO{
 ////     * @param _data
 ////     * @return 
 ////     */
-////    public MaintenanceVO delete(UsuarioVO _data){
-////        MaintenanceVO objresultado = new MaintenanceVO();
+////    public ResultCRUDVO delete(UsuarioVO _data){
+////        ResultCRUDVO objresultado = new ResultCRUDVO();
 ////        int result=0;
 ////        String msgError = "Error al dejar usuario como No Vigente "
 ////            + ", username: "+_data.getUsername();
@@ -969,8 +969,8 @@ public class UsersDAO extends BaseDAO{
     * @param _password
     * @return 
     */
-    public MaintenanceVO setPassword(String _username,String _password){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO setPassword(String _username,String _password){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         PreparedStatement psupdate = null;
         int result=0;
         String msgError = "Error al actualizar "

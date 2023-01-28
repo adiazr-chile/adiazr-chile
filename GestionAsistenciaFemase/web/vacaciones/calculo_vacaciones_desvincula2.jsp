@@ -137,8 +137,9 @@
             if (cencoSelected !== '-1'){
                 //alert('calcular. cencoId:' + cencoSelected + ', rutSelected: '+rutSelected);
                 document.location.href=
-                '<%=request.getContextPath()%>/servlet/VacacionesController?action=calcula_vacaciones_desvincula2&empresa_id='+empresaId
+                '<%=request.getContextPath()%>/servlet/CalculoVacacionesServlet?action=calcula_vacaciones_desvincula2&empresa_id='+empresaId
                 +'&depto_id=' + deptoId + '&cenco_id=' + cencoId + '&rutEmpleado=' + rutSelected;
+            
             }else{
                 alert('La seleccion de centro de costo es obligatoria');
             }

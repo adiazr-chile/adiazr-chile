@@ -6,7 +6,7 @@
 package cl.femase.gestionweb.dao;
 
 import cl.femase.gestionweb.common.DatabaseException;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.ProveedorCorreoVO;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -29,8 +29,8 @@ public class ProveedorCorreoDAO extends BaseDAO{
     * @param _data
     * @return 
     */
-    public MaintenanceVO update(ProveedorCorreoVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO update(ProveedorCorreoVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         PreparedStatement psupdate = null;
         int result=0;
         String msgError = "Error al actualizar "
@@ -95,8 +95,8 @@ public class ProveedorCorreoDAO extends BaseDAO{
     * @param _data
     * @return 
     */
-    public MaintenanceVO insert(ProveedorCorreoVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO insert(ProveedorCorreoVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         int result=0;
         String msgError = "Error al insertar "
             + "proveedor de correo. "
@@ -156,8 +156,8 @@ public class ProveedorCorreoDAO extends BaseDAO{
      * @param _code
     * @return 
     */
-    public MaintenanceVO delete(String _code){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO delete(String _code){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         int result=0;
         String msgError = "Error al eliminar "
             + "un proveedor de correo, "

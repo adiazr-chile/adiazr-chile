@@ -7,7 +7,7 @@ package cl.femase.gestionweb.business;
 
 import cl.femase.gestionweb.vo.CargoVO;
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import java.util.List;
 
@@ -50,9 +50,9 @@ public class CargoBp  extends BaseBp{
     * @param _eventdata
     * @return 
     */
-    public MaintenanceVO update(CargoVO _objectToUpdate, 
+    public ResultCRUDVO update(CargoVO _objectToUpdate, 
             MaintenanceEventVO _eventdata){
-        MaintenanceVO updValues = cargosDao.update(_objectToUpdate);
+        ResultCRUDVO updValues = cargosDao.update(_objectToUpdate);
         
         //if (!updValues.isThereError()){
             String msgFinal = updValues.getMsg();
@@ -71,10 +71,10 @@ public class CargoBp  extends BaseBp{
     * @param _eventdata
     * @return 
     */
-    public MaintenanceVO insert(CargoVO _objToInsert, 
+    public ResultCRUDVO insert(CargoVO _objToInsert, 
             MaintenanceEventVO _eventdata){
         
-        MaintenanceVO insValues = cargosDao.insert(_objToInsert);
+        ResultCRUDVO insValues = cargosDao.insert(_objToInsert);
         
         //if (!updValues.isThereError()){
             String msgFinal = insValues.getMsg();

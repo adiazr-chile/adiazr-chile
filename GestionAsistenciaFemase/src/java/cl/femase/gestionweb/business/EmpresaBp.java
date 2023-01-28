@@ -7,7 +7,7 @@ package cl.femase.gestionweb.business;
 
 import cl.femase.gestionweb.common.Constantes;
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.EmpresaVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import cl.femase.gestionweb.vo.UsuarioVO;
@@ -83,10 +83,10 @@ public class EmpresaBp  extends BaseBp{
         return empresaDao.getEmpresasCount(_nombre);
     }
     
-    public MaintenanceVO insert(EmpresaVO _objToInsert, 
+    public ResultCRUDVO insert(EmpresaVO _objToInsert, 
             MaintenanceEventVO _eventdata){
         
-        MaintenanceVO insValues = empresaDao.insert(_objToInsert);
+        ResultCRUDVO insValues = empresaDao.insert(_objToInsert);
         
         //if (!updValues.isThereError()){
             String msgFinal = insValues.getMsg();
@@ -99,9 +99,9 @@ public class EmpresaBp  extends BaseBp{
         return insValues;
     }
     
-    public MaintenanceVO update(EmpresaVO _objectToUpdate, 
+    public ResultCRUDVO update(EmpresaVO _objectToUpdate, 
             MaintenanceEventVO _eventdata){
-        MaintenanceVO updValues = empresaDao.update(_objectToUpdate);
+        ResultCRUDVO updValues = empresaDao.update(_objectToUpdate);
         
         //if (!updValues.isThereError()){
             String msgFinal = updValues.getMsg();

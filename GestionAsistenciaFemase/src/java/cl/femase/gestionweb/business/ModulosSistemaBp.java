@@ -6,7 +6,7 @@
 package cl.femase.gestionweb.business;
 
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.ModuloSistemaVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import java.util.List;
@@ -41,9 +41,9 @@ public class ModulosSistemaBp  extends BaseBp{
         return lista;
     }
 
-    public MaintenanceVO update(ModuloSistemaVO _moduleToUpdate, 
+    public ResultCRUDVO update(ModuloSistemaVO _moduleToUpdate, 
             MaintenanceEventVO _eventdata){
-        MaintenanceVO updValues = modulosService.update(_moduleToUpdate);
+        ResultCRUDVO updValues = modulosService.update(_moduleToUpdate);
         
         //if (!updValues.isThereError()){
             String msgFinal = updValues.getMsg();
@@ -56,10 +56,10 @@ public class ModulosSistemaBp  extends BaseBp{
         return updValues;
     }
     
-    public MaintenanceVO insert(ModuloSistemaVO _moduleToInsert, 
+    public ResultCRUDVO insert(ModuloSistemaVO _moduleToInsert, 
             MaintenanceEventVO _eventdata){
         
-        MaintenanceVO insValues = modulosService.insert(_moduleToInsert);
+        ResultCRUDVO insValues = modulosService.insert(_moduleToInsert);
         
         //if (!updValues.isThereError()){
             String msgFinal = insValues.getMsg();
@@ -73,9 +73,9 @@ public class ModulosSistemaBp  extends BaseBp{
     }
     
     /*
-    public MaintenanceVO delete(ContractRelationVO _relationToDelete, 
+    public ResultCRUDVO delete(ContractRelationVO _relationToDelete, 
             MaintenanceEventVO _eventdata){
-        MaintenanceVO insValues = contractRelService.delete(_relationToDelete);
+        ResultCRUDVO insValues = contractRelService.delete(_relationToDelete);
         
         //if (!updValues.isThereError()){
             String msgFinal = insValues.getMsg();

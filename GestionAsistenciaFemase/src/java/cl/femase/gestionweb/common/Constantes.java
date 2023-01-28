@@ -171,4 +171,47 @@ public class Constantes {
     * Id parametro indica el numero maximo de dias de permiso administrativo para un semestre
     */
     public static final String ID_PARAMETRO_MAXIMO_SEMESTRAL_DIAS_PA = "max_dias_pa_semestre";
+
+    public static String fnSET_FECHA_BASE_VP  = "set_fecha_base_vacacion_progresiva";
+    
+    /**
+    * Db Function: 'set_saldo_vacaciones_basicas_anuales_empleado'
+    * 
+    *  Cálculo de vacaciones básicas anuales por empleado.
+    *  Esta función realiza el cálculo de VBA para un empleado vigente, 
+    *   a partir de la fecha de inicio de contrato 
+    *   o de la nueva fecha de inicio de contrato si es que cuenta con continuidad laboral 
+    */
+    public static String fnSET_VBA_EMPLEADO   = "set_saldo_vacaciones_basicas_anuales_empleado";
+    
+    /**
+    *   Db Function: 'set_saldo_vacaciones_basicas_anuales' 
+    * 
+    * Cálculo de vacaciones básicas anuales por CENCO.
+    * Esta función realiza el cálculo de VBA para un CENTRO DE COSTO, 
+    * obtiene a todos los empleados vigentes y 
+    * a partir de la fecha de inicio de contrato 
+    * o de la nueva fecha de inicio de contrato, 
+    * si es que cuenta con continuidad laboral.
+    */
+    public static String fnSET_VBA_CENCO      = "set_saldo_vacaciones_basicas_anuales";
+    
+    /**
+    *   Db Function: 'set_saldo_vacaciones_progresivas_empleado' 
+    * 
+    * Cálculo de vacaciones progresivas por empleado
+    * Esta función realiza el cálculo de saldo de VP para un empleado, 
+    * basándose en la fecha base VP y con la ultima fecha de inicio de vacación.
+    */
+    public static String fnSET_VP_EMPLEADO    = "set_saldo_vacaciones_progresivas_empleado";
+    
+    /**
+    *   Db Function: 'set_saldo_vacaciones_progresivas' 
+    * 
+    * Cálculo de vacaciones progresivas por CENCO
+    * Esta función realiza el cálculo de saldo de VP para un CENTRO DE COSTO, 
+    * basándose en las fecha base VP 
+    * y con la ultima fecha de inicio de vacación de todos los empleados del CENCO.
+    */
+    public static String fnSET_VP_CENCO       = "set_saldo_vacaciones_progresivas";
 }

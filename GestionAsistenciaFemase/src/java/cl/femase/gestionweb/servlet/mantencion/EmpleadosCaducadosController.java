@@ -5,7 +5,7 @@ import cl.femase.gestionweb.business.EmpleadosBp;
 import cl.femase.gestionweb.business.MaintenanceEventsBp;
 import cl.femase.gestionweb.common.Constantes;
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.EmpleadoVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import cl.femase.gestionweb.vo.UsuarioCentroCostoVO;
@@ -299,7 +299,7 @@ public class EmpleadosCaducadosController extends BaseServlet {
                             + ", fechaTerminoContratoStr: " + empleado.getFechaTerminoContratoAsStr()    
                             + ", contratoIndefinido?: " + empleado.isContratoIndefinido()
                             + ", estado: " + empleado.getEstado());
-                        MaintenanceVO doUpdate = 
+                        ResultCRUDVO doUpdate = 
                             empleadosbp.updateEmpleadoCaducado(empleado, resultado);
                         listaEmpleados.add(empleado);
 

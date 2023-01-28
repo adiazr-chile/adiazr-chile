@@ -6,7 +6,7 @@
 package cl.femase.gestionweb.dao;
 
 import cl.femase.gestionweb.common.DatabaseException;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.TipoDispositivoVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import java.sql.PreparedStatement;
@@ -45,8 +45,8 @@ public class TipoDispositivoDAO extends BaseDAO{
      * @param _data
      * @return 
      */
-    public MaintenanceVO update(TipoDispositivoVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO update(TipoDispositivoVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         PreparedStatement psupdate = null;
         int result=0;
         String msgError = "Error al actualizar "
@@ -100,8 +100,8 @@ public class TipoDispositivoDAO extends BaseDAO{
      * @param _data
      * @return 
      */
-    public MaintenanceVO insert(TipoDispositivoVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO insert(TipoDispositivoVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         int result=0;
         String msgError = "Error al insertar "
             + "tipo_dispositivo. "
@@ -150,8 +150,8 @@ public class TipoDispositivoDAO extends BaseDAO{
      * @param _data
      * @return 
      */
-    public MaintenanceVO delete(TipoDispositivoVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO delete(TipoDispositivoVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         int result=0;
         String msgError = "Error al eliminar "
                 + "un tipo_dispositivo, Id: "+_data.getId()

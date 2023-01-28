@@ -7,7 +7,7 @@ package cl.femase.gestionweb.business;
 
 import cl.femase.gestionweb.vo.CargoVO;
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.RegionVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import java.util.List;
@@ -47,9 +47,9 @@ public class RegionBp  extends BaseBp{
     * @param _eventdata
     * @return 
     */
-    public MaintenanceVO update(RegionVO _objectToUpdate, 
+    public ResultCRUDVO update(RegionVO _objectToUpdate, 
             MaintenanceEventVO _eventdata){
-        MaintenanceVO updValues = regionesService.update(_objectToUpdate);
+        ResultCRUDVO updValues = regionesService.update(_objectToUpdate);
         
         //if (!updValues.isThereError()){
             String msgFinal = updValues.getMsg();
@@ -68,10 +68,10 @@ public class RegionBp  extends BaseBp{
     * @param _eventdata
     * @return 
     */
-    public MaintenanceVO insert(RegionVO _objToInsert, 
+    public ResultCRUDVO insert(RegionVO _objToInsert, 
             MaintenanceEventVO _eventdata){
         
-        MaintenanceVO insValues = regionesService.insert(_objToInsert);
+        ResultCRUDVO insValues = regionesService.insert(_objToInsert);
         
         //if (!updValues.isThereError()){
             String msgFinal = insValues.getMsg();

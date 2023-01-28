@@ -9,7 +9,7 @@ import cl.femase.gestionweb.common.Constantes;
 import cl.femase.gestionweb.common.DatabaseException;
 import cl.femase.gestionweb.vo.CentroCostoVO;
 import cl.femase.gestionweb.vo.InfoMarcaVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.MarcaVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import java.sql.PreparedStatement;
@@ -1851,8 +1851,8 @@ public class MarcasDAO extends BaseDAO{
     * @return 
     * 
     */
-    public MaintenanceVO insert(MarcaVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO insert(MarcaVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         int result=0;
         String msgError = "Error al insertar "
             + "marca. "
@@ -1938,8 +1938,8 @@ public class MarcasDAO extends BaseDAO{
     * @param _marca
     * @return 
     */
-    public MaintenanceVO insertaMarcaManual(MarcaVO _marca){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO insertaMarcaManual(MarcaVO _marca){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         PreparedStatement ps = null;
         ResultSet rs = null;
         int result=0;
@@ -2061,9 +2061,9 @@ public class MarcasDAO extends BaseDAO{
     * @param _marcaOriginal
     * @return 
     */
-    public MaintenanceVO update(MarcaVO _marcaModificada,
+    public ResultCRUDVO update(MarcaVO _marcaModificada,
             MarcaVO _marcaOriginal){
-        MaintenanceVO objresultado = new MaintenanceVO();
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         int result=0;
         StringTokenizer tkfechaHora = new StringTokenizer(_marcaModificada.getFechaHora()," ");
         String auxfecha = tkfechaHora.nextToken();
@@ -2143,8 +2143,8 @@ public class MarcasDAO extends BaseDAO{
     * @param _data
     * @return 
     */
-    public MaintenanceVO delete(MarcaVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO delete(MarcaVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         int result=0;
         String msgError = "Error al eliminar "
             + "marca. "

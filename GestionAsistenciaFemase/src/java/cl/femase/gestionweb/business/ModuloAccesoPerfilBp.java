@@ -6,7 +6,7 @@
 package cl.femase.gestionweb.business;
 
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.ModuloAccesoPerfilVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import java.util.LinkedHashMap;
@@ -45,9 +45,9 @@ public class ModuloAccesoPerfilBp  extends BaseBp{
         return lista;
     }
     
-    public MaintenanceVO delete(ModuloAccesoPerfilVO _objToUpdate, 
+    public ResultCRUDVO delete(ModuloAccesoPerfilVO _objToUpdate, 
             MaintenanceEventVO _eventdata){
-        MaintenanceVO updValues = accesosPerfilService.delete(_objToUpdate);
+        ResultCRUDVO updValues = accesosPerfilService.delete(_objToUpdate);
         
         //if (!updValues.isThereError()){
             String msgFinal = updValues.getMsg();
@@ -60,10 +60,10 @@ public class ModuloAccesoPerfilBp  extends BaseBp{
         return updValues;
     }
     
-    public MaintenanceVO insert(ModuloAccesoPerfilVO _objToInsert, 
+    public ResultCRUDVO insert(ModuloAccesoPerfilVO _objToInsert, 
             MaintenanceEventVO _eventdata){
         
-        MaintenanceVO insValues = accesosPerfilService.insert(_objToInsert);
+        ResultCRUDVO insValues = accesosPerfilService.insert(_objToInsert);
         
         //if (!updValues.isThereError()){
             String msgFinal = insValues.getMsg();
@@ -77,9 +77,9 @@ public class ModuloAccesoPerfilBp  extends BaseBp{
     }
     
     /*
-    public MaintenanceVO delete(ContractRelationVO _relationToDelete, 
+    public ResultCRUDVO delete(ContractRelationVO _relationToDelete, 
             MaintenanceEventVO _eventdata){
-        MaintenanceVO insValues = contractRelService.delete(_relationToDelete);
+        ResultCRUDVO insValues = contractRelService.delete(_relationToDelete);
         
         //if (!updValues.isThereError()){
             String msgFinal = insValues.getMsg();

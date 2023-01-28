@@ -6,7 +6,7 @@
 package cl.femase.gestionweb.dao;
 
 import cl.femase.gestionweb.common.DatabaseException;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.RegistroHistoricoVO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -43,10 +43,10 @@ public class TraspasoHistoricoDAO extends BaseDAO{
     * @param _cadenaRuts
     * @return 
     */
-    public MaintenanceVO insertMarcasHistoricas(String _empresaId, 
+    public ResultCRUDVO insertMarcasHistoricas(String _empresaId, 
             String _fecha, 
             String _cadenaRuts){
-        MaintenanceVO resultado = new MaintenanceVO();
+        ResultCRUDVO resultado = new ResultCRUDVO();
         int affectedRows        = 0;
         PreparedStatement ps    = null;
         Connection dbConn       = null;
@@ -123,10 +123,10 @@ public class TraspasoHistoricoDAO extends BaseDAO{
     * @param _cadenaRuts
     * @return 
     */
-    public MaintenanceVO insertMarcasRechazosHistoricas(String _empresaId, 
+    public ResultCRUDVO insertMarcasRechazosHistoricas(String _empresaId, 
             String _fecha, 
             String _cadenaRuts){
-        MaintenanceVO resultado = new MaintenanceVO();
+        ResultCRUDVO resultado = new ResultCRUDVO();
         int affectedRows =0;
         PreparedStatement ps = null;
         Connection dbConn = null;
@@ -194,10 +194,10 @@ public class TraspasoHistoricoDAO extends BaseDAO{
     * @param _cadenaRuts
     * @return 
     */
-    public MaintenanceVO insertAusenciasHistoricas(String _empresaId, 
+    public ResultCRUDVO insertAusenciasHistoricas(String _empresaId, 
             String _fecha, 
             String _cadenaRuts){
-        MaintenanceVO resultado = new MaintenanceVO();
+        ResultCRUDVO resultado = new ResultCRUDVO();
         int affectedRows =0;
         PreparedStatement ps = null;
         Connection dbConn = null;
@@ -260,10 +260,10 @@ public class TraspasoHistoricoDAO extends BaseDAO{
     * @param _cadenaRuts
     * @return 
     */
-    public MaintenanceVO insertDetalleAsistenciaHistoricos(String _empresaId, 
+    public ResultCRUDVO insertDetalleAsistenciaHistoricos(String _empresaId, 
             String _fecha, 
             String _cadenaRuts){
-        MaintenanceVO resultado = new MaintenanceVO();
+        ResultCRUDVO resultado = new ResultCRUDVO();
         int affectedRows =0;
         PreparedStatement ps = null;
         Connection dbConn = null;
@@ -320,8 +320,8 @@ public class TraspasoHistoricoDAO extends BaseDAO{
     * @param _fecha
     * @return 
     */
-    public MaintenanceVO insertLogEventosHistoricos(String _empresaId, String _fecha){
-        MaintenanceVO resultado = new MaintenanceVO();
+    public ResultCRUDVO insertLogEventosHistoricos(String _empresaId, String _fecha){
+        ResultCRUDVO resultado = new ResultCRUDVO();
         int affectedRows =0;
         PreparedStatement ps = null;
         Connection dbConn = null;
@@ -953,10 +953,10 @@ public class TraspasoHistoricoDAO extends BaseDAO{
     * @param _endDate
     * @return 
     */
-    public MaintenanceVO traspasaMarcasHistoricas(String _empresaId, 
+    public ResultCRUDVO traspasaMarcasHistoricas(String _empresaId, 
             String _startDate, 
             String _endDate){
-        MaintenanceVO resultado = new MaintenanceVO();
+        ResultCRUDVO resultado = new ResultCRUDVO();
         int affectedRows        = 0;
         PreparedStatement ps    = null;
         Connection dbConn       = null;
@@ -1034,10 +1034,10 @@ public class TraspasoHistoricoDAO extends BaseDAO{
     * 
     * @return 
     */
-    public MaintenanceVO traspasaMarcasRechazosHistoricas(String _empresaId, 
+    public ResultCRUDVO traspasaMarcasRechazosHistoricas(String _empresaId, 
             String _startDate, 
             String _endDate){
-        MaintenanceVO resultado = new MaintenanceVO();
+        ResultCRUDVO resultado = new ResultCRUDVO();
         int affectedRows =0;
         PreparedStatement ps = null;
         Connection dbConn = null;
@@ -1104,10 +1104,10 @@ public class TraspasoHistoricoDAO extends BaseDAO{
     * @param _endDate
     * @return 
     */
-    public MaintenanceVO traspasaDetallesAusenciasHistoricas(String _empresaId, 
+    public ResultCRUDVO traspasaDetallesAusenciasHistoricas(String _empresaId, 
             String _startDate, 
             String _endDate){
-        MaintenanceVO resultado = new MaintenanceVO();
+        ResultCRUDVO resultado = new ResultCRUDVO();
         int affectedRows =0;
         PreparedStatement ps = null;
         Connection dbConn = null;
@@ -1173,10 +1173,10 @@ public class TraspasoHistoricoDAO extends BaseDAO{
     * @param _endDate
     * @return 
     */
-    public MaintenanceVO traspasaDetalleAsistenciaHistoricos(String _empresaId, 
+    public ResultCRUDVO traspasaDetalleAsistenciaHistoricos(String _empresaId, 
             String _startDate, 
             String _endDate){
-        MaintenanceVO resultado = new MaintenanceVO();
+        ResultCRUDVO resultado = new ResultCRUDVO();
         int affectedRows =0;
         PreparedStatement ps = null;
         Connection dbConn = null;
@@ -1234,10 +1234,10 @@ public class TraspasoHistoricoDAO extends BaseDAO{
     * @param _endDate
     * @return 
     */
-    public MaintenanceVO traspasaLogEventosHistoricos(String _empresaId, 
+    public ResultCRUDVO traspasaLogEventosHistoricos(String _empresaId, 
             String _startDate, 
             String _endDate){
-        MaintenanceVO resultado = new MaintenanceVO();
+        ResultCRUDVO resultado = new ResultCRUDVO();
         int affectedRows =0;
         PreparedStatement ps = null;
         Connection dbConn = null;

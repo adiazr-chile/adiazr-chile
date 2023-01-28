@@ -7,7 +7,7 @@ import cl.femase.gestionweb.vo.DispositivoCentroCostoVO;
 import cl.femase.gestionweb.vo.DispositivoDepartamentoVO;
 import cl.femase.gestionweb.vo.DispositivoEmpresaVO;
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.DispositivoVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import cl.femase.gestionweb.vo.UsuarioVO;
@@ -266,7 +266,7 @@ public class DispositivosController extends BaseServlet {
             }else if (action.compareTo("create") == 0) {
                     System.out.println(WEB_NAME+"[DispositivosController]"
                         + "Mantenedor - Dispositivos - Insertar...");
-                    MaintenanceVO doCreate = auxnegocio.insert(auxdata, resultado);					
+                    ResultCRUDVO doCreate = auxnegocio.insert(auxdata, resultado);					
                     listaObjetos.add(auxdata);
 
                     //Convert Java Object to Json
@@ -278,7 +278,7 @@ public class DispositivosController extends BaseServlet {
                     System.out.println(WEB_NAME+"[DispositivosController]"
                         + "Mantenedor - Dispositivos - Actualizar...");
                     try{
-                        MaintenanceVO doUpdate = auxnegocio.update(auxdata, resultado);
+                        ResultCRUDVO doUpdate = auxnegocio.update(auxdata, resultado);
                         listaObjetos.add(auxdata);
 
                         //Convert Java Object to Json

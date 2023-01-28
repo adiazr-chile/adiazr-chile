@@ -5,7 +5,7 @@ import cl.femase.gestionweb.business.EmpleadosBp;
 import cl.femase.gestionweb.business.TiempoExtraBp;
 import cl.femase.gestionweb.vo.EmpleadoVO;
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import cl.femase.gestionweb.vo.TiempoExtraVO;
 import cl.femase.gestionweb.vo.UsuarioVO;
@@ -267,7 +267,7 @@ public class TiempoExtraController extends BaseServlet {
                         + "Crear nuevo tiempo extra...");
                     try{
                         resultado.setRutEmpleado(auxdata.getRut());
-                        MaintenanceVO doInsert = tenegocio.insert(auxdata, resultado);
+                        ResultCRUDVO doInsert = tenegocio.insert(auxdata, resultado);
                         listaTE.add(auxdata);
                         //Convert Java Object to Json
                         String json=gson.toJson(auxdata);					
@@ -283,7 +283,7 @@ public class TiempoExtraController extends BaseServlet {
                     System.out.println(WEB_NAME+"Mantenedor Tiempos extra - "
                         + "Actualizar tiempo extra...");
                     try{
-                        MaintenanceVO doUpdate = tenegocio.update(auxdata, resultado);
+                        ResultCRUDVO doUpdate = tenegocio.update(auxdata, resultado);
                         //listaTE.add(auxdata);
                         String listData="{\"Result\":\"OK\"}";
                         response.getWriter().print(listData);
@@ -296,7 +296,7 @@ public class TiempoExtraController extends BaseServlet {
                     System.out.println(WEB_NAME+"Mantenedor Tiempos extra - "
                         + "Eliminar tiempo extra...");
                     try{
-                        MaintenanceVO doDelete = tenegocio.delete(auxdata, resultado);
+                        ResultCRUDVO doDelete = tenegocio.delete(auxdata, resultado);
                         String listData="{\"Result\":\"OK\"}";
                         response.getWriter().print(listData);
 

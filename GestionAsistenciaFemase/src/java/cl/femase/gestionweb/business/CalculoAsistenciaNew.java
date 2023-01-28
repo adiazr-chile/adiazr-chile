@@ -16,7 +16,7 @@ import cl.femase.gestionweb.vo.DiferenciaHorasVO;
 import cl.femase.gestionweb.vo.EmpleadoVO;
 import cl.femase.gestionweb.vo.InfoFeriadoVO;
 import cl.femase.gestionweb.vo.LogErrorVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.MarcaJsonVO;
 import cl.femase.gestionweb.vo.MarcaVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
@@ -226,7 +226,7 @@ public class CalculoAsistenciaNew extends BaseBp{
             " COMIENZA A PROCESAR "
             + "empleado (" + _empleado.getRut() +")"
             + ", isHistorico? " + isHistorico );
-        MaintenanceVO resultado=new MaintenanceVO();
+        ResultCRUDVO resultado=new ResultCRUDVO();
         ArrayList<DetalleAsistenciaVO> dataFechasRut = new ArrayList<>();
         //listaEmpleadosConMarcas.add(empleado);
 

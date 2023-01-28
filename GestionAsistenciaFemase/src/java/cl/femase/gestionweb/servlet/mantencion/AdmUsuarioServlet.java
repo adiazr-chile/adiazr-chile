@@ -8,7 +8,7 @@ package cl.femase.gestionweb.servlet.mantencion;
 import cl.femase.gestionweb.servlet.BaseServlet;
 import cl.femase.gestionweb.business.UsuarioBp;
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.PerfilUsuarioVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import cl.femase.gestionweb.vo.UsuarioCentroCostoVO;
@@ -123,7 +123,7 @@ public class AdmUsuarioServlet extends BaseServlet {
                         + "AdmUsuarioServlet]modificar datos del usuario");
                    
                     //actualizar info propia del usuario
-                    MaintenanceVO result = usuarioBp.update(userdata, resultado);
+                    ResultCRUDVO result = usuarioBp.update(userdata, resultado);
                     if (result.isThereError()){
                         System.out.println(WEB_NAME+"[gestionFemase."
                             + "AdmUsuarioServlet]Error al modificar usuario: "+result.getMsg());
@@ -178,7 +178,7 @@ public class AdmUsuarioServlet extends BaseServlet {
                         + "AdmUsuarioServlet]Crear nuevo usuario");
                    
                     //insertar info propia del usuario
-                    MaintenanceVO result = usuarioBp.insert(userdata, resultado);
+                    ResultCRUDVO result = usuarioBp.insert(userdata, resultado);
                     if (result.isThereError()){
                         System.out.println(WEB_NAME+"[gestionFemase.AdmUsuarioServlet]"
                             + "Error al crear usuario: "+result.getMsg());

@@ -6,7 +6,7 @@
 package cl.femase.gestionweb.business;
 
 import cl.femase.gestionweb.vo.DetalleTurnoVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.TurnoRotativoDetalleVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import java.sql.SQLException;
@@ -43,7 +43,7 @@ public class TurnoRotativoDetalleBp  extends BaseBp{
     }
     
     public void deleteDetalleTurnoEmpleado(TurnoRotativoDetalleVO _detalle){
-        MaintenanceVO updValues = turnoRotativoDetalleService.deleteDetalleTurnoEmpleado(_detalle);
+        ResultCRUDVO updValues = turnoRotativoDetalleService.deleteDetalleTurnoEmpleado(_detalle);
         
         //if (!updValues.isThereError()){
 //            String msgFinal = updValues.getMsg();

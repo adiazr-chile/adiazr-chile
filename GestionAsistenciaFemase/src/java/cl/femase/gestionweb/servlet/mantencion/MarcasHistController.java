@@ -300,7 +300,7 @@ public class MarcasHistController extends BaseServlet {
 //                    + ", CodDispositivo: " + auxdata.getCodDispositivo()
 //                    + ", TipoMarca: " + auxdata.getTipoMarca());
 //                    
-//                MaintenanceVO doCreate = auxnegocio.insertWithLog(auxdata, resultado);					
+//                ResultCRUDVO doCreate = auxnegocio.insertWithLog(auxdata, resultado);					
 //                listaObjetos.add(auxdata);
 //
 //                //Convert Java Object to Json
@@ -333,7 +333,7 @@ public class MarcasHistController extends BaseServlet {
 //                            resultado.setDeptoId(infoEmpleado.getDepartamento().getId());
 //                            resultado.setCencoId(infoEmpleado.getCentroCosto().getId());
 //                        }
-//                        MaintenanceVO doUpdate = auxnegocio.update(auxdata, resultado);
+//                        ResultCRUDVO doUpdate = auxnegocio.update(auxdata, resultado);
 //                        StringTokenizer tkfechaHora = new StringTokenizer(auxdata.getFechaHora()," ");
 //                        String auxfecha = tkfechaHora.nextToken();
 //                        String auxhora = tkfechaHora.nextToken();
@@ -376,7 +376,7 @@ public class MarcasHistController extends BaseServlet {
 //                            resultado.setDeptoId(infoEmpleado.getDepartamento().getId());
 //                            resultado.setCencoId(infoEmpleado.getCentroCosto().getId());
 //                        }
-//                        MaintenanceVO doDelete = auxnegocio.delete(auxdata, resultado);
+//                        ResultCRUDVO doDelete = auxnegocio.delete(auxdata, resultado);
 //                        listaObjetos.add(auxdata);
 //
 //                        //Convert Java Object to Json

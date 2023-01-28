@@ -7,7 +7,7 @@ package cl.femase.gestionweb.business;
 
 import cl.femase.gestionweb.common.Utilidades;
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.ProcesoEjecucionVO;
 import cl.femase.gestionweb.vo.ProcesoFiltroVO;
 import cl.femase.gestionweb.vo.ProcesoProgramacionVO;
@@ -83,10 +83,10 @@ public class ProcesosBp  extends BaseBp{
         return procesosService.getProcesosCount(_empresaId, _nombre);
     }
     
-    public MaintenanceVO insert(ProcesoVO _objToInsert, 
+    public ResultCRUDVO insert(ProcesoVO _objToInsert, 
             MaintenanceEventVO _eventdata){
         
-        MaintenanceVO insValues = procesosService.insert(_objToInsert);
+        ResultCRUDVO insValues = procesosService.insert(_objToInsert);
         
         //if (!updValues.isThereError()){
             String msgFinal = insValues.getMsg();
@@ -99,9 +99,9 @@ public class ProcesosBp  extends BaseBp{
         return insValues;
     }
     
-    public MaintenanceVO update(ProcesoVO _objectToUpdate, 
+    public ResultCRUDVO update(ProcesoVO _objectToUpdate, 
             MaintenanceEventVO _eventdata){
-        MaintenanceVO updValues = procesosService.update(_objectToUpdate);
+        ResultCRUDVO updValues = procesosService.update(_objectToUpdate);
         
         //if (!updValues.isThereError()){
             String msgFinal = updValues.getMsg();
@@ -124,10 +124,10 @@ public class ProcesosBp  extends BaseBp{
         return programacion;
     }
     
-    public MaintenanceVO insertProgramacion(ProcesoProgramacionVO _objectToUpdate,
+    public ResultCRUDVO insertProgramacion(ProcesoProgramacionVO _objectToUpdate,
         MaintenanceEventVO _eventdata){
     
-        MaintenanceVO updValues = procesosService.insertProgramacion(_objectToUpdate);
+        ResultCRUDVO updValues = procesosService.insertProgramacion(_objectToUpdate);
         
         //if (!updValues.isThereError()){
             String msgFinal = updValues.getMsg();
@@ -141,10 +141,10 @@ public class ProcesosBp  extends BaseBp{
     }
     
     
-    public MaintenanceVO deleteProgramacion(ProcesoProgramacionVO _objectToDelete,
+    public ResultCRUDVO deleteProgramacion(ProcesoProgramacionVO _objectToDelete,
         MaintenanceEventVO _eventdata){
     
-        MaintenanceVO updValues = procesosService.deleteProgramacion(_objectToDelete);
+        ResultCRUDVO updValues = procesosService.deleteProgramacion(_objectToDelete);
         
         //if (!updValues.isThereError()){
 //            String msgFinal = updValues.getMsg();

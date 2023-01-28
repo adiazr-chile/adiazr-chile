@@ -8,7 +8,7 @@ package cl.femase.gestionweb.business;
 import cl.femase.gestionweb.vo.CentroCostoVO;
 import cl.femase.gestionweb.vo.InfoMarcaVO;
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.MarcaJsonVO;
 import cl.femase.gestionweb.vo.MarcaVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
@@ -447,10 +447,10 @@ public class MarcasBp  extends BaseBp{
             _endDate);
     }
     
-    public MaintenanceVO update(MarcaVO _marcaModificada,
+    public ResultCRUDVO update(MarcaVO _marcaModificada,
             MarcaVO _marcaOriginal,
             MaintenanceEventVO _eventdata){
-        MaintenanceVO updValues = marcasDao.update(_marcaModificada, _marcaOriginal);
+        ResultCRUDVO updValues = marcasDao.update(_marcaModificada, _marcaOriginal);
         
         //if (!updValues.isThereError()){
             String msgFinal = updValues.getMsg();
@@ -463,9 +463,9 @@ public class MarcasBp  extends BaseBp{
         return updValues;
     }
     
-    public MaintenanceVO delete(MarcaVO _objectToDelete, 
+    public ResultCRUDVO delete(MarcaVO _objectToDelete, 
             MaintenanceEventVO _eventdata){
-        MaintenanceVO deletedValues = marcasDao.delete(_objectToDelete);
+        ResultCRUDVO deletedValues = marcasDao.delete(_objectToDelete);
         
         //if (!updValues.isThereError()){
             String msgFinal = deletedValues.getMsg();
@@ -484,9 +484,9 @@ public class MarcasBp  extends BaseBp{
      * @param _objToInsert
      * @return 
      */
-    public MaintenanceVO insert(MarcaVO _objToInsert){
+    public ResultCRUDVO insert(MarcaVO _objToInsert){
         
-        MaintenanceVO insValues = marcasDao.insert(_objToInsert);
+        ResultCRUDVO insValues = marcasDao.insert(_objToInsert);
         
         return insValues;
     }
@@ -497,11 +497,11 @@ public class MarcasBp  extends BaseBp{
     * @param _eventdata
     * @return 
     */
-    public MaintenanceVO insertWithLog(MarcaVO _objToInsert, 
+    public ResultCRUDVO insertWithLog(MarcaVO _objToInsert, 
             MaintenanceEventVO _eventdata){
         
         //obtener cod_interno del 
-        MaintenanceVO insValues = marcasDao.insertaMarcaManual(_objToInsert);
+        ResultCRUDVO insValues = marcasDao.insertaMarcaManual(_objToInsert);
         
         if (!insValues.isThereError()){
             String msgFinal = insValues.getMsg();

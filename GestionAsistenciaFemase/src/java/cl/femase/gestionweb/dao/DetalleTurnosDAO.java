@@ -7,7 +7,7 @@ package cl.femase.gestionweb.dao;
 
 import cl.femase.gestionweb.common.DatabaseException;
 import cl.femase.gestionweb.common.Utilidades;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.DetalleTurnoVO;
 import cl.femase.gestionweb.vo.DiferenciaHorasVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
@@ -49,8 +49,8 @@ public class DetalleTurnosDAO extends BaseDAO{
      * @param _data
      * @return 
      */
-    public MaintenanceVO insert(DetalleTurnoVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO insert(DetalleTurnoVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         int result=0;
         String msgError = "Error al insertar "
             + "detalle turno. "
@@ -130,8 +130,8 @@ public class DetalleTurnosDAO extends BaseDAO{
      * @param _data
      * @return 
      */
-    public MaintenanceVO update(DetalleTurnoVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO update(DetalleTurnoVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         int result=0;
         String msgError = "Error al actualizar "
             + "detalle turno. "
@@ -217,8 +217,8 @@ public class DetalleTurnosDAO extends BaseDAO{
      * @param _data
      * @return 
      */
-    public MaintenanceVO delete(DetalleTurnoVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO delete(DetalleTurnoVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         int result=0;
         String msgError = "Error al eliminar "
             + "detalle turno. "

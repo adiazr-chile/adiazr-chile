@@ -15,9 +15,11 @@ import cl.femase.gestionweb.business.TurnosBp;
 import cl.femase.gestionweb.common.Constantes;
 import cl.femase.gestionweb.common.ExcelReportWriter;
 import cl.femase.gestionweb.common.Utilidades;
+import cl.femase.gestionweb.common.freemarker.PdfGenerator;
 import cl.femase.gestionweb.vo.AsignacionTurnoVO;
 import cl.femase.gestionweb.vo.EmpleadoVO;
 import cl.femase.gestionweb.vo.FiltroBusquedaJsonVO;
+import cl.femase.gestionweb.vo.FreemarkerTemplateVO;
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import cl.femase.gestionweb.vo.ReportDetailHeaderVO;
@@ -67,6 +69,7 @@ public class ReporteModifAlterTurnos extends BaseServlet {
     static String REPORT_NAME_CSV = "_reporte_modif_alter_turnos.csv";
     static String REPORT_NAME_XLS = "_reporte_modif_alter_turnos.xls";
     static String REPORT_NAME_XML = "_reporte_modif_alter_turnos.xml";
+    static String REPORT_NAME_PDF = "_reporte_modif_alter_turnos.pdf";
     static String REPORT_LABEL = "Reporte de modificaciones y/o alteraciones de turnos";
     ExcelReportWriter excelReportWriter = new ExcelReportWriter();
             
@@ -158,8 +161,16 @@ public class ReporteModifAlterTurnos extends BaseServlet {
                 writeXMLFile(request, paramEmpresa, 
                     paramDepto, intCencoId, 
                     startDate, endDate, intTurno, listaEmpleados);
+        }else if (paramFormato.compareTo("pdf") == 0){
+            //mostrar PDF. Generar link para download del archivo PDF
+            fileName = userConnected.getUsername() + REPORT_NAME_PDF;
+            fullFilePath = 
+                writePDFFile(request, paramEmpresa, 
+                    paramDepto, intCencoId, 
+                    startDate, endDate, intTurno, listaEmpleados);
         }
                 
+        
         FileGeneratedVO fileGenerated = new FileGeneratedVO(fileName, fullFilePath);
         if (fileGenerated != null){
             System.out.println(WEB_NAME+"[servlet.ReporteModifAlterTurnos]"
@@ -303,6 +314,144 @@ public class ReporteModifAlterTurnos extends BaseServlet {
 
         return filePath;
     }
+    
+    /**
+    * Genera archivo PDF con los datos obtenidos, usando la API freemarker
+    * 
+    * @param _request
+    * @param _empresaId
+    * @param _deptoId
+    * @param _cencoId
+    * @param _startDate
+    * @param _endDate
+    * @param _idTurno
+    * @param _listaEmpleados
+    * @return 
+    * @throws javax.servlet.ServletException 
+    * @throws java.io.IOException 
+    */
+    protected String writePDFFile(HttpServletRequest _request,
+        String _empresaId,
+        String _deptoId, 
+        int _cencoId,
+        String _startDate,
+        String _endDate,
+        int _idTurno,
+        ArrayList<EmpleadoVO> _listaEmpleados)
+    throws ServletException, IOException {
+        String outputFilePath = "";
+        try {
+            ServletContext application = this.getServletContext();
+            PropertiesVO appProperties=(PropertiesVO)application.getAttribute("appProperties");
+            HttpSession session = _request.getSession(true);
+            UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
+            System.out.println(WEB_NAME+"[servlet.ReporteModifAlterTurnos.writePDFFile]"
+                + "empresaId: " + _empresaId
+                + ", deptoId: " + _deptoId
+                + ", cencoId: " + _cencoId
+                + ", startDate: " + _startDate    
+                + ", endDate: " + _endDate
+                + ", idTurno: " + _idTurno);
+            CentroCostoBp cencoBp   = new CentroCostoBp(appProperties);
+            EmpleadosBp empleadoBp  = new EmpleadosBp(appProperties);
+            String jsonOutput = cencoBp.getEmpresaDeptoCencoJson(_empresaId, _deptoId, _cencoId);
+            FiltroBusquedaJsonVO labelsFiltro = 
+                (FiltroBusquedaJsonVO)new Gson().fromJson(jsonOutput, FiltroBusquedaJsonVO.class);
+            Calendar calNow = Calendar.getInstance(new Locale("es", "CL"));
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            NumberFormat nf = NumberFormat.getNumberInstance(new Locale("es", "ES"));
+            Utilidades utils=new Utilidades();
+            
+            EmpleadoVO infoEmpleado = 
+                empleadoBp.getEmpleado(_empresaId, _listaEmpleados.get(0).getRut());
+            
+            ReportHeaderVO header = new ReportHeaderVO();
+            ReportDetailHeaderVO headersDetail = new ReportDetailHeaderVO();
+            ArrayList<ReportDetailVO> detalles = new ArrayList<>();
+
+            header.setReportLabelHeader("Tipo reporte");
+            header.setReportLabel(REPORT_LABEL);
+             
+            header.setFechaReporteHeader("Fecha reporte");
+            header.setFechaReporte(sdf.format(calNow.getTime()));
+            
+            header.setRutTrabajadorHeader("Rut trabajador");
+            header.setRutTrabajador(infoEmpleado.getRut());
+            
+            header.setNombreTrabajadorHeader("Nombre trabajador");
+            header.setNombreTrabajador(infoEmpleado.getNombreCompleto());
+            
+            header.setEmpresaHeader("Empresa");
+            header.setEmpresaLabel(labelsFiltro.getEmpresanombre());
+            
+            header.setDeptoHeader("Departamento");
+            header.setDeptoLabel(labelsFiltro.getDeptonombre());
+            
+            header.setCencoHeader("Centro de costo");
+            header.setCencoLabel(labelsFiltro.getCenconombre());
+            
+            header.setFechaInicioHeader("Fecha inicio");
+            header.setFechaInicio(_startDate);
+            
+            header.setFechaFinHeader("Fecha fin");
+            header.setFechaFin(_endDate);
+            
+            //cabeceras del detalle
+            headersDetail.setHorarioHeader("Horario");
+            headersDetail.setFechaAsignacionTurnoHeader("Fecha asignacion de turno");
+            headersDetail.setNuevoHorarioHeader("Nuevo Horario");
+            headersDetail.setDescripcionHeader("Descripcion (transitorio - permanente)");
+            
+            AsignacionTurnoBp asignaTurnosBp = new AsignacionTurnoBp(appProperties);
+            AsignacionTurnoVO turnoVigente = asignaTurnosBp.getTurnoVigente(_empresaId, infoEmpleado.getRut());
+            AsignacionTurnoVO turnoAnterior = asignaTurnosBp.getTurnoAnterior(_empresaId, infoEmpleado.getRut());
+            if (turnoAnterior == null) turnoAnterior = new AsignacionTurnoVO();
+            
+            if (turnoVigente != null){
+                ReportDetailVO detailReport = new ReportDetailVO();
+                detailReport.setHorario(turnoAnterior.getNombreTurno());
+                detailReport.setFechaAsignacionTurno(turnoVigente.getFechaAsignacion());
+                detailReport.setNuevoHorario(turnoVigente.getNombreTurno());
+                detailReport.setDescripcion("");
+                
+                detalles.add(detailReport);
+            }else{
+                System.out.println(WEB_NAME+"[servlet."
+                    + "ReporteModifAlterTurnos.writePDFFile]"
+                    + Constantes.NO_HAY_INFO_TURNOS);
+                ReportDetailVO detailReport = new ReportDetailVO();
+                
+                detailReport.setHorario(Constantes.SIN_DATOS);
+                detailReport.setFechaAsignacionTurno(Constantes.SIN_DATOS);
+                detailReport.setNuevoHorario(Constantes.SIN_DATOS);
+                detailReport.setDescripcion("");
+                detalles.add(detailReport);
+            }
+                       
+            ReportVO reportData = new ReportVO();
+            reportData.setHeader(header);
+            reportData.setHeadersDetail(headersDetail);
+            reportData.setDetalle(detalles);
+         
+            //set datos del template freemarker
+            FreemarkerTemplateVO template = new FreemarkerTemplateVO();
+            template.setReportTitle("Reporte de modificaciones y/o alteraciones de turnos");
+            template.setReportAbrev("modif_alter_turnos");
+            template.setReportLogo("logo_fundacion_01.png");
+            template.setTemplateName("modif_alter_turnos.ftl");
+            PdfGenerator pdfGenerator=new PdfGenerator(appProperties, template);
+            outputFilePath = pdfGenerator.generateReport(reportData);
+            System.out.println(WEB_NAME+"[servlet."
+                + "ReporteModifAlterTurnos.writePDFFile]"
+                + "outputFilePath (PDF):" + outputFilePath);
+               
+        } finally {
+            //if (outfile!=null) outfile.close();
+        }
+
+        return outputFilePath;
+    }
+    
     
     /**
     * Genera archivo Excel con los datos obtenidos

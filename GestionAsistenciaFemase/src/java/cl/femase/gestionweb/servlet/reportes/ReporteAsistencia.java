@@ -12,9 +12,11 @@ import cl.femase.gestionweb.business.EmpleadosBp;
 import cl.femase.gestionweb.business.MaintenanceEventsBp;
 import cl.femase.gestionweb.common.Constantes;
 import cl.femase.gestionweb.common.ExcelReportWriter;
+import cl.femase.gestionweb.common.freemarker.PdfGenerator;
 import cl.femase.gestionweb.vo.DetalleAsistenciaVO;
 import cl.femase.gestionweb.vo.EmpleadoVO;
 import cl.femase.gestionweb.vo.FiltroBusquedaJsonVO;
+import cl.femase.gestionweb.vo.FreemarkerTemplateVO;
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import cl.femase.gestionweb.vo.ReportDetailHeaderVO;
@@ -65,6 +67,7 @@ public class ReporteAsistencia extends BaseServlet {
 
     static String REPORT_NAME_CSV = "_reporte_asistencia.csv";
     static String REPORT_NAME_XLS = "_reporte_asistencia.xls";
+    static String REPORT_NAME_PDF = "_reporte_asistencia.pdf";
     static String REPORT_NAME_XML = "_reporte_asistencia.xml";
     static String REPORT_LABEL = "Reporte de Asistencia";
     ExcelReportWriter excelReportWriter = new ExcelReportWriter();
@@ -154,6 +157,13 @@ public class ReporteAsistencia extends BaseServlet {
                 fileName = userConnected.getUsername() + REPORT_NAME_XML;
                 fullFilePath = 
                     writeXMLFile(request, paramEmpresa, 
+                        paramDepto, intCencoId, 
+                        startDate, endDate, intTurno, listaEmpleados);
+        }else if (paramFormato.compareTo("pdf") == 0){
+                fileName = userConnected.getUsername() + REPORT_NAME_PDF;
+                //mostrar CSV. Generar link para download del archivo xls
+                fullFilePath = 
+                    writePDFFile(request, paramEmpresa, 
                         paramDepto, intCencoId, 
                         startDate, endDate, intTurno, listaEmpleados);
         }
@@ -509,6 +519,7 @@ public class ReporteAsistencia extends BaseServlet {
             reportData.setHeadersDetail(headersDetail);
             reportData.setDetalle(detalles);
             
+            
             excelReportWriter.writeReportInExcel(reportData, excelFilePath, "ASISTENCIA");
             
             //Close the File Writer
@@ -519,6 +530,166 @@ public class ReporteAsistencia extends BaseServlet {
         }
 
         return excelFilePath;
+    }
+    
+    /**
+    * Genera archivo PDF con los datos obtenidos
+    * 
+    * @param _request
+    * @param _empresaId
+    * @param _deptoId
+    * @param _cencoId
+    * @param _startDate
+    * @param _endDate
+    * @param _idTurno
+    * @param _listaEmpleados
+    * @return 
+    * @throws javax.servlet.ServletException 
+    * @throws java.io.IOException 
+    */
+    protected String writePDFFile(HttpServletRequest _request,
+        String _empresaId,
+        String _deptoId, 
+        int _cencoId,
+        String _startDate,
+        String _endDate,
+        int _idTurno,
+        ArrayList<EmpleadoVO> _listaEmpleados)
+    throws ServletException, IOException {
+        String outputFilePath = "";
+        try {
+            ServletContext application = this.getServletContext();
+            PropertiesVO appProperties=(PropertiesVO)application.getAttribute("appProperties");
+            HttpSession session = _request.getSession(true);
+            UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
+            System.out.println(WEB_NAME+"[servlet.ReporteAsistencia.writePDFFile]"
+                + "empresaId: " + _empresaId
+                + ", deptoId: " + _deptoId
+                + ", cencoId: " + _cencoId
+                + ", startDate: " + _startDate    
+                + ", endDate: " + _endDate
+                + ", idTurno: " + _idTurno);
+            CentroCostoBp cencoBp   = new CentroCostoBp(appProperties);
+            EmpleadosBp empleadoBp  = new EmpleadosBp(appProperties);
+            //TurnosBp turnoBp        = new TurnosBp(appProperties);
+            //TurnoRotativoBp turnoRotBp = new TurnoRotativoBp(appProperties);
+                        
+            DetalleAsistenciaBp detalleAsistenciaBp = new DetalleAsistenciaBp(appProperties);
+            LinkedHashMap<String,List<DetalleAsistenciaVO>> listaDetalles = 
+                detalleAsistenciaBp.getDetallesInforme(_listaEmpleados, 
+                    _startDate, _endDate, _idTurno);
+            String jsonOutput = cencoBp.getEmpresaDeptoCencoJson(_empresaId, _deptoId, _cencoId);
+            FiltroBusquedaJsonVO labelsFiltro = 
+                (FiltroBusquedaJsonVO)new Gson().fromJson(jsonOutput, FiltroBusquedaJsonVO.class);
+            //int idTurnoRotativo = turnoBp.getTurnoRotativo(_empresaId);
+            Calendar calNow = Calendar.getInstance(new Locale("es", "CL"));
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            //NumberFormat nf = NumberFormat.getNumberInstance(new Locale("es", "ES"));
+            //Utilidades utils=new Utilidades();
+            
+            EmpleadoVO infoEmpleado = 
+                empleadoBp.getEmpleado(_empresaId, _listaEmpleados.get(0).getRut());
+            
+            ReportHeaderVO header = new ReportHeaderVO();
+            ReportDetailHeaderVO headersDetail = new ReportDetailHeaderVO();
+            ArrayList<ReportDetailVO> detalles = new ArrayList<>();
+
+            header.setReportLabelHeader("Tipo reporte");
+            header.setReportLabel(REPORT_LABEL);
+            
+            header.setFechaReporteHeader("Fecha reporte");
+            header.setFechaReporte(sdf.format(calNow.getTime()));
+            
+            header.setRutTrabajadorHeader("Rut trabajador");
+            header.setRutTrabajador(infoEmpleado.getRut());
+            
+            header.setNombreTrabajadorHeader("Nombre trabajador");
+            header.setNombreTrabajador(infoEmpleado.getNombreCompleto());
+            
+            header.setEmpresaHeader("Empresa");
+            header.setEmpresaLabel(labelsFiltro.getEmpresanombre());
+            
+            header.setDeptoHeader("Departamento");
+            header.setDeptoLabel(labelsFiltro.getDeptonombre());
+            
+            header.setCencoHeader("Centro de costo");
+            header.setCencoLabel(labelsFiltro.getCenconombre());
+            
+            header.setFechaInicioHeader("Fecha inicio");
+            header.setFechaInicio(_startDate);
+            
+            header.setFechaFinHeader("Fecha fin");
+            header.setFechaFin(_endDate);
+            
+            //cabeceras del detalle
+            headersDetail.setFechaHeader("Fecha");
+            headersDetail.setAsistenciaHeader("Asistencia");
+            headersDetail.setJustificacionesHeader("Justificaciones");
+                        
+            if (listaDetalles != null && !listaDetalles.isEmpty()){
+                Set<String> keys = listaDetalles.keySet();
+                for(String k:keys){
+                    System.out.println(WEB_NAME+"[servlet.ReporteAsistencia.writePDFFile]"
+                        + "key empleado: " + k);
+                    if (k != null && k.compareTo("")!=0){    
+                        List<DetalleAsistenciaVO> details = listaDetalles.get(k);
+                        for (DetalleAsistenciaVO detail: details) {
+                            String asistencia = "NO";
+                            if (detail.getHrsPresenciales() != null 
+                                && detail.getHrsPresenciales().compareTo("") != 0){
+                                    asistencia = "SI";
+                            }
+                            String justificacion="";
+                            if (detail.getHhmmJustificadas() != null 
+                                && detail.getHhmmJustificadas().compareTo("") != 0){
+                                    justificacion = detail.getObservacion();
+                            }
+                            
+                            //****se lineas de detalle
+                            ReportDetailVO detailReport = new ReportDetailVO();
+                            detailReport.setFecha(detail.getLabelFechaEntradaMarca());
+                            detailReport.setAsistencia(asistencia);
+                            detailReport.setJustificacion(justificacion);
+                            
+                            detalles.add(detailReport);
+                        }    
+                    }
+                }
+            }else{
+                System.out.println(WEB_NAME+"[servlet."
+                    + "ReporteAsistencia.writePDFFile]"
+                    + "No hay informacion de asistencia");
+                ReportDetailVO detailReport = new ReportDetailVO();
+                detailReport.setFecha(Constantes.SIN_DATOS);
+                detailReport.setAsistencia(Constantes.SIN_DATOS);
+                detailReport.setJustificacion(Constantes.SIN_DATOS);
+                detalles.add(detailReport);
+            }
+                       
+            ReportVO reportData = new ReportVO();
+            reportData.setHeader(header);
+            reportData.setHeadersDetail(headersDetail);
+            reportData.setDetalle(detalles);
+            
+            //excelReportWriter.writeReportInExcel(reportData, excelFilePath, "ASISTENCIA");
+            
+            //set datos del template freemarker
+            FreemarkerTemplateVO template = new FreemarkerTemplateVO();
+            template.setReportTitle("Reporte de Asistencia");
+            template.setReportAbrev("reporte_asistencia");
+            template.setReportLogo("logo_fundacion_01.png");
+            template.setTemplateName("reporte_asistencia_simple.ftl");
+            PdfGenerator pdfGenerator=new PdfGenerator(appProperties, template);
+            outputFilePath = pdfGenerator.generateReport(reportData);
+            System.out.println(WEB_NAME+"[servlet."
+                + "ReporteModifAlterTurnos.writePDFFile]"
+                + "outputFilePath (PDF):" + outputFilePath);
+               
+        } finally {
+            //if (outfile!=null) outfile.close();
+        }
+
+        return outputFilePath;
     }
     
     /**

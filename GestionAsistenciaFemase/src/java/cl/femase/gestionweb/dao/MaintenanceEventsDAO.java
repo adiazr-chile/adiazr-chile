@@ -8,7 +8,7 @@ package cl.femase.gestionweb.dao;
 import cl.femase.gestionweb.common.DatabaseException;
 import cl.femase.gestionweb.vo.EventoMantencionVO;
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import cl.femase.gestionweb.vo.SearchFilterVO;
 import java.sql.PreparedStatement;
@@ -163,8 +163,8 @@ public class MaintenanceEventsDAO extends BaseDAO{
     * @param _eventdata
     * @return 
     */
-    public MaintenanceVO addEvent(MaintenanceEventVO _eventdata){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO addEvent(MaintenanceEventVO _eventdata){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         PreparedStatement ps = null;
         int result=0;
         String headerError = "Error al insertar evento ";
@@ -245,8 +245,8 @@ public class MaintenanceEventsDAO extends BaseDAO{
     * @param _eventdata
     * @return 
     */
-    public MaintenanceVO addLogAuditoria(MaintenanceEventVO _eventdata){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO addLogAuditoria(MaintenanceEventVO _eventdata){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         PreparedStatement ps = null;
         int result=0;
         String headerError = "Error al insertar auditoria_log ";

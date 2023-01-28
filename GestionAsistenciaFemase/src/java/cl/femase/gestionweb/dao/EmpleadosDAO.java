@@ -10,7 +10,7 @@ import cl.femase.gestionweb.common.DatabaseException;
 import cl.femase.gestionweb.common.Utilidades;
 import cl.femase.gestionweb.vo.CentroCostoVO;
 import cl.femase.gestionweb.vo.DepartamentoVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.EmpleadoVO;
 import cl.femase.gestionweb.vo.EmpresaVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
@@ -83,8 +83,8 @@ public class EmpleadosDAO extends BaseDAO{
      * @param _data
      * @return 
      */
-    public MaintenanceVO update(EmpleadoVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO update(EmpleadoVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         PreparedStatement psupdate = null;
         int result=0;
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -315,8 +315,8 @@ public class EmpleadosDAO extends BaseDAO{
     * @param _data
     * @return 
     */
-    public MaintenanceVO updateEmpleadoCaducado(EmpleadoVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO updateEmpleadoCaducado(EmpleadoVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         PreparedStatement psupdate = null;
         int result=0;
         String msgError = "Error al actualizar "
@@ -390,8 +390,8 @@ public class EmpleadosDAO extends BaseDAO{
     * @param _data
     * @return 
     */
-    public MaintenanceVO insert(EmpleadoVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO insert(EmpleadoVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         int result=0;
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String msgError = "Error al insertar "

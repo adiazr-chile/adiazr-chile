@@ -18,7 +18,7 @@ import cl.femase.gestionweb.vo.DetalleAusenciaVO;
 import cl.femase.gestionweb.vo.DetalleTurnoVO;
 import cl.femase.gestionweb.vo.EmpleadoVO;
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.MensajeUsuarioVO;
 import cl.femase.gestionweb.vo.NotificacionSolicitudPermisoAdministrativoVO;
 import cl.femase.gestionweb.vo.NotificacionVO;
@@ -621,7 +621,7 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
                     String mensajeFinal = evento.getMensajeFinal();
                     session.setAttribute("mensaje", "Solicitud de Permiso Administrativo ingresada exitosamente."
                         + "<p>" + mensajeFinal);
-                    MaintenanceVO doCreate = solicitudesBp.insert(solicitud, resultado);					
+                    ResultCRUDVO doCreate = solicitudesBp.insert(solicitud, resultado);					
                     listaSolicitudes.add(solicitud);
                     //************************************************************
                     //************************************************************
@@ -683,7 +683,7 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
                     resultado.setEmpresaId(infoEmpleado.getEmpresa().getId());
                     resultado.setDeptoId(infoEmpleado.getDepartamento().getId());
                     resultado.setCencoId(infoEmpleado.getCentroCosto().getId());
-                    MaintenanceVO doCreate = new MaintenanceVO();
+                    ResultCRUDVO doCreate = new ResultCRUDVO();
                     if (strAccion.compareTo(Constantes.ESTADO_SOLICITUD_CANCELADA) == 0){
                         solicitud.setFechaHoraCancela(strFechaHoraActual);
                         doCreate = 
@@ -749,7 +749,7 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
                     resultado.setEmpresaId(infoEmpleado.getEmpresa().getId());
                     resultado.setDeptoId(infoEmpleado.getDepartamento().getId());
                     resultado.setCencoId(infoEmpleado.getCentroCosto().getId());
-                    MaintenanceVO doCreate = new MaintenanceVO();
+                    ResultCRUDVO doCreate = new ResultCRUDVO();
                     String usernameApruebaRechaza = userConnected.getUsername();
                     if (strAccion.compareTo(Constantes.ESTADO_SOLICITUD_APROBADA) == 0){
                         /**
@@ -814,7 +814,7 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
                             }
                             
                             newAusencia.setDiasSolicitados(solicitud.getDiasSolicitados());
-                            MaintenanceVO insertResult = new MaintenanceVO();
+                            ResultCRUDVO insertResult = new ResultCRUDVO();
                             insertResult = 
                                 insertarPermisoAdministrativo(request, 
                                     appProperties, 
@@ -889,7 +889,7 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
     * Insertar ausencia del tipo 'Permiso administrativo'
     * 
     */
-    private MaintenanceVO insertarPermisoAdministrativo(HttpServletRequest _request,
+    private ResultCRUDVO insertarPermisoAdministrativo(HttpServletRequest _request,
             PropertiesVO _appProperties,
             HashMap<String, Double> _parametrosSistema,
             UsuarioVO _userConnected, 
@@ -956,7 +956,7 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
         resultado.setRutEmpleado(_ausencia.getRutEmpleado());
         System.out.println(WEB_NAME+"[SolicitudPermisoAdministrativoController.insertarPermisoAdministrativo]"
             + "Insertar detalle ausencia (PERMISO ADMINISTRATIVO)");
-        MaintenanceVO doCreate = ausenciasBp.insertaPermisoAdministrativo(_ausencia, resultado);
+        ResultCRUDVO doCreate = ausenciasBp.insertaPermisoAdministrativo(_ausencia, resultado);
         
         if (doCreate.isThereError()){
             mensajeFinal= "Error al insertar Permiso administrativo: " + doCreate.getMsgError();
@@ -979,7 +979,7 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
                 objPA.setDiasUtilizadosSemestre2(saldoDiasUtilizadosPostPA);
             }
             
-            MaintenanceVO resultadoUpdate = permisosDao.updateResumenPA(objPA);
+            ResultCRUDVO resultadoUpdate = permisosDao.updateResumenPA(objPA);
              
         }
         

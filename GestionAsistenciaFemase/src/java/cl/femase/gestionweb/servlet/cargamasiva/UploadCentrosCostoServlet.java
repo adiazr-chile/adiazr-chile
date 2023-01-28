@@ -11,7 +11,7 @@ import cl.femase.gestionweb.dao.MaintenanceEventsDAO;
 import cl.femase.gestionweb.servlet.BaseServlet;
 import cl.femase.gestionweb.vo.CentroCostoVO;
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import cl.femase.gestionweb.vo.UsuarioVO;
 import java.io.File;
@@ -118,7 +118,7 @@ public class UploadCentrosCostoServlet extends BaseServlet {
                                         resultado.setEmpresaIdSource(userConnected.getEmpresaId());
                                         System.out.println(WEB_NAME+"[UploadCentrosCostoServlet]"
                                             + "Insertar cenco nombre: " + data.getNombre());
-                                        MaintenanceVO insertCenco = 
+                                        ResultCRUDVO insertCenco = 
                                             cencoBp.insert(data, resultado);
                                         if (!insertCenco.isThereError()){
                                             cencosOk.put(data.getNombre(), data);

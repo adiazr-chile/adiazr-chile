@@ -7,7 +7,7 @@ package cl.femase.gestionweb.business;
 
 import cl.femase.gestionweb.vo.EventoMantencionVO;
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import cl.femase.gestionweb.vo.SearchFilterVO;
 import java.util.LinkedHashMap;
@@ -41,8 +41,8 @@ public class MaintenanceEventsBp  extends BaseBp{
         return eventslist;
     }
         
-    public MaintenanceVO addEvent(MaintenanceEventVO _eventdata){
-        MaintenanceVO eventdata = eventosDao.addEvent(_eventdata); 
+    public ResultCRUDVO addEvent(MaintenanceEventVO _eventdata){
+        ResultCRUDVO eventdata = eventosDao.addEvent(_eventdata); 
         
         return eventdata;
     }

@@ -8,7 +8,7 @@ package cl.femase.gestionweb.business;
 import cl.femase.gestionweb.vo.UsuarioVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.ModuloSistemaVO;
 import cl.femase.gestionweb.vo.UsuarioCentroCostoVO;
 import java.sql.SQLException;
@@ -77,7 +77,7 @@ public class UsuarioBp  extends BaseBp{
      * @param _data
      * @return
      */
-    public MaintenanceVO insertCenco(UsuarioCentroCostoVO _data){
+    public ResultCRUDVO insertCenco(UsuarioCentroCostoVO _data){
         return userDao.insertCenco(_data);
     }
     
@@ -85,12 +85,12 @@ public class UsuarioBp  extends BaseBp{
         return userDao.getUsuario(_username);
     }
     
-    public MaintenanceVO update(UsuarioVO _userToUpdate, 
+    public ResultCRUDVO update(UsuarioVO _userToUpdate, 
             MaintenanceEventVO _eventdata){
         boolean existeEmail = false;
 //        boolean existeEmail = userDao.existeEmail(_userToUpdate.getUsername(), 
 //            _userToUpdate.getEmail(), _userToUpdate.getEmpresaId());
-        MaintenanceVO updValues = new MaintenanceVO();
+        ResultCRUDVO updValues = new ResultCRUDVO();
         if (existeEmail){
             updValues.setThereError(true);
             updValues.setCodError(99);
@@ -116,12 +116,12 @@ public class UsuarioBp  extends BaseBp{
         return updValues;
     }
     
-    public MaintenanceVO insert(UsuarioVO _userToInsert, 
+    public ResultCRUDVO insert(UsuarioVO _userToInsert, 
             MaintenanceEventVO _eventdata){
         boolean existeEmail = false;
 //        boolean existeEmail = userDao.existeEmail(_userToInsert.getUsername(), 
 //            _userToInsert.getEmail(), _userToInsert.getEmpresaId());
-        MaintenanceVO insValues = new MaintenanceVO();
+        ResultCRUDVO insValues = new ResultCRUDVO();
         
         System.out.println(WEB_NAME+"[UsuarioBp.insert]Insertar usuario, inicio...");
         String msgFinal = insValues.getMsg();
@@ -174,9 +174,9 @@ public class UsuarioBp  extends BaseBp{
         return insValues;
     }
     
-////    public MaintenanceVO delete(UsuarioVO _relationToDelete, 
+////    public ResultCRUDVO delete(UsuarioVO _relationToDelete, 
 ////            MaintenanceEventVO _eventdata){
-////        MaintenanceVO insValues = userDao.delete(_relationToDelete);
+////        ResultCRUDVO insValues = userDao.delete(_relationToDelete);
 ////        
 ////        //if (!updValues.isThereError()){
 ////            String msgFinal = insValues.getMsg();
@@ -201,12 +201,12 @@ public class UsuarioBp  extends BaseBp{
             _idPerfil, _idEstado, _empresaId);
     }
     
-    public MaintenanceVO setConnectionStatus(UsuarioVO _data){
+    public ResultCRUDVO setConnectionStatus(UsuarioVO _data){
         return userDao.setConnectionStatus(_data);
     }
     
-    public MaintenanceVO setPassword(String _username,String _password, MaintenanceEventVO _eventdata){
-        MaintenanceVO theResult = userDao.setPassword(_username, _password);
+    public ResultCRUDVO setPassword(String _username,String _password, MaintenanceEventVO _eventdata){
+        ResultCRUDVO theResult = userDao.setPassword(_username, _password);
         String msgFinal = theResult.getMsg();
         theResult.setMsg(msgFinal);
         _eventdata.setDescription(msgFinal);

@@ -3,7 +3,7 @@ package cl.femase.gestionweb.servlet.mantencion;
 import cl.femase.gestionweb.servlet.BaseServlet;
 import cl.femase.gestionweb.business.ModulosSistemaBp;
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.ModuloSistemaVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import cl.femase.gestionweb.vo.UsuarioVO;
@@ -172,7 +172,7 @@ public class ModulosSistemaController extends BaseServlet {
                     }   
             }else if (action.compareTo("create") == 0) {
                         System.out.println(WEB_NAME+"Mantenedor - Modulos - Insertar modulo...");
-                        MaintenanceVO doCreate = modulosBp.insert(moduloobj, resultado);					
+                        ResultCRUDVO doCreate = modulosBp.insert(moduloobj, resultado);					
                         lstModulos.add(moduloobj);
 
                         //Convert Java Object to Json
@@ -183,7 +183,7 @@ public class ModulosSistemaController extends BaseServlet {
             }else if (action.compareTo("update") == 0) {  
                     System.out.println(WEB_NAME+"Mantenedor - Modulos - Actualizar modulo sistema...");
                     try{
-                        MaintenanceVO doUpdate = modulosBp.update(moduloobj, resultado);
+                        ResultCRUDVO doUpdate = modulosBp.update(moduloobj, resultado);
                         lstModulos.add(moduloobj);
 
                         //Convert Java Object to Json

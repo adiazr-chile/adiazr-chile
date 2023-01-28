@@ -137,7 +137,7 @@
             if (cencoSelected !== '-1'){
                 //alert('calcular. cencoId:' + cencoSelected + ', rutSelected: '+rutSelected);
                 document.location.href=
-                '<%=request.getContextPath()%>/servlet/VacacionesController?action=calcula_saldo&empresa_id='+empresaId
+                '<%=request.getContextPath()%>/servlet/CalculoVacacionesServlet?action=calcula_saldo&empresa_id='+empresaId
                 +'&depto_id=' + deptoId + '&cenco_id=' + cencoId + '&rutEmpleado=' + rutSelected;
             }else{
                 alert('La seleccion de centro de costo es obligatoria');
@@ -197,7 +197,7 @@
         <button type="submit" id="LoadRecordsButton">Consultar datos</button>
         <input name="botoncrear" 
             type="button" 
-            value="Calcular saldo vacaciones" 
+            value="Ejecutar calculo de vacaciones" 
             class="button button-blue" 
             onclick="calcularSaldo();">
         <!--<input name="boton_ingresar" 

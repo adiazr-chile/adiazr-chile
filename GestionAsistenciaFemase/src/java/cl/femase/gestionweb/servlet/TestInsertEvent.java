@@ -7,7 +7,7 @@ package cl.femase.gestionweb.servlet;
 
 import cl.femase.gestionweb.dao.MaintenanceEventsDAO;
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import java.io.IOException;
 import java.util.Date;
@@ -65,7 +65,7 @@ public class TestInsertEvent extends BaseServlet {
         resultado.setEmpresaIdSource("emp99");
         resultado.setDescription("Evento dummy, it_" + _iteracion);
         
-        MaintenanceVO respuesta = daoEventos.addLogAuditoria(resultado);
+        ResultCRUDVO respuesta = daoEventos.addLogAuditoria(resultado);
         
         if (respuesta.isThereError()){
             System.err.println("[TestInsertEvent]"

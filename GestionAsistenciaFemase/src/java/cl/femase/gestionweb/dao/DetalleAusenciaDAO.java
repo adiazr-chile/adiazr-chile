@@ -7,7 +7,7 @@ package cl.femase.gestionweb.dao;
 
 import cl.femase.gestionweb.common.Constantes;
 import cl.femase.gestionweb.common.DatabaseException;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.DetalleAusenciaVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import cl.femase.gestionweb.vo.UsuarioCentroCostoVO;
@@ -45,8 +45,8 @@ public class DetalleAusenciaDAO extends BaseDAO{
     * @param _data
     * @return 
     */
-    public MaintenanceVO update(DetalleAusenciaVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO update(DetalleAusenciaVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         PreparedStatement psupdate = null;
         int result=0;
         String msgError = "Error al actualizar "
@@ -144,8 +144,8 @@ public class DetalleAusenciaDAO extends BaseDAO{
     * @param _data
     * @return 
     */
-    public MaintenanceVO updateDiasEfectivosVacaciones(DetalleAusenciaVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO updateDiasEfectivosVacaciones(DetalleAusenciaVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         PreparedStatement psupdate = null;
         int result=0;
         String msgError = "Error al actualizar "
@@ -215,9 +215,9 @@ public class DetalleAusenciaDAO extends BaseDAO{
      * @param _diasEfectivos
     * @return 
     */
-    public MaintenanceVO updateDiasEfectivosVacaciones(int _correlativo, 
+    public ResultCRUDVO updateDiasEfectivosVacaciones(int _correlativo, 
             int _diasEfectivos){
-        MaintenanceVO objresultado = new MaintenanceVO();
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         PreparedStatement psupdate = null;
         int result=0;
         String msgError = "Error al actualizar "
@@ -274,8 +274,8 @@ public class DetalleAusenciaDAO extends BaseDAO{
      * @param _data
      * @return 
      */
-    public MaintenanceVO delete(DetalleAusenciaVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO delete(DetalleAusenciaVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         PreparedStatement psupdate = null;
         int result=0;
         String msgError = "Error al eliminar "
@@ -351,8 +351,8 @@ public class DetalleAusenciaDAO extends BaseDAO{
     * @param _runEmpleado
     * @return 
     */
-    public MaintenanceVO actualizaSaldosVacaciones(String _runEmpleado){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO actualizaSaldosVacaciones(String _runEmpleado){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         PreparedStatement ps = null;
         ResultSet rs = null;
         int result=0;
@@ -424,8 +424,8 @@ public class DetalleAusenciaDAO extends BaseDAO{
     * @param _runEmpleado
     * @return 
     */
-    public MaintenanceVO actualizaSaldosVacacionesVBA(String _runEmpleado){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO actualizaSaldosVacacionesVBA(String _runEmpleado){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         PreparedStatement ps = null;
         ResultSet rs = null;
         int result=0;
@@ -492,8 +492,8 @@ public class DetalleAusenciaDAO extends BaseDAO{
     * @param _data
     * @return 
     */ 
-    public MaintenanceVO insert(DetalleAusenciaVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO insert(DetalleAusenciaVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         int result=0;
         int newId = getNewIdDetalleAusencia();
         
@@ -602,8 +602,8 @@ public class DetalleAusenciaDAO extends BaseDAO{
     * @param _data
     * @return 
     */ 
-    public MaintenanceVO insertaVacacion(DetalleAusenciaVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO insertaVacacion(DetalleAusenciaVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         int result=0;
         int newId = getNewIdDetalleAusencia();
         
@@ -719,8 +719,8 @@ public class DetalleAusenciaDAO extends BaseDAO{
     * @param _data
     * @return 
     */ 
-    public MaintenanceVO insertaPermisoAdministrativo(DetalleAusenciaVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO insertaPermisoAdministrativo(DetalleAusenciaVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         int result=0;
         int newId = getNewIdDetalleAusencia();
         String msgError = "Error al insertar "

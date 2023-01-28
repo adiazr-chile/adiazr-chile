@@ -12,7 +12,7 @@ import cl.femase.gestionweb.common.ClientInfo;
 import cl.femase.gestionweb.common.Utilidades;
 import cl.femase.gestionweb.dao.MaintenanceEventsDAO;
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.MarcaVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import cl.femase.gestionweb.vo.UsuarioVO;
@@ -151,7 +151,7 @@ public class UploadMarcasServlet extends BaseServlet {
 //                                                +", rut: "+empleado.getRut());
                                             //if (empleadosBp.tieneContratoVigente(empleado.getEmpresa().getId(), empleado.getRut(), empleado.getCentroCosto().getId())){
                                                 //insertar marca
-                                                MaintenanceVO insertMarca = marcasBp.insert(newMark);
+                                                ResultCRUDVO insertMarca = marcasBp.insert(newMark);
                                                 if (!insertMarca.isThereError()){
                                                     marcasOk.put(""+csvRecord.getRecordNumber(), newMark);
                                                 }else{

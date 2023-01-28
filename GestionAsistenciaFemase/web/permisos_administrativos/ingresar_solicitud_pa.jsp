@@ -17,7 +17,9 @@
     double diasDisponibles  = 0;
     double diasUtilizados   = 0;
     boolean haySaldo = true;
-    String msgSaldo=""; 
+    String minDate = "";
+    String maxDate = "";
+    String msgSaldo = ""; 
     Calendar mycal = Calendar.getInstance(new Locale("es","CL"));
     int anioActual = mycal.get(Calendar.YEAR);
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -56,10 +58,13 @@
             int semestreActual = Utilidades.getSemestre(currentDate);
             diasDisponibles = saldoPA.getDiasDisponiblesSemestre1();
             diasUtilizados  = saldoPA.getDiasUtilizadosSemestre1();
-            
+            minDate = fechaActual;
+            maxDate = anioActual + "-06-30";
             if (semestreActual == 2){
                 diasDisponibles = saldoPA.getDiasDisponiblesSemestre2();
                 diasUtilizados  = saldoPA.getDiasUtilizadosSemestre2();
+                
+                maxDate = anioActual + "-12-31";
             }
             
             msgSaldo = "Dias disponibles: " + diasDisponibles;
@@ -155,8 +160,13 @@
                       <option value="PM">PM-TARDE</option>
                     </select>
                     
-                    <input type="date" id="fechaDesde" name="fechaDesde" min="<%=fechaActual%>" value="" placeholder="Ingrese fecha de inicio" />
-                    <input type="date" id="fechaHasta" name="fechaHasta" min="<%=fechaActual%>" value="" placeholder="Ingrese fecha de termino" />
+                    <input type="date" id="fechaDesde" name="fechaDesde" 
+                           min="<%=minDate%>" max="<%=maxDate%>"
+                           value="" placeholder="Ingrese fecha de inicio" />
+                    <input type="date" id="fechaHasta" 
+                           name="fechaHasta" 
+                           min="<%=minDate%>" max="<%=maxDate%>" 
+                           value="" placeholder="Ingrese fecha de termino" />
                     <label for="jornada">&nbsp;</label>
                     <br>
                     <input type="button" class="change_password" value="Vista previa" onClick="validate()" >

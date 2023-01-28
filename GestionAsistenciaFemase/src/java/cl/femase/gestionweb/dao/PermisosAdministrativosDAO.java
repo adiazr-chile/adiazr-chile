@@ -11,7 +11,7 @@ import cl.femase.gestionweb.common.DatabaseException;
 import cl.femase.gestionweb.common.Utilidades;
 import cl.femase.gestionweb.vo.DetalleAusenciaVO;
 import cl.femase.gestionweb.vo.InfoFeriadoVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import cl.femase.gestionweb.vo.PermisoAdministrativoVO;
 import java.sql.PreparedStatement;
@@ -72,8 +72,8 @@ public class PermisosAdministrativosDAO extends BaseDAO{
     * @param _data
     * @return 
     */
-    public MaintenanceVO updateResumenPA(PermisoAdministrativoVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO updateResumenPA(PermisoAdministrativoVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         PreparedStatement psupdate = null;
         int result=0;
         Date currentDate = new Date();
@@ -160,11 +160,11 @@ public class PermisosAdministrativosDAO extends BaseDAO{
     * @param _semestre
     * @return 
     */
-    public MaintenanceVO updateDiasAdministrativosSemestre(String _empresaId, 
+    public ResultCRUDVO updateDiasAdministrativosSemestre(String _empresaId, 
             int _anio, 
             int _semestre,
             int _maximoDiasSemestre){
-        MaintenanceVO objresultado = new MaintenanceVO();
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         PreparedStatement psupdate = null;
         int result=0;
         String msgError = "Error al actualizar "
@@ -245,11 +245,11 @@ public class PermisosAdministrativosDAO extends BaseDAO{
     * 
     * @return 
     */
-    public MaintenanceVO resetearDiasAdministrativosSemestre(String _empresaId, 
+    public ResultCRUDVO resetearDiasAdministrativosSemestre(String _empresaId, 
             int _maximoDiasSemestre,
             int _currentYear, 
             int _semestre){
-        MaintenanceVO objresultado = new MaintenanceVO();
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         int result=0;
         String msgError = "Error al retetear "
             + "Resumen Permiso Administrativo para el "
@@ -310,14 +310,94 @@ public class PermisosAdministrativosDAO extends BaseDAO{
         return objresultado;
     }
     
+    /**
+    * Reinicia el número de días de 'permisos administrativos' de un semestre (disponibles y utilizados)
+    * Para todos los empleados de la empresa indicada
+    * Esto es: 
+    *   Insertar un nuevo registro en la tabla 'permiso_administrativo' 
+    *   
+    * @param _empresaId
+     * @param _runEmpleado
+     * @param _maximoDiasSemestre
+     * @param _currentYear
+     * @param _semestre
+    * 
+    * @return 
+    */
+    public ResultCRUDVO insertaRegistroPermisoAdministrativo(String _empresaId, 
+            String _runEmpleado,
+            int _maximoDiasSemestre,
+            int _currentYear, 
+            int _semestre){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
+        int result=0;
+        String msgError = "Error al insertar "
+            + "Resumen Permiso Administrativo para: "
+            + "EmpresaId: " + _empresaId
+            + ", runEmpleado: " + _runEmpleado
+            + ", anio-semestre: " + _currentYear + "-" + _semestre
+            + ", maximo dias PA Semestre: " + _maximoDiasSemestre;
+        
+        String msgFinal = " Inserta Resumen Permiso Administrativo:"
+            + " EmpresaId [" + _empresaId + "]"
+            + ", run empleado [" + _runEmpleado + "]"    
+            + ", anio-semestre [" + _currentYear + "-" + _semestre + "]"
+            + ", maximo dias Semestre [" + _maximoDiasSemestre + "]";
+       
+        objresultado.setMsg(msgFinal);
+        PreparedStatement insert    = null;
+       
+        try{
+            String sql = "INSERT INTO permiso_administrativo("
+                + "empresa_id, "
+                + "run_empleado, "
+                + "anio, "
+                + "dias_disponibles_semestre" + _semestre + ", "
+                + "dias_utilizados_semestre" + _semestre + ", "
+                + "last_update) values ('" + _empresaId + "','" + _runEmpleado + "'," + _currentYear + "," + _maximoDiasSemestre + ",0,current_timestamp)";
+
+            dbConn = dbLocator.getConnection(m_dbpoolName,
+                "[PermisosAdministrativosDAO.insertaRegistroPermisoAdministrativo]");
+            insert = dbConn.prepareStatement(sql);
+                        
+            int filasAfectadas = insert.executeUpdate();
+            if (filasAfectadas > 0){
+                System.out.println(WEB_NAME+"[PermisosAdministrativosDAO."
+                    + "insertaRegistroPermisoAdministrativo]"
+                    + "Reseteo de Resumen PA OK, Anio: " + _currentYear+", filas afectadas= " + filasAfectadas);
+            }
+            
+            insert.close();
+            dbLocator.freeConnection(dbConn);
+        }catch(SQLException|DatabaseException sqle){
+            System.err.println("[PermisosAdministrativosDAO."
+                + "insertaRegistroPermisoAdministrativo]"
+                + "Error1: " + sqle.toString());
+            objresultado.setThereError(true);
+            objresultado.setCodError(result);
+            objresultado.setMsgError(msgError+" :"+sqle.toString());
+        }finally{
+            try {
+                if (insert != null) insert.close();
+                dbLocator.freeConnection(dbConn);
+            } catch (SQLException ex) {
+                System.err.println("[PermisosAdministrativosDAO."
+                    + "insertaRegistroPermisoAdministrativo]"
+                    + "Error: " + ex.toString());
+            }
+        }
+
+        return objresultado;
+    }
+    
 ////    /**
 ////    * Agrega un nuevo registro de Permiso Administrativo
 ////    * 
 ////    * @param _data
 ////    * @return 
 ////    */
-////    public MaintenanceVO insertResumenPASemestre1(PermisoAdministrativoVO _data){
-////        MaintenanceVO objresultado = new MaintenanceVO();
+////    public ResultCRUDVO insertResumenPASemestre1(PermisoAdministrativoVO _data){
+////        ResultCRUDVO objresultado = new ResultCRUDVO();
 ////        int result=0;
 ////        String msgError = "Error al insertar "
 ////            + "Resumen Permiso Administrativo (1er semestre), "
@@ -390,8 +470,8 @@ public class PermisosAdministrativosDAO extends BaseDAO{
     * @param _data
     * @return 
     */
-    public MaintenanceVO deleteResumenPA(PermisoAdministrativoVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO deleteResumenPA(PermisoAdministrativoVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         int result=0;
         String msgError = "Error al eliminar "
             + "resumen permiso administrativo, "

@@ -67,8 +67,8 @@
             ////doubleSaldoVacaciones = saldoVacaciones.getSaldoDias();//vacaciones.saldo_dias
             ////progresivos = saldoVacaciones.getDiasProgresivos();//vacaciones.dias_progresivos
             
-            doubleSaldoVacaciones = saldoVacaciones.getSaldoDiasVBA();
-            progresivos = saldoVacaciones.getSaldoDiasVP();
+            doubleSaldoVacaciones = saldoVacaciones.getSaldoDiasVBA();//vacaciones.saldo_dias_vba
+            progresivos = saldoVacaciones.getSaldoDiasVP();//vacaciones.saldo_dias_vp
             
             msgSaldo = "Saldo dias disponibles: " + doubleSaldoVacaciones;
             
@@ -81,7 +81,9 @@
         }
         if (doubleSaldoVacaciones <= 0){
             haySaldo=false;
-            msgSaldo = "Ud. no tiene saldo de vacaciones disponible. Comun&iacute;quese con su Jefe Directo.";
+            msgSaldo = "Ud. no tiene saldo de vacaciones disponible "
+                + "o puede ser que se requiera efectuar un c&aacute;lculo de saldo de vacaciones." 
+                + "Comun&iacute;quese con su Jefe Directo.";
         }
     }
         

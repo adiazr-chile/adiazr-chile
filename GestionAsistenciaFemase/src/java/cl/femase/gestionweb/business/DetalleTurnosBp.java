@@ -7,7 +7,7 @@ package cl.femase.gestionweb.business;
 
 import cl.femase.gestionweb.vo.DetalleTurnoVO;
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -66,9 +66,9 @@ public class DetalleTurnosBp  extends BaseBp{
         return lista;
     }
     
-    public MaintenanceVO update(DetalleTurnoVO _turnoToUpdate, 
+    public ResultCRUDVO update(DetalleTurnoVO _turnoToUpdate, 
             MaintenanceEventVO _eventdata){
-        MaintenanceVO updValues = detalleturnosService.update(_turnoToUpdate);
+        ResultCRUDVO updValues = detalleturnosService.update(_turnoToUpdate);
         
         //if (!updValues.isThereError()){
             String msgFinal = updValues.getMsg();
@@ -81,9 +81,9 @@ public class DetalleTurnosBp  extends BaseBp{
         return updValues;
     }
     
-    public MaintenanceVO delete(DetalleTurnoVO _turnoToDelete, 
+    public ResultCRUDVO delete(DetalleTurnoVO _turnoToDelete, 
             MaintenanceEventVO _eventdata){
-        MaintenanceVO deleteValues = detalleturnosService.delete(_turnoToDelete);
+        ResultCRUDVO deleteValues = detalleturnosService.delete(_turnoToDelete);
         
         //if (!updValues.isThereError()){
             String msgFinal = deleteValues.getMsg();
@@ -96,10 +96,10 @@ public class DetalleTurnosBp  extends BaseBp{
         return deleteValues;
     }
     
-    public MaintenanceVO insert(DetalleTurnoVO _objToInsert, 
+    public ResultCRUDVO insert(DetalleTurnoVO _objToInsert, 
             MaintenanceEventVO _eventdata){
         
-        MaintenanceVO insValues = detalleturnosService.insert(_objToInsert);
+        ResultCRUDVO insValues = detalleturnosService.insert(_objToInsert);
         
         //if (!updValues.isThereError()){
             String msgFinal = insValues.getMsg();

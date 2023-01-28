@@ -10,7 +10,7 @@ import cl.femase.gestionweb.vo.CentroCostoVO;
 import cl.femase.gestionweb.vo.DepartamentoVO;
 import cl.femase.gestionweb.vo.EmpleadoVO;
 import cl.femase.gestionweb.vo.EmpresaVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.PersonalEmpresaVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import java.sql.PreparedStatement;
@@ -46,8 +46,8 @@ public class PersonalEmpresaDAO extends BaseDAO{
      * @param _data
      * @return 
      */
-    public MaintenanceVO insert(PersonalEmpresaVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO insert(PersonalEmpresaVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         int result=0;
         String msgError = "Error al insertar "
             + "empleado en personal_empresa. "
@@ -113,8 +113,8 @@ public class PersonalEmpresaDAO extends BaseDAO{
      * @param _data
      * @return 
      */
-    public MaintenanceVO delete(PersonalEmpresaVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO delete(PersonalEmpresaVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         PreparedStatement psupdate = null;
         int result=0;
          String msgError = "Error al eliminar "

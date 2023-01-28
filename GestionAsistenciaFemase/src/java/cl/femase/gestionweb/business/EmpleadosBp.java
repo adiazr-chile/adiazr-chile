@@ -6,14 +6,17 @@
 package cl.femase.gestionweb.business;
 
 import cl.femase.gestionweb.common.Constantes;
+import cl.femase.gestionweb.common.Utilidades;
+import cl.femase.gestionweb.dao.ParametroDAO;
 import cl.femase.gestionweb.dao.UsersDAO;
 import cl.femase.gestionweb.vo.CargoVO;
 import cl.femase.gestionweb.vo.CentroCostoVO;
 import cl.femase.gestionweb.vo.DepartamentoVO;
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.EmpleadoVO;
 import cl.femase.gestionweb.vo.EmpresaVO;
+import cl.femase.gestionweb.vo.ParametroVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import cl.femase.gestionweb.vo.ResultadoCargaCsvVO;
 import cl.femase.gestionweb.vo.ResultadoCargaDataCsvVO;
@@ -24,6 +27,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -42,18 +46,28 @@ public class EmpleadosBp  extends BaseBp{
     private final cl.femase.gestionweb.dao.MaintenanceEventsDAO eventsService;
     private final cl.femase.gestionweb.dao.EmpleadosDAO empleadosDao;
     private final cl.femase.gestionweb.business.AsignacionTurnoBp asignacionTurnoBp;
+    private final cl.femase.gestionweb.dao.PermisosAdministrativosDAO permisosAdminDao;
+    private final cl.femase.gestionweb.dao.ParametroDAO daoParams;
     
+    /**
+    * 
+     * @param props
+    */
     public EmpleadosBp(PropertiesVO props) {
-        this.props = props;
-        eventsService = new cl.femase.gestionweb.dao.MaintenanceEventsDAO(this.props);
-        empleadosDao = new cl.femase.gestionweb.dao.EmpleadosDAO(this.props);
-        asignacionTurnoBp = new AsignacionTurnoBp(this.props);
+        this.props          = props;
+        eventsService       = new cl.femase.gestionweb.dao.MaintenanceEventsDAO(this.props);
+        empleadosDao        = new cl.femase.gestionweb.dao.EmpleadosDAO(this.props);
+        asignacionTurnoBp   = new AsignacionTurnoBp(this.props);
+        permisosAdminDao    = new cl.femase.gestionweb.dao.PermisosAdministrativosDAO(this.props);
+        daoParams           = new cl.femase.gestionweb.dao.ParametroDAO(this.props);
     }
 
     public EmpleadosBp() {
-        eventsService = new cl.femase.gestionweb.dao.MaintenanceEventsDAO(this.props);
-        empleadosDao = new cl.femase.gestionweb.dao.EmpleadosDAO(this.props);
-        asignacionTurnoBp = new AsignacionTurnoBp(this.props);
+        eventsService       = new cl.femase.gestionweb.dao.MaintenanceEventsDAO(this.props);
+        empleadosDao        = new cl.femase.gestionweb.dao.EmpleadosDAO(this.props);
+        asignacionTurnoBp   = new AsignacionTurnoBp(this.props);
+        permisosAdminDao    = new cl.femase.gestionweb.dao.PermisosAdministrativosDAO(this.props);
+        daoParams           = new cl.femase.gestionweb.dao.ParametroDAO(this.props);
     }
     
     public List<EmpleadoVO> getEmpleadosByTurno(String _empresaId, 
@@ -426,7 +440,7 @@ public class EmpleadosBp  extends BaseBp{
                     mensajes.add(new ResultadoCargaCsvVO("OK", "Empleado reemplazado exitosamente."));
                 } else {
                     System.out.println(WEB_NAME+"[EmpleadosBp.procesaEmpleadosCSV]Insertar nuevo empleado...");
-                    MaintenanceVO insertObj = insert(empleado, evento);
+                    ResultCRUDVO insertObj = insert(empleado, evento);
                     if (!insertObj.isThereError()){ 
                         mensajes.add(new ResultadoCargaCsvVO("OK", "Empleado creado exitosamente."));
                         int perfilId = Constantes.ID_PERFIL_EMPLEADO;
@@ -695,9 +709,9 @@ public class EmpleadosBp  extends BaseBp{
     * @param _eventdata
     * @return 
     */
-    public MaintenanceVO updateEmpleadoCaducado(EmpleadoVO _objectToUpdate, 
+    public ResultCRUDVO updateEmpleadoCaducado(EmpleadoVO _objectToUpdate, 
             MaintenanceEventVO _eventdata){
-        MaintenanceVO updValues = empleadosDao.updateEmpleadoCaducado(_objectToUpdate);
+        ResultCRUDVO updValues = empleadosDao.updateEmpleadoCaducado(_objectToUpdate);
         
         //if (!updValues.isThereError()){
             String msgFinal = updValues.getMsg();
@@ -716,7 +730,7 @@ public class EmpleadosBp  extends BaseBp{
     * @param _eventdata
     * @return
     */
-    public MaintenanceVO update(EmpleadoVO _empleadoToUpdate, 
+    public ResultCRUDVO update(EmpleadoVO _empleadoToUpdate, 
             MaintenanceEventVO _eventdata){
         System.out.println(WEB_NAME+"[EmpleadosBp.update]"
             + "Actualizar empleado "
@@ -726,7 +740,7 @@ public class EmpleadosBp  extends BaseBp{
         
         boolean existeEmail = empleadosDao.existeEmail(_empleadoToUpdate.getRut(), 
             _empleadoToUpdate.getEmail(), _empleadoToUpdate.getEmpresa().getId());
-        MaintenanceVO updValues = new MaintenanceVO();
+        ResultCRUDVO updValues = new ResultCRUDVO();
         if (existeEmail){
             updValues.setThereError(true);
             updValues.setCodError(99);
@@ -748,7 +762,7 @@ public class EmpleadosBp  extends BaseBp{
                     && _empleadoToUpdate.getCodInternoCaracterAdicional().compareTo("") != 0){
                         codInterno = codInterno + _empleadoToUpdate.getCodInternoCaracterAdicional();
                 }
-                MaintenanceVO auxEvt = 
+                ResultCRUDVO auxEvt = 
                     usuarioDao.setEstadoUsuario(codInterno.toUpperCase(), 
                         _empleadoToUpdate.getEstado());
                 
@@ -794,12 +808,12 @@ public class EmpleadosBp  extends BaseBp{
     * @param _eventdata
     * @return 
     */
-    public MaintenanceVO insert(EmpleadoVO _empleadoToInsert, 
+    public ResultCRUDVO insert(EmpleadoVO _empleadoToInsert, 
             MaintenanceEventVO _eventdata){
         
         boolean existeEmail = empleadosDao.existeEmail(_empleadoToInsert.getRut(),
             _empleadoToInsert.getEmail(), _empleadoToInsert.getEmpresa().getId());
-        MaintenanceVO insValues = new MaintenanceVO();
+        ResultCRUDVO insValues = new ResultCRUDVO();
         if (existeEmail){
             insValues.setThereError(true);
             insValues.setCodError(99);
@@ -848,6 +862,40 @@ public class EmpleadosBp  extends BaseBp{
             System.out.println(WEB_NAME+"[EmpleadosBp.insert]"
                 + "Insertar usuario con perfil Empleado o Director...");
             insertarUsuario(_empleadoToInsert, perfilUsuario, newUsername, newPassword, _eventdata);
+            
+            //*********************************************************************
+            //*********Insertar registro en la tabla permiso_administrativo *******
+            Date currentDate = new Date();
+            SimpleDateFormat anioFormat = new SimpleDateFormat("yyyy");
+            ParametroVO parametro =
+                daoParams.getParametroByKey(_empleadoToInsert.getEmpresa().getId(), 
+                    Constantes.ID_PARAMETRO_MAXIMO_SEMESTRAL_DIAS_PA);
+            int MAXIMO_SEMESTRAL_DIAS_PA = (int)parametro.getValor();
+            int CURRENT_YEAR =  Integer.parseInt(anioFormat.format(new Date()));
+            int semestreActual = Utilidades.getSemestre(currentDate);
+            System.out.println(WEB_NAME+"[EmpleadosBp.insert]"
+                + "Nuevo empleado. Insertar registro en la tabla permiso_administrativo. "
+                + "Empresa_id: " + _empleadoToInsert.getEmpresa().getId()
+                + ", RUN empleado: " + _empleadoToInsert.getCodInterno()
+                + ", MAXIMO_SEMESTRAL_DIAS_PA: " + MAXIMO_SEMESTRAL_DIAS_PA
+                + ", CURRENT_YEAR: " + CURRENT_YEAR
+                + ", semestreActual: " + semestreActual);
+            ResultCRUDVO resultadoInsert = permisosAdminDao.insertaRegistroPermisoAdministrativo(_empleadoToInsert.getEmpresa().getId(),
+                _empleadoToInsert.getCodInterno(),
+                MAXIMO_SEMESTRAL_DIAS_PA,
+                CURRENT_YEAR,
+                semestreActual);
+            
+            if (resultadoInsert.isThereError()){
+                System.out.println(WEB_NAME+"[EmpleadosBp.insert]"
+                    + "Error al Insertar registro en la tabla permiso_administrativo. "
+                    + resultadoInsert.getMsgError());
+            }else{
+                System.out.println(WEB_NAME+"[EmpleadosBp.insert]"
+                    + "Registro insertado exitosamente en la tabla permiso_administrativo. ");
+            }
+            
+            //*********************************************************************
             
         }
         //if (!updValues.isThereError()){
@@ -900,7 +948,7 @@ public class EmpleadosBp  extends BaseBp{
         _eventdata.setRutEmpleado(codInterno.toUpperCase());
         _eventdata.setType("USR");
         //Insertar usuario
-        MaintenanceVO result = usuarioBp.insert(usuario, _eventdata);
+        ResultCRUDVO result = usuarioBp.insert(usuario, _eventdata);
         
         //Insertar centro de costo para el nuevo usuario
         UsuarioCentroCostoVO newUserCenco=
@@ -917,9 +965,9 @@ public class EmpleadosBp  extends BaseBp{
     }
     
     /*
-    public MaintenanceVO delete(ContractRelationVO _relationToDelete, 
+    public ResultCRUDVO delete(ContractRelationVO _relationToDelete, 
             MaintenanceEventVO _eventdata){
-        MaintenanceVO insValues = contractRelService.delete(_relationToDelete);
+        ResultCRUDVO insValues = contractRelService.delete(_relationToDelete);
         
         //if (!updValues.isThereError()){
             String msgFinal = insValues.getMsg();

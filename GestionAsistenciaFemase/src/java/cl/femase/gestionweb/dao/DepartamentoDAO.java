@@ -7,7 +7,7 @@ package cl.femase.gestionweb.dao;
 
 import cl.femase.gestionweb.common.Constantes;
 import cl.femase.gestionweb.common.DatabaseException;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.DepartamentoVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import cl.femase.gestionweb.vo.UsuarioCentroCostoVO;
@@ -97,8 +97,8 @@ public class DepartamentoDAO extends BaseDAO{
      * @param _data
      * @return 
      */
-    public MaintenanceVO update(DepartamentoVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO update(DepartamentoVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         PreparedStatement psupdate = null;
         int result=0;
         String msgError = "Error al actualizar "
@@ -166,8 +166,8 @@ public class DepartamentoDAO extends BaseDAO{
      * @param _data
      * @return 
      */
-    public MaintenanceVO insert(DepartamentoVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO insert(DepartamentoVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         int result=0;
         String msgError = "Error al insertar "
             + "departamento. "
@@ -229,8 +229,8 @@ public class DepartamentoDAO extends BaseDAO{
      * @param _data
      * @return 
      */
-    public MaintenanceVO delete(DepartamentoVO _data){
-        MaintenanceVO objresultado = new MaintenanceVO();
+    public ResultCRUDVO delete(DepartamentoVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
         int result=0;
         String msgError = "Error al eliminar "
             + "un departamento, Id: "+_data.getId()

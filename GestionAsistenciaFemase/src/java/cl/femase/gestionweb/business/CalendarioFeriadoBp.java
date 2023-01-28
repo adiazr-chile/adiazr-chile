@@ -10,7 +10,7 @@ import cl.femase.gestionweb.vo.EmpleadoVO;
 import cl.femase.gestionweb.vo.InfoFeriadoJsonObjectVO;
 import cl.femase.gestionweb.vo.InfoFeriadoVO;
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
-import cl.femase.gestionweb.vo.MaintenanceVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -163,9 +163,9 @@ public class CalendarioFeriadoBp  extends BaseBp{
         return hashFechas;
     }
     
-    public MaintenanceVO update(CalendarioFeriadoVO _objectToUpdate, 
+    public ResultCRUDVO update(CalendarioFeriadoVO _objectToUpdate, 
             MaintenanceEventVO _eventdata){
-        MaintenanceVO updValues = feriadosDao.update(_objectToUpdate);
+        ResultCRUDVO updValues = feriadosDao.update(_objectToUpdate);
         
         //if (!updValues.isThereError()){
             String msgFinal = updValues.getMsg();
@@ -178,9 +178,9 @@ public class CalendarioFeriadoBp  extends BaseBp{
         return updValues;
     }
     
-    public MaintenanceVO delete(String _rowKey, 
+    public ResultCRUDVO delete(String _rowKey, 
             MaintenanceEventVO _eventdata){
-        MaintenanceVO updValues = feriadosDao.delete(_rowKey);
+        ResultCRUDVO updValues = feriadosDao.delete(_rowKey);
         
         //if (!updValues.isThereError()){
             String msgFinal = updValues.getMsg();
@@ -199,10 +199,10 @@ public class CalendarioFeriadoBp  extends BaseBp{
     * @param _eventdata
     * @return 
     */
-    public MaintenanceVO insert(CalendarioFeriadoVO _objToInsert, 
+    public ResultCRUDVO insert(CalendarioFeriadoVO _objToInsert, 
             MaintenanceEventVO _eventdata){
         
-        MaintenanceVO insValues = feriadosDao.insert(_objToInsert);
+        ResultCRUDVO insValues = feriadosDao.insert(_objToInsert);
         
         //if (!updValues.isThereError()){
             String msgFinal = insValues.getMsg();
