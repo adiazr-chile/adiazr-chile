@@ -60,8 +60,13 @@ import javax.servlet.http.HttpSession;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.data.JRCsvDataSource;
+import net.sf.jasperreports.engine.export.ooxml.JRXlsxExporter;
 import net.sf.jasperreports.engine.util.JRLoader;
+import net.sf.jasperreports.export.SimpleExporterInput;
+import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
+import net.sf.jasperreports.export.SimpleXlsxReportConfiguration;
        
 import org.apache.pdfbox.multipdf.PDFMergerUtility;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -113,6 +118,7 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
         ServletContext application  = this.getServletContext();
         PropertiesVO appProperties  = (PropertiesVO)application.getAttribute("appProperties");
         String tipoParam = request.getParameter("tipo");
+        String formato = request.getParameter("formato");
         UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
         FileGeneratedVO fileGenerated = null;
         System.out.println(WEB_NAME+"[servlet.reportes."
@@ -121,9 +127,13 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
             +", usuario conectado: "+userConnected.getUsername());
         if (_empleado == null) return null;
         String jasperFilename   = "asistencia_semanal.jasper";
-        String pdfFileName      = "asistencia_semanal_" + _empleado.getRut() + ".pdf";
         String jasperFullPath   = appProperties.getReportesPath() + File.separator + jasperFilename;
-        String pdfFullPath      = appProperties.getPathExportedFiles() + File.separator + pdfFileName;
+        String outputFileName      = "asistencia_semanal_" + _empleado.getRut() + ".pdf";
+        if (formato.compareTo("xls") == 0){
+            outputFileName      = "asistencia_semanal_" + _empleado.getRut() + ".xlsx";
+        }
+        
+        String outputFullPath      = appProperties.getPathExportedFiles() + File.separator + outputFileName;
         
         System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal."
             + "processRequestRut]"
@@ -160,45 +170,27 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
                         + "processRequestRut]"
                         + "jasperFullPath: " + jasperFullPath
                         + ", csvFile: " + csvFile
-                        + ", pdfFullPath: " + pdfFullPath);
+                        + ", pdfFullPath: " + outputFullPath);
                     
-                    fillJasperReport(jasperFullPath, 
-                        parameters,
-                        csvFile, 
-                        pdfFullPath);
-                    
-                    ////JasperReport report = JasperCompileManager.compileReport(jrxmlFullPath);
-//                    JRCsvDataSource ds = new JRCsvDataSource(csvFile);
-//                    ds.setColumnNames(columnNames);
-//                    JasperRunManager.runReportToPdfFile(jrxmlFullPath, 
-//                        fullPath, parameters, ds);
-                    ////JasperPrint jprint = JasperFillManager.fillReport(report, parameters, ds);
-                    ////JasperExportManager.exportReportToPdfFile(jprint,
-                    ////    "C:\\paso\\asistencia_salida_100.pdf");
-
-                    //Map parameters = new Hash Map();
-                    ////JasperPrint jprint = JasperFillManager.fillReport(report, parameters, ds);
-                    ////JasperExportManager.exportReportToPdfFile(jprint,fullPath);
-                    ////JasperRunManager.runReportToPdfFile(jrxmlFullPath, fullPath, parameters, ds);
-                    
+                    if (formato.compareTo("pdf") == 0){
+                        fillJasperReportToPdf(jasperFullPath, 
+                            parameters,
+                            csvFile, 
+                            outputFullPath);
+                    }else{//en excel
+                        fillJasperReportToXLSX(jasperFullPath, 
+                            parameters,
+                            csvFile, 
+                            outputFileName, 
+                            response);
+                    }
                 }catch(JRException jex){
                     System.err.println("[processRequestRut.processRequestRut]"
                         + "Error al leer template jasper report: "+jex.toString());
                     jex.printStackTrace();
                 }
                 
-//                
-//                try{   
-//                    fullPath = 
-//                        appProperties.getPathExportedFiles()+File.separator+fileName;
-//                    JasperRunManager.runReportToPdfFile(jasperFileName, fullPath, parameters, m_databaseConnection);
-//                }catch(Exception e){
-//                    System.err.println("[processRequestRut.processRequestRut]"
-//                        + "Error al generar pdf: "+e.toString());
-//                    e.printStackTrace();
-//                }
-                //}
-                fileGenerated = new FileGeneratedVO(pdfFileName, pdfFullPath);     
+                fileGenerated = new FileGeneratedVO(outputFileName, outputFullPath);
         }else{
             System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal."
                 + "processRequestRut]NO Generar archivo...");
@@ -239,23 +231,44 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
     /**
     * 
     */
-    private void fillJasperReport(String _jasperReportName,
+    private void fillJasperReportToPdf(String _jasperReportName,
             Map _parameters,
             String _csvFilename, 
             String _outputPdfFilename) throws JRException
     {
-        //long start = System.currentTimeMillis();
-        //Preparing parameters
-//        Map parameters = new HashMap();
-//        parameters.put("empresa_nombre", "FEMASE Corp");
-//        parameters.put("empresa_direccion", "avda bla bla");
-        //String jasperFile = "C:\\Proyectos\\GestionFemaseRuntime\\reportes\\asistencia_semanal.jasper";
         String outputfile = JasperFillManager.fillReportToFile(_jasperReportName,
             _parameters, getDataSource(_csvFilename));
         JasperExportManager.exportReportToPdfFile(outputfile,
             _outputPdfFilename);
-        //System.err.println("Filling time : " + (System.currentTimeMillis() - start));
-    }     
+    }
+    
+    /**
+    * 
+    */
+    private void fillJasperReportToXLSX(String _sourceFileName,
+            Map _parameters,
+            String _csvFilename, 
+            String _outputXlsFilename,
+            HttpServletResponse _response) throws JRException
+    {
+        
+        System.out.println("[ReporteAsistenciaSemanal.fillJasperReportToXLSX]Generar reporte en formato XLSX");
+        try{
+            JasperPrint jasperPrint = JasperFillManager.fillReport(_sourceFileName, _parameters,getDataSource(_csvFilename));
+            JRXlsxExporter exporter = new JRXlsxExporter();
+            SimpleXlsxReportConfiguration reportConfigXLS = new SimpleXlsxReportConfiguration();
+            reportConfigXLS.setSheetNames(new String[] { "sheet1" });
+            exporter.setConfiguration(reportConfigXLS);
+            exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
+            exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(_response.getOutputStream()));
+            _response.setHeader("Content-Disposition", "attachment;filename=" + _outputXlsFilename);
+            _response.setContentType("application/octet-stream");
+            exporter.exportReport();
+        }catch(IOException ioex){
+            System.err.println("[ReporteAsistenciaSemanal.fillJasperReportToXLSX]Error: "+ ioex.toString());
+        }
+        
+    }
         
 //    /**
 //     * obtiene parametros a setear en el reporte
@@ -1041,13 +1054,13 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
                     +", nombre: " + empleado.getNombreCompleto());
                 if (nombreCenco.compareTo("") == 0) nombreCenco = empleado.getCencoNombre();
                 List<DetalleAsistenciaVO> detalleAsistenciaRut = detalles.get(empleado.getRut());
-                if (detalleAsistenciaRut!=null){
-                    System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal.doPost]"
-                        + "detalleAsistenciaRut != null!");
-                }else{
-                    System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal.doPost]"
-                        + "detalleAsistenciaRut is null!");
-                }
+//                if (detalleAsistenciaRut!=null){
+//                    System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal.doPost]"
+//                        + "detalleAsistenciaRut != null!");
+//                }else{
+//                    System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal.doPost]"
+//                        + "detalleAsistenciaRut is null!");
+//                }
                 empleado.setEmpresaId(empresaId);
                 archivoGenerado = processRequestRut(request, response, empleado, detalleAsistenciaRut);
                 
@@ -1056,7 +1069,7 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
                         + "archivo generado: " + archivoGenerado.getFileName());
                     archivosGenerados.put(empleado.getRut(), archivoGenerado.getFilePath());
                 }    
-            }
+            }// fin iteracion empleados
                         
             if (archivosGenerados.size() > 0){
                 archivoGenerado = mergePdfFiles(archivosGenerados, userConnected, nombreCenco);

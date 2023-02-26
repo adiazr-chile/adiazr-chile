@@ -156,6 +156,19 @@
             }else return false;
 			
         }
+		
+		function selectAll(selectBox,selectAll) { 
+			// have we been passed an ID 
+			if (typeof selectBox == "string") { 
+				selectBox = document.getElementById(selectBox);
+			} 
+			// is the select box a multiple select box? 
+			if (selectBox.type == "select-multiple") { 
+				for (var i = 0; i < selectBox.options.length; i++) { 
+					 selectBox.options[i].selected = selectAll; 
+				} 
+    		}
+    	}
         
     </script>
     
@@ -245,8 +258,9 @@
             <!-- inicio div empleado -->
             <div id="content4" align="left">    
                 <div id="col1"><label>Empleado</label></div>
+                <div id="col1"><label><input type="button" name="Button" value="Seleccionar todos" onclick="selectAll(document.getElementById('rutEmpleado'),true)" /></label></div>
                 <div id="col2">    
-                    <select name="rutEmpleado" size="10" id="rutEmpleado">
+                    <select name="rutEmpleado" size="10" id="rutEmpleado" multiple>
                         <option value='-1' selected>Seleccione Empleado</option>
                     </select>
             	</div>

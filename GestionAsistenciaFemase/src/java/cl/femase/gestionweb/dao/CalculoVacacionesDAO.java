@@ -40,7 +40,7 @@ public class CalculoVacacionesDAO extends BaseDAO{
             String _fechaEmisionCertificadoAFP, 
             int _numCotizaciones,
             String _diasEspeciales,
-            int _diasAdicionales, 
+            double _diasAdicionales, 
             String _afpCode){
         ResultCRUDVO CRUDResult = new ResultCRUDVO();
         String strJson = "";
@@ -77,9 +77,15 @@ public class CalculoVacacionesDAO extends BaseDAO{
         *       select set_fecha_base_vacacion_progresiva('9967722-8','emp01',null,0 ,'S',2,'NINGUNA');
         * 
         */
+        if (_fechaEmisionCertificadoAFP != null &&
+            _fechaEmisionCertificadoAFP.compareTo("") == 0) {
+                _fechaEmisionCertificadoAFP = "null";
+        }else{
+            _fechaEmisionCertificadoAFP = "'" + _fechaEmisionCertificadoAFP + "'";
+        }
         String sqlFunctionInvoke = "select " + Constantes.fnSET_FECHA_BASE_VP + "('" + _runEmpleado + "',"
                 + "'" + _empresaId + "',"
-                + "'" + _fechaEmisionCertificadoAFP + "',"
+                + _fechaEmisionCertificadoAFP + ","
                 + _numCotizaciones + ","
                 + "'" + _diasEspeciales + "',"
                 + _diasAdicionales + ","

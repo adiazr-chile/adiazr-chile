@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+import org.apache.commons.io.FileUtils;
 
 /**
 * This utility compresses a list of files to standard ZIP format file.
@@ -33,32 +34,74 @@ public class UtilZipFiles {
     private static final int BUFFER_SIZE = 4096;
 
     /**
-     * Compresses a collection of files to a destination zip file
-     * @param listFiles A collection of files and directories
-     * @param destZipFile The path of the destination zip file
-     * @throws FileNotFoundException
-     * @throws IOException
-     */
-   public static void compressFiles(List<File> listFiles, String destZipFile) throws FileNotFoundException, IOException {
+    * Compresses a collection of files to a destination zip file
+    * @param listFiles A collection of files and directories
+    * @param destZipFile The path of the destination zip file
+    * @throws FileNotFoundException
+    * @throws IOException
+    */
+    public static void compressFiles(List<File> listFiles, String destZipFile) throws FileNotFoundException, IOException {
        System.out.println(WEB_NAME+"[UtilZipFiles.compressFiles]"
-               + "zip destino: "+destZipFile);
+            + "zip destino: "+destZipFile);
 
        ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(destZipFile));
 
        for (File file : listFiles) {
-           if (file.isDirectory()) {
-               addFolderToZip(file, file.getName(), zos);
-           } else {
-               addFileToZip(file, zos);
-           }
+            System.out.println(WEB_NAME+"[UtilZipFiles.compressFiles]"
+                + "file to zip: " + file.getName()
+                + ", file.abs path: " + file.getAbsolutePath());
+            if (file.isDirectory()) {
+                addFolderToZip(file, file.getName(), zos);
+            } else {
+                addFileToZip(file, zos);
+            }
        }
 
        if (zos!=null){
            zos.flush();
            zos.close();
        }
-   }
+    }
 
+    /**
+    * Delete a collection of files
+    * 
+    * @param listFiles A collection of files and directories
+    * @throws FileNotFoundException
+    * @throws IOException
+    */
+    public static void deleteFiles(List<File> listFiles) throws FileNotFoundException, IOException {
+        //System.out.println(WEB_NAME+"[UtilZipFiles.deleteFiles]");
+        System.gc();//Added this part
+        try{
+            Thread.sleep(2000);////This part gives the Bufferedreaders and the InputStreams time to close Completely
+        }catch(InterruptedException inex){
+            System.err.println(WEB_NAME 
+                + "[UtilZipFiles.deleteFiles]Error al hacer sleep: " + inex.toString());
+        }
+        for (File file : listFiles) {
+//            System.out.println(WEB_NAME+"[UtilZipFiles.deleteFiles]"
+//                + "file to delete: " + file.getName()
+//                + ", file.abs path: " + file.getAbsolutePath()
+//                + ", file.path: " + file.getPath()
+//                + ", file.exists? " + file.exists());
+            
+            try{
+                if (file.exists()){
+                    file.delete();
+//                    System.out.println(WEB_NAME+"[UtilZipFiles.deleteFiles]"
+//                        + "file.delete? " + file.delete());
+                }else{
+                    System.out.println(WEB_NAME+"[UtilZipFiles.deleteFiles]"
+                        + "archivo no existe");
+                }
+            }catch(Exception ex){
+                System.err.println(WEB_NAME 
+                    + "[UtilZipFiles.deleteFiles]Error_1: " + ex.toString());
+            }
+        }
+    }
+    
    /**
     * Adds a directory to the current zip output stream
     * @param folder the directory to be  added

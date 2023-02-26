@@ -469,11 +469,11 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
                                 + ", turnoNombre: " + infoEmpleado.getNombreTurno()    
                                 + ". Hora entrada turno: " + turnoDetalle.getHoraEntrada()
                                 + ". Hora salida turno: " + turnoDetalle.getHoraSalida());
-                            
+                            String newHoraSalidaTurno = Utilidades.restarMinsHora(turnoDetalle.getHoraSalida(), turnoDetalle.getMinutosColacion());
                             HashMap<Integer,Utilidades.IntervaloVO> 
                                 intervalos = 
                                     Utilidades.getIntervalos(turnoDetalle.getHoraEntrada(), 
-                                        turnoDetalle.getHoraSalida(), 2);
+                                        newHoraSalidaTurno, 2, turnoDetalle.getMinutosColacion());
                             
                             if (solicitud.getJornada().compareTo(Constantes.JORNADA_PERMISO_ADMINISTRATIVO_AM) == 0){
                                 intervalo = intervalos.get(1);

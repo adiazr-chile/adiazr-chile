@@ -855,7 +855,7 @@ public class VacacionesDAO extends BaseDAO{
                 data.setAfpCode(rs.getString("afp_code"));
                 data.setAfpName(rs.getString("afp_name"));
                 data.setFechaCertifVacacionesProgresivas(rs.getString("fec_certif_vac_progresivas"));
-                data.setDiasAdicionales(rs.getInt("dias_adicionales"));
+                data.setDiasAdicionales(rs.getDouble("dias_adicionales"));
                 data.setDiasEfectivos(rs.getDouble("dias_efectivos_tomados"));
                 
                 data.setFechaBaseVp(rs.getString("fecha_base_vp"));
@@ -1004,7 +1004,7 @@ public class VacacionesDAO extends BaseDAO{
                 data.setAfpCode(rs.getString("afp_code"));
                 data.setAfpName(rs.getString("afp_name"));
                 data.setFechaCertifVacacionesProgresivas(rs.getString("fec_certif_vac_progresivas"));
-                data.setDiasAdicionales(rs.getInt("dias_adicionales"));
+                data.setDiasAdicionales(rs.getDouble("dias_adicionales"));
                 data.setDiasEfectivos(rs.getDouble("dias_efectivos_tomados"));
                 
                 data.setFechaBaseVp(rs.getString("fecha_base_vp"));

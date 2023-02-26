@@ -39,7 +39,7 @@ public class CalculoVacacionesBp  extends BaseBp{
             String _fechaEmisionCertificadoAFP, 
             int _numCotizaciones,
             String _diasEspeciales,
-            int _diasAdicionales, 
+            double _diasAdicionales, 
             String _afpCode, 
             MaintenanceEventVO _eventdata){
         

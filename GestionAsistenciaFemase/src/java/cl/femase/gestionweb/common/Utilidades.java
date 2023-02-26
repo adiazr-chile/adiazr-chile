@@ -989,6 +989,38 @@ public class Utilidades {
     
     /**
     * 
+    * @param _horaHHMM
+    * @param _minutosASumar
+    * @return 
+    */
+    public static String sumarMinsHora(String _horaHHMM, int _minutosASumar){
+        //******************* restar minutos a una hora
+        System.out.println("[sumarMinsHora](new)hora: " + _horaHHMM
+            + ", minutosSumar: "+_minutosASumar);
+        SimpleDateFormat fechaFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat horaFormat = new SimpleDateFormat("HH:mm:ss");
+        SimpleDateFormat fechahoraFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        Calendar mycal = Calendar.getInstance();
+        Date fechaActual = mycal.getTime();
+        Date fechaAux = getDateFromString(fechaFormat.format(fechaActual)+ " " + _horaHHMM, "yyyy-MM-dd HH:mm");
+        
+        // Obtiene fecha y hora actuales
+        Calendar fecha = Calendar.getInstance();
+        fecha.setTime(fechaAux);
+        System.out.println("La fecha actual es: " +fechahoraFormat.format(fechaAux));
+        
+        // Restar minutos a la fecha
+        fecha.add(Calendar.MINUTE, _minutosASumar);
+        
+        String result = horaFormat.format(fecha.getTimeInMillis());
+        System.out.println("La fecha actual nueva es: " + result);
+        System.out.println("[Utilidades.sumarMinsHora](new)resultado: " + result);
+        
+        return result;
+    }
+    
+    /**
+    * 
     * @param _year
     * @param _month
     * @param _day
@@ -1729,7 +1761,7 @@ public class Utilidades {
     * @return 
     */
     public static HashMap<Integer,IntervaloVO> getIntervalos(String _horaInicioTurno, 
-        String _horaFinTurno, int _numIntervalos){
+        String _horaFinTurno, int _numIntervalos, int _minutosColacion){
         
         HashMap<Integer, IntervaloVO> hashIntervalos = new HashMap<>();
         SimpleDateFormat sdfHora    = new SimpleDateFormat("HH:mm:ss", new Locale("es","CL"));
@@ -1750,9 +1782,17 @@ public class Utilidades {
                 Date start = intervalo.getStart().toDate();
                 Date end = intervalo.getEnd().toDate();
                 
+                String newHoraFinIntervalo = Utilidades.sumarMinsHora(sdfHora.format(end), _minutosColacion);
+                StringTokenizer tokenHora = new StringTokenizer(newHoraFinIntervalo, ":");
+                Calendar newCal = Calendar.getInstance(new Locale("es","CL"));
+                newCal.set(Calendar.HOUR_OF_DAY, Integer.parseInt(tokenHora.nextToken()));
+                newCal.set(Calendar.MINUTE, Integer.parseInt(tokenHora.nextToken()));
+                newCal.set(Calendar.SECOND, Integer.parseInt(tokenHora.nextToken()));
+                Date newFechaFin = newCal.getTime();
+                
                 IntervaloVO objIntervalo = new IntervaloVO();
                 objIntervalo.setHoraInicio(sdfHora.format(start));
-                objIntervalo.setHoraFin(sdfHora.format(end));
+                objIntervalo.setHoraFin(sdfHora.format(newFechaFin));
                 
                 hashIntervalos.put(iteracion, objIntervalo);
                 

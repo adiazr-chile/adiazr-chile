@@ -14,6 +14,7 @@ import cl.femase.gestionweb.business.TurnoRotativoBp;
 import cl.femase.gestionweb.business.TurnosBp;
 import cl.femase.gestionweb.common.Constantes;
 import cl.femase.gestionweb.common.ExcelReportWriter;
+import cl.femase.gestionweb.common.UtilZipFiles;
 import cl.femase.gestionweb.common.Utilidades;
 import cl.femase.gestionweb.common.freemarker.PdfGenerator;
 import cl.femase.gestionweb.vo.DetalleAsistenciaVO;
@@ -75,6 +76,7 @@ public class ReporteDiasFestivosTrabajados extends BaseServlet {
     static String REPORT_NAME_PDF = "_inf_dgo_festivos_trabajados.pdf";
     static String REPORT_NAME_XML = "_inf_dgo_festivos_trabajados.xml";
     static String REPORT_LABEL = "Reporte de dia domingos y festivos";
+    static String ZIP_FILE_NAME = "_inf_dgo_festivos_trabajados.zip";
     
     ExcelReportWriter excelReportWriter = new ExcelReportWriter();
     
@@ -92,6 +94,8 @@ public class ReporteDiasFestivosTrabajados extends BaseServlet {
             throws ServletException, IOException {
         
         HttpSession session = request.getSession(true);
+        ServletContext application = this.getServletContext();
+        PropertiesVO appProperties=(PropertiesVO)application.getAttribute("appProperties");
         UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
         
         int intCencoId = -1;
@@ -131,13 +135,16 @@ public class ReporteDiasFestivosTrabajados extends BaseServlet {
             + ", cenco: " + intCencoId);
         ArrayList<EmpleadoVO> listaEmpleados = new ArrayList<>();
         String[] empleadosSelected = request.getParameterValues("rutEmpleado");
+        ArrayList<FileGeneratedVO> archivosGenerados = new ArrayList<>();
         if (empleadosSelected != null){
             for (int x = 0; x < empleadosSelected.length; x++){
-                System.out.println(WEB_NAME+"[servlet.ReporteDiasFestivosTrabajados]"
-                    + "rut seleccionado[" + x + "] = " + empleadosSelected[x]);
-                EmpleadoVO auxEmpleado=new EmpleadoVO();
-                auxEmpleado.setRut(empleadosSelected[x]);
-                listaEmpleados.add(auxEmpleado);
+                if (empleadosSelected[x].compareTo("-1") != 0){
+                    System.out.println(WEB_NAME+"[servlet.ReporteDiasFestivosTrabajados]"
+                        + "rut seleccionado[" + x + "] = " + empleadosSelected[x]);
+                    EmpleadoVO auxEmpleado=new EmpleadoVO();
+                    auxEmpleado.setRut(empleadosSelected[x]);
+                    listaEmpleados.add(auxEmpleado);
+                }
             }     
         }else System.out.println(WEB_NAME+"[servlet.ReporteDiasFestivosTrabajados]"
             + "No hay empleados seleccionados");
@@ -146,37 +153,113 @@ public class ReporteDiasFestivosTrabajados extends BaseServlet {
         //generar link para download del archivo csv
         String fileName = userConnected.getUsername()+REPORT_NAME_CSV;
         String fullFilePath="";
-        
+        FileGeneratedVO fileGenerated;
         if (paramFormato.compareTo("xls") == 0){
             fileName = userConnected.getUsername() + REPORT_NAME_XLS;
             //mostrar CSV. Generar link para download del archivo xls
-            fullFilePath = 
+            for (int i = 0; i < listaEmpleados.size(); i++) {
+                EmpleadoVO itEmpleado = listaEmpleados.get(i);
+                System.out.println(WEB_NAME+"[servlet.ReporteDiasFestivosTrabajados]"
+                    + "Generar XLS para el RUN empleado: " + itEmpleado.getRut());
+                String outputFilePath = appProperties.getPathExportedFiles()+
+                    File.separator+
+                    itEmpleado.getRut() + REPORT_NAME_XLS;
                 writeXLSFile(request, paramEmpresa, 
                     paramDepto, intCencoId, 
-                    startDate, endDate, intTurno, listaEmpleados);
+                    startDate, endDate, 
+                    intTurno, itEmpleado, 
+                    outputFilePath);
+                //---- Agrega archivo generado ----------
+                fileGenerated = new FileGeneratedVO("", outputFilePath);
+                archivosGenerados.add(fileGenerated);
+                //---------------------------------------
+            }
+            
         }else if (paramFormato.compareTo("csv") == 0){
             //mostrar CSV. Generar link para download del archivo csv
-            fullFilePath = 
+            for (int i = 0; i < listaEmpleados.size(); i++) {
+                EmpleadoVO itEmpleado = listaEmpleados.get(i);
+                System.out.println(WEB_NAME+"[servlet.ReporteDiasFestivosTrabajados]"
+                    + "Generar CSV para el RUN empleado: " + itEmpleado.getRut());    
+                String outputFilePath = appProperties.getPathExportedFiles()+
+                    File.separator+
+                    itEmpleado.getRut() + REPORT_NAME_CSV;
                 writeCSVFile(request, paramEmpresa, 
-                paramDepto, intCencoId, 
-                startDate, endDate, intTurno, listaEmpleados);
-        }else if (paramFormato.compareTo("xml") == 0){
-                fileName = userConnected.getUsername() + REPORT_NAME_XML;
-                fullFilePath = 
-                    writeXMLFile(request, paramEmpresa, 
                     paramDepto, intCencoId, 
                     startDate, endDate, intTurno, 
-                    listaEmpleados);
+                    itEmpleado, outputFilePath);
+                //---- Agrega archivo generado ----------
+                fileGenerated = new FileGeneratedVO("", outputFilePath);
+                archivosGenerados.add(fileGenerated);
+                //---------------------------------------
+            }
+        }else if (paramFormato.compareTo("xml") == 0){
+            fileName = userConnected.getUsername() + REPORT_NAME_XML;
+            //mostrar CSV. Generar link para download del archivo xls
+            for (int i = 0; i < listaEmpleados.size(); i++) {
+                EmpleadoVO itEmpleado = listaEmpleados.get(i);
+                System.out.println(WEB_NAME+"[servlet.ReporteDiasFestivosTrabajados]"
+                    + "Generar XML para el RUN empleado: " + itEmpleado.getRut());
+                String outputFilePath = appProperties.getPathExportedFiles()+
+                    File.separator+
+                    itEmpleado.getRut() + REPORT_NAME_XML;
+                writeXMLFile(request, paramEmpresa, 
+                    paramDepto, intCencoId, 
+                    startDate, endDate, intTurno, 
+                    itEmpleado, outputFilePath);
+                //---- Agrega archivo generado ----------
+                fileGenerated = new FileGeneratedVO("", outputFilePath);
+                archivosGenerados.add(fileGenerated);
+                //---------------------------------------
+            }
         }else if (paramFormato.compareTo("pdf") == 0){
-                fileName = userConnected.getUsername() + REPORT_NAME_PDF;
-                //mostrar CSV. Generar link para download del archivo xls
+            //mostrar PDF. Generar link para download del archivo PDF
+            fileName = userConnected.getUsername() + REPORT_NAME_PDF;
+            for (int i = 0; i < listaEmpleados.size(); i++) {
+                EmpleadoVO itEmpleado = listaEmpleados.get(i);
+                System.out.println(WEB_NAME+"[servlet.ReporteDiasFestivosTrabajados]"
+                    + "Generar PDF para el RUN empleado: " + itEmpleado.getRut());
                 fullFilePath = 
                     writePDFFile(request, paramEmpresa, 
                         paramDepto, intCencoId, 
-                        startDate, endDate, intTurno, listaEmpleados);
+                        startDate, endDate, intTurno, itEmpleado);
+                //---- Agrega archivo generado ----------
+                fileGenerated = new FileGeneratedVO(fileName, fullFilePath);
+                archivosGenerados.add(fileGenerated);
+                //---------------------------------------
+            }
         }
         
-        FileGeneratedVO fileGenerated = new FileGeneratedVO(fileName,fullFilePath);
+        if (!archivosGenerados.isEmpty()){
+            //UtilZipFiles utilZip = new UtilZipFiles();
+            List<File> fileList = new ArrayList<>();
+            for (int i = 0;i < archivosGenerados.size(); i++) {
+                FileGeneratedVO archivo = archivosGenerados.get(i);
+                System.out.println(WEB_NAME 
+                    + "[servlet.ReporteDiasFestivosTrabajados]add to ZIP: " 
+                    + " filename: " + archivo.getFileName()
+                    + ", filePath: " + archivo.getFilePath());
+                File newfile = new File(archivo.getFilePath());
+                fileList.add(newfile);
+            }
+            System.out.println(WEB_NAME 
+                + "[servlet.ReporteDiasFestivosTrabajados]"
+                + "Comprimir archivos generados...");
+            //
+            String outputZipFile = appProperties.getPathExportedFiles() +
+                File.separator + userConnected.getUsername() + ZIP_FILE_NAME;
+            UtilZipFiles.compressFiles(fileList, outputZipFile);
+            
+            System.out.println(WEB_NAME 
+                + "[servlet.ReporteDiasFestivosTrabajados]"
+                + "Eliminar archivos generados...");
+            UtilZipFiles.deleteFiles(fileList);
+            
+            fileGenerated = new FileGeneratedVO(userConnected.getUsername() + ZIP_FILE_NAME, outputZipFile);
+        }else {
+            fileGenerated = new FileGeneratedVO(fileName, fullFilePath);
+        }
+        
         if (fileGenerated != null){
             System.out.println(WEB_NAME+"[servlet.ReporteDiasFestivosTrabajados]"
                 + "Add archivo generado: " + fileGenerated.getFileName());
@@ -194,7 +277,7 @@ public class ReporteDiasFestivosTrabajados extends BaseServlet {
             resultado.setEmpresaId(paramEmpresa);
             resultado.setDeptoId(paramDepto);
             resultado.setCencoId(intCencoId);
-            resultado.setDescription("Consulta informe de horas extras.");
+            resultado.setDescription("Consulta " + REPORT_LABEL);
             eventosBp.addEvent(resultado);
         }        
     }
@@ -209,21 +292,21 @@ public class ReporteDiasFestivosTrabajados extends BaseServlet {
      * @param _startDate
      * @param _endDate
      * @param _idTurno
-     * @param _listaEmpleados
-    * @return 
+     * @param _empleado
+     * @param _outputFilePath
     * @throws javax.servlet.ServletException 
     * @throws java.io.IOException 
     */
-    protected String writeCSVFile(HttpServletRequest _request,
+    protected void writeCSVFile(HttpServletRequest _request,
         String _empresaId,
         String _deptoId, 
         int _cencoId,
         String _startDate,
         String _endDate,
         int _idTurno,
-        ArrayList<EmpleadoVO> _listaEmpleados)
+        EmpleadoVO _empleado, 
+        String _outputFilePath)
     throws ServletException, IOException {
-        String filePath="";
         PrintWriter outfile=null;
         try {
             ServletContext application = this.getServletContext();
@@ -243,20 +326,20 @@ public class ReporteDiasFestivosTrabajados extends BaseServlet {
             TurnosBp turnoBp        = new TurnosBp(appProperties);
             TurnoRotativoBp turnoRotBp = new TurnoRotativoBp(appProperties);
             DetalleAsistenciaBp detalleAsistenciaBp = new DetalleAsistenciaBp(appProperties);
+            
+            List<EmpleadoVO> empleadosList = new ArrayList<>();
+            empleadosList.add(_empleado);
             LinkedHashMap<String,List<DetalleAsistenciaVO>> listaDetalles = 
-                detalleAsistenciaBp.getDetallesInforme(_listaEmpleados, 
+                detalleAsistenciaBp.getDetallesInforme(empleadosList, 
                     _startDate, _endDate, -1);
+            
             String jsonOutput = cencoBp.getEmpresaDeptoCencoJson(_empresaId, _deptoId, _cencoId);
             FiltroBusquedaJsonVO labelsFiltro = 
                 (FiltroBusquedaJsonVO)new Gson().fromJson(jsonOutput, FiltroBusquedaJsonVO.class);
             int idTurnoRotativo = turnoBp.getTurnoRotativo(_empresaId);
             String separatorFields = ";";
             
-            //cabeceras fijas
-            filePath = appProperties.getPathExportedFiles()+
-                File.separator+
-                userConnected.getUsername()+REPORT_NAME_CSV;
-            FileWriter filewriter = new FileWriter(filePath);
+            FileWriter filewriter = new FileWriter(_outputFilePath);
             outfile     = new PrintWriter(filewriter);
             Calendar calNow = Calendar.getInstance(new Locale("es", "CL"));
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -265,7 +348,7 @@ public class ReporteDiasFestivosTrabajados extends BaseServlet {
             int filas=0;
 
             EmpleadoVO infoEmpleado = 
-                empleadoBp.getEmpleado(_empresaId, _listaEmpleados.get(0).getRut());
+                empleadoBp.getEmpleado(_empresaId, _empleado.getRut());
                     
             //cabecera del archivo
             outfile.println("Tipo reporte;"+REPORT_LABEL);
@@ -360,7 +443,6 @@ public class ReporteDiasFestivosTrabajados extends BaseServlet {
             if (outfile!=null) outfile.close();
         }
 
-        return filePath;
     }
     
     /**
@@ -373,19 +455,21 @@ public class ReporteDiasFestivosTrabajados extends BaseServlet {
     * @param _startDate
     * @param _endDate
     * @param _idTurno
-    * @param _listaEmpleados
-    * @return 
+     * @param _empleado
+     * @param _outputFilePath
+    * 
     * @throws javax.servlet.ServletException 
     * @throws java.io.IOException 
     */
-    protected String writeXLSFile(HttpServletRequest _request,
+    protected void writeXLSFile(HttpServletRequest _request,
         String _empresaId,
         String _deptoId, 
         int _cencoId,
         String _startDate,
         String _endDate,
         int _idTurno,
-        ArrayList<EmpleadoVO> _listaEmpleados)
+        EmpleadoVO _empleado,
+        String _outputFilePath)
     throws ServletException, IOException {
         String excelFilePath = "";
         try {
@@ -405,9 +489,12 @@ public class ReporteDiasFestivosTrabajados extends BaseServlet {
             TurnosBp turnoBp        = new TurnosBp(appProperties);
             TurnoRotativoBp turnoRotBp = new TurnoRotativoBp(appProperties);
                         
+            List<EmpleadoVO> empleadosList = new ArrayList<>();
+            empleadosList.add(_empleado);
+            
             DetalleAsistenciaBp detalleAsistenciaBp = new DetalleAsistenciaBp(appProperties);
             LinkedHashMap<String,List<DetalleAsistenciaVO>> listaDetalles = 
-                detalleAsistenciaBp.getDetallesInforme(_listaEmpleados, 
+                detalleAsistenciaBp.getDetallesInforme(empleadosList, 
                     _startDate, _endDate, _idTurno);
             String jsonOutput = cencoBp.getEmpresaDeptoCencoJson(_empresaId, _deptoId, _cencoId);
             FiltroBusquedaJsonVO labelsFiltro = 
@@ -419,7 +506,7 @@ public class ReporteDiasFestivosTrabajados extends BaseServlet {
             Utilidades utils=new Utilidades();
             
             EmpleadoVO infoEmpleado = 
-                empleadoBp.getEmpleado(_empresaId, _listaEmpleados.get(0).getRut());
+                empleadoBp.getEmpleado(_empresaId, _empleado.getRut());
             
             excelFilePath = appProperties.getPathExportedFiles()+
                 File.separator+
@@ -526,7 +613,6 @@ public class ReporteDiasFestivosTrabajados extends BaseServlet {
             //if (outfile!=null) outfile.close();
         }
 
-        return excelFilePath;
     }
     
     /**
@@ -539,7 +625,7 @@ public class ReporteDiasFestivosTrabajados extends BaseServlet {
     * @param _startDate
     * @param _endDate
     * @param _idTurno
-    * @param _listaEmpleados
+    * @param _empleado
     * 
     * @return 
     * @throws javax.servlet.ServletException 
@@ -552,7 +638,7 @@ public class ReporteDiasFestivosTrabajados extends BaseServlet {
         String _startDate,
         String _endDate,
         int _idTurno,
-        ArrayList<EmpleadoVO> _listaEmpleados)
+        EmpleadoVO _empleado)
     throws ServletException, IOException {
         String outputFilePath = "";
         try {
@@ -573,8 +659,10 @@ public class ReporteDiasFestivosTrabajados extends BaseServlet {
             TurnoRotativoBp turnoRotBp = new TurnoRotativoBp(appProperties);
                         
             DetalleAsistenciaBp detalleAsistenciaBp = new DetalleAsistenciaBp(appProperties);
+            List<EmpleadoVO> empleadosList = new ArrayList<>();
+            empleadosList.add(_empleado);
             LinkedHashMap<String,List<DetalleAsistenciaVO>> listaDetalles = 
-                detalleAsistenciaBp.getDetallesInforme(_listaEmpleados, 
+                detalleAsistenciaBp.getDetallesInforme(empleadosList, 
                     _startDate, _endDate, _idTurno);
             String jsonOutput = cencoBp.getEmpresaDeptoCencoJson(_empresaId, _deptoId, _cencoId);
             FiltroBusquedaJsonVO labelsFiltro = 
@@ -586,7 +674,7 @@ public class ReporteDiasFestivosTrabajados extends BaseServlet {
             Utilidades utils=new Utilidades();
             
             EmpleadoVO infoEmpleado = 
-                empleadoBp.getEmpleado(_empresaId, _listaEmpleados.get(0).getRut());
+                empleadoBp.getEmpleado(_empresaId, _empleado.getRut());
             
             ReportHeaderVO header = new ReportHeaderVO();
             ReportDetailHeaderVO headersDetail = new ReportDetailHeaderVO();
@@ -693,19 +781,21 @@ public class ReporteDiasFestivosTrabajados extends BaseServlet {
     * @param _startDate
     * @param _endDate
     * @param _idTurno
-    * @param _listaEmpleados
-    * @return 
+     * @param _empleado
+     * @param _outputFilePath
+    * 
     * @throws javax.servlet.ServletException 
     * @throws java.io.IOException 
     */
-    protected String writeXMLFile(HttpServletRequest _request,
+    protected void writeXMLFile(HttpServletRequest _request,
         String _empresaId,
         String _deptoId, 
         int _cencoId,
         String _startDate,
         String _endDate,
         int _idTurno,
-        ArrayList<EmpleadoVO> _listaEmpleados)
+        EmpleadoVO _empleado, 
+        String _outputFilePath)
     throws ServletException, IOException {
         String xmlFilePath = "";
         try {
@@ -726,8 +816,10 @@ public class ReporteDiasFestivosTrabajados extends BaseServlet {
             TurnoRotativoBp turnoRotBp = new TurnoRotativoBp(appProperties);
                         
             DetalleAsistenciaBp detalleAsistenciaBp = new DetalleAsistenciaBp(appProperties);
+            List<EmpleadoVO> empleadosList = new ArrayList<>();
+            empleadosList.add(_empleado);
             LinkedHashMap<String,List<DetalleAsistenciaVO>> listaDetalles = 
-                detalleAsistenciaBp.getDetallesInforme(_listaEmpleados, 
+                detalleAsistenciaBp.getDetallesInforme(empleadosList, 
                     _startDate, _endDate, _idTurno);
             String jsonOutput = cencoBp.getEmpresaDeptoCencoJson(_empresaId, _deptoId, _cencoId);
             FiltroBusquedaJsonVO labelsFiltro = 
@@ -739,7 +831,7 @@ public class ReporteDiasFestivosTrabajados extends BaseServlet {
             Utilidades utils=new Utilidades();
             
             EmpleadoVO infoEmpleado = 
-                empleadoBp.getEmpleado(_empresaId, _listaEmpleados.get(0).getRut());
+                empleadoBp.getEmpleado(_empresaId, _empleado.getRut());
             
             xmlFilePath = appProperties.getPathExportedFiles()+
                 File.separator+
@@ -841,7 +933,6 @@ public class ReporteDiasFestivosTrabajados extends BaseServlet {
             //if (outfile!=null) outfile.close();
         }
 
-        return xmlFilePath;
     }
 
     /**

@@ -100,7 +100,7 @@ public class UploadDiasVacacionesServlet extends BaseServlet {
                                         infoVacacion.setAfpCode(afpCode);
                                         infoVacacion.setFechaCertifVacacionesProgresivas(fechaCertifVacacionesProgresivas);
                                         infoVacacion.setDiasEspeciales(diasEspeciales);
-                                        infoVacacion.setDiasAdicionales(Integer.parseInt(diasAdicionales));
+                                        infoVacacion.setDiasAdicionales(Double.parseDouble(diasAdicionales));
                                         
                                         //infoVacacion.setDiasEspeciales(Integer.parseInt(diasEspeciales));
                                         //infoVacacion.setFechaInicioUltimasVacaciones(iniUltVacaciones);

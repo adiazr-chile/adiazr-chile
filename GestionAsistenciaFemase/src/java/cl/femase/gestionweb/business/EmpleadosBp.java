@@ -811,6 +811,10 @@ public class EmpleadosBp  extends BaseBp{
     public ResultCRUDVO insert(EmpleadoVO _empleadoToInsert, 
             MaintenanceEventVO _eventdata){
         
+        boolean existeInCenco = empleadosDao.existeInCenco(_empleadoToInsert.getEmpresa().getId(), 
+            _empleadoToInsert.getCentroCosto().getId(), 
+            _empleadoToInsert.getRut());
+        
         boolean existeEmail = empleadosDao.existeEmail(_empleadoToInsert.getRut(),
             _empleadoToInsert.getEmail(), _empleadoToInsert.getEmpresa().getId());
         ResultCRUDVO insValues = new ResultCRUDVO();
@@ -823,6 +827,21 @@ public class EmpleadosBp  extends BaseBp{
                 + "Rut: '" + _empleadoToInsert.getRut() + "'. "
                 + "El email " + _empleadoToInsert.getEmail()
                 +" ya existe en el Sistema.");
+            System.out.println(WEB_NAME+"[EmpleadosBp.insert]Error: " + insValues.getMsg());
+        }else if (existeInCenco){
+            CentroCostoBp cencoBp = new CentroCostoBp(props);
+            CentroCostoVO infoCenco = cencoBp.getCentroCostoByKey(_empleadoToInsert.getDepartamento().getId(), 
+                _empleadoToInsert.getCentroCosto().getId());
+            
+            insValues.setThereError(true);
+            insValues.setCodError(99);
+            insValues.setMsgError("El RUN: " + _empleadoToInsert.getRut()
+                + " ya existe en el Centro de costo [ " + _empleadoToInsert.getCentroCosto().getId()+"," + infoCenco.getNombre() +"]");
+            insValues.setMsg("Error al crear empleado "
+                + "EmpresaID: '" + _empleadoToInsert.getEmpresa().getId() + "'. "
+                + "RUN: '" + _empleadoToInsert.getRut() + "'. "        
+                + "El RUN "
+                + " ya existe en el Centro de costo [ " + _empleadoToInsert.getCentroCosto().getId()+"," + infoCenco.getNombre() +"]");
             System.out.println(WEB_NAME+"[EmpleadosBp.insert]Error: " + insValues.getMsg());
         }else{
             insValues = empleadosDao.insert(_empleadoToInsert);

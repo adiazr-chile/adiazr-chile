@@ -14,6 +14,7 @@ import cl.femase.gestionweb.business.TurnoRotativoBp;
 import cl.femase.gestionweb.business.TurnosBp;
 import cl.femase.gestionweb.common.Constantes;
 import cl.femase.gestionweb.common.ExcelReportWriter;
+import cl.femase.gestionweb.common.UtilZipFiles;
 import cl.femase.gestionweb.common.Utilidades;
 import cl.femase.gestionweb.common.freemarker.PdfGenerator;
 import cl.femase.gestionweb.vo.AsignacionTurnoVO;
@@ -39,6 +40,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.StringTokenizer;
 import javax.servlet.ServletContext;
@@ -66,6 +68,7 @@ import org.w3c.dom.Element;
 @WebServlet(name = "ReporteModifAlterTurnos", urlPatterns = {"/ReporteModifAlterTurnos"})
 public class ReporteModifAlterTurnos extends BaseServlet {
 
+    static String ZIP_FILE_NAME = "_report_modif_alter_turnos.zip";
     static String REPORT_NAME_CSV = "_reporte_modif_alter_turnos.csv";
     static String REPORT_NAME_XLS = "_reporte_modif_alter_turnos.xls";
     static String REPORT_NAME_XML = "_reporte_modif_alter_turnos.xml";
@@ -88,7 +91,9 @@ public class ReporteModifAlterTurnos extends BaseServlet {
         
         HttpSession session = request.getSession(true);
         UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
-        
+        ServletContext application = this.getServletContext();
+        PropertiesVO appProperties=(PropertiesVO)application.getAttribute("appProperties");
+            
         int intCencoId = -1;
         String paramEmpresa = "";
         String paramDepto   = "";
@@ -128,50 +133,130 @@ public class ReporteModifAlterTurnos extends BaseServlet {
             + ", cenco: " + intCencoId);
         ArrayList<EmpleadoVO> listaEmpleados = new ArrayList<>();
         String[] empleadosSelected = request.getParameterValues("rutEmpleado");
+        ArrayList<FileGeneratedVO> archivosGenerados = new ArrayList<>();
         if (empleadosSelected != null){
             for (int x = 0; x < empleadosSelected.length; x++){
-                System.out.println(WEB_NAME+"[servlet.ReporteModifAlterTurnos]"
-                    + "rut seleccionado[" + x + "] = " + empleadosSelected[x]);
-                EmpleadoVO auxEmpleado=new EmpleadoVO();
-                auxEmpleado.setRut(empleadosSelected[x]);
-                listaEmpleados.add(auxEmpleado);
+                if (empleadosSelected[x].compareTo("-1") != 0){
+                    System.out.println(WEB_NAME+"[servlet.ReporteModifAlterTurnos]"
+                        + "rut seleccionado[" + x + "] = " + empleadosSelected[x]);
+                    EmpleadoVO auxEmpleado=new EmpleadoVO();
+                    auxEmpleado.setRut(empleadosSelected[x]);
+                    listaEmpleados.add(auxEmpleado);
+                }
             }     
         }else System.out.println(WEB_NAME+"[servlet.ReporteModifAlterTurnos]"
             + "No hay empleados seleccionados");
                     
         String fileName = userConnected.getUsername() + REPORT_NAME_CSV;
         String fullFilePath="";
+        FileGeneratedVO fileGenerated;
         if (paramFormato.compareTo("xls") == 0){
             fileName = userConnected.getUsername() + REPORT_NAME_XLS;
             //mostrar CSV. Generar link para download del archivo xls
-            fullFilePath = 
+            for (int i = 0; i < listaEmpleados.size(); i++) {
+                EmpleadoVO itEmpleado = listaEmpleados.get(i);
+                System.out.println(WEB_NAME+"[servlet.ReporteModifAlterTurnos]"
+                    + "Generar XLS para el RUN empleado: " + itEmpleado.getRut());
+                String outputFilePath = appProperties.getPathExportedFiles()+
+                    File.separator+
+                    itEmpleado.getRut() + REPORT_NAME_XLS;
                 writeXLSFile(request, paramEmpresa, 
-                    paramDepto, intCencoId, 
-                    startDate, endDate, intTurno, listaEmpleados);
+                        paramDepto, intCencoId, 
+                        startDate, endDate, intTurno, 
+                        itEmpleado, outputFilePath);
+                //---- Agrega archivo generado ----------
+                fileGenerated = new FileGeneratedVO("", outputFilePath );
+                archivosGenerados.add(fileGenerated);
+                //---------------------------------------
+            }
+            
         }else if (paramFormato.compareTo("csv") == 0){
             //mostrar CSV. Generar link para download del archivo csv
-            fullFilePath = 
+            for (int i = 0; i < listaEmpleados.size(); i++) {
+                EmpleadoVO itEmpleado = listaEmpleados.get(i);
+                System.out.println(WEB_NAME+"[servlet.ReporteModifAlterTurnos]"
+                    + "Generar CSV para el RUN empleado: " + itEmpleado.getRut());
+                
+                String outputFilePath = appProperties.getPathExportedFiles()+
+                    File.separator+
+                    itEmpleado.getRut() + REPORT_NAME_CSV;
                 writeCSVFile(request, paramEmpresa, 
-                    paramDepto, intCencoId, 
-                    startDate, endDate, intTurno, listaEmpleados);
+                        paramDepto, intCencoId, 
+                        startDate, endDate, intTurno, itEmpleado, 
+                        outputFilePath);
+                //---- Agrega archivo generado ----------
+                fileGenerated = new FileGeneratedVO("", outputFilePath);
+                archivosGenerados.add(fileGenerated);
+                //---------------------------------------
+            }
         }else if (paramFormato.compareTo("xml") == 0){
             fileName = userConnected.getUsername() + REPORT_NAME_XML;
             //mostrar CSV. Generar link para download del archivo xls
-            fullFilePath = 
+            for (int i = 0; i < listaEmpleados.size(); i++) {
+                EmpleadoVO itEmpleado = listaEmpleados.get(i);
+                System.out.println(WEB_NAME+"[servlet.ReporteModifAlterTurnos]"
+                    + "Generar XML para el RUN empleado: " + itEmpleado.getRut());
+                String outputFilePath = appProperties.getPathExportedFiles()+
+                    File.separator+
+                    itEmpleado.getRut() + REPORT_NAME_XML;
                 writeXMLFile(request, paramEmpresa, 
-                    paramDepto, intCencoId, 
-                    startDate, endDate, intTurno, listaEmpleados);
+                        paramDepto, intCencoId, 
+                        startDate, endDate, intTurno, 
+                        itEmpleado, outputFilePath);
+                //---- Agrega archivo generado ----------
+                fileGenerated = new FileGeneratedVO("", outputFilePath);
+                archivosGenerados.add(fileGenerated);
+                //---------------------------------------
+            }
         }else if (paramFormato.compareTo("pdf") == 0){
             //mostrar PDF. Generar link para download del archivo PDF
             fileName = userConnected.getUsername() + REPORT_NAME_PDF;
-            fullFilePath = 
-                writePDFFile(request, paramEmpresa, 
-                    paramDepto, intCencoId, 
-                    startDate, endDate, intTurno, listaEmpleados);
+            for (int i = 0; i < listaEmpleados.size(); i++) {
+                EmpleadoVO itEmpleado = listaEmpleados.get(i);
+                System.out.println(WEB_NAME+"[servlet.ReporteModifAlterTurnos]"
+                    + "Generar PDF para el RUN empleado: " + itEmpleado.getRut());
+                fullFilePath = 
+                    writePDFFile(request, paramEmpresa, 
+                        paramDepto, intCencoId, 
+                        startDate, endDate, intTurno, 
+                        itEmpleado);
+                //---- Agrega archivo generado ----------
+                fileGenerated = new FileGeneratedVO(fileName, fullFilePath);
+                archivosGenerados.add(fileGenerated);
+                //---------------------------------------
+            }
         }
-                
         
-        FileGeneratedVO fileGenerated = new FileGeneratedVO(fileName, fullFilePath);
+        if (!archivosGenerados.isEmpty()){
+            //UtilZipFiles utilZip = new UtilZipFiles();
+            List<File> fileList = new ArrayList<>();
+            for (int i = 0;i < archivosGenerados.size(); i++) {
+                FileGeneratedVO archivo = archivosGenerados.get(i);
+                System.out.println(WEB_NAME 
+                    + "[servlet.ReporteModifAlterTurnos]add to ZIP: " 
+                    + " filename: " + archivo.getFileName()
+                    + ", filePath: " + archivo.getFilePath());
+                File newfile = new File(archivo.getFilePath());
+                fileList.add(newfile);
+            }
+            System.out.println(WEB_NAME 
+                + "[servlet.ReporteModifAlterTurnos]"
+                + "Comprimir archivos generados...");
+            //
+            String outputZipFile = appProperties.getPathExportedFiles() +
+                File.separator + userConnected.getUsername() + ZIP_FILE_NAME;
+            UtilZipFiles.compressFiles(fileList, outputZipFile);
+            
+            System.out.println(WEB_NAME 
+                + "[servlet.ReporteModifAlterTurnos]"
+                + "Eliminar archivos generados...");
+            UtilZipFiles.deleteFiles(fileList);
+            
+            fileGenerated = new FileGeneratedVO(userConnected.getUsername() + ZIP_FILE_NAME, outputZipFile);
+        }else {
+            fileGenerated = new FileGeneratedVO(fileName, fullFilePath);
+        }
+        
         if (fileGenerated != null){
             System.out.println(WEB_NAME+"[servlet.ReporteModifAlterTurnos]"
                 + "Add archivo generado: " + fileGenerated.getFileName());
@@ -189,7 +274,7 @@ public class ReporteModifAlterTurnos extends BaseServlet {
             resultado.setEmpresaId(paramEmpresa);
             resultado.setDeptoId(paramDepto);
             resultado.setCencoId(intCencoId);
-            resultado.setDescription("Consulta informe de jornada.");
+            resultado.setDescription("Consulta " + REPORT_LABEL);
             eventosBp.addEvent(resultado);
         }        
     }
@@ -198,27 +283,27 @@ public class ReporteModifAlterTurnos extends BaseServlet {
     * Obtiene la informacion para exportar a CSV
     * 
     * @param _request
-     * @param _empresaId
-     * @param _deptoId
-     * @param _cencoId
-     * @param _startDate
-     * @param _endDate
-     * @param _idTurno
-     * @param _listaEmpleados
-    * @return 
+    * @param _empresaId
+    * @param _deptoId
+    * @param _cencoId
+    * @param _startDate
+    * @param _endDate
+    * @param _idTurno
+    * @param _empleado
+    * @param _outputFilePath
     * @throws javax.servlet.ServletException 
     * @throws java.io.IOException 
     */
-    protected String writeCSVFile(HttpServletRequest _request,
+    protected void writeCSVFile(HttpServletRequest _request,
         String _empresaId,
         String _deptoId, 
         int _cencoId,
         String _startDate,
         String _endDate,
         int _idTurno,
-        ArrayList<EmpleadoVO> _listaEmpleados)
+        EmpleadoVO _empleado,
+        String _outputFilePath)
     throws ServletException, IOException {
-        String filePath="";
         PrintWriter outfile=null;
         try {
             ServletContext application = this.getServletContext();
@@ -236,11 +321,6 @@ public class ReporteModifAlterTurnos extends BaseServlet {
             EmpleadosBp empleadoBp  = new EmpleadosBp(appProperties);
             TurnosBp turnoBp        = new TurnosBp(appProperties);
             TurnoRotativoBp turnoRotBp = new TurnoRotativoBp(appProperties);
-                        
-//            DetalleAsistenciaBp detalleAsistenciaBp = new DetalleAsistenciaBp(appProperties);
-//            LinkedHashMap<String,List<DetalleAsistenciaVO>> listaDetalles = 
-//                detalleAsistenciaBp.getDetallesInforme(_listaEmpleados, 
-//                    _startDate, _endDate, _idTurno);
             String jsonOutput = cencoBp.getEmpresaDeptoCencoJson(_empresaId, _deptoId, _cencoId);
             FiltroBusquedaJsonVO labelsFiltro = 
                 (FiltroBusquedaJsonVO)new Gson().fromJson(jsonOutput, FiltroBusquedaJsonVO.class);
@@ -248,10 +328,8 @@ public class ReporteModifAlterTurnos extends BaseServlet {
             String separatorFields = ";";
             
             //cabeceras fijas
-            filePath = appProperties.getPathExportedFiles()+
-                File.separator+
-                userConnected.getUsername()+ REPORT_NAME_CSV;
-            FileWriter filewriter = new FileWriter(filePath);
+            
+            FileWriter filewriter = new FileWriter(_outputFilePath);
             outfile     = new PrintWriter(filewriter);
             Calendar calNow = Calendar.getInstance(new Locale("es", "CL"));
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -259,7 +337,7 @@ public class ReporteModifAlterTurnos extends BaseServlet {
             Utilidades utils=new Utilidades();
             
             EmpleadoVO infoEmpleado = 
-                empleadoBp.getEmpleado(_empresaId, _listaEmpleados.get(0).getRut());
+                empleadoBp.getEmpleado(_empresaId, _empleado.getRut());
                     
             //cabecera del archivo
             outfile.println("Tipo reporte;"+REPORT_LABEL);
@@ -312,7 +390,6 @@ public class ReporteModifAlterTurnos extends BaseServlet {
             if (outfile!=null) outfile.close();
         }
 
-        return filePath;
     }
     
     /**
@@ -325,7 +402,7 @@ public class ReporteModifAlterTurnos extends BaseServlet {
     * @param _startDate
     * @param _endDate
     * @param _idTurno
-    * @param _listaEmpleados
+     * @param _empleado
     * @return 
     * @throws javax.servlet.ServletException 
     * @throws java.io.IOException 
@@ -337,7 +414,7 @@ public class ReporteModifAlterTurnos extends BaseServlet {
         String _startDate,
         String _endDate,
         int _idTurno,
-        ArrayList<EmpleadoVO> _listaEmpleados)
+        EmpleadoVO _empleado)
     throws ServletException, IOException {
         String outputFilePath = "";
         try {
@@ -363,7 +440,7 @@ public class ReporteModifAlterTurnos extends BaseServlet {
             Utilidades utils=new Utilidades();
             
             EmpleadoVO infoEmpleado = 
-                empleadoBp.getEmpleado(_empresaId, _listaEmpleados.get(0).getRut());
+                empleadoBp.getEmpleado(_empresaId, _empleado.getRut());
             
             ReportHeaderVO header = new ReportHeaderVO();
             ReportDetailHeaderVO headersDetail = new ReportDetailHeaderVO();
@@ -436,7 +513,7 @@ public class ReporteModifAlterTurnos extends BaseServlet {
             //set datos del template freemarker
             FreemarkerTemplateVO template = new FreemarkerTemplateVO();
             template.setReportTitle("Reporte de modificaciones y/o alteraciones de turnos");
-            template.setReportAbrev("modif_alter_turnos");
+            template.setReportAbrev("modif_alter_turnos_" + _empleado.getRut());
             template.setReportLogo("logo_fundacion_01.png");
             template.setTemplateName("modif_alter_turnos.ftl");
             PdfGenerator pdfGenerator=new PdfGenerator(appProperties, template);
@@ -463,21 +540,21 @@ public class ReporteModifAlterTurnos extends BaseServlet {
     * @param _startDate
     * @param _endDate
     * @param _idTurno
-    * @param _listaEmpleados
-    * @return 
+    * @param _empleado
+     * @param _outputFilePath 
     * @throws javax.servlet.ServletException 
     * @throws java.io.IOException 
     */
-    protected String writeXLSFile(HttpServletRequest _request,
+    protected void writeXLSFile(HttpServletRequest _request,
         String _empresaId,
         String _deptoId, 
         int _cencoId,
         String _startDate,
         String _endDate,
         int _idTurno,
-        ArrayList<EmpleadoVO> _listaEmpleados)
+        EmpleadoVO _empleado,
+        String _outputFilePath)
     throws ServletException, IOException {
-        String excelFilePath = "";
         try {
             ServletContext application = this.getServletContext();
             PropertiesVO appProperties=(PropertiesVO)application.getAttribute("appProperties");
@@ -492,29 +569,18 @@ public class ReporteModifAlterTurnos extends BaseServlet {
                 + ", idTurno: " + _idTurno);
             CentroCostoBp cencoBp   = new CentroCostoBp(appProperties);
             EmpleadosBp empleadoBp  = new EmpleadosBp(appProperties);
-            //TurnosBp turnoBp        = new TurnosBp(appProperties);
-            //TurnoRotativoBp turnoRotBp = new TurnoRotativoBp(appProperties);
-                        
-            //DetalleAsistenciaBp detalleAsistenciaBp = new DetalleAsistenciaBp(appProperties);
-            //LinkedHashMap<String,List<DetalleAsistenciaVO>> listaDetalles = 
-            //    detalleAsistenciaBp.getDetallesInforme(_listaEmpleados, 
-            //        _startDate, _endDate, _idTurno);
             String jsonOutput = cencoBp.getEmpresaDeptoCencoJson(_empresaId, _deptoId, _cencoId);
             FiltroBusquedaJsonVO labelsFiltro = 
                 (FiltroBusquedaJsonVO)new Gson().fromJson(jsonOutput, FiltroBusquedaJsonVO.class);
-            //int idTurnoRotativo = turnoBp.getTurnoRotativo(_empresaId);
             Calendar calNow = Calendar.getInstance(new Locale("es", "CL"));
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             NumberFormat nf = NumberFormat.getNumberInstance(new Locale("es", "ES"));
             Utilidades utils=new Utilidades();
             
             EmpleadoVO infoEmpleado = 
-                empleadoBp.getEmpleado(_empresaId, _listaEmpleados.get(0).getRut());
+                empleadoBp.getEmpleado(_empresaId, _empleado.getRut());
             
-            excelFilePath = appProperties.getPathExportedFiles()+
-                File.separator+
-                userConnected.getUsername()+ REPORT_NAME_XLS;
-            FileWriter filewriter = new FileWriter(excelFilePath);
+            FileWriter filewriter = new FileWriter(_outputFilePath);
             
             ReportHeaderVO header = new ReportHeaderVO();
             ReportDetailHeaderVO headersDetail = new ReportDetailHeaderVO();
@@ -584,7 +650,7 @@ public class ReporteModifAlterTurnos extends BaseServlet {
             reportData.setHeadersDetail(headersDetail);
             reportData.setDetalle(detalles);
             
-            excelReportWriter.writeReportInExcel(reportData, excelFilePath,"ASIGNACION_TURNOS");
+            excelReportWriter.writeReportInExcel(reportData, _outputFilePath,"ASIGNACION_TURNOS");
             
             //Close the File Writer
             filewriter.close();
@@ -593,7 +659,6 @@ public class ReporteModifAlterTurnos extends BaseServlet {
             //if (outfile!=null) outfile.close();
         }
 
-        return excelFilePath;
     }
     
     /**
@@ -606,21 +671,21 @@ public class ReporteModifAlterTurnos extends BaseServlet {
     * @param _startDate
     * @param _endDate
     * @param _idTurno
-    * @param _listaEmpleados
+     * @param _empleado
     * @return 
     * @throws javax.servlet.ServletException 
     * @throws java.io.IOException 
     */
-    protected String writeXMLFile(HttpServletRequest _request,
+    protected void writeXMLFile(HttpServletRequest _request,
         String _empresaId,
         String _deptoId, 
         int _cencoId,
         String _startDate,
         String _endDate,
         int _idTurno,
-        ArrayList<EmpleadoVO> _listaEmpleados)
+        EmpleadoVO _empleado,
+        String _outputPathFile)
     throws ServletException, IOException {
-        String xmlFilePath = "";
         try {
             ServletContext application = this.getServletContext();
             PropertiesVO appProperties=(PropertiesVO)application.getAttribute("appProperties");
@@ -635,29 +700,17 @@ public class ReporteModifAlterTurnos extends BaseServlet {
                 + ", idTurno: " + _idTurno);
             CentroCostoBp cencoBp   = new CentroCostoBp(appProperties);
             EmpleadosBp empleadoBp  = new EmpleadosBp(appProperties);
-            //TurnosBp turnoBp        = new TurnosBp(appProperties);
-            //TurnoRotativoBp turnoRotBp = new TurnoRotativoBp(appProperties);
-                        
-            //DetalleAsistenciaBp detalleAsistenciaBp = new DetalleAsistenciaBp(appProperties);
-            //LinkedHashMap<String,List<DetalleAsistenciaVO>> listaDetalles = 
-            //    detalleAsistenciaBp.getDetallesInforme(_listaEmpleados, 
-            //        _startDate, _endDate, _idTurno);
             String jsonOutput = cencoBp.getEmpresaDeptoCencoJson(_empresaId, _deptoId, _cencoId);
             FiltroBusquedaJsonVO labelsFiltro = 
                 (FiltroBusquedaJsonVO)new Gson().fromJson(jsonOutput, FiltroBusquedaJsonVO.class);
-            //int idTurnoRotativo = turnoBp.getTurnoRotativo(_empresaId);
             Calendar calNow = Calendar.getInstance(new Locale("es", "CL"));
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             NumberFormat nf = NumberFormat.getNumberInstance(new Locale("es", "ES"));
             Utilidades utils=new Utilidades();
             
             EmpleadoVO infoEmpleado = 
-                empleadoBp.getEmpleado(_empresaId, _listaEmpleados.get(0).getRut());
+                empleadoBp.getEmpleado(_empresaId, _empleado.getRut());
             
-            xmlFilePath = appProperties.getPathExportedFiles()+
-                File.separator+
-                userConnected.getUsername()+ REPORT_NAME_XML;
-                        
             DocumentBuilderFactory documentFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder documentBuilder = documentFactory.newDocumentBuilder();
             Document document = documentBuilder.newDocument();
@@ -712,7 +765,7 @@ public class ReporteModifAlterTurnos extends BaseServlet {
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
             DOMSource domSource = new DOMSource(document);
-            StreamResult streamResult = new StreamResult(new File(xmlFilePath));
+            StreamResult streamResult = new StreamResult(new File(_outputPathFile));
  
             // If you use
             // StreamResult result = new StreamResult(System.out);
@@ -730,7 +783,6 @@ public class ReporteModifAlterTurnos extends BaseServlet {
             //if (outfile!=null) outfile.close();
         }
 
-        return xmlFilePath;
     }
     
     /**
@@ -854,10 +906,12 @@ public class ReporteModifAlterTurnos extends BaseServlet {
 
         private final String fileName;
         private final String filePath;
+        private File file; 
         
         public FileGeneratedVO(String _fileName,String _filePath) {
             this.fileName = _fileName;
             this.filePath = _filePath;
+            file = new File(_filePath);
         }
 
         public String getFileName() {
@@ -867,6 +921,12 @@ public class ReporteModifAlterTurnos extends BaseServlet {
         public String getFilePath() {
             return filePath;
         }
+
+        public File getFile() {
+            return file;
+        }
    
+        
+        
     }
 }

@@ -1949,6 +1949,51 @@ public class EmpleadosDAO extends BaseDAO{
     
     /**
     * 
+    * @param _rutEmpleado
+     * @param _empresaId
+    * @param _cencoId
+    * @return 
+    */
+    public boolean existeInCenco(String _empresaId,
+            int _cencoId,
+            String _rutEmpleado){
+        boolean result=false;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        
+        try{
+            String sql = "select empl_rut "
+                    + "from empleado "
+                + "where cenco_id = " + _cencoId + " "
+                    + "and cod_interno = '" + _rutEmpleado + "' "
+                    + "and empresa_id = '" + _empresaId + "'";
+            System.out.println(WEB_NAME+"[EmpleadosDAO.existeInCenco]SQL: "+sql);
+            
+            dbConn = dbLocator.getConnection(m_dbpoolName,"[EmpleadosDAO.existeInCenco]");
+            ps = dbConn.prepareStatement(sql);
+            rs = ps.executeQuery();
+
+            result = rs.next();
+            ps.close();
+            rs.close();
+            dbLocator.freeConnection(dbConn);
+        }catch(SQLException|DatabaseException sqle){
+            m_logger.error("Error: "+sqle.toString());
+        }finally{
+            try {
+                if (ps != null) ps.close();
+                if (rs != null) rs.close();
+                dbLocator.freeConnection(dbConn);
+            } catch (SQLException ex) {
+                System.err.println("Error: "+ex.toString());
+            }
+        }
+        
+        return result;
+    }
+    
+    /**
+    * 
     * @param _empresaId
     * @param _codInterno
     * @param _turnoId

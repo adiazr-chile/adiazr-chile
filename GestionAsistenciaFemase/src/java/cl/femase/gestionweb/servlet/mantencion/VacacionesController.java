@@ -1,7 +1,6 @@
 package cl.femase.gestionweb.servlet.mantencion;
 
 import cl.femase.gestionweb.business.CalculoVacacionesBp;
-import cl.femase.gestionweb.business.DetalleAusenciaBp;
 import cl.femase.gestionweb.servlet.BaseServlet;
 import cl.femase.gestionweb.business.EmpleadosBp;
 import cl.femase.gestionweb.business.VacacionesBp;
@@ -167,7 +166,7 @@ public class VacacionesController extends BaseServlet {
                 infoVacacion.setFechaCertifVacacionesProgresivas(request.getParameter("fechaCertifVacacionesProgresivas"));
             }
             if(request.getParameter("diasAdicionales") != null){
-                infoVacacion.setDiasAdicionales(Integer.parseInt(request.getParameter("diasAdicionales")));
+                infoVacacion.setDiasAdicionales(Double.parseDouble(request.getParameter("diasAdicionales")));
             }
             
             /**
@@ -343,14 +342,14 @@ public class VacacionesController extends BaseServlet {
                         String fechaEmisionCertificadoAFP   = infoVacacion.getFechaCertifVacacionesProgresivas(); 
                         int numCotizaciones                 = infoVacacion.getNumCotizaciones();
                         String diasEspeciales               = infoVacacion.getDiasEspeciales();
-                        int diasAdicionales = 0;
+                        double dblDiasAdicionales = 0;
                         try{
                             BigDecimal bd = new BigDecimal(infoVacacion.getDiasAdicionales());
-                            diasAdicionales = bd.intValue();
+                            dblDiasAdicionales = bd.doubleValue();
                         }catch(Exception ex){
                             System.err.println(WEB_NAME+"[VacacionesController]"
                                 + "Error al rescatar param dias_adicionales: " + ex.toString());
-                            diasAdicionales = 0;
+                            dblDiasAdicionales = 0;
                         }
                         String afpCode                      = infoVacacion.getAfpCode();
                         
@@ -359,7 +358,7 @@ public class VacacionesController extends BaseServlet {
                                 fechaEmisionCertificadoAFP, 
                                 numCotizaciones, 
                                 diasEspeciales, 
-                                diasAdicionales, 
+                                dblDiasAdicionales, 
                                 afpCode, 
                                 resultado);
                         System.out.println(WEB_NAME + "[VacacionesController]"

@@ -94,13 +94,14 @@
 			
         });
        
+	    /**
+		*
+		*/
         function validaForm() {
             var isOk=true;
             var cencoId = $('#cencoId').val();
             var rutEmpleado = $('#rutEmpleado').val();
-            //var startDate = $('#fechaInicioAsStr').val();
-            //var endDate = $('#fechaFinAsStr').val();
-           
+            
             if (cencoId === '-1'){
                 //alert('Seleccione centro de costo');
                 $("#dialog1").dialog({
@@ -115,8 +116,8 @@
                 $('#cencoId').focus();
                 isOk=false;
             }
-            //alert('rutEmpleado: '+rutEmpleado);
-            if (isOk===true && rutEmpleado === '-1'){
+            //alert('isOK_0? ' + isOk + ', rutEmpleado: ' + rutEmpleado);
+            if (isOk && rutEmpleado == '-1'){
                 //alert('Seleccione empleado');
                 $("#dialog3").dialog({
                     show: {effect: 'fade', speed: 1000},
@@ -130,29 +131,26 @@
                 $('#rutEmpleado').focus();
                 isOk=false;
             }
-		   
-            if (isOk){
-                if (startDate === '' || endDate === ''){
-                    $("#dialog2").dialog({
-                        show: {effect: 'fade', speed: 1000},
-                        hide: {effect: 'fade', speed: 1000},
-                        width: 250,
-                        height: 150,
-                        open: function( event, ui ) {
-                            $("#dialog2").closest("div[role='dialog']").css({top:120,left:200});              
-                        }
-                    });
-                    //$('#fechaInicioAsStr').focus();
-                    isOk=false;
-                }
-            }
-			
+		    //alert('isOK_2? ' + isOk);
             if (isOk){
                 return true;	
             }else return false;
 			
         }
-        
+	
+		function selectAll(selectBox,selectAll) { 
+			// have we been passed an ID 
+			if (typeof selectBox == "string") { 
+				selectBox = document.getElementById(selectBox);
+			} 
+			// is the select box a multiple select box? 
+			if (selectBox.type == "select-multiple") { 
+				for (var i = 0; i < selectBox.options.length; i++) { 
+					 selectBox.options[i].selected = selectAll; 
+				} 
+    		}
+    	}
+		
     </script>
     
     <script type="text/javascript">
@@ -241,8 +239,9 @@
             <!-- inicio div empleado -->
             <div id="content4" align="left">    
                 <div id="col1"><label>Empleado</label></div>
+                <div id="col1"><label><input type="button" name="Button" value="Seleccionar todos" onclick="selectAll(document.getElementById('rutEmpleado'),true)" /></label></div>
                 <div id="col2">    
-                	<select name="rutEmpleado" size="10" id="rutEmpleado">
+                    <select name="rutEmpleado" size="10" id="rutEmpleado" multiple>
                         <option value='-1' selected>Seleccione Empleado</option>
 					</select>
             	</div>
