@@ -265,6 +265,27 @@ public class VacacionesBp  extends BaseBp{
     }
     
     /**
+    * @param _objectToUpdate
+    * @param _eventdata
+    * @return 
+    * 
+    */
+    public ResultCRUDVO clearRegistry(VacacionesVO _objectToUpdate, 
+            MaintenanceEventVO _eventdata){
+        ResultCRUDVO updValues = vacacionesdao.clearRegistry(_objectToUpdate);
+        
+        //if (!updValues.isThereError()){
+            String msgFinal = updValues.getMsg();
+            updValues.setMsg(msgFinal);
+            _eventdata.setDescription(msgFinal);
+            //insertar evento 
+            eventsService.addEvent(_eventdata); 
+        //}
+        
+        return updValues;
+    }
+    
+    /**
     * 
     * @param _empresaId
     * @param _eventdata

@@ -158,6 +158,7 @@ public class VacacionesDAO extends BaseDAO{
         return objresultado;
     }
     
+        
     /**
     * Actualiza dias acumulados, dias_progresivos y saldo de dias de vacaciones
     * 
@@ -611,6 +612,63 @@ public class VacacionesDAO extends BaseDAO{
                 dbLocator.freeConnection(dbConn);
             } catch (SQLException ex) {
                 System.err.println("[VacacionesDAO.insert]"
+                    + "Error: " + ex.toString());
+            }
+        }
+
+        return objresultado;
+    }
+    
+    /**
+    * Inicializa  saldo de vacaciones de un empleado.
+    * 
+    * @param _data
+    * @return 
+    */
+    public ResultCRUDVO clearRegistry(VacacionesVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
+        int result=0;
+        String msgError = "Error al inicializar registro de  "
+            + "Info de Vacaciones, "
+            + "EmpresaId: " + _data.getEmpresaId()
+            + ", rutEmpleado: " + _data.getRutEmpleado();
+        String msgFinal = " Inserta info de vacaciones:"
+            + "EmpresaId [" + _data.getEmpresaId() + "]" 
+            + ", rutEmpleado [" + _data.getRutEmpleado() + "]";
+        objresultado.setMsg(msgFinal);
+        PreparedStatement insert    = null;
+        
+        try{
+            String sql = "INSERT INTO vacaciones"
+                + "(empresa_id, rut_empleado, fecha_carga_inicial) "
+                + "values (?, ?, current_timestamp)";
+
+            dbConn = dbLocator.getConnection(m_dbpoolName,"[VacacionesDAO.clearRegistry]");
+            insert = dbConn.prepareStatement(sql);
+            insert.setString(1,  _data.getEmpresaId());
+            insert.setString(2,  _data.getRutEmpleado());
+            
+            int filasAfectadas = insert.executeUpdate();
+            if (filasAfectadas == 1){
+                System.out.println(WEB_NAME+"[VacacionesDAO.clearRegistry]vacaciones"
+                    + ", empresaId:" + _data.getEmpresaId()
+                    + ", rutEmpleado:" + _data.getRutEmpleado()    
+                    +" insertada OK!");
+            }
+            
+            insert.close();
+            dbLocator.freeConnection(dbConn);
+        }catch(SQLException|DatabaseException sqle){
+            System.err.println("[VacacionesDAO.clearRegistry]Error1: "+sqle.toString());
+            objresultado.setThereError(true);
+            objresultado.setCodError(result);
+            objresultado.setMsgError(msgError+" :"+sqle.toString());
+        }finally{
+            try {
+                if (insert != null) insert.close();
+                dbLocator.freeConnection(dbConn);
+            } catch (SQLException ex) {
+                System.err.println("[VacacionesDAO.clearRegistry]"
                     + "Error: " + ex.toString());
             }
         }

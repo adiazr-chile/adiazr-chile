@@ -1,3 +1,4 @@
+<%@page import="cl.femase.gestionweb.vo.TurnoRotativoCicloVO"%>
 <%@ include file="/include/check_session.jsp" %>
 <%@page import="java.time.format.DateTimeFormatter"%>
 <%@page import="java.util.Locale"%>
@@ -18,6 +19,8 @@
         = (List<UsuarioCentroCostoVO>)session.getAttribute("cencos_empleado"); 
     List<TurnoRotativoVO> turnos = 
         (List<TurnoRotativoVO>)session.getAttribute("turnos_rotativos"); 
+    
+    List<TurnoRotativoCicloVO> ciclos = (List<TurnoRotativoCicloVO>)session.getAttribute("ciclos");
     
     List<LocalDate> detalleCiclo = (List<LocalDate>)session.getAttribute("detalle_ciclo");
 	
@@ -128,6 +131,8 @@
                 $("#fecha_inicio").datepicker().datepicker("setDate", fechaInicio);
             <%}%>
             
+        <%}else{%>
+            document.getElementById("num_ciclos").value = "7";
         <%}%>
     });
 	
@@ -311,10 +316,16 @@
                 <td width="16%" align="right" valign="middle" class="h4">N&uacute;mero de ciclos</td>
                 <td width="20%" valign="middle"><span class="col-md-4">
                   <select id="num_ciclos" name="num_ciclos" >
-                    <option value="7" selected>1 Semana</option>
-                    <option value="14">2 Semanas</option>
-                    <option value="21">3 Semanas</option>
-
+                    <%
+                     Iterator<TurnoRotativoCicloVO> iteraCiclos = ciclos.iterator();
+                    while(iteraCiclos.hasNext() ) {
+                        TurnoRotativoCicloVO auxCiclo = iteraCiclos.next();
+                        strValue = "" + auxCiclo.getNumDias();
+                        strLabel = auxCiclo.getEtiqueta();
+                        //strLabel = "(" + strValue + ") " + strLabel.toUpperCase();
+                    %>
+                        <option value="<%=strValue%>"><%=strLabel%></option>
+                        <%} %>
                   </select>
                 </span></td>
                 <td width="15%" align="right" valign="middle" class="h4">Duraci&oacute;n</td>

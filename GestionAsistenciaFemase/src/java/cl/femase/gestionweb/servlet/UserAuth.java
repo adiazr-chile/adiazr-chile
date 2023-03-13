@@ -24,6 +24,7 @@ import cl.femase.gestionweb.business.TipoAusenciaBp;
 import cl.femase.gestionweb.business.TipoDispositivoBp;
 import cl.femase.gestionweb.business.TipoMarcaManualBp;
 import cl.femase.gestionweb.business.TurnoRotativoBp;
+import cl.femase.gestionweb.business.TurnoRotativoCicloBp;
 import cl.femase.gestionweb.business.TurnosBp;
 import cl.femase.gestionweb.business.UsuarioBp;
 import cl.femase.gestionweb.common.ClientInfo;
@@ -42,6 +43,7 @@ import cl.femase.gestionweb.vo.MaintenanceEventVO;
 import cl.femase.gestionweb.vo.MarcaVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import cl.femase.gestionweb.vo.ProveedorCorreoVO;
+import cl.femase.gestionweb.vo.TurnoRotativoCicloVO;
 import cl.femase.gestionweb.vo.TurnoVO;
 import cl.femase.gestionweb.vo.UsuarioCentroCostoVO;
 import cl.femase.gestionweb.vo.UsuarioVO;
@@ -357,7 +359,15 @@ public class UserAuth extends BaseServlet {
                 session.setAttribute("proveedores_correo", proveedoresCorreo);
                 
                 session.removeAttribute("tieneTurnoRotativo");
-                session.setAttribute("tieneTurnoRotativo", false);        
+                session.setAttribute("tieneTurnoRotativo", false);
+                
+                //set ciclos para turnos rotativos
+                System.out.println(WEB_NAME+"[UserAuth]Set ciclos para turnos rotativos");
+                TurnoRotativoCicloBp cicloBp = new TurnoRotativoCicloBp(appProperties);
+                List<TurnoRotativoCicloVO> ciclos = 
+                    cicloBp.getCiclos(userOk.getEmpresaId(), 0, null, 0, -1, "ciclo_num_dias");
+                session.setAttribute("ciclos", ciclos);
+                
                 //Buscar los centros de costo asignados al usuario tipo empleado
                 if (userOk.getIdPerfil() == Constantes.ID_PERFIL_EMPLEADO 
                         || userOk.getIdPerfil() == Constantes.ID_PERFIL_DIRECTOR){

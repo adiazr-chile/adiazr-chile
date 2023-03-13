@@ -4,8 +4,8 @@
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="313"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="676"/>
-	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="772"/>
-	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="214"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="579"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="409"/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="DbFemase"/>
 	<parameter name="rut" class="java.lang.String">
 		<parameterDescription><![CDATA[]]></parameterDescription>
@@ -34,17 +34,17 @@
 	<parameter name="totalHrsJustificadas" class="java.lang.String">
 		<parameterDescription><![CDATA[]]></parameterDescription>
 	</parameter>
-	<parameter name="dias_disponibles" class="java.lang.Integer"/>
-	<parameter name="dias_progresivos" class="java.lang.Integer"/>
-	<parameter name="dias_adicionales" class="java.lang.Integer"/>
-	<parameter name="dias_acumulados" class="java.lang.Integer"/>
-	<parameter name="dias_asignados" class="java.lang.Integer"/>
+	<parameter name="dias_disponibles" class="java.lang.Double"/>
+	<parameter name="dias_progresivos" class="java.lang.Double"/>
+	<parameter name="dias_adicionales" class="java.lang.Double"/>
+	<parameter name="dias_acumulados" class="java.lang.Double"/>
+	<parameter name="dias_asignados" class="java.lang.Double"/>
 	<parameter name="es_zona_extrema" class="java.lang.String"/>
-	<parameter name="dias_normales" class="java.lang.Integer"/>
-	<parameter name="dias_zona_extrema" class="java.lang.Integer">
+	<parameter name="dias_normales" class="java.lang.Double"/>
+	<parameter name="dias_zona_extrema" class="java.lang.Double">
 		<parameterDescription><![CDATA[]]></parameterDescription>
 	</parameter>
-	<parameter name="dias_especiales" class="java.lang.Integer"/>
+	<parameter name="dias_especiales" class="java.lang.Double"/>
 	<parameter name="empresa_direccion" class="java.lang.String"/>
 	<parameter name="empresa_region" class="java.lang.String"/>
 	<parameter name="empresa_comuna" class="java.lang.String"/>
@@ -78,7 +78,13 @@ detalle_ausencia.allow_hour,
 coalesce(autorizador.empl_nombres, '') || ' ' || coalesce(autorizador.empl_ape_paterno, '') nombre_autorizador,
 coalesce(detalle_ausencia.dias_efectivos_vacaciones,0) dias_efectivos_vacaciones,
  coalesce(detalle_ausencia.saldo_dias_vacaciones_asignadas,0)  saldo_dias_vacaciones_asignadas,
- coalesce(detalle_ausencia.dias_acumulados_vacaciones_asignadas,0) dias_acumulados_vacaciones_asignadas   
+ coalesce(detalle_ausencia.dias_acumulados_vacaciones_asignadas,0) dias_acumulados_vacaciones_asignadas,
+ coalesce(dias_efectivos_vba, 0) dias_efectivos_vba, 
+ coalesce(dias_efectivos_vp, 0) dias_efectivos_vp, 
+ coalesce(saldo_vba_pre_vacaciones, 0) saldo_vba_pre_vacaciones, 
+ coalesce(saldo_vp_pre_vacaciones, 0) saldo_vp_pre_vacaciones, 
+ coalesce(saldo_vba_post_vacaciones, 0) saldo_vba_post_vacaciones, 
+ coalesce(saldo_vp_post_vacaciones, 0) saldo_vp_post_vacaciones   
 FROM detalle_ausencia 
 inner join empleado on detalle_ausencia.rut_empleado = empleado.empl_rut 
 inner join ausencia on detalle_ausencia.ausencia_id = ausencia.ausencia_id
@@ -207,13 +213,49 @@ order by detalle_ausencia.fecha_inicio asc]]>
 		<property name="com.jaspersoft.studio.field.name" value="dias_efectivos_vacaciones"/>
 		<property name="com.jaspersoft.studio.field.label" value="dias_efectivos_vacaciones"/>
 	</field>
-	<field name="saldo_dias_vacaciones_asignadas" class="java.lang.Integer">
+	<field name="saldo_dias_vacaciones_asignadas" class="java.lang.Float">
 		<property name="com.jaspersoft.studio.field.name" value="saldo_dias_vacaciones_asignadas"/>
 		<property name="com.jaspersoft.studio.field.label" value="saldo_dias_vacaciones_asignadas"/>
 	</field>
-	<field name="dias_acumulados_vacaciones_asignadas" class="java.lang.Integer">
+	<field name="dias_acumulados_vacaciones_asignadas" class="java.lang.Float">
 		<property name="com.jaspersoft.studio.field.name" value="dias_acumulados_vacaciones_asignadas"/>
 		<property name="com.jaspersoft.studio.field.label" value="dias_acumulados_vacaciones_asignadas"/>
+	</field>
+	<field name="dias_efectivos_vba" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="dias_efectivos_vba"/>
+		<property name="com.jaspersoft.studio.field.label" value="dias_efectivos_vba"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="detalle_ausencia"/>
+		<fieldDescription><![CDATA[Dias efectivos vacaciones básicas anuales]]></fieldDescription>
+	</field>
+	<field name="dias_efectivos_vp" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="dias_efectivos_vp"/>
+		<property name="com.jaspersoft.studio.field.label" value="dias_efectivos_vp"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="detalle_ausencia"/>
+		<fieldDescription><![CDATA[Dias efectivos vacaciones progresivas]]></fieldDescription>
+	</field>
+	<field name="saldo_vba_pre_vacaciones" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.name" value="saldo_vba_pre_vacaciones"/>
+		<property name="com.jaspersoft.studio.field.label" value="saldo_vba_pre_vacaciones"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="detalle_ausencia"/>
+		<fieldDescription><![CDATA[Saldo de vacaciones básicas anuales pre vacaciones ingresadas.]]></fieldDescription>
+	</field>
+	<field name="saldo_vp_pre_vacaciones" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.name" value="saldo_vp_pre_vacaciones"/>
+		<property name="com.jaspersoft.studio.field.label" value="saldo_vp_pre_vacaciones"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="detalle_ausencia"/>
+		<fieldDescription><![CDATA[Saldo de vacaciones progresivas pre vacaciones ingresadas]]></fieldDescription>
+	</field>
+	<field name="saldo_vba_post_vacaciones" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.name" value="saldo_vba_post_vacaciones"/>
+		<property name="com.jaspersoft.studio.field.label" value="saldo_vba_post_vacaciones"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="detalle_ausencia"/>
+		<fieldDescription><![CDATA[Saldo días VBA (saldo de VBA post vacaciones ingresadas).]]></fieldDescription>
+	</field>
+	<field name="saldo_vp_post_vacaciones" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.name" value="saldo_vp_post_vacaciones"/>
+		<property name="com.jaspersoft.studio.field.label" value="saldo_vp_post_vacaciones"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="detalle_ausencia"/>
+		<fieldDescription><![CDATA[Saldo días VP (saldo de VP post vacaciones ingresadas)]]></fieldDescription>
 	</field>
 	<background>
 		<band splitType="Stretch"/>
@@ -268,7 +310,7 @@ order by detalle_ausencia.fecha_inicio asc]]>
 		</band>
 	</title>
 	<pageHeader>
-		<band height="103" splitType="Stretch">
+		<band height="129" splitType="Stretch">
 			<staticText>
 				<reportElement x="-11" y="0" width="98" height="15" uuid="8161b9cc-5359-4683-8ed0-b9b35848b538"/>
 				<textElement textAlignment="Right">
@@ -373,33 +415,30 @@ order by detalle_ausencia.fecha_inicio asc]]>
 				<reportElement x="737" y="55" width="31" height="16" uuid="876260d6-85b6-4062-a383-da98668f71a1"/>
 				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
-			<line>
-				<reportElement x="-11" y="97" width="811" height="5" uuid="f1dd8d07-100f-41f3-8253-8e9b099676eb"/>
-			</line>
 			<staticText>
-				<reportElement x="508" y="81" width="127" height="13" uuid="eea467e1-8285-4d1b-8d6e-2cba0dc3e841"/>
+				<reportElement x="335" y="81" width="124" height="28" uuid="eea467e1-8285-4d1b-8d6e-2cba0dc3e841"/>
 				<textElement>
 					<font size="10" isBold="true" isUnderline="true"/>
 				</textElement>
 				<text><![CDATA[Autorizada por]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="11" y="80" width="76" height="14" uuid="aabfee01-bf9a-4274-8667-839856009dd0"/>
+				<reportElement x="-6" y="80" width="66" height="14" uuid="aabfee01-bf9a-4274-8667-839856009dd0"/>
 				<textElement>
 					<font size="10" isBold="true" isUnderline="true"/>
 				</textElement>
 				<text><![CDATA[Fecha inicio]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="106" y="81" width="64" height="13" uuid="fca4bd0d-d5d6-41cf-8c9a-581ff500d776"/>
+				<reportElement x="71" y="80" width="52" height="13" uuid="fca4bd0d-d5d6-41cf-8c9a-581ff500d776"/>
 				<textElement>
 					<font size="10" isBold="true" isUnderline="true"/>
 				</textElement>
 				<text><![CDATA[Fecha fin]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="286" y="81" width="81" height="13" uuid="b1a5f42c-fb34-4462-8b24-d66019dbbc1c"/>
-				<textElement>
+				<reportElement x="206" y="80" width="54" height="29" uuid="b1a5f42c-fb34-4462-8b24-d66019dbbc1c"/>
+				<textElement textAlignment="Center">
 					<font size="10" isBold="true" isUnderline="true"/>
 				</textElement>
 				<text><![CDATA[Dias efectivos]]></text>
@@ -418,29 +457,74 @@ order by detalle_ausencia.fecha_inicio asc]]>
 				<textFieldExpression><![CDATA[$P{es_zona_extrema}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="180" y="82" width="100" height="13" uuid="c09fbf46-b182-4148-970e-e899a0de1175"/>
-				<textElement>
+				<reportElement x="140" y="80" width="62" height="34" uuid="c09fbf46-b182-4148-970e-e899a0de1175"/>
+				<textElement textAlignment="Center">
 					<font size="10" isBold="true" isUnderline="true"/>
 				</textElement>
 				<text><![CDATA[Dias acumulados]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="375" y="81" width="123" height="13" uuid="63db2c9a-de29-4a3a-b7e2-a58985e86f8d"/>
-				<textElement>
+				<reportElement x="263" y="81" width="69" height="28" uuid="63db2c9a-de29-4a3a-b7e2-a58985e86f8d"/>
+				<textElement textAlignment="Center">
 					<font size="10" isBold="true" isUnderline="true"/>
 				</textElement>
 				<text><![CDATA[Saldo días asignados]]></text>
 			</staticText>
+			<staticText>
+				<reportElement x="461" y="80" width="54" height="42" uuid="12874450-3f22-4916-92e8-56c3ddb28d02"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Dias efectivos VBA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="516" y="81" width="54" height="42" uuid="f278e819-68ad-463b-ba6b-18789b96774e"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Dias efectivos VP]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="570" y="80" width="54" height="42" uuid="11bbf674-c8d1-4cd7-bc9d-ed175857e439"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Saldo VBA previo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="626" y="80" width="54" height="42" uuid="04f715c2-0b71-43aa-94c6-bff050118b1e"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Saldo VP previo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="680" y="80" width="54" height="42" uuid="720870a2-197f-42b7-a00a-628ac085f3c7"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Saldo VBA post]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="740" y="81" width="54" height="42" uuid="add069ad-bcc0-476b-8153-037ce699e86d"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Saldo VP post]]></text>
+			</staticText>
+			<line>
+				<reportElement x="-11" y="125" width="811" height="1" uuid="acbd5894-1c99-42d7-8aa7-ed7b05c5651e"/>
+			</line>
 		</band>
 	</pageHeader>
 	<columnHeader>
 		<band splitType="Stretch"/>
 	</columnHeader>
 	<detail>
-		<band height="16" splitType="Stretch">
+		<band height="17" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 			<textField>
-				<reportElement x="11" y="3" width="74" height="12" uuid="bedc4e01-f4a4-4b2e-9dad-84fa658d69be">
+				<reportElement x="-9" y="3" width="74" height="12" uuid="bedc4e01-f4a4-4b2e-9dad-84fa658d69be">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<textElement>
@@ -449,7 +533,7 @@ order by detalle_ausencia.fecha_inicio asc]]>
 				<textFieldExpression><![CDATA[$F{fecha_inicio_str}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="106" y="3" width="64" height="12" uuid="d0eda97f-e657-4faf-b5a0-12ceded6df81">
+				<reportElement x="71" y="3" width="64" height="12" uuid="d0eda97f-e657-4faf-b5a0-12ceded6df81">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<textElement>
@@ -458,18 +542,9 @@ order by detalle_ausencia.fecha_inicio asc]]>
 				<textFieldExpression><![CDATA[$F{fecha_fin_str}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="511" y="3" width="49" height="12" uuid="85f74b6a-bba7-4efb-bd3b-00235c1ee6ca">
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				<reportElement x="336" y="3" width="124" height="12" uuid="dce95fd8-300c-488e-b4fb-46ed1c53c88a">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-				</reportElement>
-				<textElement>
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{rut_autoriza_ausencia}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="586" y="3" width="213" height="12" uuid="dce95fd8-300c-488e-b4fb-46ed1c53c88a">
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 				</reportElement>
 				<textElement>
 					<font size="8"/>
@@ -477,8 +552,9 @@ order by detalle_ausencia.fecha_inicio asc]]>
 				<textFieldExpression><![CDATA[$F{nombre_autorizador}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="288" y="2" width="66" height="12" uuid="b0265faf-7035-4b2b-b143-a55be08adbce">
+				<reportElement x="206" y="2" width="50" height="12" uuid="b0265faf-7035-4b2b-b143-a55be08adbce">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Right">
 					<font size="8"/>
@@ -486,7 +562,7 @@ order by detalle_ausencia.fecha_inicio asc]]>
 				<textFieldExpression><![CDATA[$F{dias_efectivos_vacaciones}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="179" y="3" width="64" height="12" uuid="d58fa0aa-59ef-4694-a3d4-0d60b0c469c9">
+				<reportElement x="139" y="2" width="50" height="12" uuid="d58fa0aa-59ef-4694-a3d4-0d60b0c469c9">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
@@ -496,7 +572,7 @@ order by detalle_ausencia.fecha_inicio asc]]>
 				<textFieldExpression><![CDATA[$F{dias_acumulados_vacaciones_asignadas}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="376" y="3" width="64" height="12" uuid="f1aeef35-cbe4-42d6-a9f1-fb7cbc1e011a">
+				<reportElement x="264" y="2" width="50" height="12" uuid="f1aeef35-cbe4-42d6-a9f1-fb7cbc1e011a">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
@@ -504,6 +580,66 @@ order by detalle_ausencia.fecha_inicio asc]]>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{saldo_dias_vacaciones_asignadas}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="462" y="3" width="50" height="12" uuid="a49723a3-600a-41c2-9f8e-dea891bcfca9">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{dias_efectivos_vba}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="517" y="3" width="50" height="12" uuid="4151d0f8-a410-4d7d-bdb3-325c5acde13d">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{dias_efectivos_vp}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="573" y="3" width="50" height="12" uuid="6cd6f5a1-6e78-495b-bfea-be6c3562c41c">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{saldo_vba_pre_vacaciones}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="626" y="3" width="50" height="12" uuid="067e208c-b54a-4dcd-8bd6-c1f671d71461">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{saldo_vp_pre_vacaciones}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="682" y="3" width="50" height="12" uuid="326b7287-a9e1-4544-956e-3b0f005987a3">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{saldo_vba_post_vacaciones}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="741" y="3" width="50" height="12" uuid="25748344-89c9-4f4b-a5e6-6466335ceb98">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{saldo_vp_post_vacaciones}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
@@ -530,9 +666,9 @@ order by detalle_ausencia.fecha_inicio asc]]>
 				<text><![CDATA[V° B° Trabajador]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="757" y="55" width="20" height="14" uuid="1acab939-d07f-4bdf-8de3-56a698c1fbbe">
+				<reportElement x="742" y="55" width="36" height="14" uuid="1acab939-d07f-4bdf-8de3-56a698c1fbbe">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$P{dias_disponibles}]]></textFieldExpression>
@@ -548,37 +684,37 @@ order by detalle_ausencia.fecha_inicio asc]]>
 				<text><![CDATA[Total de días:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="705" y="15" width="49" height="14" uuid="e2658845-882e-4d4d-b703-a4ebe316d039"/>
+				<reportElement x="688" y="15" width="49" height="14" uuid="e2658845-882e-4d4d-b703-a4ebe316d039"/>
 				<textElement textAlignment="Right">
 					<font size="10" isBold="true" isUnderline="true"/>
 				</textElement>
 				<text><![CDATA[Total (+):]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="266" y="13" width="73" height="14" uuid="17e86785-0eab-40a0-9498-5908562ddcad"/>
+				<reportElement x="197" y="14" width="73" height="14" uuid="17e86785-0eab-40a0-9498-5908562ddcad"/>
 				<textElement textAlignment="Right">
 					<font size="10" isBold="true" isUnderline="true"/>
 				</textElement>
 				<text><![CDATA[Progresivos:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="343" y="14" width="20" height="14" uuid="ac4d253b-1def-490f-a450-59e1d8759965">
+				<reportElement x="273" y="14" width="36" height="14" uuid="ac4d253b-1def-490f-a450-59e1d8759965">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$P{dias_progresivos}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="163" y="14" width="68" height="14" uuid="4a6c5413-d405-4b37-9d33-051c35123644"/>
+				<reportElement x="86" y="14" width="68" height="14" uuid="4a6c5413-d405-4b37-9d33-051c35123644"/>
 				<textElement textAlignment="Right">
 					<font size="10" isBold="true" isUnderline="true"/>
 				</textElement>
 				<text><![CDATA[Adicionales:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="234" y="14" width="20" height="14" uuid="11346d2b-1270-41d1-ad12-75e4d76c0cff">
+				<reportElement x="156" y="14" width="36" height="14" uuid="11346d2b-1270-41d1-ad12-75e4d76c0cff">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
@@ -590,10 +726,10 @@ order by detalle_ausencia.fecha_inicio asc]]>
 				<reportElement x="-11" y="52" width="811" height="1" uuid="fe36046b-2eb4-4c97-96ec-66a559d64e56"/>
 			</line>
 			<line>
-				<reportElement x="-6" y="9" width="811" height="1" uuid="9e8c66bd-95e1-47fb-95c8-cfe3084bb6c5"/>
+				<reportElement x="-11" y="3" width="811" height="1" uuid="9e8c66bd-95e1-47fb-95c8-cfe3084bb6c5"/>
 			</line>
 			<staticText>
-				<reportElement x="655" y="34" width="101" height="14" uuid="f6500a9e-2799-490a-ae6e-6c2d864a3cc5"/>
+				<reportElement x="635" y="34" width="101" height="14" uuid="f6500a9e-2799-490a-ae6e-6c2d864a3cc5"/>
 				<textElement textAlignment="Right">
 					<font size="10" isBold="true" isUnderline="true"/>
 				</textElement>
@@ -603,69 +739,69 @@ order by detalle_ausencia.fecha_inicio asc]]>
 				<reportElement x="-6" y="72" width="811" height="1" uuid="5ef20a9d-ddbc-48c6-96af-eb44922b5191"/>
 			</line>
 			<staticText>
-				<reportElement x="640" y="56" width="115" height="14" uuid="c9fef169-7555-46a8-a26f-251d5189a4b4"/>
+				<reportElement x="622" y="56" width="115" height="14" uuid="c9fef169-7555-46a8-a26f-251d5189a4b4"/>
 				<textElement textAlignment="Right">
 					<font size="10" isBold="true" isUnderline="true"/>
 				</textElement>
 				<text><![CDATA[Total disponibles (=):]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="757" y="14" width="20" height="14" uuid="1cd526a0-5315-4991-aa1d-961225d3fe79">
+				<reportElement x="742" y="14" width="36" height="14" uuid="1cd526a0-5315-4991-aa1d-961225d3fe79">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$P{dias_acumulados}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="757" y="34" width="20" height="14" uuid="82f14d94-d451-475b-8a40-d3626697568f">
+				<reportElement x="742" y="34" width="36" height="14" uuid="82f14d94-d451-475b-8a40-d3626697568f">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$P{dias_asignados}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="455" y="13" width="20" height="14" uuid="059e20c2-71b2-4e59-8357-4d21a3475a70">
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				<reportElement x="391" y="13" width="36" height="14" uuid="059e20c2-71b2-4e59-8357-4d21a3475a70">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$P{dias_zona_extrema}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="376" y="14" width="73" height="14" uuid="7182afa3-89d1-4c31-b4d9-4c260d379009"/>
+				<reportElement x="316" y="14" width="73" height="14" uuid="7182afa3-89d1-4c31-b4d9-4c260d379009"/>
 				<textElement textAlignment="Right">
 					<font size="10" isBold="true" isUnderline="true"/>
 				</textElement>
 				<text><![CDATA[Zona extrema:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="490" y="14" width="65" height="14" uuid="3cdc8b1e-c9c1-4ed0-983e-b59644eacdab"/>
+				<reportElement x="437" y="14" width="59" height="14" uuid="3cdc8b1e-c9c1-4ed0-983e-b59644eacdab"/>
 				<textElement textAlignment="Left">
 					<font size="10" isBold="true" isUnderline="true"/>
 				</textElement>
 				<text><![CDATA[Especiales:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="560" y="14" width="20" height="14" uuid="aea8fd29-7950-4fad-b741-1a58964c13fd">
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				<reportElement x="499" y="14" width="36" height="14" uuid="aea8fd29-7950-4fad-b741-1a58964c13fd">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$P{dias_especiales}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="596" y="14" width="51" height="14" uuid="7db3b1f4-04df-4102-8cac-6ef0656b588a"/>
+				<reportElement x="566" y="14" width="51" height="14" uuid="7db3b1f4-04df-4102-8cac-6ef0656b588a"/>
 				<textElement textAlignment="Left">
 					<font size="10" isBold="true" isUnderline="true"/>
 				</textElement>
 				<text><![CDATA[Normales]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="651" y="14" width="20" height="14" uuid="82db718e-7405-42d4-b9af-6f3f20550721">
+				<reportElement x="619" y="14" width="36" height="14" uuid="82db718e-7405-42d4-b9af-6f3f20550721">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>

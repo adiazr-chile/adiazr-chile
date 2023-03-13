@@ -404,6 +404,7 @@ public class VacacionesController extends BaseServlet {
                         + ", rutEmpleado: " + infoVacacion.getRutEmpleado());
                     try{
                         ResultCRUDVO doDelete = vacacionesBp.delete(infoVacacion, resultado);
+                        ResultCRUDVO doClear = vacacionesBp.clearRegistry(infoVacacion, resultado);
                         
                         //Convert Java Object to Json
                         String json=gson.toJson(infoVacacion);					
