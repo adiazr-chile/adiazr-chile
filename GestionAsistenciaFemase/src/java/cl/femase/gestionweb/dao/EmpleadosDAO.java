@@ -973,7 +973,7 @@ public class EmpleadosDAO extends BaseDAO{
         
         try{
             String sql = "SELECT "
-                + "empl.empl_rut,empl.empl_nombres,empl.empl_ape_paterno,"
+                + "upper(empl.empl_rut) empl_rut,empl.empl_nombres,empl.empl_ape_paterno,"
                 + "empl.empl_ape_materno,empl.empl_fecha_nacimiento,"
                 + "empl.empl_direccion direccion,empl.empl_email email,"
                 + "empl.empl_fec_ini_contrato,"

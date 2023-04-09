@@ -356,7 +356,7 @@ public class CentroCostoDAO extends BaseDAO{
         ResultSet rs = null;
         EmpleadoVO data;
         try{
-            String sql = "select distinct(empl_rut) rut,"
+            String sql = "select distinct(upper(empl_rut)) rut,"
                 + "empl_nombres || ' ' || empl_ape_paterno|| ' ' || empl_ape_materno nombre, "
                 + "empl_email email,"
                 + "autoriza_ausencia, empl_estado,cargo.cargo_nombre "
@@ -366,7 +366,8 @@ public class CentroCostoDAO extends BaseDAO{
                 + " and empl_estado = 1 and autoriza_ausencia=true ";//
                 //+ " order by empl_rut";
        
-            if (!m_usedGlobalDbConnection) dbConn = dbLocator.getConnection(m_dbpoolName,"[CentroCostoDAO.getDirectoresCenco]");
+            if (!m_usedGlobalDbConnection) dbConn = 
+                dbLocator.getConnection(m_dbpoolName,"[CentroCostoDAO.getDirectoresCenco]");
             ps = dbConn.prepareStatement(sql);
             rs = ps.executeQuery();
 

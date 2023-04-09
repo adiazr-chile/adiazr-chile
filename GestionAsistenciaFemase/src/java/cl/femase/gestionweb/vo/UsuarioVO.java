@@ -64,8 +64,9 @@ public class UsuarioVO implements Serializable {
         return runEmpleado;
     }
 
-    public void setRunEmpleado(String runEmpleado) {
-        this.runEmpleado = runEmpleado;
+    public void setRunEmpleado(String _runEmpleado) {
+        if (_runEmpleado != null) _runEmpleado = _runEmpleado.toUpperCase();
+        this.runEmpleado = _runEmpleado;
     }
     
     public String getAdminEmpresa() {

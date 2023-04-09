@@ -762,8 +762,8 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
                             ausenciaPorHora,
                             solicitudFromBd.getFechaInicioPA(),
                             solicitudFromBd.getFechaFinPA(), 
-                            null, 
-                            null);
+                            solicitudFromBd.getHoraInicioPA_AMPM(), 
+                            solicitudFromBd.getHoraFinPA_AMPM());
                         if (ausenciasConflicto.isEmpty()){
                             System.out.println(WEB_NAME+"[SolicitudPermisoAdministrativoController]"
                                 + "No hay conflicto. "

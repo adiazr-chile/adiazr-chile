@@ -214,8 +214,10 @@ public class EmpleadoVO implements Serializable{
         return codInternoCaracterAdicional;
     }
 
-    public void setCodInternoCaracterAdicional(String codInternoCaracterAdicional) {
-        this.codInternoCaracterAdicional = codInternoCaracterAdicional;
+    public void setCodInternoCaracterAdicional(String _codInternoCaracterAdicional) {
+        if (_codInternoCaracterAdicional != null) 
+            _codInternoCaracterAdicional = _codInternoCaracterAdicional.toUpperCase();
+        this.codInternoCaracterAdicional = _codInternoCaracterAdicional;
     }
 
     public int getSaldoDiasVacaciones() {
@@ -366,8 +368,9 @@ public class EmpleadoVO implements Serializable{
         return codInterno;
     }
 
-    public void setCodInterno(String codInterno) {
-        this.codInterno = codInterno;
+    public void setCodInterno(String _codInterno) {
+        if (_codInterno != null) _codInterno = _codInterno.toUpperCase();
+        this.codInterno = _codInterno;
     }
 
     /**
@@ -634,7 +637,13 @@ public class EmpleadoVO implements Serializable{
         return rut;
     }
 
+    /**
+    * 
+    * @param _rut
+    */
     public void setRut(String _rut) {
+        if (_rut != null) _rut = _rut.toUpperCase();
+        
         this.rut = _rut;
         setRutParam("'"+_rut+"'");
     }

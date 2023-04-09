@@ -633,31 +633,17 @@ public class SolicitudVacacionesController extends BaseServlet {
                             null, 
                             null);
                         if (ausenciasConflicto.isEmpty()){
-                            System.out.println(WEB_NAME+"[SolicitudVacacionesController]"
+                            System.out.println(WEB_NAME + "[SolicitudVacacionesController]"
                                 + "No hay conflicto. "
                                 + "Aprobar solicitud de vacaciones "
                                 + "e Insertar vacacion...");
                             //No hay conflicto con ausencias existentes
-                            solicitud.setFechaHoraApruebaRechaza(strFechaHoraActual);
-                            doCreate = 
-                                solicitudesBp.aprobarSolicitud(solicitud.getId(), 
-                                    usernameApruebaRechaza, 
-                                    strFechaHoraActual,
-                                    solicitud.getNotaObservacion(),
-                                    resultado);
-                            solicitud.setEstadoId(Constantes.ESTADO_SOLICITUD_APROBADA);
-                            solicitud.setEstadoLabel(Constantes.ESTADO_SOLICITUD_APROBADA_LABEL);
-                            notificaEventoSolicitud("SOLICITUD_APROBADA",
-                                "Solicitud de Vacaciones Aprobada", 
-                                solicitudFromBd, userConnected, 
-                                request, 
-                                solicitudFromBd.getInicioVacaciones(), 
-                                solicitudFromBd.getFinVacaciones(),
-                                solicitudFromBd.getDiasEfectivosVacacionesSolicitadas());
-                            
                             //*********************************************************
                             System.out.println(WEB_NAME+"[SolicitudVacacionesController]"
-                                + "Aprobar solicitud de vacaciones. Insertar vacacion...");
+                                + "Aprobar solicitud de vacaciones. Insertar vacacion..."
+                                + ". Rut usuario conectado: " + userConnected.getRunEmpleado());
+                            String runUsuario = userConnected.getRunEmpleado();
+                            if (runUsuario != null) runUsuario = runUsuario.toUpperCase();
                             
                             SolicitudVacacionesVO auxSolicitud = 
                                 solicitudesBp.getSolicitudByKey(solicitud.getId());
@@ -670,18 +656,57 @@ public class SolicitudVacacionesController extends BaseServlet {
                             newAusencia.setFechaFinAsStr(auxSolicitud.getFinVacaciones());
                             //fijos
                             newAusencia.setIdAusencia(Constantes.ID_AUSENCIA_VACACIONES);
-                            newAusencia.setRutAutorizador(userConnected.getRunEmpleado());
+                            newAusencia.setRutAutorizador(runUsuario);
                             newAusencia.setAusenciaAutorizada("S");
                             newAusencia.setPermiteHora("N");
                             newAusencia.setDiasEfectivosVacaciones(solicitud.getDiasEfectivosVacacionesSolicitadas());
                             ResultCRUDVO insertResult = new ResultCRUDVO();
                             insertResult = insertarVacacion(request, appProperties, parametrosSistema, userConnected, newAusencia);
-                            
+                            if (insertResult.isThereError()){
+                                //la solicitud queda como pendiente...indicando error
+                                System.err.println("[SolicitudVacacionesController]"
+                                    + "Error al insertar vacacion.");
+                                request.setAttribute("msgerror", "Error al insertar Vacacion");
+                                String mensajeFinal= insertResult.getMsg();
+                                solicitud.setNotaObservacion(mensajeFinal);
+                                solicitud.setFechaHoraApruebaRechaza(strFechaHoraActual);
+                                solicitud.setEstadoId(Constantes.ESTADO_SOLICITUD_PENDIENTE);
+                                solicitud.setEstadoLabel(Constantes.ESTADO_SOLICITUD_PENDIENTE_LABEL);
+                                System.out.println(WEB_NAME+"[SolicitudVacacionesController]"
+                                    + "Notificar error al insertar la Vacacion");
+                                notificaEventoSolicitud("SOLICITUD_ERROR",
+                                    "Solicitud de Vacaciones Error", 
+                                    solicitudFromBd, userConnected, request,
+                                    solicitudFromBd.getInicioVacaciones(), 
+                                    solicitudFromBd.getFinVacaciones(),
+                                    solicitudFromBd.getDiasEfectivosVacacionesSolicitadas());        
+                            }else{
+                                System.out.println(WEB_NAME+"[SolicitudVacacionesController]"
+                                    + "La Vacacion se inserto correctamente. "
+                                    + "Ahora se debe aprobar la solicitud de vacaciones.");
+                                //**********
+                                solicitud.setFechaHoraApruebaRechaza(strFechaHoraActual);
+                                doCreate = 
+                                    solicitudesBp.aprobarSolicitud(solicitud.getId(), 
+                                        usernameApruebaRechaza, 
+                                        strFechaHoraActual,
+                                        solicitud.getNotaObservacion(),
+                                        resultado);
+                                solicitud.setEstadoId(Constantes.ESTADO_SOLICITUD_APROBADA);
+                                solicitud.setEstadoLabel(Constantes.ESTADO_SOLICITUD_APROBADA_LABEL);
+                                notificaEventoSolicitud("SOLICITUD_APROBADA",
+                                    "Solicitud de Vacaciones Aprobada", 
+                                    solicitudFromBd, userConnected, 
+                                    request, 
+                                    solicitudFromBd.getInicioVacaciones(), 
+                                    solicitudFromBd.getFinVacaciones(),
+                                    solicitudFromBd.getDiasEfectivosVacacionesSolicitadas());        
+                            }
                         }else{
                             /**
                             * Hay conflicto con ausencias existentes: Rechazar Solicitud de vacaciones. 
                             */
-                            System.err.println("[DetalleAusenciaController]"
+                            System.err.println("[SolicitudVacacionesController]"
                                 + "Hay conflicto con ausencias existentes...");
                             request.setAttribute("msgerror", "Ausencia conflicto");
                             String mensajeFinal= "Hay conflicto con ausencias existentes...";
@@ -1065,9 +1090,10 @@ public class SolicitudVacacionesController extends BaseServlet {
                 if (itDirectores.getApePaterno() != null) strNombre += " " + itDirectores.getApePaterno();
                 if (itDirectores.getApeMaterno() != null) strNombre += " " + itDirectores.getApeMaterno();
                 System.out.println(WEB_NAME+"[SolicitudVacacionesController."
-                    + "getDestinatarioSolicitud]add destinatario. "
+                    + "getDestinatarioSolicitud]add destinatario Solicitud vacaciones: "
                     + "strNombre: " + strNombre
-                    + ", strEmail: " + strEmail
+                    + ", rut: " + itDirectores.getRut()
+                    + ", strEmail: " + strEmail    
                     + ", strCargo: " + strCargo);
                 DestinatarioSolicitudVO destinatario = 
                     new DestinatarioSolicitudVO(strNombre, strEmail, strCargo);

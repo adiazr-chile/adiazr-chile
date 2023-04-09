@@ -29,18 +29,35 @@ public class CentroCostoBp  extends BaseBp{
     private final cl.femase.gestionweb.dao.MaintenanceEventsDAO eventsDao;
     private final cl.femase.gestionweb.dao.CentroCostoDAO centrocostoDao;
     
+    /**
+    * 
+    * @param props
+    */
     public CentroCostoBp(PropertiesVO props) {
         this.props = props;
         eventsDao = new cl.femase.gestionweb.dao.MaintenanceEventsDAO(this.props);
         centrocostoDao = new cl.femase.gestionweb.dao.CentroCostoDAO(this.props);
     }
 
+    /**
+    * 
+    * @param _empresaId
+    * @param _deptoId
+    * @param _cencoId
+    * @return 
+    */
     public List<EmpleadoVO> getDirectoresCenco(String _empresaId, 
             String _deptoId, 
             int _cencoId){
         return centrocostoDao.getDirectoresCenco(_empresaId, _deptoId, _cencoId);
     }
     
+    /**
+    * 
+    * @param _usuario
+    * @param _deptoId
+    * @return 
+    */
     public List<CentroCostoVO> getCentrosCostoDepto(UsuarioVO _usuario, String _deptoId){
         List<CentroCostoVO> listaFinal = new ArrayList<>();
         List<CentroCostoVO> listaBase = 
@@ -54,10 +71,21 @@ public class CentroCostoBp  extends BaseBp{
         return listaFinal;
     }
     
+    /**
+    * 
+    * @param _username
+    * @return 
+    */
     public List<UsuarioCentroCostoVO> getAllCentrosCosto(String _username){ 
         return centrocostoDao.getAllCentrosCosto(_username);
     }
     
+    /**
+    * 
+    * @param _deptoId
+    * @param _cencoId
+    * @return 
+    */
     public CentroCostoVO getCentroCostoByKey(String _deptoId,
             int _cencoId){
         
