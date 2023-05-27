@@ -81,10 +81,24 @@ public class DetalleAusenciaVO implements Serializable{
     //Saldo de dias administrativos post permiso administrativo
     private double saldoPostPA;
     
+    //Saldo de dias administrativos post permiso examen salud preventiva
+    private int saldoPostPESP;
+    
     public DetalleAusenciaVO() {
         
     }
 
+    public int getSaldoPostPESP() {
+        return saldoPostPESP;
+    }
+
+    public void setSaldoPostPESP(int saldoPostPESP) {
+        this.saldoPostPESP = saldoPostPESP;
+    }
+
+    
+    
+    
     public double getSaldoPostPA() {
         return saldoPostPA;
     }

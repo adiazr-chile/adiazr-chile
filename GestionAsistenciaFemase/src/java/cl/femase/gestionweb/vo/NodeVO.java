@@ -18,12 +18,21 @@ public class NodeVO implements Serializable{
 
     private String href;
     private String text;
+    private int status;
     private int[] tags;
     private String parent_id;
     private boolean selectable = false;
     private ArrayList<NodeVO> nodes=new ArrayList<>();
     
     public NodeVO() {
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 
     public boolean isSelectable() {

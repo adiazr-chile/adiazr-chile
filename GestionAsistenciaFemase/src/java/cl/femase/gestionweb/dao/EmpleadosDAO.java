@@ -2496,6 +2496,8 @@ public class EmpleadosDAO extends BaseDAO{
         return lista;
     }
     
+    
+    
     /**
     * Obtiene lista de empleados con datos basicos
     * @param _empresaId
@@ -2523,9 +2525,7 @@ public class EmpleadosDAO extends BaseDAO{
             int _jtPageSize, 
             String _jtSorting){
         
-        List<EmpleadoVO> lista = 
-            new ArrayList<>();
-    
+        List<EmpleadoVO> lista = new ArrayList<>();
         PreparedStatement ps = null;
         ResultSet rs = null;
         EmpleadoVO data;
@@ -2627,6 +2627,190 @@ public class EmpleadosDAO extends BaseDAO{
                
                 data.setRut(rs.getString("rut"));
                 data.setCodInterno(rs.getString("cod_interno"));
+                data.setNombres(rs.getString("nombre"));
+                data.setApeMaterno(rs.getString("materno"));
+                data.setEmpresaNombre(rs.getString("empresa_nombre"));
+                data.setDeptoNombre(rs.getString("depto_nombre"));
+                data.setCencoNombre(rs.getString("ccosto_nombre"));
+                data.setComunaNombre(rs.getString("comuna_nombre"));
+                data.setRegionNombre(rs.getString("region_nombre"));
+                data.setNombreCargo(rs.getString("cargo_nombre"));
+                data.setIdTurno(rs.getInt("empl_id_turno"));
+                data.setNombreTurno(rs.getString("nombre_turno"));
+                
+                EmpresaVO auxEmpresa = new EmpresaVO();
+                auxEmpresa.setId(rs.getString("empresa_id"));
+                auxEmpresa.setNombre(data.getEmpresaNombre());
+                
+                data.setEmpresaId(auxEmpresa.getId());
+                
+                DepartamentoVO auxDepto = new DepartamentoVO();
+                auxDepto.setId(rs.getString("depto_id"));
+                auxDepto.setNombre(data.getDeptoNombre());
+                data.setDeptoId(auxDepto.getId());
+                
+                CentroCostoVO auxCenco = new CentroCostoVO();
+                auxCenco.setId(rs.getInt("cenco_id"));
+                auxCenco.setNombre(data.getCencoNombre());
+                data.setCencoId(auxCenco.getId());
+                
+                data.setEmpresa(auxEmpresa);
+                data.setDepartamento(auxDepto);
+                data.setCentroCosto(auxCenco);
+                
+                data.setClaveMarcacion(rs.getString("clave_marcacion"));
+                lista.add(data);
+                //
+            }
+            ps.close();
+            rs.close();
+            dbLocator.freeConnection(dbConn);
+        }catch(SQLException|DatabaseException sqle){
+            m_logger.error("Error: "+sqle.toString());
+        }finally{
+            try {
+                if (ps != null) ps.close();
+                if (rs != null) rs.close();
+                dbLocator.freeConnection(dbConn);
+            } catch (SQLException ex) {
+                System.err.println("Error: "+ex.toString());
+            }
+        }
+        
+        return lista;
+    }
+    
+    /**
+    * Obtiene lista de empleados con datos basicos
+    * @param _empresaId
+    * @param _deptoId
+    * @param _cencoId
+    * @param _cargo
+    * @param _rutEmpleado
+    * @param _nombres
+    * @param _apePaterno
+    * @param _apeMaterno
+    * @param _jtStartIndex
+    * @param _jtPageSize
+    * @param _jtSorting
+    * @return 
+    */
+    public List<EmpleadoVO> getEmpleadosAll(String _empresaId, 
+            String _deptoId, 
+            int _cencoId,
+            int _cargo,
+            String _rutEmpleado,
+            String _nombres,
+            String _apePaterno,
+            String _apeMaterno,
+            int _jtStartIndex, 
+            int _jtPageSize, 
+            String _jtSorting){
+        
+        List<EmpleadoVO> lista = new ArrayList<>();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        EmpleadoVO data;
+        
+        try{
+            String sql = "SELECT "
+                + "empleado.empl_rut AS rut,"
+                + "coalesce(empleado.empl_nombres, '') || ' ' || "
+                + "coalesce(empleado.empl_ape_paterno, '') nombre,"
+                + "empleado.empl_id_cargo,"
+                + "empleado.empl_id_turno, "
+                + "empleado.empresa_id, "
+                + "empresa.empresa_nombre, "
+                + "empleado.empl_ape_materno AS materno,"
+                + "empleado.depto_id,"
+                + "departamento.depto_nombre,"
+                + "empleado.cenco_id,"
+                + "centro_costo.ccosto_nombre,"
+                + "centro_costo.id_comuna,"
+                + "comuna.comuna_nombre,"
+                + "region.region_nombre,"
+                + "region.region_id,"
+                + "comuna.comuna_id,"
+                + "cargo.cargo_nombre,"
+                + "turno.nombre_turno,"
+                + "empleado.empl_estado,"
+                + "cargo.cargo_nombre,"
+                + "turno.nombre_turno,"
+                + "empresa.empresa_nombre,"
+                    + "empleado.cod_interno,"
+                    + "empleado.clave_marcacion, "
+                    + "empleado.empl_estado estado "
+                + "FROM "
+                + "empleado,"
+                + "centro_costo,"
+                + "empresa,"
+                + "departamento,"
+                + "comuna,"
+                + "region,"
+                + "cargo,"
+                + "turno "
+                + "WHERE "
+                + "empleado.empl_id_cargo = cargo.cargo_id AND "
+                + "empleado.empl_id_turno = turno.id_turno AND "
+                + "empleado.empresa_id = empresa.empresa_id AND "
+                + "empleado.depto_id = departamento.depto_id AND "
+                + "empleado.cenco_id = centro_costo.ccosto_id AND "
+                + "centro_costo.id_comuna = comuna.comuna_id AND "
+                + "comuna.region_id = region.region_id ";
+
+            if (_empresaId!=null && _empresaId.compareTo("-1")!=0){        
+                sql += " and empleado.empresa_id= '"+_empresaId+"'";
+            }
+            if (_deptoId!=null && _deptoId.compareTo("-1")!=0){        
+                sql += " and empleado.depto_id = '"+_deptoId+"' ";
+            }
+            if (_cencoId != -1){        
+                sql += " and empleado.cenco_id = "+_cencoId+" ";
+            }
+            if (_cargo != -1){        
+                sql += " and empl_id_cargo = "+_cargo+" ";
+            }
+            if (_rutEmpleado != null && _rutEmpleado.compareTo("") != 0 && _rutEmpleado.compareTo("todos") != 0){        
+                sql += " and upper(empleado.empl_rut) like '"+_rutEmpleado.toUpperCase()+"%'";
+            }
+            if (_nombres!=null && _nombres.compareTo("")!=0){        
+                sql += " and upper(empl_nombres) like '"+_nombres.toUpperCase()+"%'";
+            }
+            if (_apePaterno != null && _apePaterno.compareTo("") != 0){        
+                sql += " and upper(empl_ape_paterno) like '"+_apePaterno.toUpperCase()+"%'";
+            }
+            if (_apeMaterno != null && _apeMaterno.compareTo("") != 0){        
+                sql += " and upper(empl_ape_materno) like '"+_apeMaterno.toUpperCase()+"%'";
+            }
+            
+            sql += " order by " + _jtSorting; 
+            if (_jtPageSize > 0){
+                sql += " limit "+_jtPageSize + " offset "+_jtStartIndex;
+            }
+            
+            System.out.println(WEB_NAME+"[EmpleadosDAO.getEmpleadosAll]"
+                + "EmpresaId: "+_empresaId
+                + ",deptoId: "+_deptoId
+                + ",cencoId: "+_cencoId
+                + ",rutEmpleado: "+_rutEmpleado
+                + ",nombres: "+_nombres
+                + ",apPaterno: "+_apePaterno
+                + ",apMaterno: "+_apeMaterno
+                + ", _jtStartIndex: "+_jtStartIndex
+                + ", _jtPageSize: "+_jtPageSize
+                + ", _jtSorting: "+_jtSorting
+                + ", Sql: "+sql);
+            
+            dbConn = dbLocator.getConnection(m_dbpoolName,"[EmpleadosDAO.getEmpleadosAll]");
+            ps = dbConn.prepareStatement(sql);
+            rs = ps.executeQuery();
+
+            while (rs.next()){
+                data = new EmpleadoVO();
+               
+                data.setRut(rs.getString("rut"));
+                data.setCodInterno(rs.getString("cod_interno"));
+                data.setEstado(rs.getInt("estado"));
                 data.setNombres(rs.getString("nombre"));
                 data.setApeMaterno(rs.getString("materno"));
                 data.setEmpresaNombre(rs.getString("empresa_nombre"));

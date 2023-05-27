@@ -75,6 +75,12 @@ public class Constantes {
     
     public static int ID_AUSENCIA_VACACIONES        = 1;
     public static int ID_AUSENCIA_PERMISO_ADMINISTRATIVO = 4;
+    
+    /**
+    *   ID del Permiso Examen Salud Preventiva = 44
+    */
+    public static int ID_AUSENCIA_PERMISO_EXAMEN_SALUD_PREVENTIVA = 44;
+    
     public static String FECHA_FIN_CONTRATO_INDEFINIDO = "3000-12-31";
     
     /**
@@ -171,7 +177,14 @@ public class Constantes {
     * Id parametro indica el numero maximo de dias de permiso administrativo para un semestre
     */
     public static final String ID_PARAMETRO_MAXIMO_SEMESTRAL_DIAS_PA = "max_dias_pa_semestre";
+    
+    /**
+    * Id parametro indica el numero maximo de dias de permiso examen salud preventiva
+    */
+    public static final String ID_PARAMETRO_MAXIMO_ANUAL_DIAS_PESP = "maximo_anual_pesp";
 
+    
+    
     public static String fnSET_FECHA_BASE_VP  = "set_fecha_base_vacacion_progresiva";
     
     /**

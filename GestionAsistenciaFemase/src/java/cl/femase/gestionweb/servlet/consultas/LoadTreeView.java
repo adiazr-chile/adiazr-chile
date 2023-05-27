@@ -10,7 +10,6 @@ import cl.femase.gestionweb.dao.CentroCostoDAO;
 import cl.femase.gestionweb.dao.CompanyTreeDAO;
 import cl.femase.gestionweb.dao.DepartamentoDAO;
 import cl.femase.gestionweb.dao.EmpleadosDAO;
-import static cl.femase.gestionweb.servlet.consultas.EventosMantencionController.m_logger;
 import cl.femase.gestionweb.vo.CentroCostoVO;
 import cl.femase.gestionweb.vo.DepartamentoVO;
 import cl.femase.gestionweb.vo.EmpleadoVO;
@@ -37,14 +36,15 @@ import javax.servlet.http.HttpSession;
 public class LoadTreeView extends BaseServlet {
 
     /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
+    * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
+    * methods.
+    *
+    * @param request servlet request
+    * @param response servlet response
+    * @throws ServletException if a servlet-specific error occurs
+    * @throws IOException if an I/O error occurs
+    */
+    @Override
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
@@ -59,7 +59,7 @@ public class LoadTreeView extends BaseServlet {
         CompanyTreeDAO empresasDAO = new CompanyTreeDAO();
         DepartamentoDAO deptosDAO = new DepartamentoDAO(appProperties);
         CentroCostoDAO cencosDAO = new CentroCostoDAO(appProperties);
-        List<EmpresaVO> listaEmpresas = new ArrayList<EmpresaVO>();
+        List<EmpresaVO> listaEmpresas = new ArrayList<>();
         System.out.println(WEB_NAME+"[LoadTreeView]Obtener lista de empresas, deptos y cencos...");
         listaEmpresas = empresasDAO.getEmpresas();
         
@@ -107,12 +107,15 @@ public class LoadTreeView extends BaseServlet {
                         List<EmpleadoVO> empleadosCenco= getListaEmpleados(appProperties, empresaId, itDepto.getId(), itCenco.getId());
                         for (int idxempleado = 0; idxempleado < empleadosCenco.size(); idxempleado++) {
                             EmpleadoVO itEmpleado = empleadosCenco.get(idxempleado);
+                            String labelEstado = " - [NV]";
+                            if (itEmpleado.getEstado() == 1) labelEstado = "";
                             NodeVO nodoEmpleado = new NodeVO();
                             nodoEmpleado.setHref("" + itEmpleado.getRut());
                             nodoEmpleado.setText(itEmpleado.getNombres() 
-                                + " " + itEmpleado.getApeMaterno());
+                                + " " + itEmpleado.getApeMaterno()+labelEstado);
                             nodoEmpleado.setParent_id(itCenco.getNombre());
                             nodoEmpleado.setSelectable(true);
+                            nodoEmpleado.setStatus(itEmpleado.getEstado());
                             
                             empleadosNodos.add(nodoEmpleado);
                         }
@@ -207,24 +210,20 @@ public class LoadTreeView extends BaseServlet {
         EmpleadosDAO empleadosDao = new EmpleadosDAO(_appProperties);
         List<EmpleadoVO> listaEmpleados = new ArrayList<>();
         if (_empresaId.compareTo("-1") != 0 
-                && _deptoId.compareTo("-1") != 0
-                && _cencoId != -1){
-                    //todos los empleados del cenco
-                    listaEmpleados = empleadosDao.getEmpleadosShort(_empresaId, 
-                            _deptoId, 
-                            _cencoId, 
-                            -1,  
-                            null, 
-                            null, 
-                            null, 
-                            null, 
-                            0, 
-                            0, 
-                            "empleado.empl_rut");
-                    
-//                    for (int i = 0; i < auxListaEmpleados.size(); i++) {
-//			listaEmpleados.add(auxListaEmpleados.get(i));
-//                    }
+            && _deptoId.compareTo("-1") != 0
+            && _cencoId != -1){
+                //todos los empleados del cenco
+                listaEmpleados = empleadosDao.getEmpleadosAll(_empresaId, 
+                    _deptoId, 
+                    _cencoId, 
+                    -1,  
+                    null, 
+                    null, 
+                    null, 
+                    null, 
+                    0, 
+                    0, 
+                    "empleado.empl_rut");
                     
         }
         return listaEmpleados;
@@ -250,9 +249,10 @@ public class LoadTreeView extends BaseServlet {
             setResponseHeaders(response);processRequest(request, response);
         }else{
             session.setAttribute("mensaje", "Sesion de usuario "+request.getParameter("username")
-                    +" no valida");
-            m_logger.debug("Sesion de usuario "+request.getParameter("username")
-                    +" no valida");
+                +" no valida");
+            System.err.println("[LoadTreeView.doPost]"
+                + "Sesion de usuario " + request.getParameter("username")
+                +" no valida");
             request.getRequestDispatcher("/mensaje.jsp").forward(request, response);
         }
     }
@@ -277,8 +277,9 @@ public class LoadTreeView extends BaseServlet {
         }else{
             session.setAttribute("mensaje", "Sesion de usuario "+request.getParameter("username")
                     +" no valida");
-            m_logger.debug("Sesion de usuario "+request.getParameter("username")
-                    +" no valida");
+            System.err.println("[LoadTreeView.doPost]"
+                + "Sesion de usuario " + request.getParameter("username")
+                +" no valida");
             request.getRequestDispatcher("/mensaje.jsp").forward(request, response);
         }
     }

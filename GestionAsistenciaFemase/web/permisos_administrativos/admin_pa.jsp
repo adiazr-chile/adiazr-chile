@@ -287,7 +287,7 @@
                     Iterator<AusenciaVO> itera3 = ausencias.iterator();
                     while(itera3.hasNext() ) {
                         AusenciaVO auxausencia = itera3.next();
-                        if (auxausencia.getId() == 4)
+                        if (auxausencia.getId() == Constantes.ID_AUSENCIA_PERMISO_ADMINISTRATIVO)
                         {%>
                         <option value="<%=auxausencia.getId()%>" selected=""><%=auxausencia.getNombre()%></option>
                         <%}

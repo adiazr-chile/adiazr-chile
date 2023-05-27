@@ -839,6 +839,238 @@ public class DetalleAusenciaDAO extends BaseDAO{
     }
     
     /**
+    * Agrega un Permiso Administrativo en la tabla 'detalle ausencia'
+    * @param _data
+    * @return 
+    */ 
+    public ResultCRUDVO insertaPermisoExamenSaludPreventiva(DetalleAusenciaVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
+        int result=0;
+        int newId = getNewIdDetalleAusencia();
+        String msgError = "Error al insertar "
+            + "Permiso examen salud preventiva en detalle_ausencia, "
+            + "runEmpleado: " + _data.getRutEmpleado()    
+            + ", newCorrelativo: " + newId
+            + ", tipoAusenciaId: " + _data.getIdAusencia()
+            + ", ausenciaNombre: " + _data.getNombreAusencia()    
+            + ", fechaInicio: " + _data.getFechaInicioAsStr()
+            + ", fechaFin: " + _data.getFechaFinAsStr()
+            + ", rutAutorizador: " + _data.getRutAutorizador()
+            + ", ausenciaAutorizada: " + _data.getAusenciaAutorizada()
+            + ", dias solicitados: " + _data.getDiasSolicitados();
+        
+        String msgFinal = " Inserta Permiso examen salud preventiva en detalle_ausencia:"
+            + "rutEmpleado [" + _data.getRutEmpleado() + "]" 
+            + ", newCorrelativo [" + newId + "]"    
+            + ", tipoAusenciaId [" + _data.getIdAusencia() + "]"
+            + ", ausenciaNombre [" + _data.getNombreAusencia() + "]"    
+            + ", fechaInicio [" + _data.getFechaInicioAsStr() + "]"
+            + ", fechaFin [" + _data.getFechaFinAsStr() + "]"
+            + ", permiteHora [" + _data.getPermiteHora() + "]"        
+            + ", rutAutorizador [" + _data.getRutAutorizador() + "]"
+            + ", ausenciaAutorizada [" + _data.getAusenciaAutorizada() + "]"
+            + ", dias solicitados [" + _data.getDiasSolicitados() + "]";
+        
+        System.out.println(WEB_NAME+"[DetalleAusenciaDAO."
+            + "insertaPermisoExamenSaludPreventiva]" + msgFinal);
+        
+        objresultado.setMsg(msgFinal);
+        PreparedStatement insert    = null;
+        
+        try{
+            String sql = "INSERT INTO detalle_ausencia("
+                + "correlativo, "
+                + "rut_empleado, "
+                + "fecha_ingreso, "
+                + "ausencia_id, "
+                + "fecha_inicio, "
+                + "fecha_fin,"
+                + "rut_autoriza_ausencia, "
+                + "ausencia_autorizada, "
+                + "fecha_actualizacion,"
+                + "allow_hour,"
+                + "dias_solicitados, "
+                + "saldo_post_pesp";
+            sql += ")"
+                + " VALUES (" + newId + ", "    //correlativo
+                    + "?, "                     //rut_empleado
+                    + "current_date, "          //fecha_ingreso
+                    + "?,"                      //ausencia_id
+                    + " '" + _data.getFechaInicioAsStr() + "', "//fecha inicio
+                    + " '" + _data.getFechaFinAsStr() + "', "    //fecha_fin
+                    + "?, "                                 //rut_autoriza_ausencia
+                    + "?, "                                 //ausencia_autorizada
+                    + "current_timestamp, "                 //fecha_actualizacion
+                    + "? ";                                 //allow_hour
+            sql += ","+_data.getDiasSolicitados();          //dias_solicitados
+            sql += ",?)";    
+
+            System.out.println(WEB_NAME+"[DetalleAusenciaDAO.insertaPermisoExamenSaludPreventiva]sql: "+sql);
+            
+            dbConn = dbLocator.getConnection(m_dbpoolName,"[DetalleAusenciaDAO.insertaPermisoExamenSaludPreventiva]");
+            insert = dbConn.prepareStatement(sql);
+            insert.setString(1,  _data.getRutEmpleado());
+            insert.setInt(2,  _data.getIdAusencia());
+            insert.setString(3,  _data.getRutAutorizador());
+            insert.setString(4,  _data.getAusenciaAutorizada());
+            insert.setString(5,  _data.getPermiteHora());
+            insert.setInt(6,  _data.getSaldoPostPESP());
+            
+            int filasAfectadas = insert.executeUpdate();
+            if (filasAfectadas == 1){
+                System.out.println(WEB_NAME+"[DetalleAusenciaDAO.insertaPermisoExamenSaludPreventiva]detalle_ausencia"
+                    + ", rutEmpleado:" +_data.getRutEmpleado()
+                    + ", fechaIngreso:" +_data.getFechaIngresoAsStr()
+                    + ", ausenciaId:" +_data.getIdAusencia()    
+                    + ", dias solicitados: " + _data.getDiasSolicitados()
+                    + ", saldo post PESP: " + _data.getSaldoPostPESP()   
+                    +". Permiso examen salud preventiva insertado OK!");
+            }
+            
+            insert.close();
+            dbLocator.freeConnection(dbConn);
+        }catch(SQLException|DatabaseException sqle){
+            System.err.println("[DetalleAusenciaDAO.insertaPermisoExamenSaludPreventiva]Error1: "+sqle.toString());
+            objresultado.setThereError(true);
+            objresultado.setCodError(result);
+            objresultado.setMsgError(msgError+" :"+sqle.toString());
+        }finally{
+            try {
+                if (insert != null) insert.close();
+                dbLocator.freeConnection(dbConn);
+            } catch (SQLException ex) {
+                System.err.println("Error: "+ex.toString());
+            }
+        }
+
+        return objresultado;
+    }
+    
+    /**
+    * Agrega un Permiso Administrativo en la tabla 'detalle ausencia'
+    * @param _data
+    * @return 
+    */ 
+    public ResultCRUDVO insertaPermisoExamenSaludPreventivo(DetalleAusenciaVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
+        int result=0;
+        int newId = getNewIdDetalleAusencia();
+        String msgError = "Error al insertar "
+            + "Permiso Examen Salud Preventivo en detalle_ausencia, "
+            + "runEmpleado: " + _data.getRutEmpleado()    
+            + ", newCorrelativo: " + newId
+            + ", tipoAusenciaId: " + _data.getIdAusencia()
+            + ", ausenciaNombre: " + _data.getNombreAusencia()    
+            + ", fechaInicio: " + _data.getFechaInicioAsStr()
+            + ", horaInicio: " + _data.getHoraInicioFullAsStr()    
+            + ", fechaFin: " + _data.getFechaFinAsStr()
+            + ", horaFin: " + _data.getHoraFinFullAsStr()   
+            + ", permiteHora: " + _data.getPermiteHora()       
+            + ", rutAutorizador: " + _data.getRutAutorizador()
+            + ", ausenciaAutorizada: " + _data.getAusenciaAutorizada()
+            + ", dias solicitados: " + _data.getDiasSolicitados();
+        
+        String msgFinal = " Inserta Permiso Examen Salud Preventivo en detalle_ausencia:"
+            + "rutEmpleado [" + _data.getRutEmpleado() + "]" 
+            + ", newCorrelativo [" + newId + "]"    
+            + ", tipoAusenciaId [" + _data.getIdAusencia() + "]"
+            + ", ausenciaNombre [" + _data.getNombreAusencia() + "]"    
+            + ", fechaInicio [" + _data.getFechaInicioAsStr() + "]"
+            + ", horaInicio [" + _data.getHoraInicioFullAsStr() + "]"    
+            + ", fechaFin [" + _data.getFechaFinAsStr() + "]"
+            + ", horaFin [" + _data.getHoraFinFullAsStr() + "]"    
+            + ", permiteHora [" + _data.getPermiteHora() + "]"        
+            + ", rutAutorizador [" + _data.getRutAutorizador() + "]"
+            + ", ausenciaAutorizada [" + _data.getAusenciaAutorizada() + "]"
+            + ", dias solicitados [" + _data.getDiasSolicitados() + "]";
+        
+        System.out.println(WEB_NAME+"[DetalleAusenciaDAO."
+            + "insertaPermisoExamenSaludPreventivo]" + msgFinal);
+        
+        objresultado.setMsg(msgFinal);
+        PreparedStatement insert    = null;
+        
+        try{
+            String sql = "INSERT INTO detalle_ausencia("
+                + "correlativo, "
+                + "rut_empleado, "
+                + "fecha_ingreso, "
+                + "ausencia_id, "
+                + "fecha_inicio, "
+                + "fecha_fin,"
+                + "rut_autoriza_ausencia, "
+                + "ausencia_autorizada, "
+                + "fecha_actualizacion,"
+                + "allow_hour,"
+                + "dias_solicitados, "
+                + "saldo_post_pesp";
+            if (_data.getPermiteHora().compareTo("S") == 0){
+                sql += ",hora_inicio,hora_fin";
+            }
+            
+            sql += ")"
+                + " VALUES (" + newId + ", "    //correlativo
+                    + "?, "                     //rut_empleado
+                    + "current_date, "          //fecha_ingreso
+                    + "?,"                      //ausencia_id
+                    + " '" + _data.getFechaInicioAsStr() + "', "//fecha inicio
+                    + " '" + _data.getFechaFinAsStr() + "', "    //fecha_fin
+                    + "?, "                                 //rut_autoriza_ausencia
+                    + "?, "                                 //ausencia_autorizada
+                    + "current_timestamp, "                 //fecha_actualizacion
+                    + "? ";                                 //allow_hour
+            sql += ","+_data.getDiasSolicitados();          //dias_solicitados
+            sql += ",?"; //saldo post PESP
+            
+            if (_data.getPermiteHora().compareTo("S") == 0){
+                sql+=",'" + _data.getHoraInicioFullAsStr() + "', "
+                    + "'" + _data.getHoraFinFullAsStr() + "' ";
+            }
+            
+            sql += ")";    
+
+            System.out.println(WEB_NAME+"[DetalleAusenciaDAO.insertaPermisoExamenSaludPreventivo]sql: "+sql);
+            
+            dbConn = dbLocator.getConnection(m_dbpoolName,"[DetalleAusenciaDAO.insertaPermisoExamenSaludPreventivo]");
+            insert = dbConn.prepareStatement(sql);
+            insert.setString(1,  _data.getRutEmpleado());
+            insert.setInt(2,  _data.getIdAusencia());
+            insert.setString(3,  _data.getRutAutorizador());
+            insert.setString(4,  _data.getAusenciaAutorizada());
+            insert.setString(5,  _data.getPermiteHora());
+            insert.setDouble(6,  _data.getSaldoPostPESP());
+            
+            int filasAfectadas = insert.executeUpdate();
+            if (filasAfectadas == 1){
+                System.out.println(WEB_NAME+"[DetalleAusenciaDAO.insertaPermisoExamenSaludPreventivo]detalle_ausencia"
+                    + ", rutEmpleado:" +_data.getRutEmpleado()
+                    + ", fechaIngreso:" +_data.getFechaIngresoAsStr()
+                    + ", ausenciaId:" +_data.getIdAusencia()    
+                    + ", dias solicitados: " + _data.getDiasSolicitados()
+                    + ", saldo post PESP: " + _data.getSaldoPostPA()   
+                    +". Permiso Examen Salud Preventivo insertado OK!");
+            }
+            
+            insert.close();
+            dbLocator.freeConnection(dbConn);
+        }catch(SQLException|DatabaseException sqle){
+            System.err.println("[DetalleAusenciaDAO.insertaPermisoExamenSaludPreventivo]Error1: " + sqle.toString());
+            objresultado.setThereError(true);
+            objresultado.setCodError(result);
+            objresultado.setMsgError(msgError+" :"+sqle.toString());
+        }finally{
+            try {
+                if (insert != null) insert.close();
+                dbLocator.freeConnection(dbConn);
+            } catch (SQLException ex) {
+                System.err.println("Error: " + ex.toString());
+            }
+        }
+
+        return objresultado;
+    }
+    
+    /**
     * Retorna lista con detalle ausencias
     * 
     * @param _source: indica si el listado de ausencias se muestra desde ausencias-detalle o desde admin vacaciones
@@ -1088,9 +1320,9 @@ public class DetalleAusenciaDAO extends BaseDAO{
     }
     
     /**
-    * Retorna lista con detalle ausencias
+    * Retorna lista con detalle ausencias del tipo Permiso administrativo
     * 
-    * @param _source: indica si el listado de ausencias se muestra desde ausencias-detalle o desde admin vacaciones
+    * @param _source: indica si el listado de ausencias se muestra desde ausencias-detalle o desde admin PA
     * @param _rutEmpleado
     * @param _rutAutorizador
     * @param _fechaIngresoInicio
@@ -1144,7 +1376,8 @@ public class DetalleAusenciaDAO extends BaseDAO{
                 + "detalle_ausencia.allow_hour, "
                 + "coalesce(cenco.es_zona_extrema,'N') es_zona_extrema,"
                 + "coalesce(detalle_ausencia.dias_solicitados,0) dias_solicitados, "
-                + "coalesce(detalle_ausencia.saldo_post_pa,0) saldo_post_pa "        
+                + "coalesce(detalle_ausencia.saldo_post_pa,0) saldo_post_pa, "
+                + "coalesce(detalle_ausencia.saldo_post_pesp,0) saldo_post_pesp "    
                 + "FROM detalle_ausencia "
                     + "inner join empleado on detalle_ausencia.rut_empleado = empleado.empl_rut "
                     + "inner join ausencia on detalle_ausencia.ausencia_id = ausencia.ausencia_id "
@@ -1273,6 +1506,216 @@ public class DetalleAusenciaDAO extends BaseDAO{
                 
                 data.setDiasSolicitados(rs.getDouble("dias_solicitados"));
                 data.setSaldoPostPA(rs.getDouble("saldo_post_pa"));
+                data.setSaldoPostPESP(rs.getInt("saldo_post_pesp"));
+                
+                lista.add(data);
+            }
+
+            ps.close();
+            rs.close();
+            dbLocator.freeConnection(dbConn);
+        }catch(SQLException|DatabaseException sqle){
+            m_logger.error("Error: "+sqle.toString());
+        }finally{
+            try {
+                if (ps != null) ps.close();
+                if (rs != null) rs.close();
+                dbLocator.freeConnection(dbConn);
+            } catch (SQLException ex) {
+                System.err.println("Error: "+ex.toString());
+            }
+        }
+        return lista;
+    }
+    
+    /**
+    * Retorna lista con detalle ausencias del tipo Permiso Examen Salud Preventiva
+    * 
+    * @param _source: indica si el listado de ausencias se muestra desde ausencias-detalle o desde admin PESP
+    * @param _rutEmpleado
+    * @param _rutAutorizador
+    * @param _fechaIngresoInicio
+    * @param _fechaIngresoFin
+    * @param _jtStartIndex
+    * @param _jtPageSize
+    * @param _jtSorting
+    * @return 
+    */
+    public List<DetalleAusenciaVO> getPermisosExamenSaludPreventiva(String _source,
+            String _rutEmpleado,
+            String _rutAutorizador, 
+            String _fechaIngresoInicio, 
+            String _fechaIngresoFin,
+            int _jtStartIndex, 
+            int _jtPageSize, 
+            String _jtSorting){
+        
+        List<DetalleAusenciaVO> lista = 
+                new ArrayList<>();
+        
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        DetalleAusenciaVO data;
+        
+        try{
+            String sql = "SELECT "
+                + "detalle_ausencia.correlativo,"
+                + "detalle_ausencia.rut_empleado,"
+                + "empleado.empresa_id,"
+                + "coalesce(empleado.empl_nombres, '') || ' ' || coalesce(empleado.empl_ape_paterno, '') nombre,"
+                + "detalle_ausencia.fecha_ingreso,"
+                + "to_char(detalle_ausencia.fecha_ingreso, 'yyyy-MM-dd') fecha_ingreso_str,"
+                + "detalle_ausencia.ausencia_id,"
+                + "ausencia.ausencia_nombre,"
+                + "ausencia.ausencia_tipo,"
+                + "detalle_ausencia.fecha_inicio,"
+                + "detalle_ausencia.fecha_fin,"
+                + "to_char(detalle_ausencia.fecha_inicio, 'yyyy-MM-dd') fecha_inicio_str,"
+                + "to_char(detalle_ausencia.fecha_fin, 'yyyy-MM-dd') fecha_fin_str,"
+                + "to_char(detalle_ausencia.hora_inicio, 'HH24:MI:SS') hora_inicio_str,"
+                + "coalesce(to_char(detalle_ausencia.hora_inicio, 'HH24'),'VACIO') solohora_inicio_str,"
+                + "to_char(detalle_ausencia.hora_inicio, 'MI') solomins_inicio_str,"
+                + "to_char(detalle_ausencia.hora_fin, 'HH24:MI:SS') hora_fin_str,"
+                + "to_char(detalle_ausencia.hora_fin, 'HH24') solohora_fin_str,"
+                + "to_char(detalle_ausencia.hora_fin, 'MI') solomins_fin_str,"    
+                + "detalle_ausencia.rut_autoriza_ausencia,"
+                + "detalle_ausencia.ausencia_autorizada,"
+                + "detalle_ausencia.fecha_actualizacion, "
+                + "to_char(detalle_ausencia.fecha_actualizacion, 'dd-MM-yyyy HH24:MI:SS') fecha_actualizacion_str,"
+                + "detalle_ausencia.allow_hour, "
+                + "coalesce(cenco.es_zona_extrema,'N') es_zona_extrema,"
+                + "coalesce(detalle_ausencia.dias_solicitados,0) dias_solicitados, "
+                + "coalesce(detalle_ausencia.saldo_post_pa,0) saldo_post_pa, "
+                + "coalesce(detalle_ausencia.saldo_post_pesp,0) saldo_post_pesp "    
+                + "FROM detalle_ausencia "
+                    + "inner join empleado on detalle_ausencia.rut_empleado = empleado.empl_rut "
+                    + "inner join ausencia on detalle_ausencia.ausencia_id = ausencia.ausencia_id "
+                    + " inner join centro_costo cenco on (empleado.cenco_id = cenco.ccosto_id) "
+                + "WHERE 1 = 1 "
+                    + " and (detalle_ausencia.fecha_inicio >= empleado.empl_fec_ini_contrato) " ;//ausencia.ausencia_estado = 1";
+            
+            if (_rutEmpleado != null && _rutEmpleado.compareTo("-1")!=0){        
+                sql += " and detalle_ausencia.rut_empleado = '" + _rutEmpleado + "'";
+            }
+            if (_rutAutorizador != null && _rutAutorizador.compareTo("-1")!=0){        
+                sql += " and detalle_ausencia.rut_autoriza_ausencia = '" + _rutAutorizador + "'";
+            }
+            if (_fechaIngresoInicio != null && _fechaIngresoInicio.compareTo("") != 0){        
+                if (_fechaIngresoFin==null || _fechaIngresoFin.compareTo("")==0)
+                    _fechaIngresoFin = _fechaIngresoInicio; 
+                sql += " and detalle_ausencia.fecha_inicio "
+                    + "between '" + _fechaIngresoInicio +"' "
+                    + "and '" + _fechaIngresoFin +"'";
+            }
+            sql += " and detalle_ausencia.ausencia_id = " + Constantes.ID_AUSENCIA_PERMISO_EXAMEN_SALUD_PREVENTIVA;
+            
+            sql += " order by " + _jtSorting; 
+            if (_jtPageSize > 0){
+                sql += " limit "+_jtPageSize + " offset "+_jtStartIndex;
+            }
+            
+            System.out.println(WEB_NAME+"[DetalleAusenciaDAO."
+                + "getPermisosExamenSaludPreventiva]SQL: " + sql);
+            
+            dbConn = dbLocator.getConnection(m_dbpoolName,
+                "[DetalleAusenciaDAO.getPermisosExamenSaludPreventiva]");
+            ps = dbConn.prepareStatement(sql);
+            rs = ps.executeQuery();
+
+            while (rs.next()){
+                data = new DetalleAusenciaVO();
+                data.setCorrelativo(rs.getInt("correlativo"));
+                data.setRutEmpleado(rs.getString("rut_empleado"));
+                data.setEmpresaId(rs.getString("empresa_id"));
+                data.setNombreEmpleado(rs.getString("nombre"));
+                data.setFechaIngreso(rs.getDate("fecha_ingreso"));
+                data.setFechaIngresoAsStr(rs.getString("fecha_ingreso_str"));
+                data.setIdAusencia(rs.getInt("ausencia_id"));
+                data.setNombreAusencia(rs.getString("ausencia_nombre"));
+                data.setFechaInicio(rs.getDate("fecha_inicio"));
+                data.setFechaInicioAsStr(rs.getString("fecha_inicio_str"));
+                data.setFechaFin(rs.getDate("fecha_fin"));
+                data.setFechaFinAsStr(rs.getString("fecha_fin_str")); 
+                
+                data.setHoraInicioFullAsStr(rs.getString("hora_inicio_str"));
+                data.setHoraFinFullAsStr(rs.getString("hora_fin_str"));
+                
+                data.setSoloHoraInicio(rs.getString("solohora_inicio_str"));
+                data.setSoloMinsInicio(rs.getString("solomins_inicio_str"));
+                data.setSoloHoraFin(rs.getString("solohora_fin_str"));
+                data.setSoloMinsFin(rs.getString("solomins_fin_str"));
+                data.setRutAutorizador(rs.getString("rut_autoriza_ausencia"));
+                data.setAusenciaAutorizada(rs.getString("ausencia_autorizada"));
+                data.setFechaHoraActualizacion(rs.getString("fecha_actualizacion_str"));
+                data.setPermiteHora(rs.getString("allow_hour"));                
+                
+                System.out.println(WEB_NAME+"[DetalleAusenciaDAO."
+                    + "getPermisosExamenSaludPreventiva]"
+                    + "Correlativo ausencia: " + data.getCorrelativo()
+                    + ", rutAutorizador: " + data.getRutAutorizador());
+                
+                String strHoraInicio    = data.getSoloHoraInicio();
+                String strMinsInicio    = data.getSoloMinsInicio();
+                if (strHoraInicio.compareTo("VACIO")!=0){
+                    System.err.println("[DetalleAusenciaDAO."
+                        + "getPermisosExamenSaludPreventiva]parseo "
+                        + "a entero Hra Inicio: "+strHoraInicio);
+                    int intHoraInicio = -1;
+                    try{
+                        intHoraInicio = Integer.parseInt(strHoraInicio);
+                        strHoraInicio = ""+intHoraInicio;
+                    }catch(NumberFormatException nex){
+                        System.err.println("[DetalleAusenciaDAO."
+                            + "getPermisosExamenSaludPreventiva]Hra Inicio < 10: "+nex.toString());
+                        strHoraInicio = strHoraInicio.substring(strHoraInicio.length()-1);
+                    }
+                    int intMinsInicio = -1;
+                    try{
+                        intMinsInicio = Integer.parseInt(strMinsInicio);
+                        strMinsInicio = ""+intMinsInicio;
+                    }catch(NumberFormatException nex){
+                        System.err.println("[DetalleAusenciaDAO."
+                            + "getPermisosExamenSaludPreventiva]Mins Inicio < 10: "+nex.toString());
+                        strMinsInicio = strMinsInicio.substring(strMinsInicio.length()-1);
+                    }
+                }
+                
+                String strHoraFin  = data.getSoloHoraFin();
+                String strMinsFin    = data.getSoloMinsFin();
+                if (strHoraFin!=null){
+                    int intHoraFin = -1;
+                    try{
+                        intHoraFin = Integer.parseInt(strHoraFin);
+                        strHoraFin = ""+intHoraFin;
+                    }catch(NumberFormatException nex){
+                        System.err.println("[DetalleAusenciaDAO."
+                            + "getPermisosExamenSaludPreventiva]Hra fin < 10: "+nex.toString());
+                        strHoraFin = strHoraFin.substring(strHoraFin.length()-1);
+                    }
+                    
+                    int intMinsFin = -1;
+                    try{
+                        intMinsFin = Integer.parseInt(strMinsFin);
+                        strMinsFin = ""+intMinsFin;
+                    }catch(NumberFormatException nex){
+                        System.err.println("[DetalleAusenciaDAO."
+                            + "getPermisosExamenSaludPreventiva]Mins Fin < 10: "+nex.toString());
+                        strMinsFin = strMinsFin.substring(strMinsFin.length()-1);
+                    }
+                }
+                System.out.println(WEB_NAME+"[DetalleAusenciaDAO.getPermisosExamenSaludPreventiva]"
+                    + "soloHoraInicio: " +strHoraInicio
+                    + ",soloMinsInicio: " +strMinsInicio    
+                    + ",soloHoraFin: " +strHoraFin
+                    + ",soloMinsFin: " +strMinsFin);
+                data.setSoloHoraInicio(strHoraInicio);
+                data.setSoloHoraFin(strHoraFin);
+                data.setSoloMinsInicio(strMinsInicio);
+                data.setSoloMinsFin(strMinsFin);
+                
+                data.setDiasSolicitados(rs.getDouble("dias_solicitados"));
+                data.setSaldoPostPA(rs.getDouble("saldo_post_pa"));
+                data.setSaldoPostPESP(rs.getInt("saldo_post_pesp"));
                 
                 lista.add(data);
             }
@@ -1429,6 +1872,78 @@ public class DetalleAusenciaDAO extends BaseDAO{
             } catch (SQLException ex) {
                 System.err.println("[DetalleAusenciaDAO."
                     + "getPermisosAdministrativosByAnioMesInicio]"
+                    + "Error_1: " + ex.toString());
+            }
+        }
+        return lista;
+    }
+    
+    /**
+    * Retorna lista con Permisos Examen salud preventiva
+    * 
+    * @param _rutEmpleado
+    * @param _anioMesInicio
+    * @return 
+    */
+    public List<DetalleAusenciaVO> getPermisosExamenSaludPreventivaByAnioMesInicio(String _rutEmpleado,
+            String _anioMesInicio){
+        
+        List<DetalleAusenciaVO> lista = new ArrayList<>();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        DetalleAusenciaVO data;
+        try{
+            String sql = "select "
+                    + "da.correlativo,"
+                    + "da.rut_empleado, "
+                    + "da.ausencia_id,"
+                    + "au.ausencia_nombre,"
+                    + "to_char(da.fecha_inicio, 'yyyy-MM-dd') fecha_inicio_str,"
+                    + "to_char(da.fecha_fin, 'yyyy-MM-dd') fecha_fin_str, "
+                    + "dias_solicitados "
+                + "from detalle_ausencia da "
+                    + "inner join ausencia au on (da.ausencia_id = au.ausencia_id) "
+                + "where da.rut_empleado = '" + _rutEmpleado + "' "
+                + "and da.ausencia_id = " + Constantes.ID_AUSENCIA_PERMISO_EXAMEN_SALUD_PREVENTIVA
+                + " and to_char(da.fecha_inicio,'yyyy-MM') = '" + _anioMesInicio + "' "
+                + " order by da.fecha_inicio"; 
+            
+            System.out.println(WEB_NAME+"[DetalleAusenciaDAO."
+                + "getPermisosExamenSaludPreventivaByAnioMesInicio]SQL: " + sql);
+            
+            dbConn = dbLocator.getConnection(m_dbpoolName,
+                "[DetalleAusenciaDAO.getPermisosExamenSaludPreventivaByAnioMesInicio]");
+            ps = dbConn.prepareStatement(sql);
+            rs = ps.executeQuery();
+
+            while (rs.next()){
+                data = new DetalleAusenciaVO();
+                data.setCorrelativo(rs.getInt("correlativo"));
+                data.setRutEmpleado(rs.getString("rut_empleado"));
+                data.setIdAusencia(rs.getInt("ausencia_id"));
+                data.setNombreAusencia(rs.getString("ausencia_nombre"));
+                data.setFechaInicioAsStr(rs.getString("fecha_inicio_str"));
+                data.setFechaFinAsStr(rs.getString("fecha_fin_str"));
+                data.setDiasSolicitados(rs.getDouble("dias_solicitados"));
+                
+                lista.add(data);
+            }
+
+            ps.close();
+            rs.close();
+            dbLocator.freeConnection(dbConn);
+        }catch(SQLException|DatabaseException sqle){
+            System.err.println("[DetalleAusenciaDAO."
+                    + "getPermisosExamenSaludPreventivaByAnioMesInicio]"
+                    + "Error_2: " + sqle.toString());
+        }finally{
+            try {
+                if (ps != null) ps.close();
+                if (rs != null) rs.close();
+                dbLocator.freeConnection(dbConn);
+            } catch (SQLException ex) {
+                System.err.println("[DetalleAusenciaDAO."
+                    + "getPermisosExamenSaludPreventivaByAnioMesInicio]"
                     + "Error_1: " + ex.toString());
             }
         }
@@ -2306,6 +2821,67 @@ public class DetalleAusenciaDAO extends BaseDAO{
                 dbLocator.freeConnection(dbConn);
             } catch (Exception ex) {
                 System.err.println("Error: "+ex.toString());
+            }
+        }
+        return count;
+    }
+    
+    /**
+    * 
+    * @param _source
+    * @param _rutEmpleado
+    * @param _rutAutorizador
+    * @param _fechaIngresoInicio
+    * @param _fechaIngresoFin
+    * @return 
+    */
+    public int getPermisosExamenSaludPreventivaCount(String _source, 
+            String _rutEmpleado,
+            String _rutAutorizador, 
+            String _fechaIngresoInicio, 
+            String _fechaIngresoFin){
+        int count=0;
+        try {
+            dbConn = dbLocator.getConnection(m_dbpoolName,"[DetalleAusenciaDAO.getPermisosExamenSaludPreventivaCount]");
+            ResultSet rs;
+            try (Statement statement = dbConn.createStatement()) {
+                String sql = "SELECT count(*) as count "
+                    + "FROM detalle_ausencia " +
+                     "inner join empleado on detalle_ausencia.rut_empleado = empleado.empl_rut " +
+                     "inner join ausencia on detalle_ausencia.ausencia_id = ausencia.ausencia_id "
+                    + " WHERE 1 = 1 ";
+                if (_rutEmpleado != null && _rutEmpleado.compareTo("-1")!=0){        
+                    sql += " and detalle_ausencia.rut_empleado = '" + _rutEmpleado + "'";
+                }
+                if (_rutAutorizador != null && _rutAutorizador.compareTo("-1")!=0){        
+                    sql += " and detalle_ausencia.rut_autoriza_ausencia = '" + _rutAutorizador + "'";
+                }
+                if (_fechaIngresoInicio != null && _fechaIngresoInicio.compareTo("") != 0){        
+                    if (_fechaIngresoFin==null || _fechaIngresoFin.compareTo("")==0)
+                        _fechaIngresoFin = _fechaIngresoInicio;
+                    sql += " and detalle_ausencia.fecha_inicio "
+                        + "between '" + _fechaIngresoInicio +"' "
+                        + "and '" + _fechaIngresoFin +"'";
+                }
+                
+                sql += " and detalle_ausencia.ausencia_id = " + Constantes.ID_AUSENCIA_PERMISO_EXAMEN_SALUD_PREVENTIVA;
+                
+                System.out.println(WEB_NAME+"[DetalleAusenciaDAO.getPermisosExamenSaludPreventivaCount]SQL: " + sql);
+                
+                rs = statement.executeQuery(sql);
+                if (rs.next()) {
+                    count=rs.getInt("count");
+                }
+            }
+            rs.close();
+            dbLocator.freeConnection(dbConn);
+        } catch (SQLException|DatabaseException e) {
+            e.printStackTrace();
+        }finally{
+            try {
+                dbLocator.freeConnection(dbConn);
+            } catch (Exception ex) {
+                System.err.println("Error: " + ex.toString());
             }
         }
         return count;

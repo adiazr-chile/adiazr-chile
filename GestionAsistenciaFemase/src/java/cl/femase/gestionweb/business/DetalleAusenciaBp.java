@@ -98,6 +98,38 @@ public class DetalleAusenciaBp  extends BaseBp{
 
         return lista;
     }
+    
+    /**
+    * 
+    * @param _source
+    * @param _rutEmpleado
+    * @param _rutAutorizador
+    * @param _fechaIngresoInicio
+    * @param _fechaIngresoFin
+    * @param _jtStartIndex
+    * @param _jtPageSize
+    * @param _jtSorting
+    * @return 
+    */
+    public List<DetalleAusenciaVO> getPermisosExamenSaludPreventiva(
+            String _source,
+            String _rutEmpleado,
+            String _rutAutorizador, 
+            String _fechaIngresoInicio, 
+            String _fechaIngresoFin,
+            int _jtStartIndex, 
+            int _jtPageSize, 
+            String _jtSorting){
+        
+        List<DetalleAusenciaVO> lista = 
+            detAusenciaDao.getPermisosExamenSaludPreventiva(_source, 
+                _rutEmpleado, 
+                _rutAutorizador, _fechaIngresoInicio,
+                _fechaIngresoFin, _jtStartIndex, 
+                _jtPageSize, _jtSorting);
+
+        return lista;
+    }
   
     /**
     * 
@@ -125,6 +157,21 @@ public class DetalleAusenciaBp  extends BaseBp{
     
         List<DetalleAusenciaVO> lista = 
             detAusenciaDao.getPermisosAdministrativosByAnioMesInicio(_rutEmpleado, _anioMesInicio);
+
+        return lista;
+    }
+    
+    /**
+    * 
+    * @param _rutEmpleado
+    * @param _anioMesInicio
+     * @return 
+    */
+    public List<DetalleAusenciaVO> getPermisosExamenSaludPreventivaByAnioMesInicio(String _rutEmpleado,
+            String _anioMesInicio){
+    
+        List<DetalleAusenciaVO> lista = 
+            detAusenciaDao.getPermisosExamenSaludPreventivaByAnioMesInicio(_rutEmpleado, _anioMesInicio);
 
         return lista;
     }
@@ -340,6 +387,34 @@ public class DetalleAusenciaBp  extends BaseBp{
     }
     
     /**
+    * 
+    * @param _newAusencia
+    * @param _eventdata
+    * @return 
+    */
+    public ResultCRUDVO insertaPermisoExamenSaludPreventiva(DetalleAusenciaVO _newAusencia, 
+            MaintenanceEventVO _eventdata){
+        
+        ResultCRUDVO insValues = detAusenciaDao.insertaPermisoExamenSaludPreventiva(_newAusencia);
+        
+        EmpleadoVO empleado = empleadosDao.getEmpleado(null, _newAusencia.getRutEmpleado());
+        _eventdata.setEmpresaId(empleado.getEmpresa().getId());
+        _eventdata.setDeptoId(empleado.getDepartamento().getId());
+        _eventdata.setCencoId(empleado.getCentroCosto().getId());
+        _eventdata.setRutEmpleado(empleado.getRut());
+        
+        //if (!updValues.isThereError()){
+            String msgFinal = insValues.getMsg();
+            insValues.setMsg(msgFinal);
+            _eventdata.setDescription(msgFinal);
+            //insertar evento 
+            eventsDao.addEvent(_eventdata); 
+        //}
+        
+        return insValues;
+    }
+    
+    /**
     * Invoca funcion setsaldodiasvacacionesasignadas
     * @param _runEmpleado
     * @return 
@@ -423,6 +498,26 @@ public class DetalleAusenciaBp  extends BaseBp{
             String _fechaIngresoInicio, 
             String _fechaIngresoFin){
         return detAusenciaDao.getPermisosAdministrativosCount(_source, 
+            _rutEmpleado, 
+            _rutAutorizador, _fechaIngresoInicio, 
+            _fechaIngresoFin);
+    }
+    
+    /**
+    * 
+    * @param _source
+    * @param _rutEmpleado
+    * @param _rutAutorizador
+    * @param _fechaIngresoInicio
+    * @param _fechaIngresoFin
+    * @return 
+    */
+    public int getPermisosExamenSaludPreventivaCount(String _source,
+            String _rutEmpleado,
+            String _rutAutorizador, 
+            String _fechaIngresoInicio, 
+            String _fechaIngresoFin){
+        return detAusenciaDao.getPermisosExamenSaludPreventivaCount(_source, 
             _rutEmpleado, 
             _rutAutorizador, _fechaIngresoInicio, 
             _fechaIngresoFin);

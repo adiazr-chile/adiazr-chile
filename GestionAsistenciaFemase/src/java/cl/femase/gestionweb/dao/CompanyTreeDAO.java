@@ -37,7 +37,7 @@ public class CompanyTreeDAO extends BaseDAO{
         try{
             String sql ="SELECT empresa_id, empresa_nombre, "
                 + "empresa_rut, empresa_direccion, "
-                + "region_id, empresa_estado "
+                + "empresa_estado "
                 + " FROM empresa order by empresa_id ";
             
             dbConn = dbLocator.getConnection(m_dbpoolName,"[CompanyTreeDAO.getEmpresas]");
@@ -50,7 +50,7 @@ public class CompanyTreeDAO extends BaseDAO{
                 data.setNombre(rs.getString("empresa_nombre"));
                 data.setRut(rs.getString("empresa_rut"));
                 data.setDireccion(rs.getString("empresa_direccion"));
-                data.setRegionId(rs.getInt("region_id"));
+                //data.setRegionId(rs.getInt("region_id"));
                 data.setEstadoId(rs.getInt("empresa_estado"));
                 
                 lista.add(data);

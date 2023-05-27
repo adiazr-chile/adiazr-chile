@@ -217,30 +217,14 @@
                     //showCheckbox: true,
                     highlightSelected: true
                     ,onNodeSelected: function(event, node) {
-                        //$('#selectable-output').prepend('<p>' + node.text + '-' + node.href + ' [' + node.parent_id + ']' + ' was selected</p>');
-                        //alert('nodo.href: '+node.href+', parent: '+node.parent_id);
-                        var contiene = nodosSeleccionados.includes(''+node.href);
-                        //nodosSeleccionados.forEach(myFunction);
-                        //alert('Array contiene '+node.href+'? '+contiene);
+                        var contiene = nodosSeleccionados.includes('' + node.href);
+                        var label = node.text; //+ '[' + node.status + ']';
                         if (contiene === false){
-                            $('#selectable-output').prepend('<p><input type="checkbox" id="check|' + node.href + '" name="check|' + node.href + '" value="' + node.href + '" checked><label for="check|' + node.href + '">'+ '('+node.href+') ' + node.text + ' ['+node.parent_id+']</label></p>');
+                            $('#selectable-output').prepend('<p><input type="checkbox" id="check|' + node.href + '" name="check|' + node.href + '" value="' + node.href + '" checked><label for="check|' + node.href + '">'+ '('+node.href+') ' + label + ' ['+node.parent_id+']</label> Ver empleado Marcas Ausencias</p>');
                             nodosSeleccionados.push(''+node.href);
-                            //contiene = false;
                         }
 		    }
                     
-                    //
-                    //,
-                    //onNodeUnselected: function (event, node) {
-                        //$('#selectable-output').prepend('<p>' + node.text + '-' + node.href +  ' [' + node.parent_id + ']' + ' was unselected</p>');
-                    //}
-                    /*,
-                    onNodeChecked: function(event, node) {
-                        $('#selectable-output').prepend('<p>' + node.text + ' was checked</p>');
-                    },
-                    onNodeUnchecked: function (event, node) {
-                        $('#selectable-output').prepend('<p>' + node.text + ' was unchecked</p>');
-                    }*/
                 }
                 );
                 

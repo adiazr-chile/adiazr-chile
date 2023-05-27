@@ -1,5 +1,9 @@
 <%@page import="cl.femase.gestionweb.vo.SolicitudPermisoAdministrativoVO"%>
 <%@page import="cl.femase.gestionweb.dao.SolicitudPermisoAdministrativoDAO"%>
+
+<%@page import="cl.femase.gestionweb.vo.SolicitudPermisoExamenSaludPreventivaVO"%>
+<%@page import="cl.femase.gestionweb.dao.SolicitudPermisoExamenSaludPreventivaDAO"%>
+
 <%@page import="cl.femase.gestionweb.vo.PropertiesVO"%>
 <%@page import="cl.femase.gestionweb.vo.SolicitudVacacionesVO"%>
 <%@page import="cl.femase.gestionweb.vo.UsuarioCentroCostoVO"%>
@@ -19,6 +23,7 @@
     UsuarioVO userInSession = (UsuarioVO)session.getAttribute("usuarioObj");
     int numSolicitudesVACPendientes = 0;
     int numSolicitudesPAPendientes = 0;
+    int numSolicitudesPESPPendientes = 0;
         
     if (userInSession.getIdPerfil() == Constantes.ID_PERFIL_DIRECTOR 
         || userInSession.getIdPerfil() == Constantes.ID_PERFIL_DIRECTOR_TR
@@ -30,9 +35,11 @@
             + "en alguno de los cencos del usuario");
         SolicitudVacacionesBp solicitudesVacBp = new SolicitudVacacionesBp(null);
         SolicitudPermisoAdministrativoDAO solicitudesPADao = new SolicitudPermisoAdministrativoDAO();
+        SolicitudPermisoExamenSaludPreventivaDAO solicitudesPESPDao = new SolicitudPermisoExamenSaludPreventivaDAO();
+        
         /**
             - Si es perfil usuario director:
-            - Rescatar todas las solicitudes de vacaciones y de permisos administrativos
+            - Rescatar todas las solicitudes de vacaciones, de permisos administrativos o de permisos examen salud preventiva
              que esten pendientes. En alguno de los cencos donde el usuario es director
         */
         
@@ -76,12 +83,31 @@
                 + ", numSolicitudesPendientes= " + numSolicitudesPAPendientes);
             numSolicitudesPAPendientes += listaSolicitudesPA.size();
             
+            //Buscar solicitudes de permiso examen salud preventiva PENDIENTES
+            List<SolicitudPermisoExamenSaludPreventivaVO> listaSolicitudesPESP = 
+                solicitudesPESPDao.getSolicitudes(userInSession.getEmpresaId(), 
+                itcenco.getCcostoId(),
+                userInSession.getRunEmpleado(),
+                null,
+                null,
+                userInSession,
+                false,
+                Constantes.ESTADO_SOLICITUD_PENDIENTE,
+                0, 
+                0, 
+                "solic_fec_ingreso");
+            System.out.println("[GestionFemaseWeb]topFrame.jsp]"
+                + "cencoId= " + itcenco.getCcostoId()
+                + ", numSolicitudesPendientes= " + numSolicitudesPESPPendientes);
+            numSolicitudesPESPPendientes += listaSolicitudesPESP.size();
+            
         }
         System.out.println("[GestionFemaseWeb]topFrame.jsp]"
             + "(Final)Num solicitudes Vacaciones Pendientes= " + numSolicitudesVACPendientes);
         System.out.println("[GestionFemaseWeb]topFrame.jsp]"
             + "(Final)Num solicitudes Permiso Administrativo Pendientes= " + numSolicitudesPAPendientes);
-        
+        System.out.println("[GestionFemaseWeb]topFrame.jsp]"
+            + "(Final)Num solicitudes Permiso Examen Salud Preventiva Pendientes= " + numSolicitudesPESPPendientes);
         
     }
 %>
@@ -240,6 +266,16 @@
                                    class="notification" target="mainFrame">
                                   <span>Solic. PA Pendientes</span>
                                   <span class="badge"><%=numSolicitudesPAPendientes%></span>
+                                </a>
+                            <%}%>
+                            
+                            <%
+                            if (numSolicitudesPESPPendientes > 0){
+                                System.out.println("[GestionFemaseWeb]topFrame.jsp]Mostrar notificaciones de solicitudes de permisos examen salud preventiva");%>
+                                <a href="<%=request.getContextPath()%>/permisos_examen_salud_preventiva/sol_pesp_aprobar_rechazar.jsp" 
+                                   class="notification" target="mainFrame">
+                                  <span>Solic. PESP Pendientes</span>
+                                  <span class="badge"><%=numSolicitudesPESPPendientes%></span>
                                 </a>
                             <%}%>
                     <%}%>

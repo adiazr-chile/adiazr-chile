@@ -497,7 +497,9 @@ public class SolicitudVacacionesController extends BaseServlet {
                         + "para enviar mail");
                     NotificacionSolicitudVacacionesVO evento = notificaEventoSolicitud("INGRESO_SOLICITUD",
                         "Ingreso de Solicitud de Vacaciones", 
-                        solicitud, userConnected, request,null,null,-1);
+                        solicitud, userConnected, null,null,-1,
+                        "Solicitud ingresada",
+                        request.getRemoteAddr());
                     solicitud.setDiasEfectivosVacacionesSolicitadas(evento.getDiasSolicitados());
                     String mensajeFinal = evento.getMensajeFinal();
                     session.setAttribute("mensaje", "Solicitud de vacaciones ingresada exitosamente."
@@ -676,10 +678,12 @@ public class SolicitudVacacionesController extends BaseServlet {
                                     + "Notificar error al insertar la Vacacion");
                                 notificaEventoSolicitud("SOLICITUD_ERROR",
                                     "Solicitud de Vacaciones Error", 
-                                    solicitudFromBd, userConnected, request,
+                                    solicitudFromBd, userConnected, 
                                     solicitudFromBd.getInicioVacaciones(), 
                                     solicitudFromBd.getFinVacaciones(),
-                                    solicitudFromBd.getDiasEfectivosVacacionesSolicitadas());        
+                                    solicitudFromBd.getDiasEfectivosVacacionesSolicitadas(),
+                                    mensajeFinal, 
+                                    request.getRemoteAddr());        
                             }else{
                                 System.out.println(WEB_NAME+"[SolicitudVacacionesController]"
                                     + "La Vacacion se inserto correctamente. "
@@ -697,10 +701,11 @@ public class SolicitudVacacionesController extends BaseServlet {
                                 notificaEventoSolicitud("SOLICITUD_APROBADA",
                                     "Solicitud de Vacaciones Aprobada", 
                                     solicitudFromBd, userConnected, 
-                                    request, 
                                     solicitudFromBd.getInicioVacaciones(), 
                                     solicitudFromBd.getFinVacaciones(),
-                                    solicitudFromBd.getDiasEfectivosVacacionesSolicitadas());        
+                                    solicitudFromBd.getDiasEfectivosVacacionesSolicitadas(),
+                                    request.getParameter("notaObservacion"),
+                                    request.getRemoteAddr());        
                             }
                         }else{
                             /**
@@ -725,10 +730,12 @@ public class SolicitudVacacionesController extends BaseServlet {
                                 + "Rechazar solicitud de vacaciones. Dias solicitados: " + solicitud.getDiasEfectivosVacacionesSolicitadas());
                             notificaEventoSolicitud("SOLICITUD_RECHAZADA",
                                 "Solicitud de Vacaciones Rechazada", 
-                                solicitudFromBd, userConnected, request,
+                                solicitudFromBd, userConnected, 
                                 solicitudFromBd.getInicioVacaciones(), 
                                 solicitudFromBd.getFinVacaciones(),
-                                solicitudFromBd.getDiasEfectivosVacacionesSolicitadas());
+                                solicitudFromBd.getDiasEfectivosVacacionesSolicitadas(),
+                                mensajeFinal,
+                                request.getRemoteAddr());
                         }
                     }else if (strAccion.compareTo(Constantes.ESTADO_SOLICITUD_RECHAZADA) == 0){
                         solicitud.setFechaHoraApruebaRechaza(strFechaHoraActual);
@@ -743,10 +750,12 @@ public class SolicitudVacacionesController extends BaseServlet {
                             + "Rechazar solicitud de vacaciones. Dias solicitados: " + solicitud.getDiasEfectivosVacacionesSolicitadas());
                         notificaEventoSolicitud("SOLICITUD_RECHAZADA",
                             "Solicitud de Vacaciones Rechazada", 
-                            solicitudFromBd, userConnected, request,
+                            solicitudFromBd, userConnected,
                             solicitudFromBd.getInicioVacaciones(), 
                             solicitudFromBd.getFinVacaciones(),
-                            solicitudFromBd.getDiasEfectivosVacacionesSolicitadas());
+                            solicitudFromBd.getDiasEfectivosVacacionesSolicitadas(),
+                            request.getParameter("notaObservacion"),
+                            request.getRemoteAddr());
                     }					
                     listaSolicitudes.add(solicitud);
 
@@ -837,10 +846,11 @@ public class SolicitudVacacionesController extends BaseServlet {
             String _evento,
             SolicitudVacacionesVO _solicitud,
             UsuarioVO _userConnected, 
-            HttpServletRequest _request,
             String _inicioVacaciones,
             String _finVacaciones,
-            int _diasSolicitados){
+            int _diasSolicitados, 
+            String _notaObservacion, 
+            String _userIP){
     
         NotificacionSolicitudVacacionesVO evento = new NotificacionSolicitudVacacionesVO();
                 
@@ -871,7 +881,7 @@ public class SolicitudVacacionesController extends BaseServlet {
         System.out.println(WEB_NAME+"[SolicitudVacacionesController."
             + "notificaEventoSolicitud]"
             + "Email por defecto: " + mailTo);
-        String notaObservacion = _request.getParameter("notaObservacion");
+        //String notaObservacion = _request.getParameter("notaObservacion");
         String cadenaNombres    = "";
         boolean hayJefeNacional = true;
         boolean hayJefeDirecto  = true;
@@ -993,7 +1003,7 @@ public class SolicitudVacacionesController extends BaseServlet {
             + "<br>Inicio vacaciones: " + _solicitud.getInicioVacaciones()
             + "<br>Termino vacaciones: " + _solicitud.getFinVacaciones()
             + "<br>Dias solicitados: " + diasSolicitados
-            + "<br>Nota/Observacion: " + notaObservacion;
+            + "<br>Nota/Observacion: " + _notaObservacion;
         
         evento.setTipoEvento(_tipoEvento);
         evento.setMensajeFinal(mensaje);
@@ -1009,7 +1019,7 @@ public class SolicitudVacacionesController extends BaseServlet {
         MaintenanceEventVO resultado=new MaintenanceEventVO();
         resultado.setUsername(_userConnected.getUsername());
         resultado.setDatetime(new Date());
-        resultado.setUserIP(_request.getRemoteAddr());
+        resultado.setUserIP(_userIP);
         resultado.setType("NOT");
         resultado.setEmpresaIdSource(_userConnected.getEmpresaId());
         resultado.setEmpresaId(empleado.getEmpresaId());

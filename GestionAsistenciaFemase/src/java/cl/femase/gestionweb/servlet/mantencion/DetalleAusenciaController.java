@@ -359,6 +359,15 @@ public class DetalleAusenciaController extends BaseServlet {
                                     startPageIndex, 
                                     numRecordsPerPage, 
                                     jtSorting);
+                            }else if (source != null && source.compareTo("adm_pesp") == 0){
+                                listaObjetos = detAusenciaBp.getPermisosExamenSaludPreventiva(source,
+                                    rutEmpleado,
+                                    rutAutorizador, 
+                                    fechaIngresoInicio, 
+                                    fechaIngresoFin,
+                                    startPageIndex, 
+                                    numRecordsPerPage, 
+                                    jtSorting);
                             }else{
                                 listaObjetos = detAusenciaBp.getDetallesAusencias(source,
                                     rutEmpleado,
@@ -375,6 +384,12 @@ public class DetalleAusenciaController extends BaseServlet {
                             //Get Total Record Count for Pagination
                             if (source != null && source.compareTo("adm_pa") == 0){
                                 rowsCount = detAusenciaBp.getPermisosAdministrativosCount(source, 
+                                    rutEmpleado,
+                                    rutAutorizador, 
+                                    fechaIngresoInicio, 
+                                    fechaIngresoFin);
+                            }else if (source != null && source.compareTo("adm_pesp") == 0){
+                                rowsCount = detAusenciaBp.getPermisosExamenSaludPreventivaCount(source, 
                                     rutEmpleado,
                                     rutAutorizador, 
                                     fechaIngresoInicio, 
