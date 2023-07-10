@@ -324,6 +324,9 @@ public class VacacionesReport extends BaseServlet {
         //************************************************************************************
         //************************************************************************************
         //cabecera empresa
+        System.out.println(WEB_NAME+"[servlet.reportes."
+            + "VacacionesReport.getParameters]"
+            + "Set linea de totales en el reporte...");
         EmpresaVO empresa = empresaBp.getEmpresaByKey(empresaParam);
         parameters.put("empresa_id", infoEmpleado.getEmpresa().getId());
         parameters.put("empresa_nombre", empresa.getNombre());

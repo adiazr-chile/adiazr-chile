@@ -26,7 +26,7 @@ public class TurnoVO implements Serializable{
     private Date fechaModificacion;
     private String fechaModificacionAsStr;
     private String fechaAsignacionStr;
-    private String rotativo="N";
+    private String rotativo = "N";
     
     public TurnoVO() {
         

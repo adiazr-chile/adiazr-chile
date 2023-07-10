@@ -29,7 +29,7 @@ public class AsignacionTurnoRotativoVO implements Serializable{
     private String fechaAsignacion;
     private String horaEntrada;
     private String horaSalida;
-        
+    
     public AsignacionTurnoRotativoVO() {
     }
 

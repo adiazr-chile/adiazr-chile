@@ -127,7 +127,7 @@
                     title: 'Empresa',
                     list: true,
                     options: function(data){
-                        return '<%=request.getContextPath()%>/LoadItems?type=empresas'
+                        return '<%=request.getContextPath()%>/LoadItems?type=empresas';
                     },
                     width: '10%',
                     edit:true,
@@ -154,7 +154,7 @@
                     defaultValue: 'N',
                     edit:true,
                     create:true
-                },    
+                },
                 estado:{
                     title: 'Estado',
                     options: function(data){
@@ -183,7 +183,7 @@
                     create:false,
                     edit:false,
                     display: function(data) {
-                        return '<button type="button" onclick="openEditForm(' + data.record.id + ')" class="button button-blue">Detalle</button> ';
+                        return '<button type="button" onclick="openEditForm(' + data.record.id +')" class="button button-blue">Detalle</button> ';
                     }
                 },
                 MyButton2: {

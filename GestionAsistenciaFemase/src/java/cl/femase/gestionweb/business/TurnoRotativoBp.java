@@ -118,47 +118,43 @@ public class TurnoRotativoBp  extends BaseBp{
         
         return insValues;
     }
-            
+           
+    /**
+    * 
+     * @param _asignaciones
+    */
     public void insertarAsignaciones(ArrayList<AsignacionTurnoRotativoVO> _asignaciones){
     
         try {
             turnosRotativosDao.insertarAsignaciones(_asignaciones);
-            
-//        //if (!updValues.isThereError()){
-//            String msgFinal = insValues.getMsg();
-//            insValues.setMsg(msgFinal);
-//            _eventdata.setDescription(msgFinal);
-//            //insertar evento
-//            eventsService.addEvent(_eventdata); 
-//        //}
-//
-//return insValues;
+          
         } catch (SQLException ex) {
             System.err.println("[TurnoRotativoBp."
                 + "insertarAsignaciones]Error: "+ex.toString());
         }
     }
     
+    /**
+    * 
+     * @param _asignaciones
+    */
     public void eliminarAsignaciones(ArrayList<AsignacionTurnoRotativoVO> _asignaciones){
     
         try {
             turnosRotativosDao.eliminarAsignaciones(_asignaciones);
-            
-//        //if (!updValues.isThereError()){
-//            String msgFinal = insValues.getMsg();
-//            insValues.setMsg(msgFinal);
-//            _eventdata.setDescription(msgFinal);
-//            //insertar evento
-//            eventsService.addEvent(_eventdata); 
-//        //}
-//
-//return insValues;
+           
         } catch (SQLException ex) {
             System.err.println("[TurnoRotativoBp."
                 + "insertarAsignaciones]Error: "+ex.toString());
         }
     }
     
+    /**
+    * 
+     * @param _objToInsert
+     * @param _eventdata
+     * @return 
+    */
     public ResultCRUDVO insert(TurnoRotativoVO _objToInsert, 
             MaintenanceEventVO _eventdata){
         
@@ -175,6 +171,13 @@ public class TurnoRotativoBp  extends BaseBp{
         return insValues;
     }
     
+    /**
+    * 
+     * @param _currentAsignacion
+     * @param _updatedAsignacion
+     * @param _eventdata
+     * @return 
+    */
     public ResultCRUDVO modifyAsignacion(AsignacionTurnoRotativoVO _currentAsignacion, 
             AsignacionTurnoRotativoVO _updatedAsignacion, 
             MaintenanceEventVO _eventdata){
@@ -311,6 +314,13 @@ public class TurnoRotativoBp  extends BaseBp{
         return turnosRotativosDao.getAsignacionTurnoByFecha(_empresaId, _rutEmpleado, _fecha);
     }
     
+    /**
+    * 
+    * @param _empresaId
+    * @param _rutEmpleado
+    * @param _fecha
+    * @return 
+    */
     public String getAsignacionTurnoByFechaJson(String _empresaId, 
             String _rutEmpleado,
             String _fecha){

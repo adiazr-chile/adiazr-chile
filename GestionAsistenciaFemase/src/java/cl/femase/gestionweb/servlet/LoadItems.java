@@ -304,10 +304,11 @@ public class LoadItems extends BaseServlet {
                 Iterator<TurnoVO> iterTurnos = auxturnos.iterator();
                 while (iterTurnos.hasNext()) {
                     TurnoVO auxobj = iterTurnos.next();
+                    String strLabel = "[" + auxobj.getId() + "] " + auxobj.getNombre();
                     System.out.println(WEB_NAME+"[LoadItems]"
                         + "itera turno id: " + auxobj.getId() 
                         + ", nombre:  " + auxobj.getNombre() );
-                    listData += "{\"DisplayText\":\""+auxobj.getNombre()+"\",\"Value\":\""+auxobj.getId()+"\"},";
+                    listData += "{\"DisplayText\":\"" + strLabel + "\",\"Value\":\"" + auxobj.getId() + "\"},";
                 }
         }else if (type.compareTo("tipos_ausencia") == 0) {
                 //TipoAusenciaBp tipoAusenciaBp = new TipoAusenciaBp(appProperties);    

@@ -1,3 +1,6 @@
+<%@page import="cl.femase.gestionweb.vo.TurnoVO"%>
+<%@page import="cl.femase.gestionweb.business.TurnosBp"%>
+<%@page import="cl.femase.gestionweb.business.DetalleTurnosBp"%>
 <%@ include file="/include/check_session.jsp" %>
 <%@page import="java.util.Iterator"%>
 <%@page import="java.util.Map"%>
@@ -7,6 +10,9 @@
 <!DOCTYPE html>
 <%
     String paramIdTurno = request.getParameter("filtroId");
+    TurnosBp turnosBp   = new TurnosBp(null);
+    TurnoVO turnoObj    = turnosBp.getTurno(Integer.parseInt(paramIdTurno));
+    String nombreTurno = turnoObj.getNombre();
 %>
 <html>
 <head>
@@ -80,7 +86,7 @@
     $(document).ready(function () {
 
         $('#DetalleTurnoTableContainer').jtable({       
-            title: 'Detalle Turno',
+            title: 'Detalle Turno ID [<%=paramIdTurno%>]: <%=nombreTurno%>',
             paging: true, //Enable paging
             pageSize: 10, //Set page size (default: 10)
             sorting: true, //Enable sorting
@@ -117,18 +123,10 @@
                     key: true,
                     create:true,
                     type: 'radiobutton',
-                    options: { '1': 'Lunes', '2': 'Martes', '3': 'Miercoles', '4': 'Jueves', '5': 'Viernes', '6': 'Sabado', '7': 'Domingo' },
+                    options: { '1': 'Lunes', '2': 'Martes', '3': 'Miercoles', '4': 'Jueves', '5': 'Viernes', '6': 'Sabado', '7': 'Domingo', '8': 'Feriado/Festivo' },
                     inputClass: 'validate[required]',
-                    defaultValue: '1',
-                }
-                /*,
-                labelCortoDia:{
-                    title: 'Dia',
-                    width: '15%',
-                    edit:false,
-                    create:false
-                }*/
-                ,
+                    defaultValue: '1'
+                },
                 horaEntrada:{
                     title: 'Hra entrada',
                     width: '10%',

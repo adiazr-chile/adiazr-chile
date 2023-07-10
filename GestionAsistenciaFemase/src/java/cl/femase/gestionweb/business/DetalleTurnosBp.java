@@ -58,6 +58,11 @@ public class DetalleTurnosBp  extends BaseBp{
         return detalle;
     }
     
+    /**
+    * 
+    * @param _idTurno
+    * @return 
+    */
     public LinkedHashMap<Integer,DetalleTurnoVO> getHashDetalleTurno(int _idTurno){
         
         LinkedHashMap<Integer,DetalleTurnoVO> lista = 
@@ -66,6 +71,12 @@ public class DetalleTurnosBp  extends BaseBp{
         return lista;
     }
     
+    /**
+    * 
+    * @param _turnoToUpdate
+    * @param _eventdata
+    * @return 
+    */
     public ResultCRUDVO update(DetalleTurnoVO _turnoToUpdate, 
             MaintenanceEventVO _eventdata){
         ResultCRUDVO updValues = detalleturnosService.update(_turnoToUpdate);

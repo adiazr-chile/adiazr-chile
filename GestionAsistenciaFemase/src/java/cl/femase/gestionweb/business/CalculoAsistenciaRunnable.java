@@ -319,11 +319,11 @@ public class CalculoAsistenciaRunnable extends BaseBp implements Runnable{
         List<TurnoVO> listaTurnos = 
             m_turnosBp.getTurnos(_empresaId, null, -1, 0, 0, "id_turno");
         for (TurnoVO turno : listaTurnos) {
-            System.out.println(WEB_NAME+"[GestionFemase."
-                + "CalculoAsistenciaRunnable."
-                + "setParameters()]"
-                + "turno.empresa_id: "+turno.getEmpresaId()
-                + "turno.turno_id: "+turno.getId());
+//            System.out.println(WEB_NAME+"[GestionFemase."
+//                + "CalculoAsistenciaRunnable."
+//                + "setParameters()]"
+//                + "turno.empresa_id: "+turno.getEmpresaId()
+//                + "turno.turno_id: "+turno.getId());
         
             if (turno.getId() != -1){
                 LinkedHashMap<Integer,DetalleTurnoVO> detalle = 

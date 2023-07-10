@@ -61,8 +61,8 @@ public class DatabaseLocator {
     */
     public Connection getConnection(String dsName, String _fromMethod) throws DatabaseException {
         Connection conn = null;
-        System.out.println(WEB_NAME+"[DatabaseLocator.getConnection]"
-            + "Obteniendo conexion a la BD desde metodo: " + _fromMethod);
+//        System.out.println(WEB_NAME+"[DatabaseLocator.getConnection]"
+//            + "Obteniendo conexion a la BD desde metodo: " + _fromMethod);
         try {
             DataSource ds = (DataSource) ctx.lookup("java:/" + dsName);
             

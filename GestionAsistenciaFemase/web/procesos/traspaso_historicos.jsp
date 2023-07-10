@@ -134,11 +134,11 @@
 <body>
 <form id="myForm" name="myForm" method="post" action="<%=request.getContextPath()%>/servlet/TransferToHistoricalTables">
     <div class="wrapper">
-      <h1>Traspaso a historicos</h1>
+      <h1>Traspaso a hist&oacute;ricos</h1>
       <div class="tabs">
         <div class="tab">
           <input type="radio" name="css-tabs" id="tab-1" checked class="tab-switch">
-          <label for="tab-1" class="tab-label">&Uacute;ltimo registro</label>
+          <label for="tab-1" class="tab-label">&Uacute;ltimo registro hist&oacute;rico</label>
           <div class="tab-content" id="tab1">
             <table width="100%" border="0" cellspacing="1" cellpadding="1">
               <tr>
@@ -155,7 +155,7 @@
                     <input type="radio" name="tabla" value="detalle_asistencia" id="checkbox_detalle_asistencia" />C&aacute;lculos de Asistencia
                 </td>
                 <td>
-                    <input type="radio" name="tabla" value="mantencion_evento" id="checkbox_mantencion_evento" />Log de auditoria
+                    <input type="radio" name="tabla" value="mantencion_evento" id="checkbox_mantencion_evento" />Log de auditor&iacute;a
                 </td>
               </tr>
               <tr>

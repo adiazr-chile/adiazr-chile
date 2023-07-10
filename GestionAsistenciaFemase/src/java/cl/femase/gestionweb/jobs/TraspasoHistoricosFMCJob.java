@@ -1,11 +1,10 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+* To change this license header, choose License Headers in Project Properties.
+* To change this template file, choose Tools | Templates
+* and open the template in the editor.
+*/
 package cl.femase.gestionweb.jobs;
         
-//import cl.femase.gestionweb.common.DbDirectConnection;
 import cl.femase.gestionweb.common.DatabaseException;
 import cl.femase.gestionweb.common.DatabaseLocator;
 import cl.femase.gestionweb.common.GetPropertyValues;
@@ -62,26 +61,20 @@ public class TraspasoHistoricosFMCJob extends BaseJobs implements Job {
             + "Start at " + new Date());
         
         /**
-         * Seteo de objeto para envio de correo
-         * 
-         */
+        * Seteo de objeto para envio de correo
+        * 
+        */
         String fromLabel = "Gestion asistencia";
         String fromMail = m_properties.getKeyValue("mailFrom");
         String asuntoMail   = "Sistema de Gestion-Traspaso Historico Fundacion Mi Casa";
         String mailBody = "";
         String mailTo = m_properties.getKeyValue("mailAdmin");
-//        System.out.println(WEB_NAME+"[GestionFemase."
-//            + "TraspasoHistoricosFMCJob]"
-//            + "Enviando correo al admin ("+m_properties.getKeyValue("mailAdmin")+"), "
-//            + "informando que se ha procedido a realizar traspaso a tablas historicas");
-//        
         try {
-            
-            int numMarcas = insertMarcasHistoricas(empresaId);
-            int numMarcasRechazo = insertMarcasRechazosHistoricas(empresaId);
-            int numAusencias = insertAusenciasHistoricas(empresaId);
-            int numDetallesAsistencia = insertDetalleAsistenciaHistoricos(empresaId);
-            int numLogEventos = insertLogEventosHistoricos(empresaId);
+            int numMarcas               = insertMarcasHistoricas(empresaId);
+            int numMarcasRechazo        = insertMarcasRechazosHistoricas(empresaId);
+            int numAusencias            = insertAusenciasHistoricas(empresaId);
+            int numDetallesAsistencia   = insertDetalleAsistenciaHistoricos(empresaId);
+            int numLogEventos           = insertLogEventosHistoricos(empresaId);
             
             ejecucion.setEmpresaId(empresaId);
             ejecucion.setProcesoId(procesoId);
@@ -205,7 +198,8 @@ public class TraspasoHistoricosFMCJob extends BaseJobs implements Job {
                         + "longitud "
                     + "from marca "
                     + "where fecha_hora::date < (current_date - interval '6 month')::date "
-                    + "and empresa_cod='" + _empresaId + "'";
+                    + "and empresa_cod='" + _empresaId + "' "
+                    + " ON CONFLICT (empresa_cod, rut_empleado, fecha_hora, cod_tipo_marca) DO NOTHING";
 
             dbConn = dbLocator.getConnection(m_dbpoolName,"[TraspasoHistoricosFMCJob.insertMarcasHistoricas]");
             ps = dbConn.prepareStatement(sql);
@@ -259,7 +253,8 @@ public class TraspasoHistoricosFMCJob extends BaseJobs implements Job {
                     + "current_timestamp "
                     + "from marca_rechazo "
                     + "where fecha_hora::date < (current_date - interval '6 month')::date "
-                    + "and empresa_cod='" + _empresaId + "'";
+                    + "and empresa_cod='" + _empresaId + "' "
+                    + " ON CONFLICT ( correlativo_rechazo ) DO NOTHING";
 
             dbConn = dbLocator.getConnection(m_dbpoolName,"[TraspasoHistoricosFMCJob.insertMarcasRechazosHistoricas]");
             ps = dbConn.prepareStatement(sql);
@@ -287,17 +282,38 @@ public class TraspasoHistoricosFMCJob extends BaseJobs implements Job {
         Connection dbConn = null;
         try{
             String sql = "insert into mantencion_evento_historico "
-                + "(username,  descripcion_evento,  ip_usuario,"
-                + "tipo_evento,fecha_hora,empresa_id,depto_id,"
-                + "cenco_id,empleado_rut,empresa_id_source,fecha_hora_traspaso) "
+                + "(username,  "
+                    + "descripcion_evento,  "
+                    + "ip_usuario,"
+                    + "tipo_evento,"
+                    + "fecha_hora,"
+                    + "empresa_id,"
+                    + "depto_id,"
+                    + "cenco_id,"
+                    + "empleado_rut,"
+                    + "empresa_id_source,"
+                    + "fecha_hora_traspaso, "
+                    + "operating_system,"
+                    + "browser_name) "
                 + "select "
-                + "username,descripcion_evento,ip_usuario,tipo_evento,"
-                + "fecha_hora,empresa_id,depto_id,cenco_id,"
-                + "empleado_rut,empresa_id_source,current_timestamp "
+                    + "username,"
+                    + "descripcion_evento,"
+                    + "ip_usuario,"
+                    + "tipo_evento,"
+                    + "fecha_hora,"
+                    + "empresa_id,"
+                    + "depto_id,"
+                    + "cenco_id,"
+                    + "empleado_rut,"
+                    + "empresa_id_source,"
+                    + "current_timestamp,"
+                    + "operating_system,"
+                    + "browser_name "
                 + "from mantencion_evento "
                 + "where "
                 + "fecha_hora::date < (current_date - interval '6 month')::date "
-                    + "and empresa_id_source='" + _empresaId + "'";
+                    + "and empresa_id_source='" + _empresaId + "'"
+                + "ON CONFLICT (username, fecha_hora, tipo_evento) DO NOTHING ";
 
             dbConn = dbLocator.getConnection(m_dbpoolName,"[TraspasoHistoricosFMCJob.insertLogEventosHistoricos]");
             ps = dbConn.prepareStatement(sql);
@@ -349,7 +365,8 @@ public class TraspasoHistoricosFMCJob extends BaseJobs implements Job {
                     + "saldo_vp_pre_vacaciones, "
                     + "saldo_vba_post_vacaciones,"
                     + "saldo_vp_post_vacaciones "
-                    + ") "
+                    + "dias_solicitados,"
+                    + "saldo_post_pa) "
                 + " select "
                     + " rut_empleado, "
                     + "fecha_ingreso,"
@@ -372,14 +389,15 @@ public class TraspasoHistoricosFMCJob extends BaseJobs implements Job {
                     + "saldo_vba_pre_vacaciones,"
                     + "saldo_vp_pre_vacaciones, "
                     + "saldo_vba_post_vacaciones,"
-                    + "saldo_vp_post_vacaciones "
+                    + "saldo_vp_post_vacaciones,"
+                    + "dias_solicitados,"
+                    + "saldo_post_pa "
                 + " from detalle_ausencia "
                     + "inner join empleado on (detalle_ausencia.rut_empleado = empleado.empl_rut) "
                 + " where fecha_ingreso::date < (current_date - interval '6 month')::date "
-                    + "and empleado.empresa_id='" + _empresaId + "'";
+                    + "and empleado.empresa_id='" + _empresaId + "' "
+                    + " ON CONFLICT ( correlativo ) DO NOTHING";;
 
-            //System.out.println(WEB_NAME+"[insertAusenciasHistoricas]sql: "+sql);
-            
             dbConn = dbLocator.getConnection(m_dbpoolName,"[TraspasoHistoricosFMCJob.insertAusenciasHistoricas]");
             ps = dbConn.prepareStatement(sql);
             
@@ -406,16 +424,48 @@ public class TraspasoHistoricosFMCJob extends BaseJobs implements Job {
         Connection dbConn = null;
         try{
             String sql = "insert into detalle_asistencia_historica ("
-                + "empresa_id ,  depto_id ,  cenco_id ,  rut_empleado,  fecha_hora_calculo,"
-                + "  fecha_marca_entrada,  hora_entrada ,  hora_salida ,  horas_teoricas ,"
-                + "  horas_trabajadas ,  minutos_extras_50 ,  hora_inicio_ausencia ,"
-                + "  hora_fin_ausencia ,  minutos_trabajados ,  horas_extras ,  holgura_minutos ,"
-                + "  es_feriado ,  minutos_extras_100 ,  hora_entrada_teorica ,  hora_salida_teorica ,"
-                + "  minutos_extras ,  art22 ,  minutos_atraso ,  minutos_no_trabajados_entrada ,"
-                + "  minutos_no_trabajados_salida ,  autoriza_mins_no_trab_entrada ,  autoriza_mins_no_trab_salida,"
-                + "  hrs_presenciales,  hrs_trabajadas,  observacion,  hrs_ausencia,  fecha_marca_salida,"
-                + "  hhmm_extras,  hhmm_atraso,  autoriza_atraso,  autoriza_hrsextras,  hhmm_justificadas,"
-                + "  hhmm_extras_autorizadas,  marca_entrada_comentario,  marca_salida_comentario,  fecha_hora_traspaso) "
+                + "empresa_id ,"
+                    + "depto_id ,"
+                    + "cenco_id ,"
+                    + "rut_empleado,"
+                    + "fecha_hora_calculo,"
+                + "  fecha_marca_entrada,"
+                    + "hora_entrada,"
+                    + "hora_salida,"
+                    + "horas_teoricas,"
+                + "  horas_trabajadas,"
+                    + "minutos_extras_50,"
+                    + "hora_inicio_ausencia ,"
+                + "  hora_fin_ausencia,"
+                    + "minutos_trabajados,"
+                    + "horas_extras,"
+                    + "holgura_minutos,"
+                + "  es_feriado,"
+                    + "minutos_extras_100,"
+                    + "hora_entrada_teorica,"
+                    + "hora_salida_teorica ,"
+                + "  minutos_extras,"
+                    + "art22,"
+                    + "minutos_atraso,"
+                    + "minutos_no_trabajados_entrada,"
+                + "  minutos_no_trabajados_salida,"
+                    + "autoriza_mins_no_trab_entrada,"
+                    + "autoriza_mins_no_trab_salida,"
+                + "  hrs_presenciales,"
+                    + "hrs_trabajadas,"
+                    + "observacion,"
+                    + "hrs_ausencia,"
+                    + "fecha_marca_salida,"
+                + "  hhmm_extras,"
+                    + "hhmm_atraso,"
+                    + "autoriza_atraso,"
+                    + "autoriza_hrsextras,"
+                    + "hhmm_justificadas,"
+                + "  hhmm_extras_autorizadas,"
+                    + "marca_entrada_comentario,"
+                    + "marca_salida_comentario,"
+                    + "fecha_hora_traspaso,"
+                    + "hhmm_salida_anticipada) "
                 + "select "
                 + "  empresa_id ,  depto_id ,  cenco_id ,  rut_empleado,  fecha_hora_calculo,  fecha_marca_entrada,  hora_entrada ,"
                 + "  hora_salida ,  horas_teoricas ,  horas_trabajadas ,  minutos_extras_50 ,  hora_inicio_ausencia ,  hora_fin_ausencia ,"
@@ -423,10 +473,14 @@ public class TraspasoHistoricosFMCJob extends BaseJobs implements Job {
                 + "  hora_salida_teorica ,  minutos_extras ,  art22 ,  minutos_atraso ,  minutos_no_trabajados_entrada ,  minutos_no_trabajados_salida ,"
                 + "  autoriza_mins_no_trab_entrada ,  autoriza_mins_no_trab_salida,  hrs_presenciales,  hrs_trabajadas,  observacion,"
                 + "  hrs_ausencia,  fecha_marca_salida,  hhmm_extras,  hhmm_atraso,  autoriza_atraso,  autoriza_hrsextras,  hhmm_justificadas,"
-                + "  hhmm_extras_autorizadas,  marca_entrada_comentario,  marca_salida_comentario,  current_timestamp "
+                + "  hhmm_extras_autorizadas,  "
+                    + "marca_entrada_comentario,  "
+                    + "marca_salida_comentario,  "
+                    + "current_timestamp,hhmm_salida_anticipada "
                 + "  from detalle_asistencia "
                 + "  where fecha_marca_entrada < (current_date - interval '6 month')::date "
-                    + " and empresa_id='" + _empresaId + "' ";
+                    + " and empresa_id='" + _empresaId + "' "
+                    + "ON CONFLICT ( rut_empleado, fecha_marca_entrada ) DO NOTHING";  
 
             dbConn = dbLocator.getConnection(m_dbpoolName,
                 "[TraspasoHistoricosFMCJob.insertDetalleAsistenciaHistoricos]");
@@ -446,9 +500,9 @@ public class TraspasoHistoricosFMCJob extends BaseJobs implements Job {
     }
     
     /**
-     * Elimina registros de marcas 
-     * con mas de 6 meses de antiguedad (ahora en tabla historica).
-     */
+    * Elimina registros de marcas 
+    * con mas de 6 meses de antiguedad (ahora en tabla historica).
+    */
     private void deleteMarcas(String _empresaId){
         int rowsAffected =0;
         PreparedStatement ps = null;
@@ -473,6 +527,8 @@ public class TraspasoHistoricosFMCJob extends BaseJobs implements Job {
         }
         
     }
+    
+    
     
     /**
      * Elimina registros de marcas rechazadas

@@ -36,19 +36,13 @@ public class DetalleTurnosDAO extends BaseDAO{
     SimpleDateFormat m_sdf = new SimpleDateFormat("yyyy-MM-dd"); 
             
     public DetalleTurnosDAO(PropertiesVO _propsValues) {
-//        try {
-//            dbLoc = DatabaseLocator.getInstance();
-//            m_dbpoolName = _propsValues.getDbPoolName();
-//        } catch (DatabaseException ex) {
-//            m_logger.error("DbError: "+ex.toString());
-//        }
     }
 
-     /**
-     * Agrega un nuevo detalle turno
-     * @param _data
-     * @return 
-     */
+    /**
+    * Agrega un nuevo detalle turno
+    * @param _data
+    * @return 
+    */
     public ResultCRUDVO insert(DetalleTurnoVO _data){
         ResultCRUDVO objresultado = new ResultCRUDVO();
         int result=0;
@@ -97,12 +91,12 @@ public class DetalleTurnosDAO extends BaseDAO{
             int filasAfectadas = insert.executeUpdate();
             if (filasAfectadas == 1){
                 System.out.println(WEB_NAME+"[insert detalle turno]"
-                    + ", idTurno:" +_data.getIdTurno()
-                    + ", cod_dia:" +_data.getCodDia()
+                    + ", idTurno:" + _data.getIdTurno()
+                    + ", cod_dia:" + _data.getCodDia()
                     + ", hraEntrada:" + _data.getHoraEntrada() + " "
                     + ", hraSalida: " + _data.getHoraSalida() + " "
                     + ", holgura: " + _data.getHolgura() + " "
-                    + ", minsColacion: " + _data.getMinutosColacion() + " "        
+                    + ", minsColacion: " + _data.getMinutosColacion() + " "
                     +" insertado OK!");
             }
             
@@ -136,11 +130,11 @@ public class DetalleTurnosDAO extends BaseDAO{
         String msgError = "Error al actualizar "
             + "detalle turno. "
             + " idTurno: " + _data.getIdTurno()
-            +", codDia: " + _data.getCodDia()
-            +", horaEntrada: " + _data.getHoraEntrada()
-            +", horaSalida: " + _data.getHoraSalida()
-            +", holgura: " + _data.getHolgura()
-            +", minsColacion: " + _data.getMinutosColacion();
+            + ", codDia: " + _data.getCodDia()
+            + ", horaEntrada: " + _data.getHoraEntrada()
+            + ", horaSalida: " + _data.getHoraSalida()
+            + ", holgura: " + _data.getHolgura()
+            + ", minsColacion: " + _data.getMinutosColacion();
         
        String msgFinal = " Actualiza detalle turno:"
             + "idTurno [" + _data.getIdTurno() + "]"
@@ -174,7 +168,7 @@ public class DetalleTurnosDAO extends BaseDAO{
             insert.setDouble(3,  diferenciaET.getIntDiferenciaHoras());
             
             insert.setInt(4,  _data.getHolgura());
-            insert.setInt(5,  _data.getMinutosColacion());                        
+            insert.setInt(5,  _data.getMinutosColacion());
             
             //insert.setDouble(3,  Utilidades.getTotalHoras(_data.getHoraEntrada(), _data.getHoraSalida()));
             insert.setInt(6,  _data.getIdTurno());
@@ -188,7 +182,7 @@ public class DetalleTurnosDAO extends BaseDAO{
                     + ", hraEntrada:" + _data.getHoraEntrada() + " "
                     + ", hraSalida: " + _data.getHoraSalida() + " "    
                     + ", holgura: " + _data.getHolgura() + " "
-                    + ", minsColacion: " + _data.getMinutosColacion() + " "        
+                    + ", minsColacion: " + _data.getMinutosColacion() + " "
                     +" actualizado OK!");
             }
             
@@ -372,8 +366,7 @@ public class DetalleTurnosDAO extends BaseDAO{
             int _jtPageSize, 
             String _jtSorting){
         
-        List<DetalleTurnoVO> lista = 
-                new ArrayList<>();
+        List<DetalleTurnoVO> lista = new ArrayList<>();
         
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -456,6 +449,11 @@ public class DetalleTurnosDAO extends BaseDAO{
         return lista;
     }
     
+    /**
+    * 
+    * @param _idTurno
+    * @return 
+    */
     public LinkedHashMap<Integer,DetalleTurnoVO> getHashDetalleTurno(int _idTurno){
         
         LinkedHashMap<Integer,DetalleTurnoVO> lista = 
@@ -467,26 +465,26 @@ public class DetalleTurnosDAO extends BaseDAO{
         
         try{
             String sql = "SELECT "
-                + " detalle_turno.id_turno,"
-                + "turno.nombre_turno,"
-                + "detalle_turno.holgura, " 
-                + "detalle_turno.minutos_colacion, " 
-                + " detalle_turno.cod_dia,"
-                + "dias_semana.label_dia,"
-                + "dias_semana.label_corto,"
-                + "detalle_turno.hora_entrada,"
-                + "detalle_turno.hora_salida,"
-                + "detalle_turno.hora_entrada hora_entrada_date,"
-                + "detalle_turno.hora_salida hora_salida_date,"
-                + "detalle_turno.fecha_hora_modificacion,"
-                + "to_char(detalle_turno.fecha_hora_modificacion, 'yyyy-MM-dd HH24:MI:SS') fecha_modificacion_str "
+                    + " detalle_turno.id_turno,"
+                    + "turno.nombre_turno,"
+                    + "detalle_turno.holgura, " 
+                    + "detalle_turno.minutos_colacion, " 
+                    + " detalle_turno.cod_dia,"
+                    + "dias_semana.label_dia,"
+                    + "dias_semana.label_corto,"
+                    + "detalle_turno.hora_entrada,"
+                    + "detalle_turno.hora_salida,"
+                    + "detalle_turno.hora_entrada hora_entrada_date,"
+                    + "detalle_turno.hora_salida hora_salida_date,"
+                    + "detalle_turno.fecha_hora_modificacion,"
+                    + "to_char(detalle_turno.fecha_hora_modificacion, 'yyyy-MM-dd HH24:MI:SS') fecha_modificacion_str "
                 + "FROM "
-                + "detalle_turno,"
-                + "turno,"
-                + "dias_semana "
+                    + "detalle_turno,"
+                    + "turno,"
+                    + "dias_semana "
                 + "WHERE "
-                + "detalle_turno.id_turno = turno.id_turno AND "
-                + "dias_semana.cod_dia = detalle_turno.cod_dia ";
+                    + "detalle_turno.id_turno = turno.id_turno AND "
+                    + "dias_semana.cod_dia = detalle_turno.cod_dia ";
                     
             if (_idTurno != -1){        
                 sql += " and detalle_turno.id_turno = "+_idTurno;
@@ -494,9 +492,9 @@ public class DetalleTurnosDAO extends BaseDAO{
            
             sql += " order by detalle_turno.cod_dia";
             
-            System.out.println(WEB_NAME+"[DetalleTurnosDAO."
-                    + "getHashDetalleTurno]"
-                    + "Sql: " +sql);
+//            System.out.println(WEB_NAME+"[DetalleTurnosDAO."
+//                    + "getHashDetalleTurno]"
+//                    + "Sql: " +sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,"[DetalleTurnosDAO.getHashDetalleTurno]");
             ps = dbConn.prepareStatement(sql);

@@ -325,14 +325,8 @@ public class CalculoAsistenciaNew extends BaseBp{
                        
             String strKey = _empleado.getEmpresaid() + "|" + _empleado.getRut() + "|" + IT_FECHA;
             InfoFeriadoVO infoFeriado = m_fechasCalendarioFeriados.get(strKey);
-            
-//////      comentado  InfoFeriadoVO infoFeriado = 
-//////                m_feriadosBp.validaFeriado(_fechasCalculo[i], 
-//////                    _empleado.getEmpresaid(), 
-//////                    _empleado.getRut());
             boolean esFeriado = infoFeriado.isFeriado();
-            
-            ////boolean esFeriado = _hashFeriados.containsKey(_fechasCalculo[i]);
+            boolean tieneDetalleTurnoCodDiaFeriado = false;
             
             StringTokenizer tokenfecha1=new StringTokenizer(IT_FECHA, "-");
             String strAnio  = tokenfecha1.nextToken();
@@ -342,7 +336,7 @@ public class CalculoAsistenciaNew extends BaseBp{
 
             marcas = new LinkedHashMap<>();
             System.out.println(WEB_NAME+"[GestionFemase.CalculoAsistenciaNew]procesaAsistencia."
-                + "Itera fecha " + IT_FECHA);
+                + "Itera fecha: " + IT_FECHA + ", COD_DIA= " + codDia);
                 
             System.out.println(WEB_NAME+"[InfoEmpleado]"
                 + "Rut: "+_empleado.getRut()
@@ -393,11 +387,34 @@ public class CalculoAsistenciaNew extends BaseBp{
                         + "CalculoAsistenciaNew]"
                         + "NO TIENE TURNO para la fecha: " + IT_FECHA);
                     continuar=false;
-////                    if (!esFeriado){ 
-////                        detalleCalculo.setObservacion("Libre");
-////                    }else if (esFeriado) detalleCalculo.setObservacion("Feriado");
                 }else if (auxListDetalleTurno!=null){
+                        System.out.println(WEB_NAME+"[GestionFemase."
+                            + "CalculoAsistenciaNew]"
+                            + "Tiene turno normal. "
+                            + "Buscar en detalle_turno para el cod_dia: " + codDia);
                         detalleturno = auxListDetalleTurno.get(codDia);
+                        
+                        if (detalleturno == null){
+                            System.out.println(WEB_NAME + "[GestionFemase."
+                                + "CalculoAsistenciaNew]** 1 **"
+                                + "No hay detalle turno_id = " + _empleado.getIdturno() 
+                                + ", cod_dia: " + codDia);
+                            if (esFeriado){
+                                System.out.println(WEB_NAME + "[GestionFemase."
+                                    + "CalculoAsistenciaNew]"
+                                    + "La fecha " +IT_FECHA+ " es feriado. "
+                                    + "Ver si el detalle turno incluye cod_dia=8 (feriado/festivo)");
+                                detalleturno = auxListDetalleTurno.get(8);//detalle turno para cod_dia = feriado
+                                if (detalleturno != null) tieneDetalleTurnoCodDiaFeriado = true;
+                                if (detalleturno == null){
+                                    System.out.println(WEB_NAME + "[GestionFemase."
+                                        + "CalculoAsistenciaNew]** 2 **"
+                                        + "Definitivamente No hay detalle turno_id = " + _empleado.getIdturno() 
+                                        + ", cod_dia: " + codDia);
+                                }
+                            }
+                        }
+                          
                         if (detalleturno != null){
                             System.out.println(WEB_NAME+"[GestionFemase."
                                 + "CalculoAsistenciaNew]codDia: " + codDia);
@@ -536,6 +553,7 @@ public class CalculoAsistenciaNew extends BaseBp{
                                 detalleCalculo.setDeptoId(_empleado.getDeptoid());
                                 detalleCalculo.setCencoId(_empleado.getCencoid());
                                 detalleCalculo.setRutEmpleado(_empleado.getRut());
+                                
                                 String labelAlert="";
                                 String auxAlert="";
                                 Iterator<MarcaVO> collMarcas1 = marcas.values().iterator();
@@ -745,7 +763,14 @@ public class CalculoAsistenciaNew extends BaseBp{
                                         _hashTiposHE, 
                                         tieneTurnoRotativo, 
                                         turnoNocturno);
-                                
+                                /**
+                                *   20230609-01: Turnos para fin de semana y feriados 
+                                */
+                                if (tieneDetalleTurnoCodDiaFeriado && 
+                                    auxDetalleCalculo.getObservacion() == null){
+                                        auxDetalleCalculo.setObservacion("Feriado");
+                                } 
+                                    
                                 listaAux.add(auxDetalleCalculo);
                                 
                                 System.out.println(WEB_NAME+"[GestionFemase."
@@ -766,7 +791,7 @@ public class CalculoAsistenciaNew extends BaseBp{
                                     + "procesaAsistencia.**INTERMEDIO** detalleCalculo."
                                     + " Rut= " + _empleado.getRut()
                                     + ",fecha entrada= " + calculosFecha22.getFechaEntradaMarca()
-                                    +", hora Entrada= " + calculosFecha22.getHoraEntrada());
+                                    + ", hora Entrada= " + calculosFecha22.getHoraEntrada());
                             }
                         }else{ // NO HAY MARCAS
                                 /**
@@ -1076,7 +1101,7 @@ public class CalculoAsistenciaNew extends BaseBp{
                                     }
                                 }
                                 listaAux.add(detalleCalculo);
-                        }
+                        }//fin IF NO HAY MARCAS
             }//fin if continuar
 
         }//fin iteracion de fechas
@@ -1096,7 +1121,8 @@ public class CalculoAsistenciaNew extends BaseBp{
                 + ", hrsJustificadas= " + calculosFecha22.getHhmmJustificadas()
                 + ", hrsPresenciales= " + calculosFecha22.getHrsPresenciales()
                 + ", fechaEntradaMarca= " + calculosFecha22.getFechaEntradaMarca()
-                + ", getHrsAusencia= " + calculosFecha22.getHrsAusencia());
+                + ", getHrsAusencia= " + calculosFecha22.getHrsAusencia()
+                + ", observacion= " + calculosFecha22.getObservacion());
             
         }
            
@@ -1112,26 +1138,12 @@ public class CalculoAsistenciaNew extends BaseBp{
             String _hhmmTurno, 
             boolean _tieneMarcas, int _codDia){
         String observacion="Libre";
-//        observacion="Feriado";
-//        
-//        if (_hhmmTurno.compareTo("") != 0){// no tiene marcas y tiene turno
-//            if (!_esFeriado) observacion="Sin marcas";
-//        }else if (_hhmmTurno.compareTo("") == 0){//no tiene turno
-//            observacion="Libre";
-//        }
-        //if (_esFeriado && _hhmmTurno.compareTo("") != 0) observacion = "Feriado";
-        //else 
         if (_hhmmTurno.compareTo("") != 0){// no tiene marcas y tiene turno
             observacion="Sin marcas";
         }
         
         if (observacion.compareTo("Sin marcas") == 0 && _esFeriado && _codDia != 6) observacion = "Feriado";
         
-        /*else if (_hhmmTurno.compareTo("") == 0){//no tiene turno
-            observacion="Libre";
-        }*/
-
-                
         System.out.println(WEB_NAME+"[CalculoAsistenciaNew.getObservacion]"
             + " Fecha: " + _fecha
                 + ", codDia? " + _codDia

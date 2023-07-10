@@ -202,6 +202,15 @@
                     options: { 'S': 'Si', 'N': 'No' },
                     sorting: false
                 },
+                permiteFeriado:{
+                    title: 'Permite feriado?',
+                    width: '10%',
+                    edit:true,
+                    create:true,
+                    type: 'radiobutton',
+                    options: { 'S': 'Si', 'N': 'No' },
+                    sorting: false
+                },  
                 estado:{
                     title: 'Estado',
                     options: function(data){

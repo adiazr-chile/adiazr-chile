@@ -293,11 +293,10 @@ public class MarcasBp  extends BaseBp{
         
         fechasMarcas.forEach((key,value) -> {
             InfoMarcaVO registro = value;
-            
             MarcaVO marcaFinal = new MarcaVO();
-//            System.out.println(WEB_NAME+"itera row final. "
-//                + "Key: " + key 
-//                + ",info: " + registro.toString());
+            System.out.println(WEB_NAME + "itera row final. "
+                + "Key: " + key 
+                + ",info: " + registro.toString());
             
             marcaFinal.setEmpresaCod(registro.getEmpresaId());
             marcaFinal.setCorrelativo(registro.getCorrelativo());
@@ -309,11 +308,24 @@ public class MarcasBp  extends BaseBp{
             }
             marcaFinal.setTipoMarca(registro.getTipoMarca());
             marcaFinal.setComentario(registro.getComentario());
+            
+            System.out.println(WEB_NAME + ". (1)Set rowKey: "
+                + registro.getEmpresaId()
+                + "|" + registro.getRutEmpleado()
+                + "|" + registro.getFecha()
+                + "|" + registro.getTipoMarca());
+            
             marcaFinal.setRowKey(registro.getEmpresaId()
                 + "|" + registro.getRutEmpleado()
                 + "|" + registro.getFecha()
                 + "|" + registro.getTipoMarca());
+            
             if (registro.getFechaHoraMarca() != null){
+                System.out.println(WEB_NAME + ". (2)Set rowKey: "
+                    + registro.getEmpresaId()
+                    + "|" + registro.getRutEmpleado()
+                    + "|" + registro.getFechaHoraMarca()
+                    + "|" + registro.getTipoMarca());
                 marcaFinal.setRowKey(registro.getEmpresaId()
                     + "|" + registro.getRutEmpleado()
                     + "|" + registro.getFechaHoraMarca()

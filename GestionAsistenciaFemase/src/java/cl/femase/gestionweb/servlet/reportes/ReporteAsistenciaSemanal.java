@@ -494,7 +494,8 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
                         || (strAuxHt != null) ){
                     countDiasTrabajados++;
                 }
-                
+                System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal."
+                    + "getParameters]calcular hrs teoricas...");
                 DetalleAsistenciaVO auxDetail = 
                     getHrsTeoricas(detalle, infoEmpleado);
                 detalle.setHhmmTeoricas(auxDetail.getHhmmTeoricas());
@@ -1409,7 +1410,8 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
                 String hrsMinsExtras    = detalle.getHorasMinsExtrasAutorizadas();
                 String hrsTeoricasMenosColacion = null;
                 //boolean esFeriado = detalle.isEsFeriado();
-                
+                System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal."
+                    + "getCSVFile]calcular hrs teoricas...");
                 DetalleAsistenciaVO auxDetail = 
                     getHrsTeoricas(detalle, infoEmpleado);
                 hrsTeoricasMenosColacion = auxDetail.getHhmmTeoricas();
@@ -1645,20 +1647,24 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
         int diaSemana = Utilidades.getDiaSemana(Integer.parseInt(tokenFecha.nextToken()), 
             Integer.parseInt(tokenFecha.nextToken()), 
             Integer.parseInt(tokenFecha.nextToken()));
-        System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal."
-            + "getHrsTeoricas]"
-            + "Fecha: " + _detalle.getFechaEntradaMarca()
-            + ", cod dia semana: " + diaSemana
-            + ", idTurno: " + _infoEmpleado.getIdTurno());
+        
         DetalleTurnoVO detalleTurno = null;
         int idTurnoRotativo = turnoBp.getTurnoRotativo(_infoEmpleado.getEmpresaId());
         boolean tieneTurnoRotativo=false;
         boolean calcularHrsTeoricas = true;
         String hrsTeoricasMenosColacion = null;
         boolean esFeriado = _detalle.isEsFeriado();
+        boolean tieneDetalleTurnoCodDiaFeriado = false;
         boolean soloMarcaEntrada= false;
         boolean soloMarcaSalida = false;
         boolean noTieneMarcas   = false;       
+        
+        System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal."
+            + "getHrsTeoricas]"
+            + "Fecha: " + _detalle.getFechaEntradaMarca()
+            + ", cod dia semana: " + diaSemana
+            + ", es feriado? " + esFeriado    
+            + ", idTurno: " + _infoEmpleado.getIdTurno());
         
         if (idTurnoRotativo == _infoEmpleado.getIdTurno()){
             tieneTurnoRotativo = true;
@@ -1691,9 +1697,35 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
                 + "Fecha: " + _detalle.getFechaEntradaMarca()
                 + ". Tiene turno rotativo");
         }else{
+            System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal."
+                + "getHrsTeoricas]"
+                + "Rescatar detalle turno normal. "
+                + "id_turno= " + _infoEmpleado.getIdTurno()
+                + ", diaSemana= " + diaSemana 
+                + ", esFeriado: " + esFeriado);
             detalleTurno = 
                 detalleTurnoBp.getDetalleTurno(_infoEmpleado.getEmpresaId(), 
                 _infoEmpleado.getIdTurno(), diaSemana);
+            
+            System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal."
+                + "getHrsTeoricas]"
+                + "Rescatar detalle turno normal. "
+                + "id_turno= " + _infoEmpleado.getIdTurno()
+                + ", diaSemana= " + diaSemana 
+                + ", esFeriado: " + esFeriado
+                + ", detalleTurno: " + detalleTurno);
+            
+            if (detalleTurno == null && esFeriado){
+                System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal."
+                    + "getHrsTeoricas]"
+                    + "Fecha: " + _detalle.getFechaEntradaMarca() + " es feriado. "
+                    + "Ver si el detalle turno incluye cod_dia=8 (feriado/festivo)");
+                detalleTurno = 
+                    detalleTurnoBp.getDetalleTurno(_infoEmpleado.getEmpresaId(), 
+                    _infoEmpleado.getIdTurno(), 8);
+                if (detalleTurno!=null) tieneDetalleTurnoCodDiaFeriado = true;
+            }
+            
             System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal."
                 + "getHrsTeoricas]"
                 + "Fecha: " + _detalle.getFechaEntradaMarca()
@@ -1706,15 +1738,15 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
                 Utilidades.getTimeDifference(_detalle.getFechaEntradaMarca() +" " + detalleTurno.getHoraEntrada(), 
                     _detalle.getFechaEntradaMarca() + " " + detalleTurno.getHoraSalida());
             String hhmmTurno = duracionTurno.getStrDiferenciaHorasMinutos();
-            //newDetail.setObservacion(getObservacion(_detalle.getFechaEntradaMarca(), esFeriado, hhmmTurno, false, detalleTurno.getCodDia()));
+            System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal."
+                + "getHrsTeoricas]hhmmTurno: " + hhmmTurno);
+        }else {
+            System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal."
+                + "getHrsTeoricas]"
+                + "No tiene detalle turno definido");
         }
-        /*else if (!esFeriado){ 
-            newDetail.setObservacion("Libre");
-        }else if (esFeriado) {
-            newDetail.setObservacion("Feriado");
-        }*/
-            
-        if (esFeriado) calcularHrsTeoricas = false;
+        
+        //if (esFeriado && !tieneDetalleTurnoCodDiaFeriado) calcularHrsTeoricas = false;
         
         System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal."
             + "getHrsTeoricas]"

@@ -189,9 +189,9 @@ public class TurnoRotativoDAO extends BaseDAO{
                     + "hora_salida = ?,"
                     + "holgura=?, "
                     + "turno_nocturno=? ";
-            //if (_data.getAplicarTodos().compareTo("N") == 0){
-                sql += "WHERE id_turno = ?";
-            //}
+            
+            sql += "WHERE id_turno = ?";
+            
             dbConn = dbLocator.getConnection(m_dbpoolName,"[TurnoRotativoDAO.update]");
             psupdate = dbConn.prepareStatement(sql);
             psupdate.setString(1,  _data.getNombre());
@@ -319,11 +319,11 @@ public class TurnoRotativoDAO extends BaseDAO{
     }
     
     /**
-     * Retorna lista de turnos sin detalle de turno definido
-     * 
-     * @param _empresaId
-     * @return 
-     */
+    * Retorna lista de turnos sin detalle de turno definido
+    * 
+    * @param _empresaId
+    * @return 
+    */
     public List<TurnoRotativoVO> getTurnosSinDetalle(String _empresaId){
         List<TurnoRotativoVO> lista = new ArrayList<>();
         
@@ -396,15 +396,15 @@ public class TurnoRotativoDAO extends BaseDAO{
         
         try{
             String sql = "select "
-                + "id_turno, "
-                + "empresa_id,"
-                + "nombre_turno,"
-                + "hora_entrada,"
-                + "hora_salida "
+                    + "id_turno, "
+                    + "empresa_id,"
+                    + "nombre_turno,"
+                    + "hora_entrada,"
+                    + "hora_salida "
                 + "from turno_rotativo turno "
                 + "where turno.empresa_id = '" + _empresaId + "' "
-                + "and turno.estado_turno = 1 "
-                + "and id_turno in (select id_turno "
+                    + "and turno.estado_turno = 1 "
+                    + "and id_turno in (select id_turno "
                     + "from turno_rotativo_detalle "
                     + "where id_turno = turno.id_turno) "
                 + "order by nombre_turno";
@@ -553,17 +553,18 @@ public class TurnoRotativoDAO extends BaseDAO{
         
         try{
            String sql ="SELECT "
-                + "empresa_id, "
-                + "id_turno, "
-                + "nombre_turno,"
-                + "estado_turno, "
-                + "hora_entrada,"
-                + "hora_salida,"
-                + "fecha_creacion,"
-                + "fecha_modificacion,"
-                + "to_char(fecha_creacion, 'yyyy-MM-dd HH24:MI:SS') fecha_creacion_str, "
-                + "to_char(fecha_modificacion, 'yyyy-MM-dd HH24:MI:SS') fecha_modificacion_str,"
-                + "minutos_colacion,holgura "
+                    + "empresa_id, "
+                    + "id_turno, "
+                    + "nombre_turno,"
+                    + "estado_turno, "
+                    + "hora_entrada,"
+                    + "hora_salida,"
+                    + "fecha_creacion,"
+                    + "fecha_modificacion,"
+                    + "to_char(fecha_creacion, 'yyyy-MM-dd HH24:MI:SS') fecha_creacion_str, "
+                    + "to_char(fecha_modificacion, 'yyyy-MM-dd HH24:MI:SS') fecha_modificacion_str,"
+                    + "minutos_colacion,"
+                    + "holgura "
                 + "FROM turno_rotativo "
                 + "where id_turno= "+_idTurno;
 
@@ -586,7 +587,6 @@ public class TurnoRotativoDAO extends BaseDAO{
                 data.setFechaModificacionAsStr(rs.getString("fecha_modificacion_str"));
                 data.setMinutosColacion(rs.getInt("minutos_colacion"));
                 data.setHolgura(rs.getInt("holgura"));
-                
             }
 
             ps.close();
@@ -608,15 +608,15 @@ public class TurnoRotativoDAO extends BaseDAO{
     }
     
     /**
-     * Retorna lista de empleados para el turno especificado
-     * 
-     * @param _idTurno
-     * @param _empresaId
-     * @param _deptoId
-     * @param _cencoId
-     * @param cargoId
-     * @return 
-     */
+    * Retorna lista de empleados para el turno especificado
+    * 
+    * @param _idTurno
+    * @param _empresaId
+    * @param _deptoId
+    * @param _cencoId
+    * @param cargoId
+    * @return 
+    */
     public List<EmpleadoVO> getEmpleados(int _idTurno,
             String _empresaId,
             String _deptoId,
@@ -687,15 +687,15 @@ public class TurnoRotativoDAO extends BaseDAO{
     }
     
     /**
-     * Retorna lista de empleados no asignados para el turno especificado
-     * 
-     * @param _idTurno
-     * @param _empresaId
-     * @param _deptoId
-     * @param _cencoId
-     * @param cargoId
-     * @return 
-     */
+    * Retorna lista de empleados no asignados para el turno especificado
+    * 
+    * @param _idTurno
+    * @param _empresaId
+    * @param _deptoId
+    * @param _cencoId
+    * @param cargoId
+    * @return 
+    */
     public List<EmpleadoVO> getEmpleadosNoAsignados(int _idTurno,
             String _empresaId,
             String _deptoId,
@@ -770,7 +770,7 @@ public class TurnoRotativoDAO extends BaseDAO{
     * 
     * @param _empresaId
     * @param _nombreTurno
-     * @param _estado
+    * @param _estado
     * @return 
     */
     public int getTurnosCount(String _empresaId,
@@ -873,9 +873,9 @@ public class TurnoRotativoDAO extends BaseDAO{
     }
     
     /**
-     * Retorna un objeto Time.
-     * 
-     */
+    * Retorna un objeto Time.
+    * 
+    */
     private java.sql.Time getHora(String _hora){
         java.sql.Time theTime = null;
         
@@ -892,84 +892,12 @@ public class TurnoRotativoDAO extends BaseDAO{
         return theTime;
     }
     
-    
-    //nuevos metodos
-    
-//    /** 12-05-2018
-//     *  Retorna lista con las asignaciones de turnos rotativos existentes
-//     * @param _empresaId
-//     * @param _rutEmpleado
-//     * @param _idTurno
-//     * @param _fechaDesde
-//     * @param _fechaHasta
-//     * @return 
-//     */
-//    public ArrayList<AsignacionTurnoRotativoVO> getAsignacion(String _empresaId, 
-//            String _rutEmpleado, 
-//            int  _idTurno, 
-//            String _fechaDesde, 
-//            String _fechaHasta){
-//    
-//        ArrayList<AsignacionTurnoRotativoVO> asignaciones= 
-//            new ArrayList<>();
-//
-//        AsignacionTurnoRotativoVO asignacion;
-//        try {
-//            dbConn = dbLocator.getConnection(m_dbpoolName);
-//            Statement statement = dbConn.createStatement();
-//            String strSql = "select "
-//                    + "turno.empresa_id,"
-//                    + "asignacion.rut_empleado,"
-//                    + "asignacion.id_turno, "
-//                    + "asignacion.id_duracion,"
-//                    + "turno.nombre_turno, "
-//                    + "fecha_desde,"
-//                    + "fecha_hasta,"
-//                    + "turno.hora_entrada,"
-//                    + "turno.hora_salida "
-//                + "from turno_rotativo_asignacion asignacion "
-//                + "inner join turno_rotativo turno "
-//                    + "on (asignacion.id_turno = turno.id_turno) "
-//                + "where asignacion.empresa_id='" + _empresaId + "' "
-//                    + "and asignacion.rut_empleado='" + _rutEmpleado + "' ";
-//                
-//            if (_idTurno != 0 && _fechaDesde != null && _fechaHasta != null ){
-//                    strSql += " and asignacion.id_turno="+_idTurno
-//                        + " and asignacion.fecha_desde::date='" +_fechaDesde +"' "
-//                        + " and asignacion.fecha_hasta::date='" +_fechaHasta +"' ";
-//            }
-//            strSql += "order by fecha_desde desc";
-//            
-//            ResultSet rs = statement.executeQuery(strSql);		
-//            while (rs.next()) {
-//                asignacion = new AsignacionTurnoRotativoVO();
-//                
-//                asignacion.setEmpresaId(rs.getString("empresa_id"));
-//                asignacion.setRutEmpleado(rs.getString("rut_empleado"));
-//                asignacion.setIdTurno(rs.getInt("id_turno"));
-//                asignacion.setIdPeriodo(rs.getInt("id_duracion"));
-//                asignacion.setHoraEntrada(rs.getString("hora_entrada"));
-//                asignacion.setHoraSalida(rs.getString("hora_salida"));
-//                
-//                asignaciones.add(asignacion);
-//            }
-//            
-//            statement.close();
-//            rs.close();
-//            dbLocator.freeConnection(dbConn);
-//        } catch (SQLException|DatabaseException e) {
-//            e.printStackTrace();
-//        }
-//        
-//        return asignaciones;
-//    }
-    
     /** 13-05-2018
-     *  
-     *  Retorna lista con las duraciones predeterminadas de turnos
-     * 
-     * @return 
-     */
+    *  
+    *  Retorna lista con las duraciones predeterminadas de turnos
+    * 
+    * @return 
+    */
     public ArrayList<DuracionVO> getDuraciones(){
         ArrayList<DuracionVO> duraciones = new ArrayList<>();
         DuracionVO duracion;
@@ -979,10 +907,10 @@ public class TurnoRotativoDAO extends BaseDAO{
             dbConn = dbLocator.getConnection(m_dbpoolName,"[TurnoRotativoDAO.getDuraciones]");
             statement = dbConn.createStatement();
             String strSql = "SELECT "
-                + "id_duracion, "
-                + "nombre_duracion, "
-                + "num_dias, "
-                + "order_display "
+                    + "id_duracion, "
+                    + "nombre_duracion, "
+                    + "num_dias, "
+                    + "order_display "
                 + "FROM duracion "
                 + "order by order_display";
             
@@ -1016,16 +944,16 @@ public class TurnoRotativoDAO extends BaseDAO{
     }
     
     /**
-     * Obtiene lista de turnos rotativos asignados al rut/empresa especificados
-     * 
-     * @param _empresaId
-     * @param _rutEmpleado
-     * @param _idTurno
-     * @param _fechaDesde
-     * @param _fechaHasta
-     * @param _limit
-     * @return 
-     */
+    * Obtiene lista de turnos rotativos asignados al rut/empresa especificados
+    * 
+    * @param _empresaId
+    * @param _rutEmpleado
+    * @param _idTurno
+    * @param _fechaDesde
+    * @param _fechaHasta
+    * @param _limit
+    * @return 
+    */
     public List<AsignacionTurnoRotativoVO> getAsignacionTurnosRotativosByRut(String _empresaId,
             String _rutEmpleado, 
             int  _idTurno, 
@@ -1042,30 +970,31 @@ public class TurnoRotativoDAO extends BaseDAO{
         
         try{
             String sql = "select "
-                + "empresa.empresa_id,"
-                + "empl_rut,"
-                + "cod_interno,"
-                + "empl_nombres || ' ' || empl_ape_paterno || ' ' || "
-                + "empl_ape_materno nombre_empleado,"
-                + "asignacion.id_turno,"
-                + "asignacion.id_duracion,"
-                + "duracion.num_dias,"
-                + "trim(turno.nombre_turno) nombre_turno,"
-                + "to_char(asignacion.fecha_desde,'YYYY-MM-DD') fecha_desde,"
-                + "to_char(asignacion.fecha_hasta,'YYYY-MM-DD') fecha_hasta,"
-                + "turno.hora_entrada,turno.hora_salida "
+                    + "empresa.empresa_id,"
+                    + "empl_rut,"
+                    + "cod_interno,"
+                    + "empl_nombres || ' ' || empl_ape_paterno || ' ' || "
+                    + "empl_ape_materno nombre_empleado,"
+                    + "asignacion.id_turno,"
+                    + "asignacion.id_duracion,"
+                    + "duracion.num_dias,"
+                    + "trim(turno.nombre_turno) nombre_turno,"
+                    + "to_char(asignacion.fecha_desde,'YYYY-MM-DD') fecha_desde,"
+                    + "to_char(asignacion.fecha_hasta,'YYYY-MM-DD') fecha_hasta,"
+                    + "turno.hora_entrada,"
+                    + "turno.hora_salida "
                 + "from empleado "
-                + "inner join turno_rotativo_asignacion asignacion  on (empleado.empresa_id=asignacion.empresa_id and empleado.empl_rut = asignacion.rut_empleado) "
-                + "inner join turno_rotativo turno on (asignacion.id_turno = turno.id_turno) "
-                + "inner join empresa on (empleado.empresa_id = empresa.empresa_id) "
-                + "inner join duracion on (asignacion.id_duracion = duracion.id_duracion) "
+                    + "inner join turno_rotativo_asignacion asignacion  on (empleado.empresa_id=asignacion.empresa_id and empleado.empl_rut = asignacion.rut_empleado) "
+                    + "inner join turno_rotativo turno on (asignacion.id_turno = turno.id_turno) "
+                    + "inner join empresa on (empleado.empresa_id = empresa.empresa_id) "
+                    + "inner join duracion on (asignacion.id_duracion = duracion.id_duracion) "
                 + "where empleado.empresa_id = '" + _empresaId + "' "
                 + "and empl_rut='" + _rutEmpleado + "' ";
             
             if (_idTurno != 0 && _fechaDesde != null && _fechaHasta != null ){
-                    sql += " and asignacion.id_turno="+_idTurno
-                        + " and asignacion.fecha_desde::date='" +_fechaDesde +"' "
-                        + " and asignacion.fecha_hasta::date='" +_fechaHasta +"' ";
+                sql += " and asignacion.id_turno="+_idTurno
+                    + " and asignacion.fecha_desde::date='" +_fechaDesde +"' "
+                    + " and asignacion.fecha_hasta::date='" +_fechaHasta +"' ";
             }
             
             sql += "order by fecha_hasta desc ";
@@ -1081,13 +1010,9 @@ public class TurnoRotativoDAO extends BaseDAO{
             while (rs.next()){
                 asignacion = new AsignacionTurnoRotativoVO();
                 nombreTurno = rs.getString("nombre_turno");
-                
-                //if (nombreTurno != null 
-                  //      && (nombreTurno.length() <= 8 || nombreTurno.length() <= 9)){
-                    nombreTurno += " - " 
-                        + rs.getString("hora_entrada")+" a " 
-                        + rs.getString("hora_salida");
-                //}
+                nombreTurno += " - " 
+                    + rs.getString("hora_entrada")+" a " 
+                    + rs.getString("hora_salida");
                 asignacion.setNombreTurno(nombreTurno);
                 
                 asignacion.setEmpresaId(rs.getString("empresa_id"));
@@ -1097,7 +1022,6 @@ public class TurnoRotativoDAO extends BaseDAO{
                 asignacion.setIdTurno(rs.getInt("id_turno"));
                 asignacion.setIdDuracion(rs.getInt("id_duracion"));
                 asignacion.setDiasDuracion(rs.getInt("num_dias"));
-                
                 asignacion.setFechaDesde(rs.getString("fecha_desde"));
                 asignacion.setFechaHasta(rs.getString("fecha_hasta"));
                 
@@ -1123,16 +1047,16 @@ public class TurnoRotativoDAO extends BaseDAO{
     }
     
     /**
-     * Este metodo se usa para verificar si las fechas ingresadas al crear/modificar
-     * se intersectan con alguno de los turnos asignados existentes. 
-     * 
-     * @param _empresaId
-     * @param _rutEmpleado
-     * @param _idTurno
-     * @param _fechaDesde
-     * @param _fechaHasta
-     * @return 
-     */
+    * Este metodo se usa para verificar si las fechas ingresadas al crear/modificar
+    * se intersectan con alguno de los turnos asignados existentes. 
+    * 
+    * @param _empresaId
+    * @param _rutEmpleado
+    * @param _idTurno
+    * @param _fechaDesde
+    * @param _fechaHasta
+    * @return 
+    */
     public List<AsignacionTurnoRotativoVO> getAsignacionesConflicto(String _empresaId,
             String _rutEmpleado,
             int _idTurno,
@@ -1148,28 +1072,23 @@ public class TurnoRotativoDAO extends BaseDAO{
         
         try{
             String sql = "select "
-                + "empresa.empresa_id,"
-                + "empl_rut,"
-                + "cod_interno,"
-                + "empl_nombres || ' ' || empl_ape_paterno || ' ' || "
-                + "empl_ape_materno nombre_empleado,"
-                + "asignacion.id_turno,"
-                + "asignacion.id_duracion,"
-                + "turno.nombre_turno,"
-                + "to_char(asignacion.fecha_desde,'YYYY-MM-DD') fecha_desde,"
-                + "to_char(asignacion.fecha_hasta,'YYYY-MM-DD') fecha_hasta "
+                    + "empresa.empresa_id,"
+                    + "empl_rut,"
+                    + "cod_interno,"
+                    + "empl_nombres || ' ' || empl_ape_paterno || ' ' || "
+                    + "empl_ape_materno nombre_empleado,"
+                    + "asignacion.id_turno,"
+                    + "asignacion.id_duracion,"
+                    + "turno.nombre_turno,"
+                    + "to_char(asignacion.fecha_desde,'YYYY-MM-DD') fecha_desde,"
+                    + "to_char(asignacion.fecha_hasta,'YYYY-MM-DD') fecha_hasta "
                 + "from empleado "
-                + "inner join turno_rotativo_asignacion asignacion  "
-                + "on (empleado.empresa_id=asignacion.empresa_id "
-                + "and empleado.empl_rut = asignacion.rut_empleado) "
-                + "inner join turno_rotativo turno "
-                + "on (asignacion.id_turno = turno.id_turno) "
-                + "inner join empresa on (empleado.empresa_id = empresa.empresa_id) "
+                    + "inner join turno_rotativo_asignacion asignacion on (empleado.empresa_id=asignacion.empresa_id and empleado.empl_rut = asignacion.rut_empleado) "
+                    + "inner join turno_rotativo turno on (asignacion.id_turno = turno.id_turno) "
+                    + "inner join empresa on (empleado.empresa_id = empresa.empresa_id) "
                 + "where empleado.empresa_id = '" + _empresaId + "' "
                 + "and empl_rut='" + _rutEmpleado + "' "
                 + " and '["+_fechaDesde+", "+_fechaHasta+"]'::daterange @> fecha_desde ";
-//                    + "and ('"+_fechaDesde+"' between fecha_desde::date and fecha_hasta::date or " +
-//                "'"+_fechaHasta+"' between fecha_desde::date and fecha_hasta::date) ";
             
             if (_idTurno > 0){
                 sql += " and asignacion.id_turno <> " + _idTurno;
@@ -1218,6 +1137,11 @@ public class TurnoRotativoDAO extends BaseDAO{
         return lista;
     }
     
+    /**
+    * 
+     * @param _asignaciones
+     * @throws java.sql.SQLException
+    */
     public void insertarAsignaciones(ArrayList<AsignacionTurnoRotativoVO> _asignaciones) throws SQLException{
         
         try{
@@ -1288,14 +1212,15 @@ public class TurnoRotativoDAO extends BaseDAO{
         }
         finally{
             dbLocator.freeConnection(dbConn);
-//            try {
-//                //dbLocator.freeConnection(dbConn);
-//            } catch (SQLException|DatabaseException ex) {
-//                System.err.println("Error: "+ex.toString());
-//            }
+
         }
     }
-    
+
+    /**
+    * 
+    * @param _asignaciones
+    * @throws java.sql.SQLException
+    */
     public void eliminarAsignaciones(ArrayList<AsignacionTurnoRotativoVO> _asignaciones) throws SQLException{
         
         try{
@@ -1347,19 +1272,14 @@ public class TurnoRotativoDAO extends BaseDAO{
         }
         finally{
             dbLocator.freeConnection(dbConn);
-//            try {
-//                //dbLocator.freeConnection(dbConn);
-//            } catch (SQLException|DatabaseException ex) {
-//                System.err.println("Error: "+ex.toString());
-//            }
-        }
+       }
     }
     
     /**
-     * Agrega una nueva asignacion de turno rotativo
-     * @param _data
-     * @return 
-     */
+    * Agrega una nueva asignacion de turno rotativo
+    * @param _data
+    * @return 
+    */
     public ResultCRUDVO insertAsignacion(AsignacionTurnoRotativoVO _data){
         ResultCRUDVO objresultado = new ResultCRUDVO();
         int result=0;
@@ -1385,9 +1305,12 @@ public class TurnoRotativoDAO extends BaseDAO{
         
         try{
             String sql = "INSERT INTO turno_rotativo_asignacion("
-                + "empresa_id, rut_empleado, id_turno, id_duracion, fecha_desde,fecha_hasta, fecha_asignacion, fecha_ultima_actualizacion) "
+                    + "empresa_id, rut_empleado, id_turno, id_duracion, "
+                    + "fecha_desde,fecha_hasta, "
+                    + "fecha_asignacion, fecha_ultima_actualizacion) "
                 + " VALUES (?, ?, ?, ?, '" + _data.getFechaDesde() 
-                + "', '" + _data.getFechaHasta() + "', current_timestamp, current_timestamp)";
+                    + "', '" + _data.getFechaHasta() + "', "
+                    + "current_timestamp, current_timestamp)";
 
             dbConn = dbLocator.getConnection(m_dbpoolName,"[TurnoRotativoDAO.insertAsignacion]");
             insert = dbConn.prepareStatement(sql);
@@ -1455,8 +1378,8 @@ public class TurnoRotativoDAO extends BaseDAO{
         
         try{
             String sql = "DELETE "
-                    + "FROM turno_rotativo_asignacion "
-                    + "WHERE empresa_id = ? "
+                + "FROM turno_rotativo_asignacion "
+                + "WHERE empresa_id = ? "
                     + "and rut_empleado=? "
                     + "and id_turno=? "
                     + "and fecha_desde='" + _data.getFechaDesde() + "' "
@@ -1470,7 +1393,7 @@ public class TurnoRotativoDAO extends BaseDAO{
             
             int filasAfectadas = insert.executeUpdate();
             if (filasAfectadas == 1){
-                System.out.println(WEB_NAME+"[TurnoRotativoDAO.delete turno_rotativo_asignacion]"
+                System.out.println(WEB_NAME + "[TurnoRotativoDAO.delete turno_rotativo_asignacion]"
                     + ", empresaId:" + _data.getEmpresaId()
                     + ", rutEmpleado:" + _data.getRutEmpleado()
                     + ", idTurno:" + _data.getIdTurno()
@@ -1482,7 +1405,8 @@ public class TurnoRotativoDAO extends BaseDAO{
             insert.close();
             dbLocator.freeConnection(dbConn);
         }catch(SQLException|DatabaseException sqle){
-            System.err.println("TurnoRotativoDAO.delete turno_rotativo_asignacion Error1: "+sqle.toString());
+            System.err.println("TurnoRotativoDAO.delete "
+                + "turno_rotativo_asignacion Error1: "+sqle.toString());
             objresultado.setThereError(true);
             objresultado.setCodError(result);
             objresultado.setMsgError(msgError+" :"+sqle.toString());
@@ -1499,12 +1423,12 @@ public class TurnoRotativoDAO extends BaseDAO{
     }
     
     /**
-     * Modifica una asignacion de turno rotativo
-     * 
-     * @param _currentAsignacion
-     * @param _updatedAsignacion
-     * @return 
-     */
+    * Modifica una asignacion de turno rotativo
+    * 
+    * @param _currentAsignacion
+    * @param _updatedAsignacion
+    * @return 
+    */
     public ResultCRUDVO modifyAsignacion(AsignacionTurnoRotativoVO _currentAsignacion, 
             AsignacionTurnoRotativoVO _updatedAsignacion){
         ResultCRUDVO objresultado = new ResultCRUDVO();
@@ -1538,7 +1462,7 @@ public class TurnoRotativoDAO extends BaseDAO{
                     + "fecha_desde = '" + _updatedAsignacion.getFechaDesde() + "',"
                     + "fecha_hasta = '" + _updatedAsignacion.getFechaHasta() + "',"
                     + "fecha_ultima_actualizacion = current_timestamp "
-                    + " where empresa_id = ? "
+                + " where empresa_id = ? "
                     + "and rut_empleado = ? "
                     + "and id_turno = ? "
                     + "and id_duracion = ? "
@@ -1598,14 +1522,14 @@ public class TurnoRotativoDAO extends BaseDAO{
     }
     
     /**
-     * Retorna asignacion turno rotativo
-     * 
-     * 
-     * @param _empresaId
-     * @param _rutEmpleado
-     * @param _fecha
-     * @return 
-     */
+    * Retorna asignacion turno rotativo
+    * 
+    * 
+    * @param _empresaId
+    * @param _rutEmpleado
+    * @param _fecha
+    * @return 
+    */
     public String getAsignacionTurnoByFechaJson(String _empresaId, 
             String _rutEmpleado,
             String _fecha){
@@ -1668,24 +1592,25 @@ public class TurnoRotativoDAO extends BaseDAO{
         
         try{
             String sql = "select "
-                + "asignacion.id_turno,"
-                + "turno.nombre_turno,"
-                + "turno.hora_entrada,"
-                + "turno.hora_salida,"
-                + "coalesce(turno.holgura,0) holgura," 
-                + "turno.minutos_colacion "
+                    + "asignacion.id_turno,"
+                    + "turno.nombre_turno,"
+                    + "turno.hora_entrada,"
+                    + "turno.hora_salida,"
+                    + "coalesce(turno.holgura,0) holgura," 
+                    + "turno.minutos_colacion "
                 + "from turno_rotativo_asignacion asignacion "
-                + "inner join turno_rotativo turno "
-                + "on (turno.empresa_id = asignacion.empresa_id "
-                + "and turno.id_turno = asignacion.id_turno) "
+                    + "inner join turno_rotativo turno "
+                    + "on (turno.empresa_id = asignacion.empresa_id "
+                    + "and turno.id_turno = asignacion.id_turno) "
                 + "where asignacion.empresa_id='" + _empresaId + "' "
-                + "and asignacion.rut_empleado='" + _rutEmpleado + "' "
-                + "and '" + _fecha + "' between asignacion.fecha_desde "
-                + "and asignacion.fecha_hasta";
+                    + "and asignacion.rut_empleado='" + _rutEmpleado + "' "
+                    + "and '" + _fecha + "' between asignacion.fecha_desde "
+                    + "and asignacion.fecha_hasta";
                     
             System.out.println(WEB_NAME+"[TurnoRotativoDAO."
                 + "getAsignacionTurnoByFecha]Sql: "+sql);
-            dbConn = dbLocator.getConnection(m_dbpoolName,"[TurnoRotativoDAO.getAsignacionTurnoByFecha]");
+            dbConn = dbLocator.getConnection(m_dbpoolName,
+                "[TurnoRotativoDAO.getAsignacionTurnoByFecha]");
             ps = dbConn.prepareStatement(sql);
             rs = ps.executeQuery();
 
@@ -1724,7 +1649,6 @@ public class TurnoRotativoDAO extends BaseDAO{
                 data.setTotalHoras(diferenciaET.getIntDiferenciaHoras());
                 data.setHolgura(rs.getInt("holgura"));
                 data.setMinutosColacion(rs.getInt("minutos_colacion"));
-                //data.setMinutosColacion(rs.getInt("minutos_colacion"));
             }
 
             ps.close();
@@ -1848,31 +1772,32 @@ public class TurnoRotativoDAO extends BaseDAO{
         
         try{
             String sql = "SELECT "
-                    + "turno.id_turno,"
-                    + "turno.nombre_turno,"
-                    + "turno.empresa_id,"
-                    + "turno.holgura, "
-                    + "turno.estado_turno,"
-                    + "to_char(turno.hora_entrada,'HH24:mi') hora_entrada,"
-                    + "to_char(turno.hora_salida,'HH24:mi') hora_salida,"
-                    + "turno.fecha_creacion, "
-                    + "turno.fecha_modificacion, "
-                    + "turno.minutos_colacion, "
-                    + "'S' rotativo "
-                + "from turno_rotativo turno "
-                + "where turno.empresa_id = '" + _empresaId + "' and turno.id_turno<>-1 "
-                    + "and turno.estado_turno = 1 and turno.id_turno not in ("
-                    + "select id_turno "
-                    + "from turno_rotativo_centrocosto "
-                    + "where turno_rotativo_centrocosto.empresa_id = '" + _empresaId + "' "
-                    + "and turno_rotativo_centrocosto.depto_id = '" + _deptoId + "' "
-                    + "and turno_rotativo_centrocosto.cenco_id = " + _cencoId + " "
-                    + ") "
+                + "turno.id_turno,"
+                + "turno.nombre_turno,"
+                + "turno.empresa_id,"
+                + "turno.holgura, "
+                + "turno.estado_turno,"
+                + "to_char(turno.hora_entrada,'HH24:mi') hora_entrada,"
+                + "to_char(turno.hora_salida,'HH24:mi') hora_salida,"
+                + "turno.fecha_creacion, "
+                + "turno.fecha_modificacion, "
+                + "turno.minutos_colacion, "
+                + "'S' rotativo "
+            + "from turno_rotativo turno "
+            + "where turno.empresa_id = '" + _empresaId + "' and turno.id_turno<>-1 "
+                + "and turno.estado_turno = 1 and turno.id_turno not in ("
+                + "select id_turno "
+                + "from turno_rotativo_centrocosto "
+                + "where turno_rotativo_centrocosto.empresa_id = '" + _empresaId + "' "
+                + "and turno_rotativo_centrocosto.depto_id = '" + _deptoId + "' "
+                + "and turno_rotativo_centrocosto.cenco_id = " + _cencoId + " "
+                + ") "
                 + "order by turno.nombre_turno";
 
             System.out.println(WEB_NAME+"[TurnoRotativoDAO."
                 + "getTurnosNoAsignadosByCenco]sql: "+ sql);
-            dbConn = dbLocator.getConnection(m_dbpoolName,"[TurnoRotativoDAO.getTurnosNoAsignadosByCenco]");
+            dbConn = dbLocator.getConnection(m_dbpoolName,
+                "[TurnoRotativoDAO.getTurnosNoAsignadosByCenco]");
             ps = dbConn.prepareStatement(sql);
             rs = ps.executeQuery();
 
@@ -1884,6 +1809,7 @@ public class TurnoRotativoDAO extends BaseDAO{
                 turno.setRotativo(rs.getString("rotativo"));
                 turno.setHoraEntrada(rs.getString("hora_entrada"));
                 turno.setHoraSalida(rs.getString("hora_salida"));
+                
                 lista.put(turno.getId(),turno);
             }
 
@@ -1904,7 +1830,6 @@ public class TurnoRotativoDAO extends BaseDAO{
         return lista;
     }
     
-    
     /**
     * 
     * @param _asignaciones
@@ -1913,7 +1838,8 @@ public class TurnoRotativoDAO extends BaseDAO{
     public void eliminarAsignacionesCencos(ArrayList<TurnoCentroCostoVO> _asignaciones) throws SQLException{
         
         try{
-            dbConn = dbLocator.getConnection(m_dbpoolName,"[TurnoRotativoDAO.eliminarAsignacionesCencos]");
+            dbConn = dbLocator.getConnection(m_dbpoolName,
+                "[TurnoRotativoDAO.eliminarAsignacionesCencos]");
             int i = 0;
             System.out.println(WEB_NAME+"[TurnoRotativoDAO.eliminarAsignacionesCencos]"
                 + "items a eliminar: " + _asignaciones.size());
@@ -1926,7 +1852,7 @@ public class TurnoRotativoDAO extends BaseDAO{
             PreparedStatement statement = dbConn.prepareStatement(sqlDelete);
             
             for (TurnoCentroCostoVO asignacion : _asignaciones) {
-                System.out.println(WEB_NAME+"[TurnoRotativoDAO.eliminarAsignacionesCencos] "
+                System.out.println(WEB_NAME + "[TurnoRotativoDAO.eliminarAsignacionesCencos] "
                     + "Eliminar asignacion turno. "
                     + "EmpresaId= " + asignacion.getEmpresaId()    
                     + ",deptoId= " + asignacion.getDeptoId()
@@ -2020,11 +1946,6 @@ public class TurnoRotativoDAO extends BaseDAO{
         }
         finally{
             dbLocator.freeConnection(dbConn);
-//            try {
-//                //dbLocator.freeConnection(dbConn);
-//            } catch (SQLException|DatabaseException ex) {
-//                System.err.println("Error: "+ex.toString());
-//            }
         }
     }
     

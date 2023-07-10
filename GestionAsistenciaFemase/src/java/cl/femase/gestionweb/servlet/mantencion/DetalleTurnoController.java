@@ -34,6 +34,7 @@ public class DetalleTurnoController extends BaseServlet {
         
     }
 
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(true);
         if (session!=null) session.removeAttribute("mensaje");else session = request.getSession();
@@ -126,11 +127,11 @@ public class DetalleTurnoController extends BaseServlet {
             System.out.println(WEB_NAME+"cl.femase.gestionweb.servlet."
                 + "mantencion.DetalleTurnoController."
                 + "processRequest()."
-                + "param idTurno= "+request.getParameter("idTurno")
-                + ",param codDia= "+request.getParameter("codDia")
-                + ",param horaEntrada= "+request.getParameter("horaEntrada")
-                + ",param horaSalida= "+request.getParameter("horaSalida")
-            );
+                + "param idTurno= " + request.getParameter("idTurno")
+                + ", param codDia= " + request.getParameter("codDia")
+                + ", param horaEntrada= " + request.getParameter("horaEntrada")
+                + ", param horaSalida= " + request.getParameter("horaSalida") );
+            
             if (request.getParameter("idTurno")!=null){
                 auxdata.setIdTurno(Integer.parseInt(request.getParameter("idTurno")));
             }

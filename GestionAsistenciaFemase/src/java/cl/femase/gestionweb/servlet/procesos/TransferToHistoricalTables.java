@@ -95,6 +95,7 @@ public class TransferToHistoricalTables extends BaseServlet {
             ResultCRUDVO resultado = new ResultCRUDVO();
             int filasEliminadas = 0;
             switch (tabla){
+                
                 case "marca":
                     resultado = historicosDao.traspasaMarcasHistoricas(empresa, startDate, endDate);
                     break;

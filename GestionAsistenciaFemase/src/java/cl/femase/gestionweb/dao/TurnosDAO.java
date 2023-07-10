@@ -91,10 +91,10 @@ public class TurnosDAO extends BaseDAO{
     }
     
     /**
-     * Actualiza un turno
-     * @param _data
-     * @return 
-     */
+    * Actualiza un turno
+    * @param _data
+    * @return 
+    */
     public ResultCRUDVO update(TurnoVO _data){
         ResultCRUDVO objresultado = new ResultCRUDVO();
         PreparedStatement psupdate = null;
@@ -125,11 +125,11 @@ public class TurnosDAO extends BaseDAO{
 
             dbConn = dbLocator.getConnection(m_dbpoolName,"[TurnosDAO.update]");
             psupdate = dbConn.prepareStatement(sql);
-            psupdate.setString(1,  _data.getNombre());
-            psupdate.setInt(2,  _data.getEstado());
-            psupdate.setString(3,  _data.getEmpresaId());
-            psupdate.setBoolean(4,  _data.isRotativo());
-            psupdate.setInt(5,  _data.getId());
+            psupdate.setString(1, _data.getNombre());
+            psupdate.setInt(2, _data.getEstado());
+            psupdate.setString(3, _data.getEmpresaId());
+            psupdate.setBoolean(4, _data.isRotativo());
+            psupdate.setInt(5, _data.getId());
             int rowAffected = psupdate.executeUpdate();
             if (rowAffected == 1){
                 System.out.println(WEB_NAME+"[update]turno"
@@ -168,8 +168,8 @@ public class TurnosDAO extends BaseDAO{
         String msgError = "Error al insertar "
             + "turno. "
             + " empresaId: " + _data.getEmpresaId()
-            + ",nombre: " + _data.getNombre()
-            + ",rotativo?: " + _data.isRotativo();
+            + ", nombre: " + _data.getNombre()
+            + ", rotativo?: " + _data.isRotativo();
         
        String msgFinal = " Inserta turno:"
             + "empresaId [" + _data.getEmpresaId() + "]"
@@ -186,7 +186,7 @@ public class TurnosDAO extends BaseDAO{
                 + "estado_turno, "
                 + "fecha_creacion, "
                 + "empresa_id, rotativo) "
-                + " VALUES (nextval('turno_id_seq'), ?, ?, current_timestamp,?,?)";
+                + " VALUES (nextval('turno_id_seq'), ?, ?, current_timestamp, ?, ?)";
 
             dbConn = dbLocator.getConnection(m_dbpoolName,"[TurnosDAO.insert]");
             insert = dbConn.prepareStatement(sql);
@@ -293,7 +293,7 @@ public class TurnosDAO extends BaseDAO{
                 data.setFechaModificacion(rs.getDate("fecha_modificacion"));
                 data.setFechaModificacionAsStr(rs.getString("fecha_modificacion_str"));
                 data.setRotativo(rs.getString("rotativo"));
-                        
+                
                 lista.add(data);
             }
 
@@ -369,8 +369,8 @@ public class TurnosDAO extends BaseDAO{
                 turno.setFechaAsignacionStr(rs.getString("fecha_asignacion"));
                 turno.setCencoNombre(rs.getString("ccosto_nombre"));
                 turno.setRotativo(rs.getString("rotativo"));
-                
                 lista.put(turno.getId(),turno);
+                
             }
 
             ps.close();
@@ -390,17 +390,16 @@ public class TurnosDAO extends BaseDAO{
         return lista;
     }
     
-    
     /**
-     * Retorna lista con los turnos normales asignados al cenco. 
-     * y con todos los turnos rotativos
-     * 
-     * @param _empresaId
-     * @param _deptoId
-     * @param _cencoId
-     * 
-     * @return 
-     */
+    * Retorna lista con los turnos normales asignados al cenco. 
+    * y con todos los turnos rotativos
+    * 
+    * @param _empresaId
+    * @param _deptoId
+    * @param _cencoId
+    * 
+    * @return 
+    */
     public LinkedHashMap<Integer, TurnoVO> getAllTurnosAsignadosByCenco(String _empresaId,
             String _deptoId, 
             int _cencoId){
@@ -413,28 +412,29 @@ public class TurnosDAO extends BaseDAO{
         
         try{
             String sql = "SELECT "
-                + "turno.id_turno,"
-                + "turno.nombre_turno,"
-                + "false rotativo "
+                    + "turno.id_turno,"
+                    + "turno.nombre_turno,"
+                    + "false rotativo "
                 + "FROM turno "
-                + "inner join turno_centrocosto tcc "
-                + "on (turno.empresa_id = tcc.empresa_id and turno.id_turno = tcc.id_turno) "
-                + "inner join centro_costo on (centro_costo.ccosto_id = tcc.cenco_id and centro_costo.depto_id = tcc.depto_id) "
+                    + "inner join turno_centrocosto tcc "
+                    + "on (turno.empresa_id = tcc.empresa_id and turno.id_turno = tcc.id_turno) "
+                    + "inner join centro_costo on (centro_costo.ccosto_id = tcc.cenco_id and centro_costo.depto_id = tcc.depto_id) "
                 + "where (tcc.empresa_id = '" + _empresaId + "' "
                 + " and tcc.depto_id = '" + _deptoId + "' "
                 + " and cenco_id = " + _cencoId + ") "
                 + " union "
-                + "select "
-                + "id_turno,"
-                + "nombre_turno,"
-                + "true rotativo "
-                + "from turno_rotativo "
-                + "where empresa_id = '" + _empresaId + "' "
+                    + "select "
+                        + "id_turno,"
+                        + "nombre_turno,"
+                        + "true rotativo "
+                    + "from turno_rotativo "
+                    + "where empresa_id = '" + _empresaId + "' "
                 + "order by nombre_turno";
             
             System.out.println(WEB_NAME+"[TurnosDAO."
                 + "getAllTurnosAsignadosByCenco]sql: " + sql);
-            dbConn = dbLocator.getConnection(m_dbpoolName,"[TurnosDAO.getAllTurnosAsignadosByCenco]");
+            dbConn = dbLocator.getConnection(m_dbpoolName,
+                "[TurnosDAO.getAllTurnosAsignadosByCenco]");
             ps = dbConn.prepareStatement(sql);
             rs = ps.executeQuery();
 
@@ -485,30 +485,31 @@ public class TurnosDAO extends BaseDAO{
         
         try{
             String sql = "SELECT "
-                + "turno.id_turno,"
-                + "turno.nombre_turno,"
-                + "turno.empresa_id,"
-                + "turno.holgura, "
-                + "turno.estado_turno, "
-                + "turno.fecha_creacion, "
-                + "turno.fecha_modificacion, "
-                + "turno.minutos_colacion, "
-                + "CASE WHEN turno.rotativo THEN 'S' ELSE 'N' END rotativo "
+                    + "turno.id_turno,"
+                    + "turno.nombre_turno,"
+                    + "turno.empresa_id,"
+                    + "turno.holgura, "
+                    + "turno.estado_turno, "
+                    + "turno.fecha_creacion, "
+                    + "turno.fecha_modificacion, "
+                    + "turno.minutos_colacion, "
+                    + "CASE WHEN turno.rotativo THEN 'S' ELSE 'N' END rotativo "
                 + "from turno "
                 + "where turno.empresa_id = '" + _empresaId + "' and turno.id_turno<>-1 "
-                + "and turno.estado_turno = 1 "
-                + "and turno.id_turno not in ("
-                    + "select id_turno "
-                    + "from turno_centrocosto "
-                    + "where turno_centrocosto.empresa_id = '" + _empresaId + "' "
-                    + "and turno_centrocosto.depto_id = '" + _deptoId + "' "
-                    + "and turno_centrocosto.cenco_id = " + _cencoId + " "
+                    + "and turno.estado_turno = 1 "
+                        + "and turno.id_turno not in ("
+                        + "select id_turno "
+                        + "from turno_centrocosto "
+                        + "where turno_centrocosto.empresa_id = '" + _empresaId + "' "
+                            + " and turno_centrocosto.depto_id = '" + _deptoId + "' "
+                            + " and turno_centrocosto.cenco_id = " + _cencoId + " "
                 + ") "
                 + "order by turno.nombre_turno";
 
             System.out.println(WEB_NAME+"[TurnosDAO."
                 + "getTurnosNoAsignadosByCenco]sql: "+ sql);
-            dbConn = dbLocator.getConnection(m_dbpoolName,"[TurnosDAO.getTurnosNoAsignadosByCenco]");
+            dbConn = dbLocator.getConnection(m_dbpoolName,
+                "[TurnosDAO.getTurnosNoAsignadosByCenco]");
             ps = dbConn.prepareStatement(sql);
             rs = ps.executeQuery();
 
@@ -730,22 +731,20 @@ public class TurnosDAO extends BaseDAO{
     }
     
     /**
-     * Retorna lista con los turnos asignados a empleados 
-     * pertenecientes a alguno de los cencos especificados
-     * 
-     * @param _empresaId
-     * @param _cencosUsuario
-     * @return 
-     */
+    * Retorna lista con los turnos asignados a empleados 
+    * pertenecientes a alguno de los cencos especificados
+    * 
+    * @param _empresaId
+    * @param _cencosUsuario
+    * @return 
+    */
     public List<TurnoVO> getTurnosByCencos(String _empresaId, 
             List<UsuarioCentroCostoVO> _cencosUsuario){
         
         List<TurnoVO> lista = new ArrayList<>();
-        
         PreparedStatement ps = null;
         ResultSet rs = null;
         TurnoVO data;
-        
         try{
             String strCencos = "";
             Iterator<UsuarioCentroCostoVO> it = _cencosUsuario.iterator();
@@ -812,30 +811,27 @@ public class TurnosDAO extends BaseDAO{
     
     /**
     * 
-     * @param _idTurno
-     * @return 
+    * @param _idTurno
+    * @return 
     */
     public TurnoVO getTurno(int _idTurno){
-        
         PreparedStatement ps = null;
         ResultSet rs = null;
         TurnoVO data=null;
-        
         try{
             String sql ="SELECT "
-                    + "id_turno, "
-                    + "nombre_turno,"
-                    + "empresa_id, "
-                    + "estado_turno, "
-                    + "fecha_creacion,"
-                    + "fecha_modificacion,"
-                    + "to_char(fecha_creacion, 'yyyy-MM-dd HH24:MI:SS') fecha_creacion_str, "
-                    + "to_char(fecha_modificacion, 'yyyy-MM-dd HH24:MI:SS') fecha_modificacion_str,"
-                    + " CASE WHEN rotativo THEN 'S' ELSE 'N' END rotativo "
-                + "FROM turno "
-                + "where id_turno= "+_idTurno;
+                + "id_turno, "
+                + "nombre_turno,"
+                + "empresa_id, "
+                + "estado_turno, "
+                + "fecha_creacion,"
+                + "fecha_modificacion,"
+                + "to_char(fecha_creacion, 'yyyy-MM-dd HH24:MI:SS') fecha_creacion_str, "
+                + "to_char(fecha_modificacion, 'yyyy-MM-dd HH24:MI:SS') fecha_modificacion_str,"
+                + " CASE WHEN rotativo THEN 'S' ELSE 'N' END rotativo "
+            + "FROM turno "
+            + "where id_turno= "+_idTurno;
             
-//            System.out.println(WEB_NAME+"[TurnosDAO.getTurno]sql: "+sql);
             dbConn = dbLocator.getConnection(m_dbpoolName,"[TurnosDAO.getTurno]");
             ps = dbConn.prepareStatement(sql);
             rs = ps.executeQuery();
@@ -853,7 +849,6 @@ public class TurnosDAO extends BaseDAO{
                 data.setFechaModificacionAsStr(rs.getString("fecha_modificacion_str"));
                 
                 data.setRotativo(rs.getString("rotativo"));
-                
             }
 
             ps.close();
@@ -875,12 +870,11 @@ public class TurnosDAO extends BaseDAO{
     }
     
     /**
-     * 
-     * @param _empresaId
-     * @return 
-     */
+    * 
+    * @param _empresaId
+    * @return 
+    */
     public int getTurnoRotativo(String _empresaId){
-        
         PreparedStatement ps = null;
         ResultSet rs = null;
         int idTurno=0;
@@ -889,14 +883,13 @@ public class TurnosDAO extends BaseDAO{
                 + "id_turno "
                 + "FROM turno "
                 + "where rotativo= true and empresa_id='"+_empresaId+"'";
-            dbConn = dbLocator.getConnection(m_dbpoolName,"[TurnosDAO.getTurnoRotativo]empresa_id="+_empresaId);
+            dbConn = dbLocator.getConnection(m_dbpoolName,
+                "[TurnosDAO.getTurnoRotativo]empresa_id="+_empresaId);
             ps = dbConn.prepareStatement(sql);
             rs = ps.executeQuery();
-
             if (rs.next()){
                 idTurno = rs.getInt("id_turno");
             }
-
             ps.close();
             rs.close();
             dbLocator.freeConnection(dbConn);
@@ -917,12 +910,12 @@ public class TurnosDAO extends BaseDAO{
     
     /**
     * 
-     * @param _idTurno
-     * @param _empresaId
-     * @param _deptoId
-     * @param _cencoId
-     * @param cargoId
-     * @return 
+    * @param _idTurno
+    * @param _empresaId
+    * @param _deptoId
+    * @param _cencoId
+    * @param cargoId
+    * @return 
     */
     public List<EmpleadoVO> getEmpleados(int _idTurno,
             String _empresaId,
@@ -962,11 +955,6 @@ public class TurnosDAO extends BaseDAO{
             if (cargoId != -1){        
                 sql += " and empl_id_cargo = "+cargoId+" ";
             }
-            
-//            System.out.println(WEB_NAME+"cl.femase.gestionweb."
-//                + "service.TurnosSrv.getEmpleados()."
-//                + " SQL: "+sql);
-            
             dbConn = dbLocator.getConnection(m_dbpoolName,"[TurnosDAO.getEmpleados]");
             ps = dbConn.prepareStatement(sql);
             rs = ps.executeQuery();
@@ -999,12 +987,12 @@ public class TurnosDAO extends BaseDAO{
     
     /**
     * 
-     * @param _idTurno
-     * @param _empresaId
-     * @param _deptoId
-     * @param _cencoId
-     * @param cargoId
-     * @return 
+    * @param _idTurno
+    * @param _empresaId
+    * @param _deptoId
+    * @param _cencoId
+    * @param cargoId
+    * @return 
     */
     public List<EmpleadoVO> getEmpleadosNoAsignados(int _idTurno,
             String _empresaId,

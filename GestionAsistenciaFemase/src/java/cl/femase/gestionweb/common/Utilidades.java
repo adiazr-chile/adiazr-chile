@@ -1473,9 +1473,9 @@ public class Utilidades {
      * @return 
      */
     public static DiferenciaHorasVO getTimeDifference(String _fechaHoraInicio, String _fechaHoraFin){
-        System.out.println(WEB_NAME+"[Utilidades.getTimeDifference]"
-            + "fechaHoraInicio: " + _fechaHoraInicio
-            + ", fechaHoraFin: " + _fechaHoraFin);
+//        System.out.println(WEB_NAME+"[Utilidades.getTimeDifference]"
+//            + "fechaHoraInicio: " + _fechaHoraInicio
+//            + ", fechaHoraFin: " + _fechaHoraFin);
         SimpleDateFormat fechaFormat = new SimpleDateFormat("yyyy-MM-dd");
         String soloFechaInicio  = "";
         String soloFechaFin     = "";
@@ -1504,8 +1504,8 @@ public class Utilidades {
         
             if (fechaInicial!=null && (soloFechaInicio.compareTo(soloFechaFin)!=0 && fechaInicial.after(fechaFinal))){
                 //sumar un dia a la fecha de salida(final)
-                System.out.println(WEB_NAME+"[Utilidades.getTimeDifference]Fechas distintas (turno de noche). "
-                    + "Sumar un dia a la fecha de salida(final)");
+//                System.out.println(WEB_NAME+"[Utilidades.getTimeDifference]Fechas distintas (turno de noche). "
+//                    + "Sumar un dia a la fecha de salida(final)");
                 Date newDate = sumaRestarFecha(fechaFinal, 1, "DAYS");
                 Calendar newCal = Calendar.getInstance(new Locale("es", "CL"));
                 newCal.setTime(newDate);
@@ -1550,8 +1550,8 @@ public class Utilidades {
         resultado.setIntDiferenciaMinutos(Integer.parseInt(strmm));
         resultado.setIntDiferenciaSegundos(Integer.parseInt(strss));
         
-        System.out.println(WEB_NAME+"[Utilidades.getTimeDifference]"
-            + "Diferencia hh:mm:ss: "+ (strhh + ":" + strmm + ":" + strss) );
+//        System.out.println(WEB_NAME+"[Utilidades.getTimeDifference]"
+//            + "Diferencia hh:mm:ss: "+ (strhh + ":" + strmm + ":" + strss) );
         
         return resultado;
     }

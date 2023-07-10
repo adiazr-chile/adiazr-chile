@@ -227,9 +227,15 @@ public class VisorMarcasBp  extends BaseBp{
                     + ", ausencia por hora = " + registro.getAusenciaPorHora());
             }else if (registro.getIdTurnoAsignado() == -1){
                     String aux = "";
+                    boolean tieneMarcas=false;
+                    
                     if (registro.getFechaHoraMarca()!=null){
                         aux = ". " + registro.getLabelTipoMarca()
                             + ", fechaHora:" + registro.getFechaHoraMarca();
+                        tieneMarcas = true;
+                        System.out.println(WEB_NAME+"[VisorMarcasBp.setMarcasTurnoNormal]"
+                            + "Fecha = " + DIAS_SEMANA.get(registro.getCodDia()) + " " + registro.getFechaLabel() 
+                            + " ---> Libre, tipo_marca: " + registro.getTipoMarca() );
                     }
                     registro.setFieldFecha(DIAS_SEMANA.get(registro.getCodDia()) + " " + registro.getFechaLabel());
                     registro.setLabelTurno("Sin turno");
@@ -240,13 +246,14 @@ public class VisorMarcasBp  extends BaseBp{
                         registro.setTipoEvento(LIBRE);    
                         registro.setFieldEvento(TIPO_EVENTO.get(LIBRE)+ aux );
                         registro.setMasInfo(registro.getFieldEvento());
-                        registro.setTipoMarca(LIBRE);
+                        if (!tieneMarcas) registro.setTipoMarca(LIBRE);
+                        
                     }else{
                         System.out.println(WEB_NAME+"[VisorMarcasBp.setMarcasTurnoNormal]"
                             + "Fecha = " + DIAS_SEMANA.get(registro.getCodDia()) + " " + registro.getFechaLabel() 
                             + " ---> Feriado(" + registro.getLabelCalendario() + ")");
                         registro.setTipoEvento(FERIADO);
-                        registro.setTipoMarca(FERIADO);
+                        if (!tieneMarcas) registro.setTipoMarca(FERIADO);
                         registro.setFieldEvento("Feriado (" + registro.getLabelCalendario() + ")"+ aux);
                         registro.setMasInfo(registro.getFieldEvento());
                     }

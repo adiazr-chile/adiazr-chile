@@ -34,6 +34,7 @@ public class DetalleTurnoVO implements Serializable{
         
     }
 
+    
     public String getNocturno() {
         return nocturno;
     }

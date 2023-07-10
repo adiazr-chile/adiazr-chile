@@ -193,9 +193,9 @@ public class DetalleAsistenciaHistController extends BaseServlet {
                 + ",endDate=" + endDate);
 
             if (request.getParameter("action").compareTo("calcular") == 0){
-              ResultCRUDVO resultadoCalculo = new ResultCRUDVO();
-              CalculoAsistenciaBp calculoBp=new CalculoAsistenciaBp(appProperties);
-              if (filtroEmpresa.compareTo("-1") != 0 
+                ResultCRUDVO resultadoCalculo = new ResultCRUDVO();
+                CalculoAsistenciaBp calculoBp=new CalculoAsistenciaBp(appProperties);
+                if (filtroEmpresa.compareTo("-1") != 0 
                         && filtroDepto.compareTo("-1") != 0
                         && filtroCenco != -1){
                     System.out.println(WEB_NAME+"[GestionFemase."

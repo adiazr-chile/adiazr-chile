@@ -409,7 +409,46 @@ public class InfoMarcaVO implements Serializable{
 
     @Override
     public String toString() {
-        return "InfoMarcaVO{" + "rowKey=" + rowKey + ", fecha=" + fecha + ", fechaLabel=" + fechaLabel + ", codDia=" + codDia + ", empresaId=" + empresaId + ", rutEmpleado=" + rutEmpleado + ", fechaHoraMarca=" + fechaHoraMarca + ", horaMarca=" + horaMarca + ", fechaHoraMarcaLabel=" + fechaHoraMarcaLabel + ", tipoMarca=" + tipoMarca + ", codDispositivo=" + codDispositivo + ", idTurnoEmpleado=" + idTurnoEmpleado + ", idTurnoAsignado=" + idTurnoAsignado + ", labelTurno=" + labelTurno + ", horaEntradaTurno=" + horaEntradaTurno + ", horaSalidaTurno=" + horaSalidaTurno + ", minsColacion=" + minsColacion + ", turnoNocturno=" + turnoNocturno + ", numMarcas=" + numMarcas + ", tipoMarcaDuplicado=" + tipoMarcaDuplicado + ", labelCalendario=" + labelCalendario + ", fieldFecha=" + fieldFecha + ", fieldEvento=" + fieldEvento + ", hora=" + hora + ", minutos=" + minutos + ", segundos=" + segundos + ", id=" + id + ", hashcode=" + hashcode + ", comentario=" + comentario + ", fechaHoraActualizacion=" + fechaHoraActualizacion + ", codTipoMarcaManual=" + codTipoMarcaManual + ", nombreTipoMarcaManual=" + nombreTipoMarcaManual + ", ausenciaNombre=" + ausenciaNombre + ", ausenciaPorHora=" + ausenciaPorHora + ", fechaInicioAusencia=" + fechaInicioAusencia + ", fechaFinAusencia=" + fechaFinAusencia + ", tipoEvento=" + tipoEvento + ", masInfo=" + masInfo + ", horaInicioAusencia=" + horaInicioAusencia + ", horaFinAusencia=" + horaFinAusencia + '}';
+        return "InfoMarcaVO{" + "rowKey=" + rowKey 
+            + ", fecha=" + fecha 
+            + ", fechaLabel=" + fechaLabel 
+            + ", codDia=" + codDia 
+            + ", empresaId=" + empresaId 
+            + ", rutEmpleado=" + rutEmpleado 
+            + ", fechaHoraMarca=" + fechaHoraMarca 
+            + ", horaMarca=" + horaMarca 
+            + ", fechaHoraMarcaLabel=" + fechaHoraMarcaLabel 
+            + ", tipoMarca=" + tipoMarca 
+            + ", codDispositivo=" + codDispositivo 
+            + ", idTurnoEmpleado=" + idTurnoEmpleado 
+            + ", idTurnoAsignado=" + idTurnoAsignado 
+            + ", labelTurno=" + labelTurno 
+            + ", horaEntradaTurno=" + horaEntradaTurno 
+            + ", horaSalidaTurno=" + horaSalidaTurno 
+            + ", minsColacion=" + minsColacion 
+            + ", turnoNocturno=" + turnoNocturno 
+            + ", numMarcas=" + numMarcas 
+            + ", tipoMarcaDuplicado=" + tipoMarcaDuplicado 
+            + ", labelCalendario=" + labelCalendario 
+            + ", fieldFecha=" + fieldFecha 
+            + ", fieldEvento=" + fieldEvento 
+            + ", hora=" + hora 
+            + ", minutos=" + minutos 
+            + ", segundos=" + segundos 
+            + ", id=" + id 
+            + ", hashcode=" + hashcode 
+            + ", comentario=" + comentario 
+            + ", fechaHoraActualizacion=" + fechaHoraActualizacion 
+            + ", codTipoMarcaManual=" + codTipoMarcaManual 
+            + ", nombreTipoMarcaManual=" + nombreTipoMarcaManual 
+            + ", ausenciaNombre=" + ausenciaNombre 
+            + ", ausenciaPorHora=" + ausenciaPorHora 
+            + ", fechaInicioAusencia=" + fechaInicioAusencia 
+            + ", fechaFinAusencia=" + fechaFinAusencia 
+            + ", tipoEvento=" + tipoEvento 
+            + ", masInfo=" + masInfo 
+            + ", horaInicioAusencia=" + horaInicioAusencia 
+            + ", horaFinAusencia=" + horaFinAusencia + '}';
     }
 
        
