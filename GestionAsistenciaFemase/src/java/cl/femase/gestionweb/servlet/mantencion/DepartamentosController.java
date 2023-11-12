@@ -20,6 +20,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
 import java.util.Date;
+import java.util.logging.Level;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
@@ -96,7 +98,7 @@ public class DepartamentosController extends BaseServlet {
 
         if(request.getParameter("action") != null){
             System.out.println(WEB_NAME+"---->action is: " + request.getParameter("action"));
-            List<DepartamentoVO> listaObjetos = new ArrayList<DepartamentoVO>();
+            
             String action=(String)request.getParameter("action");
             Gson gson = new Gson();
             response.setContentType("application/json");
@@ -113,25 +115,21 @@ public class DepartamentosController extends BaseServlet {
             int numRecordsPerPage   = 10;
             String jtSorting        = "depto_nombre asc";
             /** filtros de busqueda */
-            String nombre      = "";
-            String empresaId   = "";
+            String filtroNombre      = "";
+            String filtroEmpresaId   = "";
             
-            if (request.getParameter("jtStartIndex") != null) 
-                startPageIndex = Integer.parseInt(request.getParameter("jtStartIndex"));
-            if (request.getParameter("jtPageSize") != null) 
-                numRecordsPerPage   = Integer.parseInt(request.getParameter("jtPageSize"));
-            if (request.getParameter("jtSorting") != null) 
-                jtSorting   = request.getParameter("jtSorting");
+            if (request.getParameter("filtroNombre") != null) 
+                filtroNombre  = request.getParameter("filtroNombre");
+            if (request.getParameter("filtroEmpresaId") != null) 
+                filtroEmpresaId = request.getParameter("filtroEmpresaId");
             
-            if (jtSorting.contains("id")) jtSorting = jtSorting.replaceFirst("id","depto_id");
-            else if (jtSorting.contains("nombre")) jtSorting = jtSorting.replaceFirst("nombre","depto_nombre");
-            else if (jtSorting.contains("empresaId")) jtSorting = jtSorting.replaceFirst("empresaId","empresa_id");
-            else if (jtSorting.contains("estado")) jtSorting = jtSorting.replaceFirst("estado","estado_id");
+            //Set filtros de busqueda seleccionados
+            request.setAttribute("filtroEmpresaId", filtroEmpresaId);
+            request.setAttribute("filtroNombre", filtroNombre);
             
-            if (request.getParameter("nombre") != null) 
-                nombre  = request.getParameter("nombre");
-            if (request.getParameter("empresaId") != null) 
-                empresaId = request.getParameter("empresaId");
+            System.out.println(WEB_NAME+"CRUD - Departamentos - "
+                + "filtroEmpresaId: " + filtroEmpresaId
+                + ", filtroNombre: " + filtroNombre);
             
             //objeto usado para update/insert
             DepartamentoVO auxdata = new DepartamentoVO();
@@ -152,83 +150,65 @@ public class DepartamentosController extends BaseServlet {
             }
                         
             if (action.compareTo("list")==0) {
-                System.out.println(WEB_NAME+"Mantenedor - Departamentos - "
-                    + "mostrando departamentos...");
-                try{
-                    int objectsCount = 0;
-                    if (request.getParameter("empresaId") != null && 
-                        request.getParameter("empresaId").compareTo("-1") != 0){
-                            listaObjetos = auxnegocio.getDepartamentos(empresaId, 
-                                nombre, 
-                                startPageIndex, 
-                                numRecordsPerPage, 
-                                jtSorting);
-                            //Get Total Record Count for Pagination
-                            objectsCount = auxnegocio.getDepartamentosCount(empresaId,
-                                nombre);
-                    }    
-                    
-                    //Convert Java Object to Json
-                    JsonElement element = gson.toJsonTree(listaObjetos,
-                        new TypeToken<List<DepartamentoVO>>() {}.getType());
-
-                    JsonArray jsonArray = element.getAsJsonArray();
-                    String listData=jsonArray.toString();
-                        
-                    //Return Json in the format required by jTable plugin
-                    listData="{\"Result\":\"OK\",\"Records\":" + 
-                        listData+",\"TotalRecordCount\": " + 
-                        objectsCount + "}";
-                    response.getWriter().print(listData);
-                    //request.getRequestDispatcher("/mantenedores/mantenedoresFrmSet.jsp").forward(request, response);
-                }catch(IOException ex){
-                    String error="{\"Result\":\"ERROR\",\"Message\":"+ex.getMessage()+"}";
-                    response.getWriter().print(error);
-                    ex.printStackTrace();
-                }   
+                System.out.println(WEB_NAME+"CRUD - Departamentos - "
+                    + "Listar departamentos...");
+                forwardToCRUDPage(request, response, auxnegocio, filtroEmpresaId, filtroNombre);
             }else if (action.compareTo("create") == 0) {
-                    System.out.println(WEB_NAME+"Mantenedor - Departamentos - Insertar Depto...");
-                    ResultCRUDVO doCreate = auxnegocio.insert(auxdata, resultado);					
-                    listaObjetos.add(auxdata);
-
-                    //Convert Java Object to Json
-                    String json=gson.toJson(auxdata);					
-                    //Return Json in the format required by jTable plugin
-                    String listData="{\"Result\":\"OK\",\"Record\":"+json+"}";											
-                    response.getWriter().print(listData);
+                    System.out.println(WEB_NAME+"CRUD - Departamentos - Insertar Depto...");
+                    ResultCRUDVO doCreate = auxnegocio.insert(auxdata, resultado);	
+                    
+                    forwardToCRUDPage(request, response, auxnegocio, auxdata.getEmpresaId(), filtroNombre);
             }else if (action.compareTo("update") == 0) {  
-                    System.out.println(WEB_NAME+"Mantenedor - Departamentos - Actualizar Depto...");
-                    try{
-                        ResultCRUDVO doUpdate = auxnegocio.update(auxdata, resultado);
-                        listaObjetos.add(auxdata);
-
-                        //Convert Java Object to Json
-                        String json=gson.toJson(auxdata);					
-                        //Return Json in the format required by jTable plugin
-                        String listData="{\"Result\":\"OK\",\"Record\":"+json+"}";											
-                        response.getWriter().print(listData);
-                        
-                    }catch(IOException ex){
-                        String error="{\"Result\":\"ERROR\",\"Message\":"+ex.getStackTrace().toString()+"}";
-                        response.getWriter().print(error);
-                    }
-            }
-            else if (action.compareTo("delete") == 0) {  
-                    //Delete record
-                    System.out.println(WEB_NAME+"Eliminando Depto- "
-                        + "Id: " + auxdata.getId()
+                    System.out.println(WEB_NAME+"CRUD - Departamentos - Actualizar Depto...");
+                    ResultCRUDVO doUpdate = auxnegocio.update(auxdata, resultado);
+                    forwardToCRUDPage(request, response, auxnegocio, filtroEmpresaId, filtroNombre);
+            }else if (action.compareTo("delete") == 0) {  
+                    //Delete record primary key
+                    auxdata.setEmpresaId(request.getParameter("empresaIdDelete"));
+                    auxdata.setId(request.getParameter("idDelete"));
+                    
+                    System.out.println(WEB_NAME+"CRUD- Eliminando Depto- "
+                        + "empresaId: " + auxdata.getEmpresaId()
+                        + ", Id depto: " + auxdata.getId()
                         +", nombre: "+ auxdata.getNombre());
                     try{
                         auxnegocio.delete(auxdata, resultado);
-                        String listData="{\"Result\":\"OK\"}";								
-                        response.getWriter().print(listData);
-                        
+                        forwardToCRUDPage(request, response, auxnegocio, auxdata.getEmpresaId(), filtroNombre);
                     }catch(Exception ex){
                         String error="{\"Result\":\"ERROR\",\"Message\":"+ex.getStackTrace().toString()+"}";
                         response.getWriter().print(error);
                     }
             }
-      }
+        }
     }
+
+    /**
+    * 
+    */
+    private void forwardToCRUDPage(HttpServletRequest _request, 
+        HttpServletResponse _response,
+        DepartamentoBp _auxnegocio,
+        String _filtroEmpresaId,
+        String _filtroNombre){
     
+        try {
+            List<DepartamentoVO> listaDeptos = new ArrayList<>();
+            
+            if (_filtroEmpresaId != null &&
+                    _filtroEmpresaId.compareTo("-1") != 0){
+                listaDeptos = _auxnegocio.getDepartamentos(_filtroEmpresaId,
+                    _filtroNombre, 0, 0, "depto_nombre");
+            }
+            _request.setAttribute("lista", listaDeptos);
+            RequestDispatcher vista = _request.getRequestDispatcher("cruds/departamentos.jsp");
+            vista.forward(_request, _response);
+        } catch (ServletException ex) {
+            System.err.println(WEB_NAME+"CRUD - Departamentos - "
+                + "Error_1: " + ex.toString());
+        } catch (IOException ex) {
+            System.err.println(WEB_NAME+"CRUD - Departamentos - "
+                + "Error_2: " + ex.toString());
+        }
+        
+    }
 }

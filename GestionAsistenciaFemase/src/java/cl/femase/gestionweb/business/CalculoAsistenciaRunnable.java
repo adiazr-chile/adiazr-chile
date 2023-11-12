@@ -146,6 +146,10 @@ public class CalculoAsistenciaRunnable extends BaseBp implements Runnable{
         isHistorico = true;
     }
     
+    /**
+    * 
+    * @param _listaEmpleados
+    */
     public static void setHebras(List<EmpleadoVO> _listaEmpleados){
          
         int i = 0;
@@ -222,24 +226,10 @@ public class CalculoAsistenciaRunnable extends BaseBp implements Runnable{
                     while (itDetails.hasNext())//while 9
                     {   
                         DetalleAsistenciaVO calculosFecha = itDetails.next();
-                        System.out.println(WEB_NAME+"[GestionFemase.CalculoAsistenciaRunnable.setHebras]."
-                            + "Agregar calculos para el insert de calculos asistencia. "
-                            + "Rut= " + calculosFecha.getRutEmpleado()
-                            + ", fechaEntrada= " + calculosFecha.getFechaEntradaMarca()
-                            + ", hora entrada= " + calculosFecha.getHoraEntrada()
-                            + ", fechaSalida= " + calculosFecha.getFechaSalidaMarca()    
-                            + ", hora salida= " + calculosFecha.getHoraSalida()
-                            + ", minutos reales= " + calculosFecha.getMinutosReales()    
-                            );
-
                         if (calculosFecha.getFechaEntradaMarca()!=null){
                             System.out.println(WEB_NAME+"[GestionFemase.CalculoAsistenciaRunnable.setHebras]."
                                 + " add To Insert: "+calculosFecha.toString());
                             
-                            /**
-                            *  hhmmAtraso=00:30,  
-                            *   holguraMinutos=10,
-                            */
                             if (calculosFecha.getHolguraMinutos() > 0){
                                 
                                 if (calculosFecha.getHhmmAtraso() != null 

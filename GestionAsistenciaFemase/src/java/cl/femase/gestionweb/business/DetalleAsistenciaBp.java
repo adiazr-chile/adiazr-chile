@@ -129,6 +129,10 @@ public class DetalleAsistenciaBp  extends BaseBp{
         return updatedValues;
     }
     
+    /**
+    * 
+    * @param _entities
+    */
     public void saveList(ArrayList<DetalleAsistenciaToInsertVO> _entities){
         try {
             calculoHorasService.saveList(_entities);

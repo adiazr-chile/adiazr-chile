@@ -208,14 +208,14 @@ public class CalculoAsistenciaNew extends BaseBp{
     
     //**********************************************
     /**
-     * Metodo principal de calculo de asistencia
-     * 
-     * @param _empleado
-     * @param _iteracion
-     * @param _isHistorico
-     * 
-     * @return 
-     */
+    * Metodo principal de calculo de asistencia
+    * 
+    * @param _empleado
+    * @param _iteracion
+    * @param _isHistorico
+    * 
+    * @return 
+    */
     public ArrayList<DetalleAsistenciaVO> calculaAsistencia(EmpleadoVO _empleado, 
             int _iteracion, 
             boolean _isHistorico) {
@@ -399,25 +399,39 @@ public class CalculoAsistenciaNew extends BaseBp{
                                 + "CalculoAsistenciaNew]** 1 **"
                                 + "No hay detalle turno_id = " + _empleado.getIdturno() 
                                 + ", cod_dia: " + codDia);
-                            if (esFeriado){
+//                            if (esFeriado){
+//                                System.out.println(WEB_NAME + "[GestionFemase."
+//                                    + "CalculoAsistenciaNew]"
+//                                    + "La fecha " +IT_FECHA+ " es feriado. "
+//                                    + "Ver si el detalle turno incluye cod_dia=8 (feriado/festivo)");
+//                                detalleturno = auxListDetalleTurno.get(8);//detalle turno para cod_dia = feriado
+//                                if (detalleturno != null) tieneDetalleTurnoCodDiaFeriado = true;
+//                                if (detalleturno == null){
+//                                    System.out.println(WEB_NAME + "[GestionFemase."
+//                                        + "CalculoAsistenciaNew]** 2 **"
+//                                        + "Definitivamente No hay detalle turno_id = " + _empleado.getIdturno() 
+//                                        + ", cod_dia: " + codDia);
+//                                }
+//                            }
+                        }
+                        
+                        if (esFeriado){
+                            System.out.println(WEB_NAME + "[GestionFemase."
+                                + "CalculoAsistenciaNew]"
+                                + "La fecha " +IT_FECHA+ " es feriado. "
+                                + "Ver si el detalle turno incluye cod_dia=8 (feriado/festivo)");
+                            detalleturno = auxListDetalleTurno.get(8);//detalle turno para cod_dia = feriado
+                            if (detalleturno != null) tieneDetalleTurnoCodDiaFeriado = true;
+                            if (detalleturno == null){
                                 System.out.println(WEB_NAME + "[GestionFemase."
-                                    + "CalculoAsistenciaNew]"
-                                    + "La fecha " +IT_FECHA+ " es feriado. "
-                                    + "Ver si el detalle turno incluye cod_dia=8 (feriado/festivo)");
-                                detalleturno = auxListDetalleTurno.get(8);//detalle turno para cod_dia = feriado
-                                if (detalleturno != null) tieneDetalleTurnoCodDiaFeriado = true;
-                                if (detalleturno == null){
-                                    System.out.println(WEB_NAME + "[GestionFemase."
-                                        + "CalculoAsistenciaNew]** 2 **"
-                                        + "Definitivamente No hay detalle turno_id = " + _empleado.getIdturno() 
-                                        + ", cod_dia: " + codDia);
-                                }
+                                    + "CalculoAsistenciaNew]** 2 **"
+                                    + "Definitivamente No hay detalle turno_id = " + _empleado.getIdturno() 
+                                    + ", cod_dia: " + codDia);
                             }
                         }
-                          
+                        
                         if (detalleturno != null){
-                            System.out.println(WEB_NAME+"[GestionFemase."
-                                + "CalculoAsistenciaNew]codDia: " + codDia);
+                            
                             System.out.println(WEB_NAME+"[GestionFemase."
                                 + "CalculoAsistenciaNew]"
                                 + "tiene turno normal, "
@@ -530,19 +544,7 @@ public class CalculoAsistenciaNew extends BaseBp{
                             + ", horasTeoricas: " + horasTeoricas
                             + ", tieneTurnoRotativo: " + tieneTurnoRotativo    
                         );
-
-                        //rescata horas extras ingresadas y autorizadas previamente
-            //            TiempoExtraVO hrsExtras = 
-            //                tiempoExtraBp.getTiempoExtra(_empleado.getRut(), _fechasCalculo[i]);
-                        //rescata tipos de horas extras ingresadas y autorizadas previamente
-            //            HashMap<String,Integer> hashTiposHE = tiempoExtraBp.getTiposHrasExtras();
-//                        System.out.println(WEB_NAME+"[GestionFemase."
-//                            + "CalculoAsistenciaNew]procesaAsistencia. "
-//                            + "Fecha calculo: "+_fechasCalculo[i]
-//                            + ", codDia: "+codDia
-//                            + ", rut: " + _empleado.getRut()
-//                            + ", size marcas: " +marcas.size());
-                        if (marcas!=null && !marcas.isEmpty()){
+                        if (marcas != null && !marcas.isEmpty()){
                             if (marcas.size() == 1){
                                 System.out.println(WEB_NAME+"[GestionFemase."
                                     + "CalculoAsistenciaNew]"
@@ -589,7 +591,7 @@ public class CalculoAsistenciaNew extends BaseBp{
                                             + "procesaAsistencia."
                                             + "Set observacion[44]: " + auxAlert
                                             + ", tieneTurnoRotativo: " + tieneTurnoRotativo);
-                                        detalleCalculo.setObservacion(auxAlert);
+                                        detalleCalculo.setObservacion(auxAlert, "CalculoAsistenciaNew_2");
                                         if (tieneTurnoRotativo){
                                             System.out.println(WEB_NAME+"[GestionFemase."
                                                 + "CalculoAsistenciaNew]procesaAsistencia."
@@ -641,7 +643,7 @@ public class CalculoAsistenciaNew extends BaseBp{
                                         + "CalculoAsistenciaNew]"
                                         + "procesaAsistencia.NO TIENE MARCAS, "
                                         + "Set observacion[4]: " + auxAlert);
-                                    detalleCalculo.setObservacion(auxAlert);
+                                    detalleCalculo.setObservacion(auxAlert, "CalculoAsistenciaNew_1");
                                     detalleCalculo.setFechaCalculo(_fechasCalculo[i]);
                                     detalleCalculo.setHorasTeoricas(horasTeoricas);
                                     detalleCalculo.setArt22(_empleado.isArticulo22());
@@ -660,11 +662,10 @@ public class CalculoAsistenciaNew extends BaseBp{
                                             + "CalculoAsistenciaNew]"
                                             + "procesaAsistencia.NO TIENE MARCAS, "
                                             + "Set observacion[3]: " + auxAlert);
-                                        //detalleCalculo.setObservacion("Sin turno - " + auxAlert);
                                         System.out.println(WEB_NAME+"[GestionFemase."
                                             + "CalculoAsistenciaNew]"
                                             + "procesaAsistencia] -1- Set Sin turno (Libre)");
-                                        detalleCalculo.setObservacion("Libre");
+                                        detalleCalculo.setObservacion("Libre", "CalculoAsistenciaNew_3");
                                         detalleCalculo.setHoraSalida("00:00:00");
                                     }
                                     detalleCalculo.setEsFeriado(esFeriado);
@@ -714,7 +715,7 @@ public class CalculoAsistenciaNew extends BaseBp{
                                             + "procesaAsistencia."
                                             + "NO TIENE MARCAS, "
                                             + "Set observacion[2]: " + auxMsgAusencias);
-                                        detalleCalculo.setObservacion(auxMsgAusencias);
+                                        detalleCalculo.setObservacion(auxMsgAusencias, "CalculoAsistenciaNew_4");
                                         String sumaJustificadas = Utilidades.sumTimesList(listaHrsAusencias);
                                         detalleCalculo.setHhmmJustificadas(sumaJustificadas);
 
@@ -742,17 +743,24 @@ public class CalculoAsistenciaNew extends BaseBp{
                                 System.out.println(WEB_NAME+"[GestionFemase."
                                     + "CalculoAsistenciaNew]"
                                     + "procesaAsistencia."
-                                    + "FechaHora entrada: "+marcaEntrada.getFechaHora()
-                                    + ", fechaHora salida: "+marcaSalida.getFechaHora()    
-                                );
+                                    + "FechaHora entrada: " + marcaEntrada.getFechaHora()
+                                    + ", fechaHora salida: " + marcaSalida.getFechaHora()
+                                    + ", itera fecha: " + IT_FECHA
+                                    + ", esFeriado: " + esFeriado
+                                    + ", hhmmTurno: " + hhmmTurno
+                                    + ", detalleturno.getCodDia(): " + detalleturno.getCodDia());
                                 LinkedHashMap<String, MarcaVO> marcasOrdenadas = 
                                     new LinkedHashMap<>();
                                 marcasOrdenadas.put("1", marcaEntrada);
                                 marcasOrdenadas.put("2", marcaSalida);
                                 m_marcasProcesadas.put(marcaEntrada.getFechaHora(), marcaEntrada);
                                 m_marcasProcesadas.put(marcaSalida.getFechaHora(), marcaSalida);
-                                //listaDetalleCalculoReturn = getInfoAsistencia(_empleado, marcas);
                                 
+                                String auxObs = getObservacion(IT_FECHA, esFeriado, hhmmTurno, true, detalleturno.getCodDia());
+                                System.out.println(WEB_NAME+"[GestionFemase."
+                                    + "CalculoAsistenciaNew]"
+                                    + "procesaAsistencia. "
+                                    + "Observacion_obtenida: " + auxObs);
                                 DetalleAsistenciaVO auxDetalleCalculo = 
                                     getInfoAsistencia(_empleado, 
                                         marcasOrdenadas, 
@@ -763,12 +771,18 @@ public class CalculoAsistenciaNew extends BaseBp{
                                         _hashTiposHE, 
                                         tieneTurnoRotativo, 
                                         turnoNocturno);
+                                System.out.println(WEB_NAME+"[GestionFemase."
+                                    + "CalculoAsistenciaNew]"
+                                    + "procesaAsistencia."
+                                    + " tieneDetalleTurnoCodDiaFeriado? " + tieneDetalleTurnoCodDiaFeriado    
+                                    + ", auxDetalleCalculo.getObservacion(): " + auxDetalleCalculo.getObservacion());
+                                
                                 /**
                                 *   20230609-01: Turnos para fin de semana y feriados 
                                 */
                                 if (tieneDetalleTurnoCodDiaFeriado && 
                                     auxDetalleCalculo.getObservacion() == null){
-                                        auxDetalleCalculo.setObservacion("Feriado");
+                                        auxDetalleCalculo.setObservacion("Feriado", "CalculoAsistenciaNew_5");
                                 } 
                                     
                                 listaAux.add(auxDetalleCalculo);
@@ -919,7 +933,7 @@ public class CalculoAsistenciaNew extends BaseBp{
                                             + "Set observacion[12]: " + auxMsgAusencias
                                             + ", hrs justificadas: " + Utilidades.sumTimesList(listaHrsAusencias)
                                             + ", hrs no remuneradas: " + Utilidades.sumTimesList(listaHrsNoRemuneradas));
-                                        detalleCalculo.setObservacion(auxMsgAusencias);
+                                        detalleCalculo.setObservacion(auxMsgAusencias, "CalculoAsistenciaNew_6");
                                         //if (esFeriado){
                                         //    detalleCalculo.setHhmmJustificadas("");
                                         //}else{
@@ -943,7 +957,7 @@ public class CalculoAsistenciaNew extends BaseBp{
                                                     + "CalculoAsistenciaNew]"
                                                     + "ausencia tipo "+auxMsgAusencias+" es pagada por el empleador."
                                                     + "Set hrs trabajadas(1) y verificar feriado");
-                                                if (esFeriado) detalleCalculo.setObservacion("Feriado");
+                                                if (esFeriado) detalleCalculo.setObservacion("Feriado", "CalculoAsistenciaNew_7");
                                                 detalleCalculo.setHrsTrabajadas(hrsTotalesMenosColacion);
                                             }
                                         //}
@@ -956,7 +970,7 @@ public class CalculoAsistenciaNew extends BaseBp{
                                         */
                                         
                                         if (auxMsgAusencias.toUpperCase().startsWith("LICENCIA")){
-                                            detalleCalculo.setObservacion(auxMsgAusencias);
+                                            detalleCalculo.setObservacion(auxMsgAusencias, "CalculoAsistenciaNew_8");
                                             //detalleCalculo.setHhmmJustificadas(Utilidades.sumTimesList(listaHrsAusencias));
                                             //detalleCalculo.setHrsAusencia(Utilidades.sumTimesList(listaHrsNoRemuneradas)); 
                                         }else{
@@ -974,7 +988,7 @@ public class CalculoAsistenciaNew extends BaseBp{
                                                 + ", hhmmTurno: " + hhmmTurno    
                                                 +", observacion: " + observacion1);
                                         
-                                            detalleCalculo.setObservacion(observacion1);
+                                            detalleCalculo.setObservacion(observacion1, "CalculoAsistenciaNew_9");
                                             detalleCalculo.setHhmmJustificadas("");
                                             detalleCalculo.setHrsAusencia("");
                                         }
@@ -1035,7 +1049,7 @@ public class CalculoAsistenciaNew extends BaseBp{
                                             + "CalculoAsistenciaNew]"
                                             + "procesaAsistencia.NO TIENE MARCAS, "
                                             + "Set observacion[11]. hh:mm turno: "+hhmmTurno);
-                                        detalleCalculo.setObservacion(getObservacion(_fechasCalculo[i],esFeriado, hhmmTurno, false, detalleturno.getCodDia()));
+                                        detalleCalculo.setObservacion(getObservacion(_fechasCalculo[i],esFeriado, hhmmTurno, false, detalleturno.getCodDia()), "CalculoAsistenciaNew_9");
                                         System.out.println(WEB_NAME+"[GestionFemase."
                                             + "CalculoAsistenciaNew]"
                                             + "procesaAsistencia. "
@@ -1073,10 +1087,10 @@ public class CalculoAsistenciaNew extends BaseBp{
                                             + ", _fecha: " + _fechasCalculo[i]
                                             + ", esFeriado?" + esFeriado);
                                         if (detalleturno != null){
-                                            detalleCalculo.setObservacion(getObservacion(_fechasCalculo[i], esFeriado, hhmmTurno, false, detalleturno.getCodDia()));
+                                            detalleCalculo.setObservacion(getObservacion(_fechasCalculo[i], esFeriado, hhmmTurno, false, detalleturno.getCodDia()), "CalculoAsistenciaNew_10");
                                         }else if (!esFeriado){ 
-                                            detalleCalculo.setObservacion("Libre");
-                                        }else if (esFeriado) detalleCalculo.setObservacion("Feriado");
+                                            detalleCalculo.setObservacion("Libre", "CalculoAsistenciaNew_11");
+                                        }else if (esFeriado) detalleCalculo.setObservacion("Feriado", "CalculoAsistenciaNew_12");
                                         
                                         
 //                                        if (esFeriado && (hhmmTurno != null && hhmmTurno.compareTo("")!=0)){
@@ -1548,16 +1562,11 @@ public class CalculoAsistenciaNew extends BaseBp{
                 System.out.println(WEB_NAME+"[GestionFemase."
                     + "CalculoAsistenciaNew]"
                     + "procesaAsistencia] -2- Set Sin turno (Libre)");
-                detalleCalculo.setObservacion("Sin turno");
+                detalleCalculo.setObservacion("Sin turno", "CalculoAsistenciaNew_13");
             }
             
             String strKey = _empleado.getEmpresaid() + "|" + _empleado.getRut() + "|" + currentMarca.getFechaEntrada();
             InfoFeriadoVO infoFeriado = m_fechasCalendarioFeriados.get(strKey);
-            
-////////    comentado        InfoFeriadoVO infoFeriado = 
-////////                m_feriadosBp.validaFeriado(currentMarca.getFechaEntrada(), 
-////////                    _empleado.getEmpresaid(), 
-////////                    _empleado.getRut());
             
             boolean esFeriado = infoFeriado.isFeriado();
             detalleCalculo.setEsFeriado(esFeriado);//
@@ -1769,8 +1778,6 @@ public class CalculoAsistenciaNew extends BaseBp{
                     + "comparahraEntrada = "+ comparahraEntrada
                     + ", comparahraSalida = "+ comparahraSalida+", hhmmAtraso: "+hhmmAtraso);
 
-//                if (auxMinsAtraso < 0) auxMinsAtraso = 0;
-//                detalleCalculo.setMinutosAtraso(auxMinsAtraso);
                 System.err.println("[GestionFemase.CalculoAsistenciaNew]"
                     + "-1- Seteando atraso"
                     + ", auxMinExtras: " + auxMinExtras
@@ -1783,19 +1790,6 @@ public class CalculoAsistenciaNew extends BaseBp{
                         + diferenciaNTSalida.getStrDiferenciaHorasMinutos());
                 }
                 
-//                if (diferenciaNTSalida != null 
-//                        && diferenciaNTSalida.getStrDiferenciaHorasMinutos()!=null
-//                        && diferenciaNTSalida.getStrDiferenciaHorasMinutos().compareTo("")==0 
-//                        && auxMinExtras > 0) 
-//                {   System.err.println("[GestionFemase.CalculoAsistenciaNew]"
-//                        + "getInfoAsistencia."
-//                        + " **1** setHrsExtras = "+ parteBSalida);
-//                    detalleCalculo.setMinutosExtras(auxMinExtras);   
-//                }
-                //if ( diferenciaNTSalida != null 
-                  //      && diferenciaNTSalida.getStrDiferenciaHorasMinutos()!=null
-                    //    && diferenciaNTSalida.getStrDiferenciaHorasMinutos().compareTo("") == 0)
-                //{
                 if (comparahraSalida < 0 ){
                     System.err.println("[GestionFemase.CalculoAsistenciaNew]"
                         + "getInfoAsistencia."
@@ -1831,8 +1825,6 @@ public class CalculoAsistenciaNew extends BaseBp{
                 System.err.println("[GestionFemase."
                     + "CalculoAsistenciaNew]"
                     + "getInfoAsistencia. hh:mm Atraso=" + hhmmAtraso);
-
-////                detalleCalculo.setHrsTrabajadas(horasMinsTrabajados);
             }else{
                 System.out.println(WEB_NAME+"[GestionFemase.CalculoAsistenciaNew]getInfoAsistencia."
                     + "NO TIENE MARCAS, "
@@ -1840,18 +1832,8 @@ public class CalculoAsistenciaNew extends BaseBp{
                 System.out.println(WEB_NAME+"[GestionFemase."
                     + "CalculoAsistenciaNew]"
                     + "procesaAsistencia] -3- Set Sin turno (Libre)");
-                detalleCalculo.setObservacion("Sin turno");
+                detalleCalculo.setObservacion("Sin turno", "CalculoAsistenciaNew_14");
                 
-////                DiferenciaHorasVO diferencia66 = 
-////                    Utilidades.getTimeDifference(currentMarca.getFechaSalida() + " " + currentMarca.getHoraEntrada(), 
-////                        currentMarca.getFechaSalida() + " " + currentMarca.getHoraSalida());
-////                System.out.println(WEB_NAME+"[getInfoAsistencia]-6- set horasMinsTrabajados");
-////                horasMinsTrabajados = diferencia66.getStrDiferenciaHorasMinutos();
-////                detalleCalculo.setHrsTrabajadas(horasMinsTrabajados);
-////                System.out.println(WEB_NAME+"[DetalleAsistenciaController."
-////                    + "getInfoAsistencia]--2-- setHrsPresenciales= " 
-////                    + horasMinsTrabajados); 
-////                detalleCalculo.setHrsPresenciales(horasMinsTrabajados);
             }
 
             /**
@@ -1874,8 +1856,6 @@ public class CalculoAsistenciaNew extends BaseBp{
                 detalleausenciaEntrada = detalleausenciasFechaEntrada.get(0);
                 
             }
-//            DetalleAusenciaVO detalleausenciaEntrada = 
-//                detalleAusenciaBp.getAusencia(_empleado.getRut(), currentMarca.getFechaEntrada());
             if (detalleausenciaEntrada != null){
                 System.out.println(WEB_NAME+"[GestionFemase.CalculoAsistenciaNew]getInfoAsistencia."
                     + "Tiene ausencias en fecha de entrada!");
@@ -1949,15 +1929,6 @@ public class CalculoAsistenciaNew extends BaseBp{
                                             listaHrsAusencias.add(difAusencia.getStrDiferenciaHorasMinutos());
                                         }
                                     }
-//////                                    if (!setNoAtraso && detalleCalculo.getHhmmAtraso().compareTo(hhmmDifAusencia) == 0){
-//////                                        System.out.println(WEB_NAME+"[GestionFemase.CalculoAsistenciaNew]-CC- "
-//////                                            + "hhmm atraso: " + detalleCalculo.getHhmmAtraso() + 
-//////                                            ", hhmmDifAusencia:" + hhmmDifAusencia
-//////                                            +", Set hrs atraso en CERO");
-//////                                        
-//////                                        detalleCalculo.setHhmmAtraso("");
-//////                                        setNoAtraso = true;
-//////                                    }
                                 }else{
                                     auxMsgAusencias += ausencia.getNombreausencia()+",";
                                     if (hhmmTurno != null && hhmmTurno.compareTo("") != 0){
@@ -1979,43 +1950,13 @@ public class CalculoAsistenciaNew extends BaseBp{
                                 + ", hrsPresenciales= " + detalleCalculo.getHrsPresenciales());
                             detalleCalculo.setHhmmJustificadas(sumaJustificadasTotales);
                             detalleCalculo.setHrsAusencia(sumaNoRemuneradasTotales);
-                            //Recalculo horas presenciales...
-////////////                            if (detalleausenciasFechaEntrada.size() > 1){
-////////////                                System.out.println(WEB_NAME+"[GestionFemase.CalculoAsistenciaNew]getInfoAsistencia."
-////////////                                    + "Recalculo horas presenciales...");
-////////////                                
-////////////                                System.out.println(WEB_NAME+"[GestionFemase.CalculoAsistenciaNew]getInfoAsistencia."
-////////////                                    + "Fecha hora entrada: " + currentMarca.getFechaEntrada()
-////////////                                        + " " + detalleCalculo.getHrsPresenciales()
-////////////                                        + ", fecha hora justificadas: " + currentMarca.getFechaEntrada()
-////////////                                        + " " + sumaJustificadas + ":00");
-////////////                                
-////////////                                DiferenciaHorasVO newHP = Utilidades.getTimeDifference(currentMarca.getFechaEntrada()
-////////////                                    +" " + detalleCalculo.getHrsPresenciales(), 
-////////////                                    currentMarca.getFechaEntrada()
-////////////                                    +" " + sumaJustificadas+":00");
-////////////                                System.out.println(WEB_NAME+"[GestionFemase.CalculoAsistenciaNew]getInfoAsistencia."
-////////////                                    + "new Horas presenciales: " + newHP.getStrDiferenciaHorasMinutosSegundos());
-////////////                                detalleCalculo.setHrsPresenciales(newHP.getStrDiferenciaHorasMinutosSegundos());
-////////////                            }
-//                            if (sumaJustificadas.compareTo(hhmmDifAusencia) == 0){
-//                                detalleCalculo.setHhmmAtraso("");
-//                            }
-                            //detalleCalculo.setHhmmJustificadas(hrsAusenciaTrabajadas);
-                            //detalleCalculo.setHhmmAtraso("");
                     }
-                    
-                    //detalleCalculo.setHrsTrabajadas(auxTotHras);
                     detalleCalculo.setMinutosAtraso(0);
                     System.out.println(WEB_NAME+"[GestionFemase.CalculoAsistenciaNew]getInfoAsistencia."
                         + "NO TIENE MARCAS, "
                         + " Seteo de ausencias...");
                     
                     ArrayList<DetalleAusenciaJsonVO> detalleausencia2 = m_listaAusencias.get(_empleado.getRut()+"|"+currentMarca.getFechaEntrada());
-                    
-//                    ArrayList<DetalleAusenciaVO> detalleausencia2 = 
-//                        detalleAusenciaBp.getAusencias(_empleado.getRut(), 
-//                            currentMarca.getFechaEntrada());
                     
                     String auxMsgAusencias = "";
                     //iterando ausencias
@@ -2050,7 +1991,7 @@ public class CalculoAsistenciaNew extends BaseBp{
                     }
                     
                     auxMsgAusencias=auxMsgAusencias.substring(0, auxMsgAusencias.length()-2);
-                    detalleCalculo.setObservacion(auxMsgAusencias);
+                    detalleCalculo.setObservacion(auxMsgAusencias, "CalculoAsistenciaNew_15");
                     System.out.println(WEB_NAME+"[GestionFemase.CalculoAsistenciaNew]setobservacion [99]:"
                         + "auxMsgAusencias: "+auxMsgAusencias);
                     
@@ -2102,10 +2043,6 @@ public class CalculoAsistenciaNew extends BaseBp{
                                     + "Seteo de hrs justificadas. "
                                     + "El atraso queda en cero por ausencia justificada");
                                 ArrayList<DetalleAusenciaJsonVO> detalleausencia = m_listaAusencias.get(_empleado.getRut()+"|"+currentMarca.getFechaEntrada());
-                                
-//                                ArrayList<DetalleAusenciaVO> detalleausencia = 
-//                                       detalleAusenciaBp.getAusencias(_empleado.getRut(), 
-//                                           currentMarca.getFechaEntrada());
                                 ArrayList<String> listaHrsAusencias = new ArrayList<>();
                                 String auxMsgAusencias="";
                                 Iterator<DetalleAusenciaJsonVO> ausenciasIterator = detalleausencia.iterator();
@@ -2134,21 +2071,14 @@ public class CalculoAsistenciaNew extends BaseBp{
                                 
                                 String sumaJustificadas = Utilidades.sumTimesList(listaHrsAusencias);
                                 detalleCalculo.setHhmmJustificadas(sumaJustificadas);
-                                //detalleCalculo.setHhmmJustificadas(hrsAusenciaTrabajadas);
                                 detalleCalculo.setHhmmAtraso("");
                         }
-                        //detalleCalculo.setHrsTrabajadas(auxTotHras);
                         detalleCalculo.setMinutosAtraso(0);
                         System.out.println(WEB_NAME+"[GestionFemase.CalculoAsistenciaNew]getInfoAsistencia."
                             + "NO TIENE MARCAS, "
                             + "Set observacion[4]. Con detalle de ausencias");
 
                         ArrayList<DetalleAusenciaJsonVO> detalleausencia = m_listaAusencias.get(_empleado.getRut()+"|"+currentMarca.getFechaSalida());
-                        
-//                        ArrayList<DetalleAusenciaVO> detalleausencia = 
-//                            detalleAusenciaBp.getAusencias(_empleado.getRut(), 
-//                                currentMarca.getFechaSalida());
-                        
                         String auxMsgAusencias = "";
                         //iterando ausencias
                         Iterator<DetalleAusenciaJsonVO> ausenciasIterator = detalleausencia.iterator();
@@ -2164,25 +2094,12 @@ public class CalculoAsistenciaNew extends BaseBp{
                                 DiferenciaHorasVO difAusencia = Utilidades.getTimeDifference(currentMarca.getFechaEntrada() + " " + ausencia.getHorainiciofullasstr() +":00", 
                                        currentMarca.getFechaEntrada() + " " + ausencia.getHorafinfullasstr()+":00");
                                 
-                                //listaHrsAusencias.add(difAusencia.getStrDiferenciaHorasMinutos());
                             }else{
                                 auxMsgAusencias += ausencia.getNombreausencia();
-    //                            if (hhmmTurno != null && hhmmTurno.compareTo("") != 0){
-    //                                listaHrsAusencias.add(hhmmTurno);
-    //                            }
-                                //hrs justificadas = suma de hrs de ausencia...
                             }
-
-    //                        auxMsgAusencias += ausencia.getNombreAusencia()
-    //                            +":"+ausencia.getHoraInicioFullAsStr().substring(0, ausencia.getHoraInicioFullAsStr().length()-3) 
-    //                            +"-"+ausencia.getHoraFinFullAsStr().substring(0, ausencia.getHoraFinFullAsStr().length()-3)+" hrs, ";
-                            //***
-                        }
+                    }
                         auxMsgAusencias=auxMsgAusencias.substring(0, auxMsgAusencias.length()-2);
-                        detalleCalculo.setObservacion(auxMsgAusencias);
-    //                    detalleCalculo.setObservacion(detalleausenciaSalida.getNombreAusencia()
-    //                        +" de "+detalleausenciaSalida.getHoraInicioFullAsStr().substring(0, detalleausenciaSalida.getHoraInicioFullAsStr().length()-3) 
-    //                        +" a "+detalleausenciaSalida.getHoraFinFullAsStr().substring(0, detalleausenciaSalida.getHoraFinFullAsStr().length()-3)+" hrs");
+                        detalleCalculo.setObservacion(auxMsgAusencias, "CalculoAsistenciaNew_16");
                     }
                 }
             }

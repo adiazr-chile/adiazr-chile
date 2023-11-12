@@ -766,7 +766,7 @@ public class DetalleAsistenciaDAO extends BaseDAO{
                     data.setMinutosNoTrabajadosSalida(rs.getInt("minutos_no_trabajados_salida"));
                     data.setHrsPresenciales(rs.getString("hrs_presenciales"));
                     data.setHrsTrabajadas(rs.getString("hrs_trabajadas"));
-                    data.setObservacion(rs.getString("observacion"));
+                    data.setObservacion(rs.getString("observacion"), "DetalleAsistenciaDAO_1");
                     data.setHrsAusencia(rs.getString("hrs_ausencia"));
                     data.setHoraMinsExtras(rs.getString("hhmm_extras"));
                     data.setHhmmAtraso(rs.getString("hhmm_atraso"));
@@ -937,7 +937,7 @@ public class DetalleAsistenciaDAO extends BaseDAO{
                     data.setMinutosNoTrabajadosSalida(rs.getInt("minutos_no_trabajados_salida"));
                     data.setHrsPresenciales(rs.getString("hrs_presenciales"));
                     data.setHrsTrabajadas(rs.getString("hrs_trabajadas"));
-                    data.setObservacion(rs.getString("observacion"));
+                    data.setObservacion(rs.getString("observacion"), "DetalleAsistenciaDAO_2");
                     data.setHrsAusencia(rs.getString("hrs_ausencia"));
                     data.setHoraMinsExtras(rs.getString("hhmm_extras"));
                     data.setHhmmAtraso(rs.getString("hhmm_atraso"));
@@ -1125,7 +1125,7 @@ public class DetalleAsistenciaDAO extends BaseDAO{
                     data.setMinutosNoTrabajadosSalida(rs.getInt("minutos_no_trabajados_salida"));
                     data.setHrsPresenciales(rs.getString("hrs_presenciales"));
                     data.setHrsTrabajadas(rs.getString("hrs_trabajadas"));
-                    data.setObservacion(rs.getString("observacion"));
+                    data.setObservacion(rs.getString("observacion"), "DetalleAsistenciaDAO_3");
                     data.setHrsAusencia(rs.getString("hrs_ausencia"));
                     data.setHoraMinsExtras(rs.getString("hhmm_extras"));
                     data.setHhmmAtraso(rs.getString("hhmm_atraso"));
@@ -1275,7 +1275,7 @@ public class DetalleAsistenciaDAO extends BaseDAO{
                 
                 data.setHrsPresenciales(rs.getString("hrs_presenciales"));
                 //data.setHrsTrabajadas(rs.getString("hrs_trabajadas"));
-                data.setObservacion(rs.getString("observacion"));
+                data.setObservacion(rs.getString("observacion"), "DetalleAsistenciaDAO_4");
                 data.setHrsAusencia(rs.getString("hrs_ausencia"));
                 data.setHoraMinsExtras(rs.getString("hhmm_extras"));
                 data.setHhmmAtraso(rs.getString("hhmm_atraso"));

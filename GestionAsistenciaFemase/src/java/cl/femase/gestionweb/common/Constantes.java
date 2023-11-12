@@ -5,6 +5,9 @@
 */
 package cl.femase.gestionweb.common;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
 *
 * @author Alexander
@@ -227,4 +230,18 @@ public class Constantes {
     * y con la ultima fecha de inicio de vacación de todos los empleados del CENCO.
     */
     public static String fnSET_VP_CENCO       = "set_saldo_vacaciones_progresivas";
+    
+    public static Map<Boolean, String> BOOLEAN_LABEL;
+    static {
+        BOOLEAN_LABEL = new HashMap<>();
+        BOOLEAN_LABEL.put(true, "Si");
+        BOOLEAN_LABEL.put(false, "No");
+    }
+    
+    public static Map<Integer, String> ESTADO_LABEL;
+    static {
+        ESTADO_LABEL = new HashMap<>();
+        ESTADO_LABEL.put(1, "Vigente");
+        ESTADO_LABEL.put(2, "No Vigente");
+    }
 }

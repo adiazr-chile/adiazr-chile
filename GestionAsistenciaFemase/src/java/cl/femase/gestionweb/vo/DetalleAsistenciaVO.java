@@ -265,11 +265,15 @@ public class DetalleAsistenciaVO implements Serializable{
     }
 
     /**
-     *
-     * @param observacion
-     */
-    public void setObservacion(String observacion) {
-        this.observacion = observacion;
+    *
+    * @param _observacion
+    * @param _source
+    */
+    public void setObservacion(String _observacion, String _source) {
+        System.out.println("[GestionFemase.DetalleAsistenciaVO."
+            + "setObservacion]Observacion: " + _observacion 
+            + ", source: " + _source);
+        this.observacion = _observacion;
     }
 
     
@@ -506,6 +510,10 @@ public class DetalleAsistenciaVO implements Serializable{
         return fechaSalidaMarca;
     }
 
+    /**
+    * 
+     * @param fechaMarca
+    */
     public void setFechaSalidaMarca(String fechaMarca) {
         this.fechaSalidaMarca = fechaMarca;
         String dateString = fechaMarca;
@@ -602,7 +610,60 @@ public class DetalleAsistenciaVO implements Serializable{
 
     @Override
     public String toString() {
-        return "DetalleAsistenciaVO{" + "rut=" + rut + ", nombreEmpleado=" + nombreEmpleado + ", empresaId=" + empresaId + ", deptoId=" + deptoId + ", cencoId=" + cencoId + ", rutEmpleado=" + rutEmpleado + ", fechaCalculo=" + fechaCalculo + ", fechaHoraCalculo=" + fechaHoraCalculo + ", fechaEntradaMarca=" + fechaEntradaMarca + ", fechaSalidaMarca=" + fechaSalidaMarca + ", labelFechaEntradaMarca=" + labelFechaEntradaMarca + ", labelFechaSalidaMarca=" + labelFechaSalidaMarca + ", rowKey=" + rowKey + ", fechaMarcaEntradaLabel=" + fechaMarcaEntradaLabel + ", fechaMarcaSalidaLabel=" + fechaMarcaSalidaLabel + ", horaEntrada=" + horaEntrada + ", horaSalida=" + horaSalida + ", horaEntradaTeorica=" + horaEntradaTeorica + ", horaSalidaTeorica=" + horaSalidaTeorica + ", horasReales=" + horasReales + ", minutosReales=" + minutosReales + ", horasTeoricas=" + horasTeoricas + ", holguraMinutos=" + holguraMinutos + ", esFeriado=" + esFeriado + ", horasExtras=" + horasExtras + ", minutosExtras=" + minutosExtras + ", minutosExtrasAl50=" + minutosExtrasAl50 + ", minutosExtrasAl100=" + minutosExtrasAl100 + ", horasAusencia=" + horasAusencia + ", horaInicioAusencia=" + horaInicioAusencia + ", horaFinAusencia=" + horaFinAusencia + ", horaMinsExtras=" + horaMinsExtras + ", horasMinsExtrasAutorizadas=" + horasMinsExtrasAutorizadas + ", minutosTeoricos=" + minutosTeoricos + ", art22=" + art22 + ", minutosAtraso=" + minutosAtraso + ", minutosNoTrabajadosEntrada=" + minutosNoTrabajadosEntrada + ", minutosNoTrabajadosSalida=" + minutosNoTrabajadosSalida + ", autorizaMinsNoTrabajadosEntrada=" + autorizaMinsNoTrabajadosEntrada + ", autorizaMinsNoTrabajadosSalida=" + autorizaMinsNoTrabajadosSalida + ", hhmmAtraso=" + hhmmAtraso + ", autorizaAtraso=" + autorizaAtraso + ", autorizaHrsExtras=" + autorizaHrsExtras + ", hhmmJustificadas=" + hhmmJustificadas + ", intHHExtras=" + intHHExtras + ", intMinsExtras=" + intMinsExtras + ", comentarioMarcaEntrada=" + comentarioMarcaEntrada + ", comentarioMarcaSalida=" + comentarioMarcaSalida + ", horaMinsSalidaAnticipada=" + horaMinsSalidaAnticipada + ", hrsPresenciales=" + hrsPresenciales + ", hrsTrabajadas=" + hrsTrabajadas + ", hrsAusencia=" + hrsAusencia + ", observacion=" + observacion + '}';
+        return "DetalleAsistenciaVO{" 
+            + "rut=" + rut 
+            + ", nombreEmpleado=" + nombreEmpleado 
+            + ", empresaId=" + empresaId 
+            + ", deptoId=" + deptoId 
+            + ", cencoId=" + cencoId 
+            + ", rutEmpleado=" + rutEmpleado 
+            + ", fechaCalculo=" + fechaCalculo 
+            + ", fechaHoraCalculo=" + fechaHoraCalculo 
+            + ", fechaEntradaMarca=" + fechaEntradaMarca 
+            + ", fechaSalidaMarca=" + fechaSalidaMarca 
+            + ", labelFechaEntradaMarca=" + labelFechaEntradaMarca 
+            + ", labelFechaSalidaMarca=" + labelFechaSalidaMarca 
+            + ", rowKey=" + rowKey 
+            + ", fechaMarcaEntradaLabel=" + fechaMarcaEntradaLabel 
+            + ", fechaMarcaSalidaLabel=" + fechaMarcaSalidaLabel 
+            + ", horaEntrada=" + horaEntrada 
+            + ", horaSalida=" + horaSalida 
+            + ", horaEntradaTeorica=" + horaEntradaTeorica 
+            + ", horaSalidaTeorica=" + horaSalidaTeorica 
+            + ", horasReales=" + horasReales 
+            + ", minutosReales=" + minutosReales 
+            + ", horasTeoricas=" + horasTeoricas 
+            + ", holguraMinutos=" + holguraMinutos 
+            + ", esFeriado=" + esFeriado 
+            + ", horasExtras=" + horasExtras 
+            + ", minutosExtras=" + minutosExtras 
+            + ", minutosExtrasAl50=" + minutosExtrasAl50 
+            + ", minutosExtrasAl100=" + minutosExtrasAl100 
+            + ", horasAusencia=" + horasAusencia 
+            + ", horaInicioAusencia=" + horaInicioAusencia 
+            + ", horaFinAusencia=" + horaFinAusencia 
+            + ", horaMinsExtras=" + horaMinsExtras 
+            + ", horasMinsExtrasAutorizadas=" + horasMinsExtrasAutorizadas 
+            + ", minutosTeoricos=" + minutosTeoricos 
+            + ", art22=" + art22 
+            + ", minutosAtraso=" + minutosAtraso 
+            + ", minutosNoTrabajadosEntrada=" + minutosNoTrabajadosEntrada 
+            + ", minutosNoTrabajadosSalida=" + minutosNoTrabajadosSalida 
+            + ", autorizaMinsNoTrabajadosEntrada=" + autorizaMinsNoTrabajadosEntrada 
+            + ", autorizaMinsNoTrabajadosSalida=" + autorizaMinsNoTrabajadosSalida 
+            + ", hhmmAtraso=" + hhmmAtraso 
+            + ", autorizaAtraso=" + autorizaAtraso 
+            + ", autorizaHrsExtras=" + autorizaHrsExtras 
+            + ", hhmmJustificadas=" + hhmmJustificadas 
+            + ", intHHExtras=" + intHHExtras 
+            + ", intMinsExtras=" + intMinsExtras 
+            + ", comentarioMarcaEntrada=" + comentarioMarcaEntrada 
+            + ", comentarioMarcaSalida=" + comentarioMarcaSalida 
+            + ", horaMinsSalidaAnticipada=" + horaMinsSalidaAnticipada 
+            + ", hrsPresenciales=" + hrsPresenciales 
+            + ", hrsTrabajadas=" + hrsTrabajadas 
+            + ", hrsAusencia=" + hrsAusencia 
+            + ", observacion=" + observacion + '}';
     }
     
 }
