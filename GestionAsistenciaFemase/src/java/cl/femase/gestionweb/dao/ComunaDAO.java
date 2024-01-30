@@ -70,6 +70,7 @@ public class ComunaDAO extends BaseDAO{
             if (_jtPageSize > 0){
                 sql += " limit "+_jtPageSize + " offset "+_jtStartIndex;
             }
+            System.out.println("[ComunasDAO.getComunas]Sql: " + sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,"[ComunaDAO.getComunas]");
             ps = dbConn.prepareStatement(sql);

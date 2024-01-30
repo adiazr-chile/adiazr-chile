@@ -99,6 +99,27 @@ public class ParametroBp  extends BaseBp{
     
     /**
     * 
+    * @param _objectToUpdate
+    * @param _eventdata
+    * @return 
+    */
+    public ResultCRUDVO delete(ParametroVO _objectToUpdate, 
+            MaintenanceEventVO _eventdata){
+        ResultCRUDVO updValues = parametrosService.delete(_objectToUpdate);
+        
+        //if (!updValues.isThereError()){
+            String msgFinal = updValues.getMsg();
+            updValues.setMsg(msgFinal);
+            _eventdata.setDescription(msgFinal);
+            //insertar evento 
+            eventsService.addEvent(_eventdata); 
+        //}
+        
+        return updValues;
+    }
+    
+    /**
+    * 
     * @param _objToInsert
     * @param _eventdata
     * @return 

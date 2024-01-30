@@ -747,16 +747,20 @@ public class CalculoAsistenciaNew extends BaseBp{
                                     + ", fechaHora salida: " + marcaSalida.getFechaHora()
                                     + ", itera fecha: " + IT_FECHA
                                     + ", esFeriado: " + esFeriado
-                                    + ", hhmmTurno: " + hhmmTurno
-                                    + ", detalleturno.getCodDia(): " + detalleturno.getCodDia());
+                                    + ", hhmmTurno: " + hhmmTurno);
+                                if (detalleturno != null){
+                                    System.out.println(WEB_NAME+"[GestionFemase."
+                                        + "CalculoAsistenciaNew]"
+                                        + ", detalleturno.getCodDia(): " + detalleturno.getCodDia());
+                                }
                                 LinkedHashMap<String, MarcaVO> marcasOrdenadas = 
                                     new LinkedHashMap<>();
                                 marcasOrdenadas.put("1", marcaEntrada);
                                 marcasOrdenadas.put("2", marcaSalida);
                                 m_marcasProcesadas.put(marcaEntrada.getFechaHora(), marcaEntrada);
                                 m_marcasProcesadas.put(marcaSalida.getFechaHora(), marcaSalida);
-                                
-                                String auxObs = getObservacion(IT_FECHA, esFeriado, hhmmTurno, true, detalleturno.getCodDia());
+                                String auxObs = "";
+                                if (detalleturno != null) auxObs = getObservacion(IT_FECHA, esFeriado, hhmmTurno, true, detalleturno.getCodDia());
                                 System.out.println(WEB_NAME+"[GestionFemase."
                                     + "CalculoAsistenciaNew]"
                                     + "procesaAsistencia. "
@@ -1156,7 +1160,7 @@ public class CalculoAsistenciaNew extends BaseBp{
             observacion="Sin marcas";
         }
         
-        if (observacion.compareTo("Sin marcas") == 0 && _esFeriado && _codDia != 6) observacion = "Feriado";
+        if (observacion.compareTo("Sin marcas") == 0 && _esFeriado && _codDia != 6) observacion += "/Feriado";
         
         System.out.println(WEB_NAME+"[CalculoAsistenciaNew.getObservacion]"
             + " Fecha: " + _fecha

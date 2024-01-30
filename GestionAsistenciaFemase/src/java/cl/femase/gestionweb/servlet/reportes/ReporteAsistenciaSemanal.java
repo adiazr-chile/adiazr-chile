@@ -162,7 +162,8 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
                             "Hhmm_extras",
                             "Hhmm_ausencia",
                             "Hhmm_trabajadas",
-                            "Observacion"};
+                            "Observacion",
+                            "Hhmm_no_trabajadas"};
                     getCSVFile(_empleado, 
                         csvFile, columnNames, m_registros);
                     
@@ -220,7 +221,8 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
             "Hhmm_extras",
             "Hhmm_ausencia",
             "Hhmm_trabajadas",
-            "Observacion"};
+            "Observacion",
+            "Hhmm_no_trabajadas"};
         //String csvfileName = "C:\\Proyectos\\GestionFemaseRuntime\\output\\admin_asistencia_semanal_sin_headers.csv";//asistencia_salida.csv";
         JRCsvDataSource ds = new JRCsvDataSource(JRLoader.getLocationInputStream(_csvFilename));
         //ds.setRecordDelimiter("\r\n");
@@ -435,7 +437,8 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
         String strAuxAtraso = "";
         String strAuxHextras = "";
         String strAuxHaus   = "";
-        String strAuxHrsJustificadas = "";  
+        String strAuxHrsJustificadas = "";
+        String strHrsNoTrabajadas = "";
         //String hrsTeoricasMenosColacion = "";
         
         int countDiasTrabajados = 0;
@@ -460,6 +463,7 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
             ArrayList<String> listaHorasPresenciales = new ArrayList<>();
             ArrayList<String> listaHorasTeoricas = new ArrayList<>();
             ArrayList<String> listaHorasTrabajadas = new ArrayList<>();
+            ArrayList<String> listaHorasNoTrabajadas = new ArrayList<>();
             ArrayList<String> listaHorasAusencia = new ArrayList<>();
             ArrayList<String> listaHorasAtraso = new ArrayList<>();
             ArrayList<String> listaHorasExtras = new ArrayList<>();
@@ -487,6 +491,13 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
                     + ", observacion: " + detalle.getObservacion());
                 
                 if (strAuxHrsJustificadas != null) listaHorasJustificadas.add(strAuxHrsJustificadas);
+                
+                strHrsNoTrabajadas = detalle.getHrsNoTrabajadas();
+                if (strHrsNoTrabajadas!=null && strHrsNoTrabajadas.compareTo("-") != 0){
+                    System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal."
+                        + "getParameters]Add hrs NO trabajadas: " + strHrsNoTrabajadas);
+                    listaHorasNoTrabajadas.add(strHrsNoTrabajadas);
+                }
                 
                 if ((detalle.getHoraEntrada() != null && detalle.getHoraEntrada().compareTo("00:00:00") != 0 
                         && detalle.getHoraSalida() != null && detalle.getHoraSalida().compareTo("00:00:00") != 0)
@@ -524,32 +535,37 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
             String totalHrsPresenciales = "00:00";
             String totalHrsTrabajadas   = "00:00";
             String totalHrsAusencia     = "00:00";
+            String totalHrsNoTrabajadas = "00:00";
             String totalHrsExtras       = "00:00";
             String totalHrsAtraso       = "00:00";
             String totalHrsJustificadas = "00:00";
             String totalHrsTeoricas     = "00:00";
 
-            if (listaHorasPresenciales.size() > 0){
+            if (!listaHorasPresenciales.isEmpty()){
                 totalHrsPresenciales = Utilidades.sumTimesList(listaHorasPresenciales);
             }
-            if (listaHorasTeoricas.size() > 0){
+            if (!listaHorasTeoricas.isEmpty()){
                 totalHrsTeoricas = Utilidades.sumTimesList(listaHorasTeoricas);
             }
-            if (listaHorasTrabajadas.size() > 0){
+            if (!listaHorasTrabajadas.isEmpty()){
                 totalHrsTrabajadas = Utilidades.sumTimesList(listaHorasTrabajadas);
             }
-            if (listaHorasAusencia.size() > 0){
+            if (!listaHorasAusencia.isEmpty()){
                 totalHrsAusencia = Utilidades.sumTimesList(listaHorasAusencia);
             }
-            if (listaHorasExtras.size() > 0){
+            if (!listaHorasExtras.isEmpty()){
                 totalHrsExtras = Utilidades.sumTimesList(listaHorasExtras);
             }
-            if (listaHorasAtraso.size() > 0){
+            if (!listaHorasAtraso.isEmpty()){
                 totalHrsAtraso = Utilidades.sumTimesList(listaHorasAtraso);
             }
-            if (listaHorasJustificadas.size() > 0){
+            if (!listaHorasJustificadas.isEmpty()){
                 totalHrsJustificadas = Utilidades.sumTimesList(listaHorasJustificadas);
             }
+            if (!listaHorasNoTrabajadas.isEmpty()){
+                totalHrsNoTrabajadas = Utilidades.sumTimesList(listaHorasNoTrabajadas);
+            }
+            
             String auxRut = _objEmpleado.getRut();
             System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal."
                 + "getParameters]auxRut: " + auxRut);
@@ -595,6 +611,7 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
                 
                 parameters.put("totalHrsTrabajadas", totalHrsTrabajadas);
                 parameters.put("totalHrsAusencia", totalHrsAusencia);
+                parameters.put("totalHrsNoTrabajadas", totalHrsNoTrabajadas);
                 parameters.put("totalHrsAtraso", totalHrsAtraso);
                 parameters.put("totalHrsExtras", totalHrsExtras);
                 parameters.put("totalHrsJustificadas", totalHrsJustificadas);
@@ -1406,9 +1423,16 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
                 String hhmmJustificadas = detalle.getHhmmJustificadas();
                 String totalDelDia      = detalle.getHrsTrabajadas();
                 String observacion      = detalle.getObservacion();
-                String hrsNoTrabajadas  = detalle.getHrsAusencia();
+                String hrsAusencia      = detalle.getHrsAusencia();
+                String hrsNoTrabajadas  = detalle.getHrsNoTrabajadas();
                 String hrsMinsExtras    = detalle.getHorasMinsExtrasAutorizadas();
                 String hrsTeoricasMenosColacion = null;
+                
+                System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal."
+                    + "getCSVFile]"
+                    + "labelFecha:" + labelFecha
+                    + ", hrsNoTrabajadas:" + hrsNoTrabajadas);
+                
                 //boolean esFeriado = detalle.isEsFeriado();
                 System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal."
                     + "getCSVFile]calcular hrs teoricas...");
@@ -1425,6 +1449,7 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
                 if (hhmmJustificadas == null) hhmmJustificadas = "-";
                 if (totalDelDia == null) totalDelDia = "-";
                 if (observacion == null) observacion = "-";
+                if (hrsAusencia == null) hrsAusencia = "-";
                 if (hrsNoTrabajadas == null) hrsNoTrabajadas = "-";
                 if (hrsMinsExtras == null) hrsMinsExtras = "-";
                 if (hrsTeoricasMenosColacion == null) hrsTeoricasMenosColacion = "-";
@@ -1434,22 +1459,24 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
                     + ", hrsTeoricasMenosColacion(2): " + hrsTeoricasMenosColacion
                     + ", entradaComentario: " + entradaComentario
                     + ", salidaComentario: " + salidaComentario);
-                /**
-                 * "Fecha",
-                 * "Hora_Entrada",
-                 * "Hora_Salida",
-                 * "Entrada_comentario",
-                 * "Salida_comentario",
-                 * "Entrada_teorica",
-                 * "Salida_teorica",
-                 * "Hrs_teoricas"
-                 * "Horas_presenciales",
-                 * "Hhmm_atraso",
-                 * "Hhmm_justificadas",
-                 * "Hhmm_extras",
-                 * "Hhmm_ausencia",
-                 * "Hhmm_trabajadas",
-                 * "Observacion"
+                /** campos:
+                 * new String[] {"Fecha",
+                    "Hora_Entrada",
+                    "Hora_Salida",
+                    "Entrada_comentario",
+                    "Salida_comentario",
+                    "Entrada_teorica",
+                    "Salida_teorica",
+                    "Horas_presenciales",
+                    "Hhmm_atraso",
+                    "Hhmm_justificadas",
+                    "Hhmm_extras",
+                    "Hhmm_ausencia",
+                    "Hhmm_trabajadas",
+                    "Observacion",
+                    "Hhmm_no_trabajadas"};
+                 * 
+                 
                 */
  
                 /*    
@@ -1478,16 +1505,18 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
                         + "\",\"" + hhmmAtraso
                         + "\",\"" + hhmmJustificadas
                         + "\",\"" + hrsMinsExtras 
-                        + "\",\"" + hrsNoTrabajadas        
+                        + "\",\"" + hrsAusencia        
                         + "\",\"" + totalDelDia
-                        + "\",\"" + observacion + "\"");
+                        + "\",\"" + observacion 
+                        + "\",\"" + hrsNoTrabajadas    
+                        + "\"");
                     csvWriter.append("\n");    
                     TotalesSemanaVO totalSemana = 
                         getTotalesSemana(registrosSemana);
                     registrosSemana.clear();
                     
                     //escribir linea de totales semana (lu-do)
-                    csvWriter.append("\"" + ""
+                    String lineaTotSemana = "\"" + ""
                     + "\",\"" + "" 
                     + "\",\"" + ""
                     + "\",\"" + ""
@@ -1499,12 +1528,16 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
                     + "\",\"" + totalSemana.getTotalHrsAtraso()
                     + "\",\"" + totalSemana.getTotalHrsJustificadas() 
                     + "\",\"" + totalSemana.getTotalHrsExtras()        
-                    + "\",\"" + totalSemana.getTotalHrsAusencia()
-                    + "\",\"" + totalSemana.getTotalHrsTrabajadas() + "\"");
+                    + "\",\"" + totalSemana.getTotalHrsNoTrabajadas()
+                    + "\",\"" + totalSemana.getTotalHrsTrabajadas() + "\"";
+                    
+                    System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal."
+                        + "getCSVFile]lineaTotSemana: " + lineaTotSemana);
+                    csvWriter.append(lineaTotSemana);
                     
                 }else{
                     registrosSemana.add(detalle);
-                    csvWriter.append("\"" + labelFecha
+                    String auxdetail = "\"" + labelFecha
                         + "\",\"" + detalle.getHoraEntrada() 
                         + "\",\"" + detalle.getHoraSalida()
                         + "\",\"" + entradaComentario
@@ -1516,9 +1549,19 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
                         + "\",\"" + hhmmAtraso
                         + "\",\"" + hhmmJustificadas
                         + "\",\"" + hrsMinsExtras 
-                        + "\",\"" + hrsNoTrabajadas        
+                        + "\",\"" + hrsAusencia        
                         + "\",\"" + totalDelDia
-                        + "\",\"" + observacion + "\"");
+                        + "\",\"" + observacion 
+                        + "\",\"" + hrsNoTrabajadas    
+                        + "\"";
+                    csvWriter.append(auxdetail);
+                    System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal."
+                        + "getCSVFile]"
+                        + "hrsAusencia: " + hrsAusencia
+                        + ", totalDelDia: " + totalDelDia
+                        + ", hrsNoTrabajadas: " + hrsNoTrabajadas);
+                    System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal."
+                        + "getCSVFile]linea detalle: " + auxdetail);
                 }
                 
                 csvWriter.append("\n");
@@ -1543,30 +1586,45 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
         ArrayList<String> listaHorasPresenciales = new ArrayList<>();
         ArrayList<String> listaHorasTeoricas = new ArrayList<>();
         ArrayList<String> listaHorasTrabajadas = new ArrayList<>();
+        ArrayList<String> listaHorasNoTrabajadas = new ArrayList<>();
         ArrayList<String> listaHorasAusencia = new ArrayList<>();
         ArrayList<String> listaHorasAtraso = new ArrayList<>();
         ArrayList<String> listaHorasExtras = new ArrayList<>();
         ArrayList<String> listaHorasJustificadas = new ArrayList<>();
-        String strAuxHp     = "";
-        String strAuxHt     = "";
-        String strAuxAtraso = "";
-        String strAuxHextras = "";
-        String strAuxHaus   = "";
+        String strAuxHp             = "";
+        String strAuxHorasTrabajadas = "";
+        String strAuxAtraso         = "";
+        String strAuxHextras         = "";
+        String strAuxHaus           = "";
         String strAuxHrsJustificadas = "";
-        String strHrsTeoricas = "";
-        int countDiasTrabajados = 0;
-        int countDiasAusente   = 0;    
+        String strHrsTeoricas       = "";
+        String strAuxHorasNoTrabajadas  ="";
+        int countDiasTrabajados     = 0;
+        int countDiasAusente        = 0;    
         
         for (DetalleAsistenciaVO detalle : _registrosSemana) {
             strAuxHp = detalle.getHrsPresenciales();
             listaHorasPresenciales.add(strAuxHp);
 
-            strAuxHt = detalle.getHrsTrabajadas();
-            listaHorasTrabajadas.add(strAuxHt);
+            System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal."
+                + "getParameters]"
+                + "getHrsTrabajadas: " + detalle.getHrsTrabajadas()
+                + ", getHrsAusencia: " + detalle.getHrsAusencia()
+                + ", getHhmmTeoricas: " + detalle.getHhmmTeoricas()
+                + ", getHrsNoTrabajadas: " + detalle.getHrsNoTrabajadas());        
+            
+            strAuxHorasTrabajadas = detalle.getHrsTrabajadas();
+            listaHorasTrabajadas.add(strAuxHorasTrabajadas);
 
             strAuxHaus = detalle.getHrsAusencia();
             listaHorasAusencia.add(strAuxHaus);
-
+            
+            strAuxHorasNoTrabajadas = detalle.getHrsNoTrabajadas();
+            if (strAuxHorasNoTrabajadas!=null && strAuxHorasNoTrabajadas.compareTo("-") != 0){
+                System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal."
+                    + "getParameters]Add hrs NO trabajadas: " + strAuxHorasNoTrabajadas);
+                listaHorasNoTrabajadas.add(strAuxHorasNoTrabajadas);
+            }
             //horas teoricas
             strHrsTeoricas = detalle.getHhmmTeoricas();
             listaHorasTeoricas.add(strHrsTeoricas);
@@ -1579,7 +1637,8 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
             strAuxHrsJustificadas = detalle.getHhmmJustificadas();
             System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal."
                 + "getParameters]fecha: " + detalle.getFechaEntradaMarca()
-                + ", hrs trabajadas: " + strAuxHt
+                + ", hrs trabajadas: " + strAuxHorasTrabajadas
+                + ", hrs No trabajadas: " + strAuxHorasNoTrabajadas
                 + ", observacion: " + detalle.getObservacion());
 
             if (strAuxHrsJustificadas != null) listaHorasJustificadas.add(strAuxHrsJustificadas);
@@ -1587,7 +1646,7 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
             if ((detalle.getHoraEntrada() != null && detalle.getHoraEntrada().compareTo("00:00:00") != 0 
                     && detalle.getHoraSalida() != null && detalle.getHoraSalida().compareTo("00:00:00") != 0)
                     || (detalle.getObservacion()!=null && detalle.getObservacion().compareTo("Dia libre") == 0)
-                    || (strAuxHt != null) ){
+                    || (strAuxHorasTrabajadas != null) ){
                 countDiasTrabajados++;
             }
             System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal."
@@ -1603,29 +1662,39 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
 
         }//fin iteracion detalle asistencia  
 
-        if (listaHorasPresenciales.size() > 0){
+        if (!listaHorasPresenciales.isEmpty()){
             totales.setTotalHrsPresenciales(Utilidades.sumTimesList(listaHorasPresenciales));
         }
-        if (listaHorasTeoricas.size() > 0){
+        if (!listaHorasTeoricas.isEmpty()){
             totales.setTotalHrsTeoricas(Utilidades.sumTimesList(listaHorasTeoricas));
         }
-        if (listaHorasTrabajadas.size() > 0){
+        if (!listaHorasTrabajadas.isEmpty()){
             totales.setTotalHrsTrabajadas(Utilidades.sumTimesList(listaHorasTrabajadas));
         }
-        if (listaHorasAusencia.size() > 0){
+        if (!listaHorasAusencia.isEmpty()){
             totales.setTotalHrsAusencia(Utilidades.sumTimesList(listaHorasAusencia));
         }
-        if (listaHorasExtras.size() > 0){
+        if (!listaHorasExtras.isEmpty()){
             totales.setTotalHrsExtras(Utilidades.sumTimesList(listaHorasExtras));
         }
-        if (listaHorasAtraso.size() > 0){
+        if (!listaHorasAtraso.isEmpty()){
             totales.setTotalHrsAtraso(Utilidades.sumTimesList(listaHorasAtraso));
         }
-        if (listaHorasJustificadas.size() > 0){
+        if (!listaHorasJustificadas.isEmpty()){
             totales.setTotalHrsJustificadas(Utilidades.sumTimesList(listaHorasJustificadas));
         }
+        
+        if (!listaHorasNoTrabajadas.isEmpty()){
+            System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal."
+                + "getParameters]Sum lista de Hrs No Trabajadas");
+            totales.setTotalHrsNoTrabajadas(Utilidades.sumTimesList(listaHorasNoTrabajadas));
+        }
+        
         totales.setDiasAusente(countDiasAusente);
         totales.setDiasTrabajados(countDiasTrabajados);
+        
+        System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal."
+            + "getParameters]Objeto Totales Semana: " + totales.toString());
         
         return totales;
     }

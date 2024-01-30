@@ -18,18 +18,27 @@ public class CargoVO implements Serializable{
     private int id;
     private String nombre;
     private int estado;
+    private String estadoNombre;
 
     public CargoVO() {
     }
 
-    
-    
     public CargoVO(int id, String nombre, int estado) {
         this.id = id;
         this.nombre = nombre;
         this.estado = estado;
     }
 
+    public String getEstadoNombre() {
+        return estadoNombre;
+    }
+
+    public void setEstadoNombre(String estadoNombre) {
+        this.estadoNombre = estadoNombre;
+    }
+
+    
+    
     public int getEstado() {
         return estado;
     }

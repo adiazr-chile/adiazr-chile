@@ -20,12 +20,22 @@ public class EmpresaVO implements Serializable{
     private String rut;
     private String direccion;
     private int estadoId=1;
-    
+    private String estadoNombre;
     private int regionId;
     private String regionNombre;
     private int comunaId;
     private String comunaNombre;
 
+    public String getEstadoNombre() {
+        return estadoNombre;
+    }
+
+    public void setEstadoNombre(String estadoNombre) {
+        this.estadoNombre = estadoNombre;
+    }
+
+    
+    
     public String getRegionNombre() {
         return regionNombre;
     }

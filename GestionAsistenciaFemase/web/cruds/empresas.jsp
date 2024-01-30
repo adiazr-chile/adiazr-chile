@@ -1,29 +1,34 @@
 
+<%@page import="cl.femase.gestionweb.vo.ComunaVO"%>
 <%@page import="cl.femase.gestionweb.common.Constantes"%>
-<%@page import="cl.femase.gestionweb.vo.DepartamentoVO"%>
 <%@page import="cl.femase.gestionweb.vo.EmpresaVO"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.Iterator"%>
 <%@page import="java.util.List"%>
 
 <%
-   String fileTitle = "departamentos"; 
-   List<DepartamentoVO> list = (List<DepartamentoVO>)request.getAttribute("lista");
-   if (list == null) list = new ArrayList<>();
-   List<EmpresaVO> empresas = (List<EmpresaVO>)session.getAttribute("empresas");
-   
-    String empresaId = (String)request.getAttribute("filtroEmpresaId");
-    String nombre = (String)request.getAttribute("filtroNombre");
-    if (empresaId == null) empresaId = "-1";
-    if (nombre == null) nombre = "";
+    String mainTitle    = "Empresas";
+    String fileTitle    = "empresas";
+    String urlPattern   = "EmpresasCRUD";
+    List<EmpresaVO> list = (List<EmpresaVO>)request.getAttribute("lista");
+    if (list == null) list = new ArrayList<>();
+  
+    List<ComunaVO> comunas = (List<ComunaVO>)session.getAttribute("comunas");
+    
+    //filtros de busqueda
+    String filtroNombre = (String)request.getAttribute("filtroNombre");
+    if (filtroNombre == null) filtroNombre = "";
+    
+    //num columnas
+    String columnas = "0,1,2,3,4,5,6,7";
 %>
 
 <!doctype html>
 <html lang="es">
     <head>
 	<meta charset="UTF-8">
-    <meta name="description" content="CRUD - Departamentos" />
-    <title>Departamentos-CRUD</title>
+        <meta name="description" content="CRUD - <%=mainTitle%>" />
+    <title><%=mainTitle%>-CRUD</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
     <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/css/bootstrap.css">-->
@@ -109,7 +114,7 @@
                     titleAttr: 'Copiar',
                     className: 'btn btn-app export barras',
                     exportOptions: {
-                        columns: [ 0,1,2,3]
+                        columns: [ <%=columnas%>]
                     }
                 },
 
@@ -120,7 +125,7 @@
                         titleAttr: 'Excel',
                         className: 'btn btn-app export excel',
                         exportOptions: {
-                            columns: [ 0,1,2,3]
+                            columns: [<%=columnas%>]
                         }
                     },
                     {
@@ -130,7 +135,7 @@
                         titleAttr: 'CSV',
                         className: 'btn btn-app export csv',
                         exportOptions: {
-                            columns: [ 0,1,2,3]
+                            columns: [<%=columnas%>]
                         }
                     },
                     {
@@ -140,7 +145,7 @@
                         titleAttr: 'Imprimir',
                         className: 'btn btn-app export imprimir',
                         exportOptions: {
-                            columns: [ 0,1,2,3]
+                            columns: [ <%=columnas%>]
                         }
                     },
                     {
@@ -156,48 +161,75 @@
         //Add row button
 	$('.dt-add').each(function () {
             $(this).on('click', function(evt){
-                //$('#newRowModalForm').modal('show');
-                document.getElementById("labelForm").value='Crear Registro';
+                //Campos en el formulario de creacion de nuevo registro
                 document.getElementById("action").value='create';
-                document.getElementById('id').readOnly= false;
+                document.getElementById("id").disabled = false;
                 
-                document.getElementById("id").value='';
-                document.getElementById("empresaId").value='';
-                document.getElementById("nombre").value='';
-                document.getElementById("estado").value='1';
+                document.getElementById("id").value = '';
+                document.getElementById("nombre").value = '';
+                document.getElementById("rut").value = '';
+                document.getElementById("direccion").value = '';
+                document.getElementById("estadoId").value = '1';
+                document.getElementById("comunaId").value = '278';
+                                
                 var botonEliminar = document.getElementById("deleteButton");
                 botonEliminar.disabled = true;
+                var nombreBuscar = document.searchForm.filtroNombre;
+                document.editNewForm.filtroNombre.value = nombreBuscar.value;
+
+                //inicializar formulario para crear nuevo registro
+                document.getElementById("id").readOnly = false;
+                document.getElementById("nombre").readOnly = false;
+                document.getElementById("rut").readOnly = false;
+                document.getElementById("direccion").readOnly = false;
+                document.getElementById("estadoId").readOnly = false;
+                document.getElementById("comunaId").readOnly = false;
+                
+                document.getElementById("saveButton").disabled = false;
+                document.getElementById("deleteButton").disabled = true;
+
                 $("#editModalForm").modal("show");
             });
 	});
         
         // code to read selected table row cell data (values).
+        //evento click en boton Select. Toma los valores de la fila seleccionada (columna por columna)        
         $("#myTable").on('click','.btnSelect',function(){
-             // get the current row
-             var currentRow=$(this).closest("tr"); 
-
-             var col1=currentRow.find("td:eq(0)").text(); // get current row 1st TD value
-             var col2=currentRow.find("td:eq(1)").text(); // get current row 2nd TD
-             var col3=currentRow.find("td:eq(2)").text(); // get current row 3rd TD
-             var col4=currentRow.find("td:eq(3)").text(); // get current row 3rd TD
-             document.getElementById("action").value='update';
-             document.getElementById("labelForm").value='Modificar Registro';
-             setValuesToEdit(col1, col2, col3, col4);
+            // get the current row
+            var currentRow=$(this).closest("tr"); 
+            var id     = currentRow.find("td:eq(0)").text(); // get current row 1st TD value
+            var nombre = currentRow.find("td:eq(1)").text(); // get current row 2nd TD
+            var rut  = currentRow.find("td:eq(2)").text(); // get current row 3rd TD
+            var direccion  = currentRow.find("td:eq(3)").text(); // get current row 3rd TD
+            var comunaId  = currentRow.find("td:eq(4)").text();
+            var estadoId  = currentRow.find("td:eq(6)").text();
+            document.getElementById("action").value='update';
+            setValuesToEdit(id, nombre, rut, direccion, comunaId, estadoId);
+             
+             $("#editModalForm").modal("show");
         });
         
+        //evento click en boton Delete. Toma los valores de la fila seleccionada (columna por columna)
         $("#myTable").on('click','.btnSelectDelete',function(){
              // get the current row
              var currentRow=$(this).closest("tr"); 
 
-             var col1=currentRow.find("td:eq(0)").text(); // get current row 1st TD value
-             var col2=currentRow.find("td:eq(1)").text(); // get current row 2nd TD
-             var col3=currentRow.find("td:eq(2)").text(); // get current row 3rd TD
-             var col4=currentRow.find("td:eq(3)").text(); // get current row 3rd TD
+             var id     = currentRow.find("td:eq(0)").text(); // get current row 1st TD value
+            var nombre = currentRow.find("td:eq(1)").text(); // get current row 2nd TD
+            var rut  = currentRow.find("td:eq(2)").text(); // get current row 3rd TD
+            var direccion  = currentRow.find("td:eq(3)").text(); // get current row 3rd TD
+            var comunaId  = currentRow.find("td:eq(4)").text();
+            var estadoId  = currentRow.find("td:eq(6)").text();
+             
              document.getElementById("action").value='delete';
-             document.getElementById("labelForm").value='Eliminar Registro';
-             setValuesToEdit(col1, col2, col3, col4);
+             ////document.getElementById("labelForm").value='Eliminar Registro';
+             setValuesToEdit(id, nombre, rut, direccion, comunaId, estadoId);
         });
         
+        //set params de busqueda previa
+        document.getElementById("filtroNombre").value='<%=filtroNombre%>';
+         
+        /*
         $("#datepicker").datepicker({ 
             autoclose: true, 
             todayHighlight: true,
@@ -209,51 +241,61 @@
              todayHighlight: true,
              language: "es"
          }).datepicker('update', new Date());
+         */
          
-         document.getElementById("filtroEmpresaId").value='<%=empresaId%>';
-         document.getElementById("filtroNombre").value='<%=nombre%>';
          
     } );
 
-    function setValuesToEdit(id, empresaId,nombre,strEstado){
-        //alert('set fields. ' + 'Id= ' + id + ', Dni= ' + dni+ ', nombre= ' + nombre);
-        var empresaABuscar = document.searchForm.filtroEmpresaId;
-        var nombreABuscar = document.searchForm.filtroNombre;
-        document.editNewForm.filtroEmpresaId.value = empresaABuscar.value;
-        document.editNewForm.filtroNombre.value = nombreABuscar.value;
-        
+    /**
+    * 
+    * */
+    function setValuesToEdit(id, nombre, rut, direccion, comunaId, estadoId){
+        //campos de busqueda
+        var nombreBuscar = document.searchForm.filtroNombre;
+	document.editNewForm.filtroNombre.value = nombreBuscar.value;
+        //Primary key del registro seleccionado
         var idDelete = document.getElementById("idDelete");
-        var empresaIdDelete = document.getElementById("empresaIdDelete");
-        
-        var inputID = document.getElementById("id");
-        var selectEmpresaId = document.getElementById("empresaId");
+        //Atributos adicionales del registro seleccionado
+        var inputID 	= document.getElementById("id");
         var inputNombre = document.getElementById("nombre");
-        var selectEstado = document.getElementById("estado");
-        var botonGuardar = document.getElementById("saveButton");
-        var botonEliminar = document.getElementById("deleteButton");
+        var inputRut = document.getElementById("rut");
+        var inputDireccion = document.getElementById("direccion");
+        var inputComunaId = document.getElementById("comunaId");
+        var inputEstadoId = document.getElementById("estadoId");
         
-        var intEstado = 1;
-        if (strEstado === 'No Vigente') intEstado = 2;
+        //botones
+        var botonGuardar 	= document.getElementById("saveButton");
+        var botonEliminar 	= document.getElementById("deleteButton");
         
+        //Seteo para mostrar valores seleccionados en el formulario para edicion/modificacion
         idDelete.value = id;
-        empresaIdDelete.value = empresaId;
         inputID.value = id;
-        selectEmpresaId.value = empresaId;
         inputNombre.value = nombre;
-        selectEstado.value = intEstado;
+        inputRut.value = rut;
+        inputDireccion.value = direccion;
+        inputComunaId.value = comunaId;
+        inputEstadoId.value = estadoId;
         
-        selectEmpresaId.readOnly = false;
+        inputID.readOnly = true;
         inputNombre.readOnly = false;
-        selectEstado.readOnly = false;
+        inputRut.readOnly = false;
+        inputDireccion.readOnly = false;
+        inputComunaId.readOnly = false;
+        inputEstadoId.readOnly = false;
         
+        //botones
         botonGuardar.disabled = false;
         botonEliminar.disabled = true;
-        //alert('accion: ' + document.getElementById("action").value);
+        
         if (document.getElementById("action").value === 'delete'){
             inputID.readOnly = true;
-            selectEmpresaId.disabled = true;
+            //desactivar la edicion de los campos
             inputNombre.readOnly = true;
-            selectEstado.disabled = true;
+            inputRut.readOnly = true;
+            inputDireccion.readOnly = true;
+            inputComunaId.readOnly = true;
+            inputEstadoId.readOnly = true;
+        
             botonGuardar.disabled = true;
             botonEliminar.disabled = false;
         }    
@@ -319,31 +361,57 @@
             .modal form label {
             font-weight: normal;
             }
+            
+            body {
+                margin: 4rem 0;
+              }
+
+              h4 {
+                margin-bottom: 2rem;
+                margin-top: 3rem;
+              }
+
+              .panel {
+                border-radius: 0.3rem;
+                padding: 1rem;
+                margin-bottom: 1rem;
+              }
+              .panel.panel-blue {
+                border: 1px solid #0087ff;
+                background-color: #ddedff;
+                color: #0087ff;
+              }
+              .panel.panel-yellow {
+                border: 1px solid #ffbd00;
+                background-color: #fef0b2;
+                color: #ffbd00;
+              }
+              .panel.panel-pink {
+                border: 1px solid #f84f7f;
+                background-color: #fad2e1;
+                color: #f84f7f;
+              }
+              .panel.panel-purple {
+                border: 1px solid #7f51f4;
+                background-color: #dfccff;
+                color: #7f51f4;
+              }
+            
     </style>                    
 </head>
 <body>
     <table align="center" class="table table-striped table-bordered dt-responsive nowra" style="width:70%">
-<form name="searchForm" id="searchForm" method="POST" action="<%=request.getContextPath()%>/DepartamentosCRUD?action=list" target="_self">
+<form name="searchForm" id="searchForm" method="POST" action="<%=request.getContextPath()%>/<%=urlPattern%>?action=list" target="_self">
   <tr>
-    <td width="10%">Empresa</td>
+    <td width="10%">Nombre</td>
     <td width="17%">
-      <select id="filtroEmpresaId" name="filtroEmpresaId" style="width:150px;" required>
-          <option value="-1" selected="">Seleccione</option>
-        <%
-                Iterator<EmpresaVO> iteraempresas = empresas.iterator();
-                while(iteraempresas.hasNext() ) {
-                    EmpresaVO auxempresa = iteraempresas.next();
-                    %>
-        <option value="<%=auxempresa.getId()%>"><%=auxempresa.getNombre()%></option>
-        <%
-                }
-            %>
-        </select>
+        <input type="text" name="filtroNombre" id="filtroNombre" />
+      
       </td>
-    <td width="15%">Nombre Depto.:</td>
-    <td width="25%"><input type="text" name="filtroNombre" id="filtroNombre" /></td>
+    <td width="15%"><input type="submit" name="buscar" id="buscar" value="Buscar" /></td>
+    <td width="25%">&nbsp;</td>
     <td width="16%">&nbsp;</td>
-    <td width="17%"><input type="submit" name="buscar" id="buscar" value="Buscar" /></td>
+    <td width="17%">&nbsp;</td>
   </tr>
   </form>
 </table>
@@ -354,18 +422,22 @@
 
   <div class="row">
     
-    <div class="col-12" >
-      <h3 class="titulo-tabla">Departamentos </h3>
+    <div class="col-12" > 
+      <h3 class="titulo-tabla"><%=mainTitle%> </h3>
       
       
       <table id="myTable" class="table table-striped table-bordered" style="width:100%">
         <thead>
             <tr>
                 
-            <th>Id Depto</th>
-            <th>Empresa</th>
+            <th>Id </th>
             <th>Nombre</th>
-            <th>Estado</th>
+            <th>Rut</th>
+            <th>Direccion</th>
+            <th>Comuna Id</th>
+            <th>Comuna Nombre</th>
+            <th>Estado Id</th>
+            <th>Estado Nombre</th>
                 <%if (!list.isEmpty()){%>
                     <th style="text-align:center;width:100px;">Nuevo registro 
                         <button type="button" class="btn btn-success btn-xs dt-add">
@@ -377,27 +449,28 @@
         </thead>
         <tbody>
             <%
-        Iterator<DepartamentoVO> iter = list.iterator();
-        DepartamentoVO depto = null;
+        Iterator<EmpresaVO> iter = list.iterator();
+        EmpresaVO registro = null;
         while (iter.hasNext()) {
-            depto = iter.next();
+            registro = iter.next();
         %>
             
             <tr>
-                <td><%= depto.getId()%></td>
-                <td><%= depto.getEmpresaId()%></td>
-                <td><%= depto.getNombre()%></td>
-                <td><%= Constantes.ESTADO_LABEL.get(depto.getEstado())%></td>
+                <td><%= registro.getId()%></td>
+                <td><%= registro.getNombre()%></td>
+                <td><%= registro.getRut()%></td>
+                <td><%= registro.getDireccion()%></td>
+                <td><%= registro.getComunaId()%></td>
+                <td><%= registro.getComunaNombre()%></td>
+                <td><%= registro.getEstadoId()%></td>
+                <td><%= registro.getEstadoNombre()%></td>
                 <td>
-                    <!--<button type="button" class="btn btn-primary btn-xs dt-edit" style="margin-right:16px;">
-                        <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
-                    </button>-->
                     <button class="btnSelect btn btn-primary btn-xs" style="margin-right:16px;">
                         <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
                     </button>
-                    <button type="button" class="btnSelectDelete btn btn-danger btn-xs dt-delete">
+                    <!--<button type="button" class="btnSelectDelete btn btn-danger btn-xs dt-delete">
                         <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                    </button>
+                    </button>-->
                 
                 </td>
             </tr>
@@ -416,154 +489,80 @@
 
 <!-- ************************************************************************************* -->
 <!-- ************************************************************************************* -->
-
-<!-- Inicio modal para editar registro -->                
-<div id="editModalForm" name="editModalForm" id="editModalForm" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
+<form name="editNewForm" method="POST" action="<%=request.getContextPath()%>/<%=urlPattern%>">
+<!-- Inicio modal para crear/editar registro -->                
+<div class="modal fade" 
+        id="editModalForm" name="editModalForm" 
+        tabindex="-1" 
+        role="dialog" 
+        aria-labelledby="exampleModalLabel" 
+        aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
     <div class="modal-content">
-      <div class="modal-header border-bottom-0">
-        <input type="text" class="form-control" name="labelForm" id="labelForm" readonly>
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Crear/Modificar Registro</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-        <form name="editNewForm" method="POST" action="<%=request.getContextPath()%>/DepartamentosCRUD">
-        <div class="modal-body">
-          
-            <div class="form-group">
-                <label for="empresaId">Empresa</label>
-                <select id="empresaId" name="empresaId" style="width:150px;" required>
-                    <option value="-1"></option>
-                    <%
-                        iteraempresas = empresas.iterator();
-                        while(iteraempresas.hasNext() ) {
-                            EmpresaVO auxempresa = iteraempresas.next();
-                            %>
-                            <option value="<%=auxempresa.getId()%>"><%=auxempresa.getNombre()%></option>
-                            <%
-                        }
-                    %>
-                </select>
+      <div class="container-fluid">
+        <!-- Inicio nueva fila -->    
+        <div class="row">
+            <div class="col">
+                ID<input type="text"  name="id" id="id">
+            </div>
+            <div class="col">
+                Nombre<input type="text"  name="nombre" id="nombre" placeholder="Ingrese nombre">
+            </div>
+            <div class="col">
+                Rut<input type="text"  name="rut" id="rut" placeholder="Ingrese rut">
+            </div>
+            <div class="col">
+                Direcci&oacute;n<input type="text"  name="direccion" id="direccion" placeholder="Ingrese direccion">
+            </div>
+            <div class="col">
+                Comuna
+                    <select name="comunaId" id="comunaId">
+                        <%
+                        for (int i = 0; i < comunas.size(); i++) {
+                            ComunaVO comuna = comunas.get(i);
+                            String label = comuna.getNombre();
+                        %>
+                        <option value="<%=comuna.getId()%>"><%=label%></option>
+                        <%}%>
+                        
+                    </select>
+                
+            </div>
+            <div class="col">
+                Estado
+                    <select name="estadoId" id="estadoId">
+                        <option value="1">Vigente</option>
+                        <option value="2">No Vigente</option>
+                    </select>
             </div>
             
-            <div class="form-group">
-            <label for="id">ID</label>
-            <input type="text" class="form-control" name="id" id="id">
-          </div>
-          <div class="form-group">
-            <label for="nombre">Nombre</label>
-            <input type="text" class="form-control" name="nombre" id="nombre" placeholder="Ingrese nombre">
-          </div>
-            
-            <div class="form-group">
-                <label for="estado">Estado</label>
-                <select name="estado" id="estado">
-                    <option value="2">No Vigente</option>
-                    <option value="1" selected>Vigente</option>
-                </select>
-            </div>
         </div>
-        <div class="modal-footer border-top-0 d-flex justify-content-center">
+        <!-- fin fila -->
+            
+</div>
+      <div class="modal-footer border-top-0 d-flex justify-content-center">
             <input type="hidden" name="action" id="action" value="update">
-            <input type="hidden" name="filtroEmpresaId" id="filtroEmpresaId">
             <input type="hidden" name="filtroNombre" id="filtroNombre">
             
+            <!-- Primary Key -->
             <input type="hidden" name="idDelete" id="idDelete">
-            <input type="hidden" name="empresaIdDelete" id="empresaIdDelete">
+            <!-- Fin Primary Key -->
             
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             <button id="saveButton" type="submit" class="btn btn-primary">Guardar cambios</button>
             <button id="deleteButton" type="submit" class="btn btn-primary">Eliminar</button>
         </div>
-      </form>
     </div>
   </div>
 </div>
-<!-- Fin modal para editar registro -->
-
-
-<!-- ******************************************************************** -->
-<!-- Inicio modal para insertar registro -->                
-<!--<div id="newRowModalForm" 
-    name="newRowModalForm" 
-    class="modal fade" 
-    tabindex="-1" role="dialog" 
-    aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header border-bottom-0">
-        <h3 class="modal-title" id="exampleModalLabel">Agregar nuevo registro</h3>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-        <form method="POST" action="<%=request.getContextPath()%>/DepartamentosCRUD">
-        <div class="modal-body">
-          <div class="form-group">
-            <label for="txtDni">DNI</label>
-            <input type="text" class="form-control" name="txtDni" id="txtDni">
-          </div>
-          <div class="form-group">
-            <label for="txtNombre">Nombre</label>
-            <input type="text" class="form-control" name="txtNombre" id="txtNombre" placeholder="Ingrese nombre">
-            <input type="hidden" name="txtId" id="txtId">
-          </div>
-          <div class="form-group">
-            <label for="txtEmail">Email</label>
-            <input type="email" class="form-control" id="txtEmail" name="txtEmail" aria-describedby="emailHelp" placeholder="Ingrese email">    
-          </div>
-          <div class="form-group">
-            <label for="txtRegion">Region</label>
-            <input type="text" class="form-control" name="txtRegion" id="txtRegion" placeholder="Ingrese region">
-          </div>
-            
-            <div class="form-group">
-            <label for="txtComuna">Comuna</label>
-            <input type="text" class="form-control" name="txtComuna" id="txtComuna" placeholder="Ingrese comuna">
-          </div>
-            
-            <div class="form-group">
-            <label for="txtCargo">Cargo</label>
-            <input type="text" class="form-control" name="txtCargo" id="txtCargo" placeholder="Ingrese cargo">
-          </div>
-            
-            <div id="fechaInicioContrato" 
-             class="input-group date" 
-             data-date-format="yyyy-mm-dd">
-                <label for="txtFechaContrato">Fecha inicio contrato</label>
-            <input class="form-control" 
-                   type="text" readonly name="txtFechaContrato" id="txtFechaContrato" />
-            <span class="input-group-addon">
-                <i class="glyphicon glyphicon-calendar"></i>
-            </span>
-            </div>
-            
-            <div class="form-group">
-                <label for="selectArt22">Art. 22</label>
-                <select name="selectArt22" id="selectArt22">
-                    <option value="N">No</option>
-                    <option value="S" selected>Si</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="selectEstado">Estado</label>
-                <select name="selectEstado" id="selectEstado">
-                    <option value="0">No Vigente</option>
-                    <option value="1" selected>Vigente</option>
-                </select>
-            </div>
-        </div>
-        <div class="modal-footer border-top-0 d-flex justify-content-center">
-            <input type="hidden" name="action" id="accion" value="create">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        	<button type="submit" class="btn btn-primary">Guardar cambios</button>
-        
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
-<!-- Fin modal para insertar registro -->
+</form>
+<!-- Fin modal para crear/editar registro -->
      
 </body>
 </html>

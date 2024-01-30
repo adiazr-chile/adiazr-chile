@@ -1,30 +1,34 @@
 
 <%@page import="cl.femase.gestionweb.common.Constantes"%>
-<%@page import="cl.femase.gestionweb.vo.DepartamentoVO"%>
+<%@page import="cl.femase.gestionweb.vo.ParametroVO"%>
 <%@page import="cl.femase.gestionweb.vo.EmpresaVO"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.Iterator"%>
 <%@page import="java.util.List"%>
 
 <%
-   String crudTitle = "Parametros"; 
+   
+   String mainTitle = "Parametros";
    String fileTitle = "parametros"; 
-   List<DepartamentoVO> list = (List<DepartamentoVO>)request.getAttribute("lista");
+   List<ParametroVO> list = (List<ParametroVO>)request.getAttribute("lista");
    if (list == null) list = new ArrayList<>();
    List<EmpresaVO> empresas = (List<EmpresaVO>)session.getAttribute("empresas");
    
+   	//filtros de busqueda
     String empresaId = (String)request.getAttribute("filtroEmpresaId");
-    String nombre = (String)request.getAttribute("filtroNombre");
     if (empresaId == null) empresaId = "-1";
-    if (nombre == null) nombre = "";
+    
+	//num columnas
+	String columnas = "0,1,2,3,4";
+	
 %>
 
 <!doctype html>
 <html lang="es">
     <head>
 	<meta charset="UTF-8">
-        <meta name="description" content="CRUD - <%=crudTitle%>" />
-    <title><%=crudTitle%>-CRUD</title>
+        <meta name="description" content="CRUD - <%=mainTitle%>" />
+    <title><%=mainTitle%>-CRUD</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
     <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/css/bootstrap.css">-->
@@ -110,7 +114,7 @@
                     titleAttr: 'Copiar',
                     className: 'btn btn-app export barras',
                     exportOptions: {
-                        columns: [ 0,1,2,3, 4,5]
+                        columns: [ <%=columnas%>]
                     }
                 },
 
@@ -121,7 +125,7 @@
                         titleAttr: 'Excel',
                         className: 'btn btn-app export excel',
                         exportOptions: {
-                            columns: [ 0,1,2,3,4,5]
+                            columns: [<%=columnas%>]
                         }
                     },
                     {
@@ -131,7 +135,7 @@
                         titleAttr: 'CSV',
                         className: 'btn btn-app export csv',
                         exportOptions: {
-                            columns: [ 0,1,2,3,4,5]
+                            columns: [<%=columnas%>]
                         }
                     },
                     {
@@ -141,7 +145,7 @@
                         titleAttr: 'Imprimir',
                         className: 'btn btn-app export imprimir',
                         exportOptions: {
-                            columns: [ 0,1,2,3,4,5]
+                            columns: [ <%=columnas%>]
                         }
                     },
                     {
@@ -157,18 +161,29 @@
         //Add row button
 	$('.dt-add').each(function () {
             $(this).on('click', function(evt){
-                //$('#newRowModalForm').modal('show');
+                //Campos en el formulario de edicion de registro
                 document.getElementById("labelForm").value='Crear Registro';
                 document.getElementById("action").value='create';
                 document.getElementById('id').readOnly= false;
                 
                 document.getElementById("id").value='';
                 document.getElementById("empresaId").value='';
-                document.getElementById("nombre").value='';
-                document.getElementById("estado").value='1';
+                document.getElementById("label").value='';
+                document.getElementById("valor").value='1';
                 var botonEliminar = document.getElementById("deleteButton");
                 botonEliminar.disabled = true;
-                $("#editModalForm").modal("show");
+				var empresaABuscar = document.searchForm.filtroEmpresaId;
+				document.editNewForm.filtroEmpresaId.value = empresaABuscar.value;
+        
+		
+				//inicializar formulario para crear nuevo registro
+				document.getElementById("empresaId").readOnly = false;
+				document.getElementById("label").readOnly = false;
+				document.getElementById("valor").readOnly = false;
+				document.getElementById("saveButton").disabled = false;
+				document.getElementById("deleteButton").disabled = true;
+		
+				$("#editModalForm").modal("show");
             });
 	});
         
@@ -176,27 +191,27 @@
         $("#myTable").on('click','.btnSelect',function(){
              // get the current row
              var currentRow=$(this).closest("tr"); 
-
-             var col1=currentRow.find("td:eq(0)").text(); // get current row 1st TD value
-             var col2=currentRow.find("td:eq(1)").text(); // get current row 2nd TD
-             var col3=currentRow.find("td:eq(2)").text(); // get current row 3rd TD
-             var col4=currentRow.find("td:eq(3)").text(); // get current row 3rd TD
+             var id=currentRow.find("td:eq(0)").text(); // get current row 1st TD value
+             var empresaId=currentRow.find("td:eq(1)").text(); // get current row 2nd TD
+             var label=currentRow.find("td:eq(2)").text(); // get current row 3rd TD
+             var valor=currentRow.find("td:eq(3)").text(); // get current row 3rd TD
              document.getElementById("action").value='update';
              document.getElementById("labelForm").value='Modificar Registro';
-             setValuesToEdit(col1, col2, col3, col4);
+             setValuesToEdit(id, empresaId, label, valor);
+             
         });
         
         $("#myTable").on('click','.btnSelectDelete',function(){
              // get the current row
              var currentRow=$(this).closest("tr"); 
 
-             var col1=currentRow.find("td:eq(0)").text(); // get current row 1st TD value
-             var col2=currentRow.find("td:eq(1)").text(); // get current row 2nd TD
-             var col3=currentRow.find("td:eq(2)").text(); // get current row 3rd TD
-             var col4=currentRow.find("td:eq(3)").text(); // get current row 3rd TD
+             var id=currentRow.find("td:eq(0)").text(); // get current row 1st TD value
+             var empresaId=currentRow.find("td:eq(1)").text(); // get current row 2nd TD
+             var label=currentRow.find("td:eq(2)").text(); // get current row 3rd TD
+             var valor=currentRow.find("td:eq(3)").text(); // get current row 3rd TD
              document.getElementById("action").value='delete';
              document.getElementById("labelForm").value='Eliminar Registro';
-             setValuesToEdit(col1, col2, col3, col4);
+             setValuesToEdit(id, empresaId, label, valor);
         });
         
         $("#datepicker").datepicker({ 
@@ -212,40 +227,36 @@
          }).datepicker('update', new Date());
          
          document.getElementById("filtroEmpresaId").value='<%=empresaId%>';
-         document.getElementById("filtroNombre").value='<%=nombre%>';
          
     } );
 
-    function setValuesToEdit(id, empresaId,nombre,strEstado){
-        //alert('set fields. ' + 'Id= ' + id + ', Dni= ' + dni+ ', nombre= ' + nombre);
+    /**
+    * 
+    * */
+    function setValuesToEdit(id, empresaId,label,valor){
         var empresaABuscar = document.searchForm.filtroEmpresaId;
-        var nombreABuscar = document.searchForm.filtroNombre;
-        document.editNewForm.filtroEmpresaId.value = empresaABuscar.value;
-        document.editNewForm.filtroNombre.value = nombreABuscar.value;
+		document.editNewForm.filtroEmpresaId.value = empresaABuscar.value;
         
         var idDelete = document.getElementById("idDelete");
         var empresaIdDelete = document.getElementById("empresaIdDelete");
         
-        var inputID = document.getElementById("id");
+        var inputID 		= document.getElementById("id");
         var selectEmpresaId = document.getElementById("empresaId");
-        var inputNombre = document.getElementById("nombre");
-        var selectEstado = document.getElementById("estado");
-        var botonGuardar = document.getElementById("saveButton");
-        var botonEliminar = document.getElementById("deleteButton");
-        
-        var intEstado = 1;
-        if (strEstado === 'No Vigente') intEstado = 2;
+		var inputLabel 		= document.getElementById("label");
+        var inputValor 		= document.getElementById("valor");
+        var botonGuardar 	= document.getElementById("saveButton");
+        var botonEliminar 	= document.getElementById("deleteButton");
         
         idDelete.value = id;
         empresaIdDelete.value = empresaId;
         inputID.value = id;
         selectEmpresaId.value = empresaId;
-        inputNombre.value = nombre;
-        selectEstado.value = intEstado;
+        inputLabel.value = label;
+        inputValor.value = valor;
         
         selectEmpresaId.readOnly = false;
-        inputNombre.readOnly = false;
-        selectEstado.readOnly = false;
+        inputLabel.readOnly = false;
+        inputValor.readOnly = false;
         
         botonGuardar.disabled = false;
         botonEliminar.disabled = true;
@@ -253,8 +264,8 @@
         if (document.getElementById("action").value === 'delete'){
             inputID.readOnly = true;
             selectEmpresaId.disabled = true;
-            inputNombre.readOnly = true;
-            selectEstado.disabled = true;
+            inputLabel.readOnly = true;
+            inputValor.readOnly = true;
             botonGuardar.disabled = true;
             botonEliminar.disabled = false;
         }    
@@ -324,7 +335,7 @@
 </head>
 <body>
     <table align="center" class="table table-striped table-bordered dt-responsive nowra" style="width:70%">
-<form name="searchForm" id="searchForm" method="POST" action="<%=request.getContextPath()%>/DepartamentosController?action=list" target="_self">
+<form name="searchForm" id="searchForm" method="POST" action="<%=request.getContextPath()%>/ParametrosCRUD?action=list" target="_self">
   <tr>
     <td width="10%">Empresa</td>
     <td width="17%">
@@ -341,8 +352,8 @@
             %>
         </select>
       </td>
-    <td width="15%">Nombre Depto.:</td>
-    <td width="25%"><input type="text" name="filtroNombre" id="filtroNombre" /></td>
+    <td width="15%">&nbsp;</td>
+    <td width="25%">&nbsp;</td>
     <td width="16%">&nbsp;</td>
     <td width="17%"><input type="submit" name="buscar" id="buscar" value="Buscar" /></td>
   </tr>
@@ -356,17 +367,19 @@
   <div class="row">
     
     <div class="col-12" >
-      <h3 class="titulo-tabla">Departamentos </h3>
+      <h3 class="titulo-tabla"><%=mainTitle%> </h3>
       
       
       <table id="myTable" class="table table-striped table-bordered" style="width:100%">
         <thead>
             <tr>
                 
-            <th>Id Depto</th>
+            <th>Id </th>
             <th>Empresa</th>
-            <th>Nombre</th>
-            <th>Estado</th>
+            <th>Label</th>
+            <th>Valor</th>
+            <th>Create Date</th>
+            <th>Amend Date</th>
                 <%if (!list.isEmpty()){%>
                     <th style="text-align:center;width:100px;">Nuevo registro 
                         <button type="button" class="btn btn-success btn-xs dt-add">
@@ -378,21 +391,20 @@
         </thead>
         <tbody>
             <%
-        Iterator<DepartamentoVO> iter = list.iterator();
-        DepartamentoVO depto = null;
+        Iterator<ParametroVO> iter = list.iterator();
+        ParametroVO param = null;
         while (iter.hasNext()) {
-            depto = iter.next();
+            param = iter.next();
         %>
             
             <tr>
-                <td><%= depto.getId()%></td>
-                <td><%= depto.getEmpresaId()%></td>
-                <td><%= depto.getNombre()%></td>
-                <td><%= Constantes.ESTADO_LABEL.get(depto.getEstado())%></td>
+                <td><%= param.getParamCode()%></td>
+                <td><%= param.getEmpresaId()%></td>
+                <td><%= param.getParamLabel()%></td>
+                <td><%= param.getValor()%></td>
+                <td><%= param.getFechaCreacion()%></td>
+                <td><%= param.getFechaModificacion()%></td>
                 <td>
-                    <!--<button type="button" class="btn btn-primary btn-xs dt-edit" style="margin-right:16px;">
-                        <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
-                    </button>-->
                     <button class="btnSelect btn btn-primary btn-xs" style="margin-right:16px;">
                         <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
                     </button>
@@ -428,13 +440,13 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-        <form name="editNewForm" method="POST" action="<%=request.getContextPath()%>/DepartamentosController">
+        <form name="editNewForm" method="POST" action="<%=request.getContextPath()%>/ParametrosCRUD">
         <div class="modal-body">
           
             <div class="form-group">
                 <label for="empresaId">Empresa</label>
                 <select id="empresaId" name="empresaId" style="width:150px;" required>
-                    <option value="-1"></option>
+                    <option value="-1">Ninguna</option>
                     <%
                         iteraempresas = empresas.iterator();
                         while(iteraempresas.hasNext() ) {
@@ -452,25 +464,23 @@
             <input type="text" class="form-control" name="id" id="id">
           </div>
           <div class="form-group">
-            <label for="nombre">Nombre</label>
-            <input type="text" class="form-control" name="nombre" id="nombre" placeholder="Ingrese nombre">
+            <label for="label">Label</label>
+            <input type="text" class="form-control" name="label" id="label" placeholder="Ingrese texto">
           </div>
-            
-            <div class="form-group">
-                <label for="estado">Estado</label>
-                <select name="estado" id="estado">
-                    <option value="2">No Vigente</option>
-                    <option value="1" selected>Vigente</option>
-                </select>
-            </div>
+          
+          <div class="form-group">
+            <label for="valor">Valor</label>
+            <input type="text" class="form-control" name="valor" id="valor" placeholder="Ingrese">
+          </div>
         </div>
         <div class="modal-footer border-top-0 d-flex justify-content-center">
             <input type="hidden" name="action" id="action" value="update">
             <input type="hidden" name="filtroEmpresaId" id="filtroEmpresaId">
-            <input type="hidden" name="filtroNombre" id="filtroNombre">
             
+            <!-- Primary Key -->
             <input type="hidden" name="idDelete" id="idDelete">
             <input type="hidden" name="empresaIdDelete" id="empresaIdDelete">
+            <!-- Fin Primary Key -->
             
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             <button id="saveButton" type="submit" class="btn btn-primary">Guardar cambios</button>
@@ -481,90 +491,6 @@
   </div>
 </div>
 <!-- Fin modal para editar registro -->
-
-
-<!-- ******************************************************************** -->
-<!-- Inicio modal para insertar registro -->                
-<!--<div id="newRowModalForm" 
-    name="newRowModalForm" 
-    class="modal fade" 
-    tabindex="-1" role="dialog" 
-    aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header border-bottom-0">
-        <h3 class="modal-title" id="exampleModalLabel">Agregar nuevo registro</h3>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-        <form method="POST" action="<%=request.getContextPath()%>/DepartamentosController">
-        <div class="modal-body">
-          <div class="form-group">
-            <label for="txtDni">DNI</label>
-            <input type="text" class="form-control" name="txtDni" id="txtDni">
-          </div>
-          <div class="form-group">
-            <label for="txtNombre">Nombre</label>
-            <input type="text" class="form-control" name="txtNombre" id="txtNombre" placeholder="Ingrese nombre">
-            <input type="hidden" name="txtId" id="txtId">
-          </div>
-          <div class="form-group">
-            <label for="txtEmail">Email</label>
-            <input type="email" class="form-control" id="txtEmail" name="txtEmail" aria-describedby="emailHelp" placeholder="Ingrese email">    
-          </div>
-          <div class="form-group">
-            <label for="txtRegion">Region</label>
-            <input type="text" class="form-control" name="txtRegion" id="txtRegion" placeholder="Ingrese region">
-          </div>
-            
-            <div class="form-group">
-            <label for="txtComuna">Comuna</label>
-            <input type="text" class="form-control" name="txtComuna" id="txtComuna" placeholder="Ingrese comuna">
-          </div>
-            
-            <div class="form-group">
-            <label for="txtCargo">Cargo</label>
-            <input type="text" class="form-control" name="txtCargo" id="txtCargo" placeholder="Ingrese cargo">
-          </div>
-            
-            <div id="fechaInicioContrato" 
-             class="input-group date" 
-             data-date-format="yyyy-mm-dd">
-                <label for="txtFechaContrato">Fecha inicio contrato</label>
-            <input class="form-control" 
-                   type="text" readonly name="txtFechaContrato" id="txtFechaContrato" />
-            <span class="input-group-addon">
-                <i class="glyphicon glyphicon-calendar"></i>
-            </span>
-            </div>
-            
-            <div class="form-group">
-                <label for="selectArt22">Art. 22</label>
-                <select name="selectArt22" id="selectArt22">
-                    <option value="N">No</option>
-                    <option value="S" selected>Si</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="selectEstado">Estado</label>
-                <select name="selectEstado" id="selectEstado">
-                    <option value="0">No Vigente</option>
-                    <option value="1" selected>Vigente</option>
-                </select>
-            </div>
-        </div>
-        <div class="modal-footer border-top-0 d-flex justify-content-center">
-            <input type="hidden" name="action" id="accion" value="create">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        	<button type="submit" class="btn btn-primary">Guardar cambios</button>
-        
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
-<!-- Fin modal para insertar registro -->
      
 </body>
 </html>

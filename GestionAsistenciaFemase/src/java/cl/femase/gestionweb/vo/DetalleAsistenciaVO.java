@@ -228,10 +228,25 @@ public class DetalleAsistenciaVO implements Serializable{
      */
     private String observacion;
     
+    /**
+    * Horas no trabajadas--> HH:mm
+    */
+    private String hrsNoTrabajadas;
+    
     public DetalleAsistenciaVO() {
             
     }
 
+    public String getHrsNoTrabajadas() {
+        return hrsNoTrabajadas;
+    }
+
+    public void setHrsNoTrabajadas(String hrsNoTrabajadas) {
+        this.hrsNoTrabajadas = hrsNoTrabajadas;
+    }
+
+    
+    
     public String getHrsAusencia() {
         return hrsAusencia;
     }

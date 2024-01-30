@@ -230,12 +230,12 @@ public class CargoDAO extends BaseDAO{
         try{
             String sql ="SELECT cargo_id, "
                 + "cargo_nombre, "
-                + "cargo_estado " +
-                " FROM cargo "
-                + "where 1=1 ";
+                + "cargo_estado, estado_nombre " +
+                " FROM cargo inner join estado on (cargo.cargo_estado = estado.estado_id)"
+                + " where 1=1 ";
            
             if (_nombre != null && _nombre.compareTo("") != 0){        
-                sql += " and upper(cargo_nombre) like '"+_nombre.toUpperCase()+"%'";
+                sql += " and upper(cargo_nombre) like '%"+_nombre.toUpperCase()+"%'";
             }
             if (_estado != -1){        
                 sql += " and cargo_estado = "+_estado;
@@ -256,6 +256,7 @@ public class CargoDAO extends BaseDAO{
                 data.setId(rs.getInt("cargo_id"));
                 data.setNombre(rs.getString("cargo_nombre"));
                 data.setEstado(rs.getInt("cargo_estado"));
+                data.setEstadoNombre(rs.getString("estado_nombre"));
                 lista.add(data);
             }
 

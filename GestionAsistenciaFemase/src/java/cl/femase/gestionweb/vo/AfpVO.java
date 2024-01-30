@@ -18,11 +18,22 @@ public class AfpVO implements Serializable{
     private String code;
     private String nombre;
     private int estado;
+    private String estadoNombre;
     
     public AfpVO() {
         
     }
 
+    public String getEstadoNombre() {
+        return estadoNombre;
+    }
+
+    public void setEstadoNombre(String estadoNombre) {
+        this.estadoNombre = estadoNombre;
+    }
+
+    
+    
     public int getEstado() {
         return estado;
     }

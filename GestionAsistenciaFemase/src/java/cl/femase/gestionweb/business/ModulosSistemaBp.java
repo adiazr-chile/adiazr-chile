@@ -56,6 +56,12 @@ public class ModulosSistemaBp  extends BaseBp{
         return updValues;
     }
     
+    /**
+    * 
+    * @param _moduleToInsert
+    * @param _eventdata
+    * @return 
+    */
     public ResultCRUDVO insert(ModuloSistemaVO _moduleToInsert, 
             MaintenanceEventVO _eventdata){
         

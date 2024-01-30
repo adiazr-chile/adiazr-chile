@@ -12,6 +12,7 @@ import cl.femase.gestionweb.vo.DetalleAsistenciaToInsertVO;
 import cl.femase.gestionweb.vo.DetalleAsistenciaVO;
 import cl.femase.gestionweb.vo.DetalleAusenciaJsonVO;
 import cl.femase.gestionweb.vo.DetalleTurnoVO;
+import cl.femase.gestionweb.vo.DiferenciaHorasVO;
 import cl.femase.gestionweb.vo.EmpleadoVO;
 import cl.femase.gestionweb.vo.InfoFeriadoVO;
 import cl.femase.gestionweb.vo.LogErrorVO;
@@ -23,12 +24,15 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.StringTokenizer;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -60,6 +64,10 @@ public class CalculoAsistenciaRunnable extends BaseBp implements Runnable{
     private static List<TurnoVO> m_listaTurnos;
     private static final HashMap<String,Integer> m_hashFechas = new HashMap<>();
     
+    static Calendar mycal = Calendar.getInstance(new Locale("es","CL"));
+    static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd H:m:s");
+    static SimpleDateFormat dbDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        
     /**
      * Lista de ausencias para cada rut
      * La key de cada item en la lista es: rut+"|"+fecha
@@ -230,6 +238,20 @@ public class CalculoAsistenciaRunnable extends BaseBp implements Runnable{
                             System.out.println(WEB_NAME+"[GestionFemase.CalculoAsistenciaRunnable.setHebras]."
                                 + " add To Insert: "+calculosFecha.toString());
                             
+                            /**
+                            * 09-12-2023: Seteo de horas No trabajadas
+                            * Si (total_del_dia > 0 Y total_del_dia < horas_teoricas){
+                            *    horas_no_trabajadas = total_del_dia - horas_teoricas
+                            *    detalle_asistencia.hrs_no_trabajadas = horas_no_trabajadas
+                            * }
+                            */
+                            if (calculosFecha.getHorasTeoricas()>0 && calculosFecha.getHrsTrabajadas() != null){
+                                System.out.println(WEB_NAME+"[GestionFemase.CalculoAsistenciaRunnable.setHebras]."
+                                    + "Calcular hrs no trabajadas");
+                                String horasNoTrabajadas = calculaHorasNoTrabajadas(calculosFecha);
+                                calculosFecha.setHrsNoTrabajadas(horasNoTrabajadas);
+                            }
+                            
                             if (calculosFecha.getHolguraMinutos() > 0){
                                 
                                 if (calculosFecha.getHhmmAtraso() != null 
@@ -283,6 +305,32 @@ public class CalculoAsistenciaRunnable extends BaseBp implements Runnable{
             + "CalculoAsistenciaRunnable.run]add calculos rut: "+empleado.getRut());
         listaCalculosEmpleado.put(empleado.getRut()+"|"+empleado.getIteracion(), dataFechasRut);
     }
+    
+    /**
+    * 
+    *    Si (total_del_dia > 0 Y total_del_dia < horas_teoricas){
+    *            horas_no_trabajadas = horas_teoricas - total_del_dia 
+    *            detalle_asistencia.hrs_no_trabajadas = horas_no_trabajadas
+    *    }
+    * 
+    */
+    private static String calculaHorasNoTrabajadas(DetalleAsistenciaVO _calculosFecha){
+        String horasNoTrabajadas = "-";
+        String fechaActuals1 = dbDateFormat.format(mycal.getTime());
+        String horadesde = fechaActuals1 + " " + _calculosFecha.getHoraEntradaTeorica();
+        String horahasta = fechaActuals1 + " " + _calculosFecha.getHoraSalidaTeorica();
+        DiferenciaHorasVO difHrsTeoricas = Utilidades.getTimeDifference(horadesde,horahasta);
+        int dif33 = Utilidades.comparaHoras(fechaActuals1 + " " + _calculosFecha.getHrsTrabajadas() + ":00", 
+            fechaActuals1 + " " +difHrsTeoricas.getStrDiferenciaHorasMinutosSegundos());
+        if (dif33 == 1){
+            DiferenciaHorasVO objHrsNoTrabajadas = 
+                Utilidades.getTimeDifference(fechaActuals1 + " " +difHrsTeoricas.getStrDiferenciaHorasMinutosSegundos(),
+                        fechaActuals1 + " " + _calculosFecha.getHrsTrabajadas() + ":00");
+            horasNoTrabajadas = objHrsNoTrabajadas.getStrDiferenciaHorasMinutos();
+        }
+        return horasNoTrabajadas;
+    }
+    
     
     /**
     * 

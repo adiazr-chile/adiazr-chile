@@ -104,7 +104,9 @@ public class AfpDAO extends BaseDAO{
         AfpVO data;
         
         try{
-            String sql = "SELECT afp_code, afp_name, afp_status FROM afp "
+            String sql = "SELECT afp_code, "
+                    + "afp_name, afp_status, estado.estado_nombre "
+                    + "FROM afp inner join estado on afp_status=estado.estado_id "
                 + "where 1 = 1 and afp_code <> 'NINGUNA' ";
            
             if (_nombre != null && _nombre.compareTo("") != 0){        
@@ -128,6 +130,7 @@ public class AfpDAO extends BaseDAO{
                 data.setCode(rs.getString("afp_code"));
                 data.setNombre(rs.getString("afp_name"));
                 data.setEstado(rs.getInt("afp_status"));
+                data.setEstadoNombre(rs.getString("estado_nombre"));
                 lista.add(data);
             }
 

@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.4.0.final using JasperReports Library version 6.4.1  -->
+<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="asistencia_semanal" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="afd47896-f0d9-4f05-b9e1-85cb497f4892">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="New Data Adapter "/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="406"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="583"/>
 	<parameter name="rut" class="java.lang.String">
 		<parameterDescription><![CDATA[]]></parameterDescription>
 	</parameter>
@@ -35,7 +37,7 @@
 	<parameter name="empresa_comuna" class="java.lang.String"/>
 	<parameter name="empresa_rut" class="java.lang.String"/>
 	<parameter name="totalHrsTeoricas" class="java.lang.String"/>
-	<queryString>
+	<queryString language="csv">
 		<![CDATA[]]>
 	</queryString>
 	<field name="Fecha" class="java.lang.String"/>
@@ -53,6 +55,7 @@
 	<field name="Hhmm_ausencia" class="java.lang.String"/>
 	<field name="Hhmm_trabajadas" class="java.lang.String"/>
 	<field name="Observacion" class="java.lang.String"/>
+	<field name="Hhmm_no_trabajadas" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>

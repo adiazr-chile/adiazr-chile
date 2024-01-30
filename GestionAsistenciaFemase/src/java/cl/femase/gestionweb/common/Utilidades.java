@@ -256,6 +256,7 @@ public class Utilidades {
         int hours = 0, minutes = 0, seconds = 0;
         for (String string : _listaHoras) {
             if (string != null){
+                System.out.println("[Utilidades.sumTimesList]item: " + string);
                 String temp[] = string.split(":");
                 if (temp[0].compareTo("") !=0 
                         && temp[1].compareTo("") != 0){
@@ -285,6 +286,7 @@ public class Utilidades {
         if (hours < 10) auxHoras = "0" + hours;
         if (minutes < 10) auxMinutos = "0" + minutes;
         
+        System.out.println("[Utilidades.sumTimesList]resultado suma: " + auxHoras + ":" + auxMinutos);
         return auxHoras + ":" + auxMinutos;
         
     }

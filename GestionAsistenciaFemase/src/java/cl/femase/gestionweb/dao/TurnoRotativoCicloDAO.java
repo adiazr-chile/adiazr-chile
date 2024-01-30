@@ -238,12 +238,12 @@ public class TurnoRotativoCicloDAO extends BaseDAO{
         
         try{
             String sql = "SELECT ciclo_correlativo correlativo, "
-                    + "empresa_id, ciclo_num_dias, "
-                    + "ciclo_etiqueta, "
-                    + "to_char(ciclo_fecha_creacion,'yyyy-MM-dd HH24:MI:SS') fecha_creacion, "
-                    + "to_char(ciclo_fecha_modificacion,'yyyy-MM-dd HH24:MI:SS') fecha_modificacion "
-                    + "FROM turno_rotativo_ciclo "
-                    + "where empresa_id = '" + _empresaId + "' ";
+                + "empresa_id, ciclo_num_dias, "
+                + "ciclo_etiqueta, "
+                + "to_char(ciclo_fecha_creacion,'yyyy-MM-dd HH24:MI:SS') fecha_creacion, "
+                + "to_char(ciclo_fecha_modificacion,'yyyy-MM-dd HH24:MI:SS') fecha_modificacion "
+                + "FROM turno_rotativo_ciclo "
+                + "where empresa_id = '" + _empresaId + "' ";
 
             if (_numDias != 0){        
                 sql += " and ciclo_num_dias =" + _numDias;

@@ -227,8 +227,8 @@ public class ProveedorCorreoDAO extends BaseDAO{
             String sql = "SELECT "
                 + "provider_code, provider_name, "
                 + "provider_domain, "
-                + "to_char(create_datetime, 'yyyy-MM-dd HH:mm:ss') create_datetime,"
-                + "to_char(update_datetime, 'yyyy-MM-dd HH:mm:ss') update_datetime "
+                + "to_char(create_datetime, 'yyyy-MM-dd HH24:MI:SS') create_datetime,"
+                + "to_char(update_datetime, 'yyyy-MM-dd HH24:MI:SS') update_datetime "
                 + "FROM proveedor_correo where 1 = 1 ";
 
             if (_name != null && _name.compareTo("") != 0){        

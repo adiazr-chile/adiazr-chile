@@ -1,3 +1,7 @@
+<%@page import="java.util.Date"%>
+<%@page import="cl.femase.gestionweb.vo.MaintenanceEventVO"%>
+<%@page import="cl.femase.gestionweb.vo.ResultCRUDVO"%>
+<%@page import="cl.femase.gestionweb.business.CalculoVacacionesBp"%>
 <%@page import="cl.femase.gestionweb.vo.PropertiesVO"%>
 <%@page import="cl.femase.gestionweb.business.DetalleAusenciaBp"%>
 <%@page import="java.util.HashMap"%>
@@ -13,6 +17,8 @@
     boolean haySaldo = true;
     String msgSaldo=""; 
     double progresivos = 0;
+    CalculoVacacionesBp calculoVacacionesBp = new CalculoVacacionesBp(appProperties);
+    DetalleAusenciaBp detAusenciaBp         = new DetalleAusenciaBp(appProperties);
     if (userConnected.getIdPerfil() == Constantes.ID_PERFIL_DIRECTOR 
             || userConnected.getIdPerfil() == Constantes.ID_PERFIL_DIRECTOR_TR){
                 haySaldo = false;
@@ -24,12 +30,38 @@
             || userConnected.getIdPerfil() == Constantes.ID_PERFIL_DIRECTOR_TR){
                 runEmpleado = userConnected.getRunEmpleado();
         }    
-        
-        // -------------- ----------------- ---------------------------------------------------
-        System.out.println("[GestionFemaseWeb]ingresar_solicitud_vacaciones.jsp]"
-            + "Consultar saldos en tabla vacaciones. "
-            + "EmpresaId: " + userConnected.getEmpresaId()
-            + ", Run empleado: "+ runEmpleado);
+            
+        System.out.println("[GestionFemaseWeb.ingreso_solic_vacaciones.jsp]"
+            + "Calcular saldo dias de vacaciones "
+            + "para un solo empleado.");
+
+        MaintenanceEventVO resultVO = new MaintenanceEventVO();
+        resultVO.setUsername(userConnected.getUsername());
+        resultVO.setDatetime(new Date());
+        resultVO.setUserIP(request.getRemoteAddr());
+        resultVO.setType("VAC");
+        resultVO.setEmpresaIdSource(userConnected.getEmpresaId());
+
+        ResultCRUDVO fnExec = calculoVacacionesBp.setVBA_Empleado(userConnected.getEmpresaId(), runEmpleado, resultVO);
+        if (fnExec != null && fnExec.getFilasAfectadasObj() != null){
+            System.out.println("[GestionFemaseWeb.ingreso_solic_vacaciones.jsp]"
+                + "Filas afectadas, post ejecucion de la funcion " + Constantes.fnSET_VBA_EMPLEADO
+                + ": " + fnExec.getFilasAfectadasObj().toString());
+        }
+        fnExec = calculoVacacionesBp.setVP_Empleado(userConnected.getEmpresaId(), runEmpleado, resultVO);
+        if (fnExec != null && fnExec.getFilasAfectadasObj() != null){
+            System.out.println("[GestionFemaseWeb.ingreso_solic_vacaciones.jsp]"
+                + "Filas afectadas, post ejecucion de la funcion " + Constantes.fnSET_VP_EMPLEADO
+                + ": " + fnExec.getFilasAfectadasObj().toString());
+        }
+        System.out.println("[GestionFemaseWeb.ingreso_solic_vacaciones.jsp]"
+            + "Actualizar saldos de vacaciones "
+            + "en tabla detalle_ausencia "
+            + "Run: "+ runEmpleado);
+
+        detAusenciaBp.actualizaSaldosVacaciones(runEmpleado);    
+            
+            
         /* *********************
         System.out.println("[GestionFemaseWeb]ingresar_solicitud_vacaciones.jsp]"
             + "Actualizar saldos en tabla vacaciones. "
@@ -50,6 +82,12 @@
         detAusenciaBp.actualizaSaldosVacaciones(runEmpleado);
         * *********************/
         // -------------- ----------------- ---------------------------------------------------
+        
+        // -------------- ----------------- ---------------------------------------------------
+        System.out.println("[GestionFemaseWeb]ingresar_solicitud_vacaciones.jsp]"
+            + "Consultar saldos actualizados en tabla 'vacaciones'. "
+            + "EmpresaId: " + userConnected.getEmpresaId()
+            + ", Run empleado: "+ runEmpleado);
         
         List<VacacionesVO> infoVacaciones = 
             vacacionesBp.getInfoVacaciones(userConnected.getEmpresaId(), 

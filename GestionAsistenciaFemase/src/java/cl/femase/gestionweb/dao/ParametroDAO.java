@@ -317,18 +317,19 @@ public class ParametroDAO extends BaseDAO{
             objresultado.setMsg(msgFinal);
             
             String sql = "UPDATE parametro "
-                + "SET empresa_id = ?, "
+                + "SET "
                     + "param_label = ?, "
                     + "param_value = ?, "
                     + "last_update = current_timestamp "
-                    + "WHERE param_code = ?";
+                    + "WHERE param_code = ? and empresa_id = ?";
 
             dbConn = dbLocator.getConnection(m_dbpoolName,"[ParametroDAO.update]");
             psupdate = dbConn.prepareStatement(sql);
-            psupdate.setString(1,  _data.getEmpresaId());
-            psupdate.setString(2,  _data.getParamLabel());
-            psupdate.setDouble(3,  _data.getValor());
-            psupdate.setString(4,  _data.getParamCode());
+            
+            psupdate.setString(1,  _data.getParamLabel());
+            psupdate.setDouble(2,  _data.getValor());
+            psupdate.setString(3,  _data.getParamCode());
+            psupdate.setString(4,  _data.getEmpresaId());
             
             int rowAffected = psupdate.executeUpdate();
             if (rowAffected == 1){
@@ -353,6 +354,64 @@ public class ParametroDAO extends BaseDAO{
                 dbLocator.freeConnection(dbConn);
             } catch (SQLException ex) {
                 System.err.println("[ParametroDAO.update]Error_2: " + ex.toString());
+            }
+        }
+
+        return objresultado;
+    }
+    
+    /**
+    * Actualiza un parametro
+    * @param _data
+    * @return 
+    */
+    public ResultCRUDVO delete(ParametroVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
+        PreparedStatement psupdate = null;
+        int result=0;
+        String msgError = "Error al eliminar "
+            + "parametro, "
+            + "empresa_id: " + _data.getEmpresaId()
+            + ", code: " + _data.getParamCode();
+        
+        try{
+            String msgFinal = " Elimina parametro:"
+                + "empresa_id [" + _data.getEmpresaId() + "]" 
+                + ", code [" + _data.getParamCode()+ "]";
+            
+            System.out.println(msgFinal);
+            objresultado.setMsg(msgFinal);
+            
+            String sql = "DELETE from parametro "
+                + "WHERE param_code = ? and empresa_id = ?";
+
+            dbConn = dbLocator.getConnection(m_dbpoolName,"[ParametroDAO.delete]");
+            psupdate = dbConn.prepareStatement(sql);
+            
+            psupdate.setString(1,  _data.getParamCode());
+            psupdate.setString(2,  _data.getEmpresaId());
+            
+            int rowAffected = psupdate.executeUpdate();
+            if (rowAffected == 1){
+                System.out.println(WEB_NAME+"[ParametroDAO.delete]"
+                    + ", empresa_id:" +_data.getEmpresaId()
+                    + ", code:" +_data.getParamCode()
+                    +" Eliminado OK!");
+            }
+
+            psupdate.close();
+            dbLocator.freeConnection(dbConn);
+        }catch(SQLException|DatabaseException sqle){
+            System.err.println("[ParametroDAO.delete]Error_1: " + sqle.toString());
+            objresultado.setThereError(true);
+            objresultado.setCodError(result);
+            objresultado.setMsgError(msgError + " :" + sqle.toString());
+        }finally{
+            try {
+                if (psupdate != null) psupdate.close();
+                dbLocator.freeConnection(dbConn);
+            } catch (SQLException ex) {
+                System.err.println("[ParametroDAO.delete]Error_2: " + ex.toString());
             }
         }
 

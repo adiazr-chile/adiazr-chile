@@ -69,18 +69,20 @@ public class EmpresaDAO extends BaseDAO{
                 + "empresa_rut,"
                 + "empresa_direccion,"
                 + "empresa_estado,"
+                + "estado.estado_nombre,"
                 + "empresa.comuna_id,"
                 + "comuna.comuna_nombre,"
                 + "comuna.region_id,"
                 + "region.region_nombre,"
                 + "region.short_name region_shortname "
                 + " from empresa "
-                + " left outer join comuna on (empresa.comuna_id=comuna.comuna_id) "
-                + " inner join region on (comuna.region_id = region.region_id)";
-            sql += " where 1=1 ";
+                    + " left outer join comuna on (empresa.comuna_id=comuna.comuna_id) "
+                    + " inner join region on (comuna.region_id = region.region_id) "
+                    + " inner join estado on (empresa.empresa_estado = estado.estado_id) ";
+            sql += " where 1 = 1 ";
            
             if (_nombre!=null && _nombre.compareTo("")!=0){        
-                sql += " and upper(empresa_nombre) like '"+_nombre.toUpperCase()+"%'";
+                sql += " and upper(empresa_nombre) like '" + _nombre.toUpperCase() + "%'";
             }
            
             sql += " order by " + _jtSorting; 
@@ -99,7 +101,7 @@ public class EmpresaDAO extends BaseDAO{
                 data.setRut(rs.getString("empresa_rut"));
                 data.setDireccion(rs.getString("empresa_direccion"));
                 data.setEstadoId(rs.getInt("empresa_estado"));
-                
+                data.setEstadoNombre(rs.getString("estado_nombre"));
                 data.setRegionId(rs.getInt("region_id"));
                 data.setRegionNombre(rs.getString("region_nombre"));
                 
@@ -349,7 +351,7 @@ public class EmpresaDAO extends BaseDAO{
             + ", nombre: "+_data.getNombre()
             + ", rut: "+_data.getRut()
             + ", direccion: "+_data.getDireccion()
-            + ", regionId: "+_data.getRegionId();
+            + ", comunaId: "+_data.getRegionId();
         
         try{
             String msgFinal = " Actualiza empresa:"
@@ -357,7 +359,7 @@ public class EmpresaDAO extends BaseDAO{
                 + ", nombre [" + _data.getNombre() + "]"
                 + ", rut [" + _data.getRut()+ "]"    
                 + ", direccion [" + _data.getDireccion() + "]"
-                + ", regionId [" + _data.getRegionId() + "]";
+                + ", comunaId [" + _data.getComunaId() + "]";
             
             System.out.println(msgFinal);
             objresultado.setMsg(msgFinal);
@@ -366,7 +368,7 @@ public class EmpresaDAO extends BaseDAO{
                 + "SET empresa_nombre = ?, "
                 + "empresa_rut = ?, "
                 + "empresa_direccion = ?,"
-                + "region_id = ?, "
+                + "comuna_id = ?, "
                 + "empresa_estado = ? "
                 + " WHERE empresa_id = ?";
             
@@ -375,7 +377,7 @@ public class EmpresaDAO extends BaseDAO{
             psupdate.setString(1,  _data.getNombre());
             psupdate.setString(2,  _data.getRut());
             psupdate.setString(3,  _data.getDireccion());
-            psupdate.setInt(4,  _data.getRegionId());
+            psupdate.setInt(4,  _data.getComunaId());
             psupdate.setInt(5,  _data.getEstadoId());
             psupdate.setString(6,  _data.getId());
             
@@ -386,7 +388,7 @@ public class EmpresaDAO extends BaseDAO{
                     + ", rut:" +_data.getRut()    
                     + ", nombre:" +_data.getNombre()
                     + ", direccion:" +_data.getDireccion()
-                    + ", region:" +_data.getRegionId()    
+                    + ", comunaId:" +_data.getComunaId()    
                     +" actualizada OK!");
             }
 
@@ -423,14 +425,14 @@ public class EmpresaDAO extends BaseDAO{
             + ", rut: "+_data.getRut()    
             + ", nombre: "+_data.getNombre()
             + ", direccion: "+_data.getDireccion()
-            + ", regionId: "+_data.getRegionId();
+            + ", comunaId: "+_data.getComunaId();
         
        String msgFinal = " Inserta empresa:"
             + "id [" + _data.getId() + "]"
             + " rut [" + _data.getRut() + "]"   
             + " nombre [" + _data.getNombre() + "]"
             + " direccion [" + _data.getDireccion() + "]"
-            + " regionId [" + _data.getRegionId() + "]";
+            + " comunaId [" + _data.getComunaId() + "]";
             
         objresultado.setMsg(msgFinal);
         PreparedStatement insert    = null;
@@ -439,7 +441,7 @@ public class EmpresaDAO extends BaseDAO{
             String sql = "INSERT INTO empresa("
                 + " empresa_id, empresa_nombre, "
                 + "empresa_rut, empresa_direccion, "
-                + "region_id, empresa_estado) "
+                + "comuna_id, empresa_estado) "
                 + " VALUES (?, ?, ?, ?, ?, ?)";
 
             dbConn = dbLocator.getConnection(m_dbpoolName,"[EmpresaDAO.insert]");
@@ -448,7 +450,7 @@ public class EmpresaDAO extends BaseDAO{
             insert.setString(2,  _data.getNombre());
             insert.setString(3,  _data.getRut());
             insert.setString(4,  _data.getDireccion());
-            insert.setInt(5,  _data.getRegionId());
+            insert.setInt(5,  _data.getComunaId());
             insert.setInt(6,  _data.getEstadoId());
             
             int filasAfectadas = insert.executeUpdate();
@@ -458,7 +460,7 @@ public class EmpresaDAO extends BaseDAO{
                     + ", id:" +_data.getId()
                     + ", rut:" +_data.getRut()
                     + ", direccion:" +_data.getDireccion()
-                    + ", regionId:" +_data.getRegionId()
+                    + ", comunaId:" +_data.getRegionId()
                     +" insertada OK!");
             }
             

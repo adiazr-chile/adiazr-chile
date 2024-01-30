@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.logging.Level;
 import org.apache.log4j.Logger;
 
 /**
@@ -70,25 +69,27 @@ public class DetalleAsistenciaDAO extends BaseDAO{
             + "hhmm_justificadas,"
             + "marca_entrada_comentario,"
             + "marca_salida_comentario,"
-            + "hhmm_salida_anticipada) "
+            + "hhmm_salida_anticipada,"
+            + "hrs_no_trabajadas) "
         + " VALUES ("
-            + "?,?, "
-            + "?,?, "
-            + "?,?, "
-            + "?,?, "
-            + "?,?, "
-            + "?,?, "
-            + "?,?,"
-            + "?,?,"
-            + "?,?,"
-            + "?,?,"
-            + "?,?,"
-            + "?,?,"
-            + "?,?,"
-            + "?,?,"
-            + "?,?,"
             + "?, ?, "
-            + "?,?,?,?)";
+            + "?, ?, "
+            + "?, ?, "
+            + "?, ?, "
+            + "?, ?, "
+            + "?, ?, "
+            + "?, ?,"
+            + "?, ?,"
+            + "?, ?,"
+            + "?, ?,"
+            + "?, ?,"
+            + "?, ?,"
+            + "?, ?,"
+            + "?, ?,"
+            + "?, ?,"
+            + "?, ?, "
+            + "?, ?,"
+            + "?, ?, ?)";
     
     private final String SQL_DELETE ="delete "
         + "FROM detalle_asistencia "
@@ -510,6 +511,8 @@ public class DetalleAsistenciaDAO extends BaseDAO{
                 
                 statement.setString(36,  entity.getDetalle().getHoraMinsSalidaAnticipada());
                 
+                statement.setString(37,  entity.getDetalle().getHrsNoTrabajadas());
+                               
                 // ...
                 statement.addBatch();
                 i++;
@@ -725,7 +728,7 @@ public class DetalleAsistenciaDAO extends BaseDAO{
             + "CASE "
             + "WHEN fecha_marca_salida > fecha_marca_entrada THEN '+1' "
             + "WHEN marca_salida_comentario is not null THEN '*' ELSE '' "
-            + "END salida_comentario "    
+            + "END salida_comentario, hrs_no_trabajadas "    
             + "FROM detalle_asistencia "
             + "where rut_empleado = '"+_rutEmpleado+"' "
             + "and fecha_marca_entrada between '"+_startDate+"' "
@@ -779,7 +782,7 @@ public class DetalleAsistenciaDAO extends BaseDAO{
 
                     data.setComentarioMarcaEntrada(rs.getString("entrada_comentario"));
                     data.setComentarioMarcaSalida(rs.getString("salida_comentario"));
-                    
+                    data.setHrsNoTrabajadas(rs.getString("hrs_no_trabajadas"));
                     lista.add(data);
                 } 
                  
@@ -881,7 +884,8 @@ public class DetalleAsistenciaDAO extends BaseDAO{
             + "CASE "
             + "WHEN fecha_marca_salida > fecha_marca_entrada THEN '+1' "
             + "WHEN marca_salida_comentario is not null THEN '*' ELSE '' "
-            + "END salida_comentario "
+            + "END salida_comentario,"
+                + "hrs_no_trabajadas "
             + "FROM detalle_asistencia "
                 + "inner join view_empleado empleado "
                 + "on (detalle_asistencia.empresa_id = empleado.empresa_id "
@@ -949,6 +953,7 @@ public class DetalleAsistenciaDAO extends BaseDAO{
                     
                     data.setComentarioMarcaEntrada(rs.getString("entrada_comentario"));
                     data.setComentarioMarcaSalida(rs.getString("salida_comentario"));
+                    data.setHrsNoTrabajadas(rs.getString("hrs_no_trabajadas"));
                     
                     data.setRowKey(data.getRut() + "|" 
                         + data.getFechaEntradaMarca());
@@ -1078,7 +1083,8 @@ public class DetalleAsistenciaDAO extends BaseDAO{
             + "coalesce(autoriza_atraso,'N') autoriza_atraso,"
             + "coalesce(autoriza_hrsextras,'N') autoriza_hrsextras,"
             + "hhmm_justificadas,"
-            + "coalesce(hhmm_extras_autorizadas,'00:00') hhmm_extras_autorizadas "
+            + "coalesce(hhmm_extras_autorizadas,'00:00') hhmm_extras_autorizadas,"
+            + "hrs_no_trabajadas "
             + "FROM detalle_asistencia "
             + "where rut_empleado in ("+ cadenaRuts+") "
             + "and fecha_marca_entrada between '"+_startDate+"' "
@@ -1133,6 +1139,7 @@ public class DetalleAsistenciaDAO extends BaseDAO{
                     data.setAutorizaHrsExtras(rs.getString("autoriza_hrsextras"));
                     data.setHhmmJustificadas(rs.getString("hhmm_justificadas"));
                     data.setHorasMinsExtrasAutorizadas(rs.getString("hhmm_extras_autorizadas"));
+                    data.setHrsNoTrabajadas(rs.getString("hrs_no_trabajadas"));
                     data.setRowKey(data.getRut() + "|" 
                         + data.getFechaEntradaMarca());
                     
@@ -1230,7 +1237,8 @@ public class DetalleAsistenciaDAO extends BaseDAO{
                 + "coalesce(autoriza_atraso,'N') autoriza_atraso,"
                 + "coalesce(autoriza_hrsextras,'N') autoriza_hrsextras,"
                 + "hhmm_justificadas,"
-                + "coalesce(hhmm_extras_autorizadas,'00:00') hhmm_extras_autorizadas "
+                + "coalesce(hhmm_extras_autorizadas,'00:00') hhmm_extras_autorizadas,"
+                + "coalesce(hrs_no_trabajadas,'00:00') hrs_no_trabajadas "
                 + "FROM detalle_asistencia_historica detalle_asistencia "
                 + "where rut_empleado = '"+_rutEmpleado+"' "
                 + "and fecha_marca_entrada between '"+_startDate+"' "
@@ -1283,7 +1291,8 @@ public class DetalleAsistenciaDAO extends BaseDAO{
                 data.setAutorizaHrsExtras(rs.getString("autoriza_hrsextras"));
                 data.setHhmmJustificadas(rs.getString("hhmm_justificadas"));
                 data.setHorasMinsExtrasAutorizadas(rs.getString("hhmm_extras_autorizadas"));
-                //
+                data.setHrsNoTrabajadas(rs.getString("hrs_no_trabajadas"));
+                
                 data.setRowKey(data.getRut() + "|" 
                     + data.getFechaEntradaMarca());
                 

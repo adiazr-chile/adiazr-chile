@@ -17,6 +17,7 @@ public class TotalesSemanaVO implements Serializable{
 
     private String totalHrsPresenciales = "00:00";
     private String totalHrsTrabajadas = "00:00";
+    private String totalHrsNoTrabajadas = "00:00";
     private String totalHrsTeoricas = "00:00";
     private String totalHrsAusencia = "00:00";
     private String totalHrsExtras = "00:00";
@@ -24,6 +25,14 @@ public class TotalesSemanaVO implements Serializable{
     private String totalHrsJustificadas = "00:00";
     private int diasTrabajados  = 0;
     private int diasAusente     = 0;
+
+    public String getTotalHrsNoTrabajadas() {
+        return totalHrsNoTrabajadas;
+    }
+
+    public void setTotalHrsNoTrabajadas(String totalHrsNoTrabajadas) {
+        this.totalHrsNoTrabajadas = totalHrsNoTrabajadas;
+    }
 
     public String getTotalHrsTeoricas() {
         return totalHrsTeoricas;
@@ -96,5 +105,11 @@ public class TotalesSemanaVO implements Serializable{
     public void setTotalHrsJustificadas(String totalHrsJustificadas) {
         this.totalHrsJustificadas = totalHrsJustificadas;
     }
+
+    @Override
+    public String toString() {
+        return "TotalesSemanaVO{" + "totalHrsPresenciales=" + totalHrsPresenciales + ", totalHrsTrabajadas=" + totalHrsTrabajadas + ", totalHrsNoTrabajadas=" + totalHrsNoTrabajadas + ", totalHrsTeoricas=" + totalHrsTeoricas + ", totalHrsAusencia=" + totalHrsAusencia + ", totalHrsExtras=" + totalHrsExtras + ", totalHrsAtraso=" + totalHrsAtraso + ", totalHrsJustificadas=" + totalHrsJustificadas + ", diasTrabajados=" + diasTrabajados + ", diasAusente=" + diasAusente + '}';
+    }
+
     
 }
