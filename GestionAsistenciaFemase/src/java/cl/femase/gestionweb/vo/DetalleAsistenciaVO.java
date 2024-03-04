@@ -68,7 +68,16 @@ public class DetalleAsistenciaVO implements Serializable{
     private String comentarioMarcaEntrada;
     private String comentarioMarcaSalida;
     private String horaMinsSalidaAnticipada;
+    private int minutosColacion;
 
+    public int getMinutosColacion() {
+        return minutosColacion;
+    }
+
+    public void setMinutosColacion(int minutosColacion) {
+        this.minutosColacion = minutosColacion;
+    }
+    
     public String getHhmmTeoricas() {
         return hhmmTeoricas;
     }

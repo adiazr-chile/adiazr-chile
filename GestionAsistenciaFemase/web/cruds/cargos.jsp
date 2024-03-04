@@ -72,7 +72,6 @@
         
     <script type="text/javascript">
         
-
     $(document).ready(function() {
         var table = $('#myTable').on( 'draw.dt', function () {
             $("#container").attr("id", "container"); 
@@ -282,7 +281,7 @@
         
     }
 
-	</script>
+    </script>
                         
     <style> 
         

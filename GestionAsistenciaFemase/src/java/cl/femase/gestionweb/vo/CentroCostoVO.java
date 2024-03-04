@@ -35,7 +35,9 @@ public class CentroCostoVO implements Serializable{
     private String label;
     private String emailNotificacion;
     private String zonaExtrema="N";
-        
+    private String estadoNombre;
+    private String comunaNombre;
+    
     public CentroCostoVO() {
     }
 
@@ -48,6 +50,24 @@ public class CentroCostoVO implements Serializable{
 //        this.dispositivosAsString = dispositivosAsString;
 //    }
 
+    public String getEstadoNombre() {
+        return estadoNombre;
+    }
+
+    public void setEstadoNombre(String estadoNombre) {
+        this.estadoNombre = estadoNombre;
+    }
+
+    public String getComunaNombre() {
+        return comunaNombre;
+    }
+
+    public void setComunaNombre(String comunaNombre) {
+        this.comunaNombre = comunaNombre;
+    }
+
+    
+    
     public String getZonaExtrema() {
         return zonaExtrema;
     }

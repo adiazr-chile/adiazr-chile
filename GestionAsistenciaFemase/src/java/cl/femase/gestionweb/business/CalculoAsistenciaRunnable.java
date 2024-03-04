@@ -320,8 +320,9 @@ public class CalculoAsistenciaRunnable extends BaseBp implements Runnable{
         String horadesde = fechaActuals1 + " " + _calculosFecha.getHoraEntradaTeorica();
         String horahasta = fechaActuals1 + " " + _calculosFecha.getHoraSalidaTeorica();
         DiferenciaHorasVO difHrsTeoricas = Utilidades.getTimeDifference(horadesde,horahasta);
+        String hhmmHrsTeoricasMenosColacion = Utilidades.restarMinsHora(difHrsTeoricas.getStrDiferenciaHorasMinutos(),_calculosFecha.getMinutosColacion());
         int dif33 = Utilidades.comparaHoras(fechaActuals1 + " " + _calculosFecha.getHrsTrabajadas() + ":00", 
-            fechaActuals1 + " " +difHrsTeoricas.getStrDiferenciaHorasMinutosSegundos());
+            fechaActuals1 + " " +hhmmHrsTeoricasMenosColacion);
         if (dif33 == 1){
             DiferenciaHorasVO objHrsNoTrabajadas = 
                 Utilidades.getTimeDifference(fechaActuals1 + " " +difHrsTeoricas.getStrDiferenciaHorasMinutosSegundos(),

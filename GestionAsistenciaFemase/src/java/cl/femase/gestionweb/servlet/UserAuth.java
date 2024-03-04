@@ -228,7 +228,7 @@ public class UserAuth extends BaseServlet {
                 //lista de centros de costo. Key=depto_id
                 session.setAttribute("allCencos", allCencos);
                     
-                /** cargar lista de departamentos en sesion */
+                /** cargar lista de comunas en sesion */
                 session.setAttribute("comunas", comunaBp.getComunas(null, -1, 0, 0, "comuna_nombre"));
                     
                 /** cargar lista de tipos eventos en sesion */

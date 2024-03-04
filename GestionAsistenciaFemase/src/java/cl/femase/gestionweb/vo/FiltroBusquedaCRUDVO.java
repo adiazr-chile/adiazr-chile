@@ -16,10 +16,31 @@ public class FiltroBusquedaCRUDVO implements Serializable{
    
     private String nombre;
     private String empresaId;
+    private String departamentoId;
     private String descripcion;
+    private String nombreCenco;
+    
     private int estado = 1;
     private int regionId = 1;
 
+    public String getDepartamentoId() {
+        return departamentoId;
+    }
+
+    public void setDepartamentoId(String departamentoId) {
+        this.departamentoId = departamentoId;
+    }
+
+    public String getNombreCenco() {
+        return nombreCenco;
+    }
+
+    public void setNombreCenco(String nombreCenco) {
+        this.nombreCenco = nombreCenco;
+    }
+
+    
+    
     public int getRegionId() {
         return regionId;
     }

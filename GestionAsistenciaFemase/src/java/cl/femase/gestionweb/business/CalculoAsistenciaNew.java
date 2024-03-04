@@ -656,6 +656,7 @@ public class CalculoAsistenciaNew extends BaseBp{
                                         detalleCalculo.setHoraEntradaTeorica(detalleturno.getHoraEntrada());
                                         detalleCalculo.setHoraSalidaTeorica(detalleturno.getHoraSalida());
                                         detalleCalculo.setHolguraMinutos(detalleturno.getHolgura());
+                                        detalleCalculo.setMinutosColacion(detalleturno.getMinutosColacion());
                                     }else{
                                         String aux11 = detalleCalculo.getObservacion();
                                         System.out.println(WEB_NAME+"[GestionFemase."
@@ -853,6 +854,7 @@ public class CalculoAsistenciaNew extends BaseBp{
                                    detalleCalculo.setHoraEntradaTeorica(detalleturno.getHoraEntrada());
                                    detalleCalculo.setHoraSalidaTeorica(detalleturno.getHoraSalida());
                                    detalleCalculo.setHolguraMinutos(detalleturno.getHolgura());
+                                   detalleCalculo.setMinutosColacion(detalleturno.getMinutosColacion());
                                    System.out.println(WEB_NAME+"[GestionFemase."
                                         + "CalculoAsistenciaNew]"
                                         + "procesaAsistencia.NO TIENE MARCAS "
@@ -1559,6 +1561,7 @@ public class CalculoAsistenciaNew extends BaseBp{
                 detalleCalculo.setHoraEntradaTeorica(_detalleturno.getHoraEntrada());
                 detalleCalculo.setHoraSalidaTeorica(_detalleturno.getHoraSalida());
                 detalleCalculo.setHolguraMinutos(_detalleturno.getHolgura());
+                detalleCalculo.setMinutosColacion(_detalleturno.getMinutosColacion());
             }else{
                 System.out.println(WEB_NAME+"[GestionFemase.CalculoAsistenciaNew]getInfoAsistencia."
                     + "NO TIENE MARCAS, "

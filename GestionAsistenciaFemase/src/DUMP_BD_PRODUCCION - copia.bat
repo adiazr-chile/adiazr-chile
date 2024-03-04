@@ -1,0 +1,2 @@
+set pgpassword=gestion
+"pg_dump.exe" -f "C:\paso\femasePROD_backup%date:~-4%%date:~3,2%%date:~0,2%%time:~0,2%%time:~3,2%%time:~6,2%.sqlpg_dump" -h "localhost" -U femase --schema "admingestionweb" "femase"

@@ -258,25 +258,28 @@ public class CentroCostoDAO extends BaseDAO{
         
         try{
             String sql = "SELECT cc.ccosto_id,"
-                + "cc.ccosto_nombre,"
-                + "cc.estado_id,"
-                + "cc.direccion,"
-                + "cc.id_comuna,"
-                + "cc.telefonos,"
-                + "cc.email,"
-                + "cc.depto_id,"
-                + "depto.depto_nombre,"
-                + "comuna.region_id,"
-                + "depto.empresa_id,"
-                + "empresa.empresa_nombre,"
-                + "cc.email_notificacion,"
-                + "cc.es_zona_extrema "
+                    + "cc.ccosto_nombre,"
+                    + "cc.estado_id,"
+                    + "cc.direccion,"
+                    + "cc.id_comuna,"
+                    + "cc.telefonos,"
+                    + "cc.email,"
+                    + "cc.depto_id,"
+                    + "depto.depto_nombre,"
+                    + "comuna.region_id,"
+                    + "depto.empresa_id,"
+                    + "empresa.empresa_nombre,"
+                    + "cc.email_notificacion,"
+                    + "coalesce(cc.es_zona_extrema,'N') es_zona_extrema,"
+                    + "comuna.comuna_nombre," 
+                    + "estado.estado_nombre "
                 + " FROM centro_costo cc "
-                + " inner join comuna on cc.id_comuna = comuna.comuna_id "
-                + " inner join region on comuna.region_id = region.region_id "
-                + " inner join departamento depto on cc.depto_id = depto.depto_id "
-                + " inner join empresa on depto.empresa_id = empresa.empresa_id "
-                + " where 1=1 ";
+                    + " inner join comuna on cc.id_comuna = comuna.comuna_id "
+                    + " inner join region on comuna.region_id = region.region_id "
+                    + " inner join departamento depto on cc.depto_id = depto.depto_id "
+                    + " inner join empresa on depto.empresa_id = empresa.empresa_id "
+                    + " inner join estado on cc.estado_id = estado.estado_id "
+                + " where ccosto_id <> -1 ";
            
             if (_deptoId != null && _deptoId.compareTo("-1") != 0){        
                 sql += " and cc.depto_id = '" + _deptoId + "'";
@@ -293,7 +296,9 @@ public class CentroCostoDAO extends BaseDAO{
             if (_jtPageSize > 0){
                 sql += " limit "+_jtPageSize + " offset "+_jtStartIndex;
             }
-       
+            
+            System.err.println("[CentroCostoDAO.getCentrosCosto]Sql: " + sql);
+            
             if (!m_usedGlobalDbConnection) dbConn = dbLocator.getConnection(m_dbpoolName,"[CentroCostoDAO.getCentrosCosto]");
             ps = dbConn.prepareStatement(sql);
             rs = ps.executeQuery();
@@ -318,6 +323,9 @@ public class CentroCostoDAO extends BaseDAO{
                 data.setZonaExtrema(rs.getString("es_zona_extrema"));
                 //System.out.println(WEB_NAME+"rescatar dispositivos asignados a cencoId= "+data.getId());
                 //data.setDispositivos(this.getDispositivosAsignados(data.getId()));
+                
+                data.setEstadoNombre(rs.getString("estado_nombre"));
+                data.setComunaNombre(rs.getString("comuna_nombre"));
                 
                 lista.add(data);
             }

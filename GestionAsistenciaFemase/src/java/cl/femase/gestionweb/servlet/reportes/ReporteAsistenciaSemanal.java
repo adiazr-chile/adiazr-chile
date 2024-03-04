@@ -1809,6 +1809,7 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
             String hhmmTurno = duracionTurno.getStrDiferenciaHorasMinutos();
             System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal."
                 + "getHrsTeoricas]hhmmTurno: " + hhmmTurno);
+            if (esFeriado) calcularHrsTeoricas = false;
         }else {
             System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal."
                 + "getHrsTeoricas]"

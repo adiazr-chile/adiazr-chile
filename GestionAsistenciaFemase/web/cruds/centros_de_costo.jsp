@@ -1,25 +1,51 @@
 
+<%@page import="cl.femase.gestionweb.vo.DispositivoVO"%>
+<%@page import="java.util.HashMap"%>
+<%@page import="cl.femase.gestionweb.vo.UsuarioVO"%>
+<%@page import="cl.femase.gestionweb.vo.ComunaVO"%>
+<%@page import="cl.femase.gestionweb.vo.DepartamentoVO"%>
+<%@page import="java.util.LinkedHashMap"%>
 <%@page import="cl.femase.gestionweb.common.Constantes"%>
 <%@page import="cl.femase.gestionweb.vo.CentroCostoVO"%>
-<%@page import="cl.femase.gestionweb.vo.EmpresaVO"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.Iterator"%>
 <%@page import="java.util.List"%>
 
 <%
-   String crudTitle = "Centros de Costo"; 
-   String fileTitle = "centros_costo"; 
-   List<CentroCostoVO> list = (List<CentroCostoVO>)request.getAttribute("lista");
-   if (list == null) list = new ArrayList<>();
-   List<EmpresaVO> empresas = (List<EmpresaVO>)session.getAttribute("empresas");
-   
-    String empresaId = (String)request.getAttribute("filtroEmpresaId");
-    String nombre = (String)request.getAttribute("filtroNombre");
-    if (empresaId == null) empresaId = "-1";
-    if (nombre == null) nombre = "";
+    String crudTitle = "Administracion Centros de Costo"; 
+    String fileTitle = "centros_costo"; 
+    String urlPattern   = "CentrosDeCostoCRUD";
+    //num columnas
+    String columnas = "0,1,2,3,4,5,6,7,8,9,10,11";
+    
+    UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
+    
+    String empresaId = userConnected.getEmpresaId();
+    
+    List<CentroCostoVO> list = (List<CentroCostoVO>)request.getAttribute("lista");
+    if (list == null) list = new ArrayList<>();
+    
+    LinkedHashMap<String, List<DepartamentoVO>> departamentosHash = 
+        (LinkedHashMap<String, List<DepartamentoVO>>)session.getAttribute("allDepartamentos");
+    
+    List<DepartamentoVO> departamentos = departamentosHash.get(empresaId);
+    if (departamentos == null) System.out.println("[centro_costo.jsp]departamentos es NULL");
+        
+    List<ComunaVO> comunas = (List<ComunaVO>)session.getAttribute("comunas");
+    
+    String filtroDepartamentoId = (String)request.getAttribute("filtroDepartamentoId");
+    String filtroNombreCenco = (String)request.getAttribute("filtroNombreCenco");
+    int filtroEstadoId = 1;
+    
+    if (request.getAttribute("filtroEstadoId") != null) filtroEstadoId = (Integer)request.getAttribute("filtroEstadoId");
+    
+    if (filtroNombreCenco == null) filtroNombreCenco = "";
+    if (filtroDepartamentoId == null) filtroDepartamentoId = "RM";
+    if (request.getAttribute("filtroEstadoId") == null) filtroEstadoId = 1;
 %>
 
 <!doctype html>
+
 <html lang="es">
     <head>
 	<meta charset="UTF-8">
@@ -109,7 +135,7 @@
                     titleAttr: 'Copiar',
                     className: 'btn btn-app export barras',
                     exportOptions: {
-                        columns: [ 0,1,2,3]
+                        columns: [ <%=columnas%>]
                     }
                 },
 
@@ -120,7 +146,7 @@
                         titleAttr: 'Excel',
                         className: 'btn btn-app export excel',
                         exportOptions: {
-                            columns: [ 0,1,2,3]
+                            columns: [<%=columnas%>]
                         }
                     },
                     {
@@ -130,7 +156,7 @@
                         titleAttr: 'CSV',
                         className: 'btn btn-app export csv',
                         exportOptions: {
-                            columns: [ 0,1,2,3]
+                            columns: [<%=columnas%>]
                         }
                     },
                     {
@@ -140,7 +166,7 @@
                         titleAttr: 'Imprimir',
                         className: 'btn btn-app export imprimir',
                         exportOptions: {
-                            columns: [ 0,1,2,3]
+                            columns: [ <%=columnas%>]
                         }
                     },
                     {
@@ -157,14 +183,21 @@
 	$('.dt-add').each(function () {
             $(this).on('click', function(evt){
                 //$('#newRowModalForm').modal('show');
-                document.getElementById("labelForm").value='Crear Registro';
+                //document.getElementById("labelForm").value='Crear Registro';
                 document.getElementById("action").value='create';
-                document.getElementById('id').readOnly= false;
+                document.getElementById('id').readOnly= true;
                 
-                document.getElementById("id").value='';
-                document.getElementById("empresaId").value='';
-                document.getElementById("nombre").value='';
-                document.getElementById("estado").value='1';
+                document.getElementById("id").value = '';//textbox
+                document.getElementById("deptoId").value = '-1';//combobox
+                document.getElementById("nombre").value = '';//textbox
+                document.getElementById("estado").value='1';//combobox
+                document.getElementById("direccion").value='';//textbox
+                document.getElementById("comunaId").value='-1';//combobox
+                document.getElementById("telefonos").value='';//textbox
+                document.getElementById("email").value='';//textbox
+                document.getElementById("emailNotificacion").value='';//textbox
+                document.getElementById("zonaExtrema").value='N';//combobox
+        
                 var botonEliminar = document.getElementById("deleteButton");
                 botonEliminar.disabled = true;
                 $("#editModalForm").modal("show");
@@ -173,29 +206,42 @@
         
         // code to read selected table row cell data (values).
         $("#myTable").on('click','.btnSelect',function(){
-             // get the current row
-             var currentRow=$(this).closest("tr"); 
+            // get the current row
+            var currentRow=$(this).closest("tr"); 
 
-             var col1=currentRow.find("td:eq(0)").text(); // get current row 1st TD value
-             var col2=currentRow.find("td:eq(1)").text(); // get current row 2nd TD
-             var col3=currentRow.find("td:eq(2)").text(); // get current row 3rd TD
-             var col4=currentRow.find("td:eq(3)").text(); // get current row 3rd TD
-             document.getElementById("action").value='update';
-             document.getElementById("labelForm").value='Modificar Registro';
-             setValuesToEdit(col1, col2, col3, col4);
+            var idCenco = currentRow.find("td:eq(0)").text();//id cenco
+            var nombreCenco = currentRow.find("td:eq(1)").text();//nombre cenco
+            var idEstado = currentRow.find("td:eq(2)").text();//id estado
+            var direccion = currentRow.find("td:eq(4)").text();//direccion
+            var idComuna = currentRow.find("td:eq(5)").text();//id comuna
+            var telefonos = currentRow.find("td:eq(7)").text();//telefonos
+            var emailGral = currentRow.find("td:eq(8)").text();//email gral
+            var emailNotificacion = currentRow.find("td:eq(9)").text();//email notificacion
+            var dispositivos = currentRow.find("td:eq(10)").text();//dispositivos separados por '|'
+            var zonaExtrema = currentRow.find("td:eq(11)").text();//es zona extrema {'S': Si, 'N': No}
+           
+            document.getElementById("action").value='update';
+            setValuesToEdit(idCenco, nombreCenco, idEstado, direccion,idComuna,telefonos,emailGral,emailNotificacion,dispositivos,zonaExtrema);
         });
         
         $("#myTable").on('click','.btnSelectDelete',function(){
-             // get the current row
-             var currentRow=$(this).closest("tr"); 
+            // get the current row
+            var currentRow=$(this).closest("tr"); 
 
-             var col1=currentRow.find("td:eq(0)").text(); // get current row 1st TD value
-             var col2=currentRow.find("td:eq(1)").text(); // get current row 2nd TD
-             var col3=currentRow.find("td:eq(2)").text(); // get current row 3rd TD
-             var col4=currentRow.find("td:eq(3)").text(); // get current row 3rd TD
-             document.getElementById("action").value='delete';
-             document.getElementById("labelForm").value='Eliminar Registro';
-             setValuesToEdit(col1, col2, col3, col4);
+            var idCenco = currentRow.find("td:eq(0)").text();//id cenco
+            var nombreCenco = currentRow.find("td:eq(1)").text();//nombre cenco
+            var idEstado = currentRow.find("td:eq(2)").text();//id estado
+            var direccion = currentRow.find("td:eq(4)").text();//direccion
+            var idComuna = currentRow.find("td:eq(5)").text();//id comuna
+            var telefonos = currentRow.find("td:eq(7)").text();//telefonos
+            var emailGral = currentRow.find("td:eq(8)").text();//email gral
+            var emailNotificacion = currentRow.find("td:eq(9)").text();//email notificacion
+            var dispositivos = currentRow.find("td:eq(10)").text();//dispositivos separados por '|'
+            var zonaExtrema = currentRow.find("td:eq(11)").text();//es zona extrema {'S': Si, 'N': No}
+            
+            document.getElementById("action").value='delete';
+            setValuesToEdit(idCenco, nombreCenco, idEstado, direccion,idComuna,telefonos,emailGral,emailNotificacion,dispositivos,zonaExtrema);
+            
         });
         
         $("#datepicker").datepicker({ 
@@ -204,50 +250,82 @@
             language: "es"
         }).datepicker('update', new Date());
                                     
-         document.getElementById("filtroEmpresaId").value='<%=empresaId%>';
-         document.getElementById("filtroNombre").value='<%=nombre%>';
+        document.getElementById("filtroEmpresaId").value='<%=empresaId%>';
+        document.getElementById("filtroNombreCenco").value='<%=filtroNombreCenco%>';
+        document.getElementById("filtroDepartamentoId").value='<%=filtroDepartamentoId%>';
+        document.getElementById("filtroEstadoId").value='<%=filtroEstadoId%>';
          
     } );
 
-    function setValuesToEdit(id, empresaId,nombre,strEstado){
-        //alert('set fields. ' + 'Id= ' + id + ', Dni= ' + dni+ ', nombre= ' + nombre);
-        var empresaABuscar = document.searchForm.filtroEmpresaId;
-        var nombreABuscar = document.searchForm.filtroNombre;
-        document.editNewForm.filtroEmpresaId.value = empresaABuscar.value;
-        document.editNewForm.filtroNombre.value = nombreABuscar.value;
+    /**
+    * 
+    * */
+    function setValuesToEdit(idCenco, nombreCenco, idEstado, direccion,idComuna,telefonos,emailGral,emailNotificacion,dispositivos,zonaExtrema){
+        var departamentoBuscar  = document.searchForm.filtroDepartamentoId;
+        var nombreCencoBuscar   = document.searchForm.filtroNombreCenco;
+        var estadoBuscar        = document.searchForm.filtroEstadoId;
+        
+        document.editNewForm.filtroDepartamentoId.value = departamentoBuscar.value;
+        document.editNewForm.filtroNombreCenco.value = nombreCencoBuscar.value;
+        document.editNewForm.filtroEstadoId.value = estadoBuscar.value;
         
         var idDelete = document.getElementById("idDelete");
-        var empresaIdDelete = document.getElementById("empresaIdDelete");
         
-        var inputID = document.getElementById("id");
-        var selectEmpresaId = document.getElementById("empresaId");
+        var inputDeptoId = document.getElementById("deptoId");
+        var inputId = document.getElementById("id");
         var inputNombre = document.getElementById("nombre");
         var selectEstado = document.getElementById("estado");
+        var inputDireccion = document.getElementById("direccion");
+        var selectComuna = document.getElementById("comunaId");
+        var inputTelefonos=document.getElementById("telefonos");
+        var inputEmail=document.getElementById("email");
+        var inputEmailNotificacion=document.getElementById("emailNotificacion");
+        var selectZonaExtrema = document.getElementById("zonaExtrema");
+        var inputDispositivos = document.getElementById("dispositivos");
+        
         var botonGuardar = document.getElementById("saveButton");
         var botonEliminar = document.getElementById("deleteButton");
         
-        var intEstado = 1;
-        if (strEstado === 'No Vigente') intEstado = 2;
-        
-        idDelete.value = id;
-        empresaIdDelete.value = empresaId;
-        inputID.value = id;
-        selectEmpresaId.value = empresaId;
-        inputNombre.value = nombre;
-        selectEstado.value = intEstado;
-        
-        selectEmpresaId.readOnly = false;
+        idDelete.value = idCenco;
+        inputId.value = idCenco;
+        inputNombre.value = nombreCenco;
+        selectEstado.value = idEstado;
+        inputDireccion.value = direccion;
+        inputDeptoId.value = departamentoBuscar.value;
+        selectComuna.value = idComuna;
+        inputTelefonos.value = telefonos;
+        inputEmail.value=emailGral;
+        inputEmailNotificacion.value=emailNotificacion;
+        selectZonaExtrema.value = zonaExtrema;
+        inputDispositivos.value = dispositivos;
+
+        inputId.readOnly = true;
+        inputDeptoId.readOnly = true;
         inputNombre.readOnly = false;
         selectEstado.readOnly = false;
+        inputDireccion.readOnly = false;
+        selectComuna.readOnly = false;
+        inputTelefonos.readOnly = false;
+        inputEmail.readOnly = false;
+        inputEmailNotificacion.readOnly = false;
+        selectZonaExtrema.readOnly = false;
+        inputDispositivos.readOnly = false;
         
         botonGuardar.disabled = false;
         botonEliminar.disabled = true;
-        //alert('accion: ' + document.getElementById("action").value);
         if (document.getElementById("action").value === 'delete'){
-            inputID.readOnly = true;
-            selectEmpresaId.disabled = true;
+            
+            inputId.readOnly = true;
             inputNombre.readOnly = true;
             selectEstado.disabled = true;
+            inputDireccion.readOnly = false;
+            selectComuna.disabled = true;
+            inputTelefonos.readOnly = false;
+            inputEmail.readOnly = false;
+            inputEmailNotificacion.readOnly = false;
+            selectZonaExtrema.disabled = true;
+            inputDispositivos.readOnly = false;
+        
             botonGuardar.disabled = true;
             botonEliminar.disabled = false;
         }    
@@ -255,7 +333,7 @@
         
     }
 
-	</script>
+    </script>
                         
     <style> 
         
@@ -317,25 +395,33 @@
 </head>
 <body>
     <table align="center" class="table table-striped table-bordered dt-responsive nowra" style="width:70%">
-<form name="searchForm" id="searchForm" method="POST" action="<%=request.getContextPath()%>/CentrosCostoController?action=list" target="_self">
+<form name="searchForm" id="searchForm" method="POST" action="<%=request.getContextPath()%>/<%=urlPattern%>?action=list" target="_self">
   <tr>
-    <td width="10%">Empresa</td>
+    <td width="10%">Departamento</td>
     <td width="17%">
-      <select id="filtroEmpresaId" name="filtroEmpresaId" style="width:150px;" required>
-          <option value="-1" selected="">Seleccione</option>
+        <select id="filtroDepartamentoId" name="filtroDepartamentoId" style="width:150px;" required>
         <%
-                Iterator<EmpresaVO> iteraempresas = empresas.iterator();
-                while(iteraempresas.hasNext() ) {
-                    EmpresaVO auxempresa = iteraempresas.next();
+                Iterator<DepartamentoVO> iteradeptos = departamentos.iterator();
+                while(iteradeptos.hasNext() ) {
+                    DepartamentoVO departamento = iteradeptos.next();
                     %>
-        <option value="<%=auxempresa.getId()%>"><%=auxempresa.getNombre()%></option>
+                    <option value="<%=departamento.getId()%>"><%=departamento.getNombre()%></option>
         <%
                 }
             %>
         </select>
       </td>
-    <td width="15%">Nombre Depto.:</td>
-    <td width="25%"><input type="text" name="filtroNombre" id="filtroNombre" /></td>
+    <td width="15%">Nombre:</td>
+    <td width="25%"><input type="text" name="filtroNombreCenco" id="filtroNombreCenco" /></td>
+    
+    <td width="15%">Estado:</td>
+    <td width="25%">
+        <select name="filtroEstadoId" id="filtroEstadoId">
+            <option value="1">Vigente</option>
+            <option value="2">No Vigente</option>
+        </select>
+    </td>
+    
     <td width="16%">&nbsp;</td>
     <td width="17%"><input type="submit" name="buscar" id="buscar" value="Buscar" /></td>
   </tr>
@@ -355,18 +441,25 @@
       <table id="myTable" class="table table-striped table-bordered" style="width:100%">
         <thead>
             <tr>
-                
-            <th>Id Depto</th>
-            <th>Empresa</th>
-            <th>Nombre</th>
-            <th>Estado</th>
-                <%if (!list.isEmpty()){%>
-                    <th style="text-align:center;width:100px;">Nuevo registro 
-                        <button type="button" class="btn btn-success btn-xs dt-add">
-                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                        </button>
-                    </th>
-                <%}%>
+                <th>Id Cenco</th>
+                <th>Nombre</th>
+                <th>Estado Id</th>
+                <th>Estado</th>
+                <th>Direccion</th>
+                <th>Id Comuna</th>
+                <th>Comuna</th>
+                <th>Telefonos</th>
+                <th>Email Gral</th>
+                <th>Email notificacion</th>
+                <th>Dispositivos</th>
+                <th>�Zona extrema?</th>
+                    <%if (!list.isEmpty()){%>
+                        <th style="text-align:center;width:100px;">Nuevo registro 
+                            <button type="button" class="btn btn-success btn-xs dt-add">
+                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                            </button>
+                        </th>
+                    <%}%>
             </tr>
         </thead>
         <tbody>
@@ -375,13 +468,31 @@
         CentroCostoVO cenco = null;
         while (iter.hasNext()) {
             cenco = iter.next();
+            HashMap<String, DispositivoVO> dispositivos = cenco.getDispositivos();
+            String strDevices = "";
+            for (String clave:dispositivos.keySet()) {
+                DispositivoVO itDevice = dispositivos.get(clave);
+                strDevices += itDevice.getId() + "<br>";
+            }
+            if (strDevices.indexOf("<br>") > 0){
+                strDevices = strDevices.substring(0, strDevices.length() - 4);
+            }
+            
         %>
             
             <tr>
-                <td><%= depto.getId()%></td>
-                <td><%= depto.getEmpresaId()%></td>
-                <td><%= depto.getNombre()%></td>
-                <td><%= Constantes.ESTADO_LABEL.get(depto.getEstado())%></td>
+                <td><%= cenco.getId()%></td>
+                <td><%= cenco.getNombre()%></td>
+                <td><%= cenco.getEstado()%></td>
+                <td><%= cenco.getEstadoNombre()%></td>
+                <td><%= cenco.getDireccion()%></td>
+                <td><%= cenco.getComunaId()%></td>
+                <td><%= cenco.getComunaNombre()%></td>
+                <td><%= cenco.getTelefonos()%></td>
+                <td><%= cenco.getEmail()%></td>
+                <td><%= cenco.getEmailNotificacion()%></td>
+                <td><%= cenco.getDispositivosAsString()%></td>
+                <td><%= cenco.getZonaExtrema()%></td>
                 <td>
                     <!--<button type="button" class="btn btn-primary btn-xs dt-edit" style="margin-right:16px;">
                         <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
@@ -389,10 +500,11 @@
                     <button class="btnSelect btn btn-primary btn-xs" style="margin-right:16px;">
                         <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
                     </button>
-                    <button type="button" class="btnSelectDelete btn btn-danger btn-xs dt-delete">
-                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                    </button>
-                
+                    <!--
+                        <button type="button" class="btnSelectDelete btn btn-danger btn-xs dt-delete">
+                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                        </button>
+                    -->
                 </td>
             </tr>
         <%}%>
@@ -405,159 +517,130 @@
   
 </div>
         
-        
 <!-- Fin tabla con datos -->
 
 <!-- ************************************************************************************* -->
 <!-- ************************************************************************************* -->
 
-<!-- Inicio modal para editar registro -->                
-<div id="editModalForm" name="editModalForm" id="editModalForm" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header border-bottom-0">
-        <input type="text" class="form-control" name="labelForm" id="labelForm" readonly>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-        <form name="editNewForm" method="POST" action="<%=request.getContextPath()%>/CentrosCostoController">
-        <div class="modal-body">
-          
-            <div class="form-group">
-                <label for="empresaId">Empresa</label>
-                <select id="empresaId" name="empresaId" style="width:150px;" required>
-                    <option value="-1"></option>
-                    <%
-                        iteraempresas = empresas.iterator();
-                        while(iteraempresas.hasNext() ) {
-                            EmpresaVO auxempresa = iteraempresas.next();
-                            %>
-                            <option value="<%=auxempresa.getId()%>"><%=auxempresa.getNombre()%></option>
+<form name="editNewForm" method="POST" action="<%=request.getContextPath()%>/<%=urlPattern%>">
+    <!-- Inicio modal para crear/editar registro -->                
+    <div class="modal fade" 
+            id="editModalForm" name="editModalForm" 
+            tabindex="-1" 
+            role="dialog" 
+            aria-labelledby="exampleModalLabel" 
+            aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Crear/Modificar Registro</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            <div class="container-fluid">
+                <!-- Inicio nueva fila -->    
+                <div class="row">
+                    <div class="col">ID<input type="text" class="form-control" name="id" id="id" size="10">
+                    </div>
+                    <div class="col">Depto ID<input type="text" class="form-control" name="deptoId" id="deptoId" size="10">
+                    </div>
+                </div>
+            	<!-- fin fila -->
+                
+                <!-- Inicio nueva fila -->    
+                <div class="row">
+                    <div class="col">Nombre<input type="text" class="form-control" name="nombre" id="nombre" size="20">
+                    </div>
+                </div>
+            	<!-- fin fila -->
+                
+                <!-- Inicio nueva fila -->    
+                <div class="row">
+                    <div class="col">
+                        Estado
+                        <select id="estado" name="estado" style="width:150px;" required>
+                            <option value="1" selected>Vigente</option>
+                            <option value="2">No Vigente</option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        Zona extrema?
+                        <select name="zonaExtrema" id="zonaExtrema">
+                            <option value="S">Si</option>
+                            <option value="N" selected>No</option>
+                        </select>
+                    </div>
+                </div>
+            	<!-- fin fila -->
+                    
+                <!-- Inicio nueva fila -->    
+                <div class="row">    
+                    <div class="col">Direccion<input type="text" class="form-control" name="direccion" id="direccion">
+                    </div>
+                </div>
+            	<!-- fin fila -->
+                <!-- Inicio nueva fila -->    
+                <div class="row">
+                    <div class="col">Comuna
+                        <select name="comunaId" id="comunaId">
                             <%
-                        }
-                    %>
-                </select>
+                            for (int i = 0; i < comunas.size(); i++) {
+                                ComunaVO comuna = comunas.get(i);
+                                String label = comuna.getNombre() + "[" + comuna.getRegionShortName() + "]";
+                            %>
+                            <option value="<%=comuna.getId()%>"><%=label%></option>
+                            <%}%>
+                        </select>
+                    </div>
+                    <div class="col">Telefonos<input type="text" class="form-control" name="telefonos" id="telefonos">
+                    </div>
+                 </div>
+                 <!-- fin fila -->
+                 
+                 <!-- Inicio nueva fila -->
+                 <div class="row">       
+                    <div class="col">E-mail<input type="text" class="form-control" name="email" id="email">
+                    </div>
+                 </div>
+                 <!-- fin fila -->
+                 
+                 <!-- Inicio nueva fila -->
+                 <div class="row">
+                     <div class="col">E-mail notificacion<input type="text" class="form-control" name="emailNotificacion" id="emailNotificacion">
+                    </div>
+                 </div>
+                 <!-- fin fila -->
+                 
+                 <!-- Inicio nueva fila -->
+                 <div class="row">       
+                    <div class="col">Dispositivos <a href='javascript:;' >[Modificar]</a><input type="text" class="form-control" name="dispositivos" id="dispositivos">
+                    </div>    
+                 </div>   
+                 <!-- fin fila -->       
+                
             </div>
+            <div class="modal-footer border-top-0 d-flex justify-content-center">
+                <input type="hidden" name="action" id="action" value="update">
+                <input type="hidden" name="filtroEmpresaId" id="filtroEmpresaId">
+                <input type="hidden" name="filtroDepartamentoId" id="filtroDepartamentoId">
+                <input type="hidden" name="filtroNombreCenco" id="filtroNombreCenco">
+                <input type="hidden" name="filtroEstadoId" id="filtroEstadoId">
+
+                <input type="hidden" name="idDelete" id="idDelete">
+
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button id="saveButton" type="submit" class="btn btn-primary">Guardar cambios</button>
+                <button id="deleteButton" type="submit" class="btn btn-primary">Eliminar</button>
             
-            <div class="form-group">
-            <label for="id">ID</label>
-            <input type="text" class="form-control" name="id" id="id">
-          </div>
-          <div class="form-group">
-            <label for="nombre">Nombre</label>
-            <input type="text" class="form-control" name="nombre" id="nombre" placeholder="Ingrese nombre">
-          </div>
-            
-            <div class="form-group">
-                <label for="estado">Estado</label>
-                <select name="estado" id="estado">
-                    <option value="2">No Vigente</option>
-                    <option value="1" selected>Vigente</option>
-                </select>
+            </div>
             </div>
         </div>
-        <div class="modal-footer border-top-0 d-flex justify-content-center">
-            <input type="hidden" name="action" id="action" value="update">
-            <input type="hidden" name="filtroEmpresaId" id="filtroEmpresaId">
-            <input type="hidden" name="filtroNombre" id="filtroNombre">
-            
-            <input type="hidden" name="idDelete" id="idDelete">
-            <input type="hidden" name="empresaIdDelete" id="empresaIdDelete">
-            
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            <button id="saveButton" type="submit" class="btn btn-primary">Guardar cambios</button>
-            <button id="deleteButton" type="submit" class="btn btn-primary">Eliminar</button>
-        </div>
-      </form>
     </div>
-  </div>
-</div>
+</form>
+
 <!-- Fin modal para editar registro -->
 
 
-<!-- ******************************************************************** -->
-<!-- Inicio modal para insertar registro -->                
-<!--<div id="newRowModalForm" 
-    name="newRowModalForm" 
-    class="modal fade" 
-    tabindex="-1" role="dialog" 
-    aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header border-bottom-0">
-        <h3 class="modal-title" id="exampleModalLabel">Agregar nuevo registro</h3>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-        <form method="POST" action="<%=request.getContextPath()%>/CentrosCostoController">
-        <div class="modal-body">
-          <div class="form-group">
-            <label for="txtDni">DNI</label>
-            <input type="text" class="form-control" name="txtDni" id="txtDni">
-          </div>
-          <div class="form-group">
-            <label for="txtNombre">Nombre</label>
-            <input type="text" class="form-control" name="txtNombre" id="txtNombre" placeholder="Ingrese nombre">
-            <input type="hidden" name="txtId" id="txtId">
-          </div>
-          <div class="form-group">
-            <label for="txtEmail">Email</label>
-            <input type="email" class="form-control" id="txtEmail" name="txtEmail" aria-describedby="emailHelp" placeholder="Ingrese email">    
-          </div>
-          <div class="form-group">
-            <label for="txtRegion">Region</label>
-            <input type="text" class="form-control" name="txtRegion" id="txtRegion" placeholder="Ingrese region">
-          </div>
-            
-            <div class="form-group">
-            <label for="txtComuna">Comuna</label>
-            <input type="text" class="form-control" name="txtComuna" id="txtComuna" placeholder="Ingrese comuna">
-          </div>
-            
-            <div class="form-group">
-            <label for="txtCargo">Cargo</label>
-            <input type="text" class="form-control" name="txtCargo" id="txtCargo" placeholder="Ingrese cargo">
-          </div>
-            
-            <div id="fechaInicioContrato" 
-             class="input-group date" 
-             data-date-format="yyyy-mm-dd">
-                <label for="txtFechaContrato">Fecha inicio contrato</label>
-            <input class="form-control" 
-                   type="text" readonly name="txtFechaContrato" id="txtFechaContrato" />
-            <span class="input-group-addon">
-                <i class="glyphicon glyphicon-calendar"></i>
-            </span>
-            </div>
-            
-            <div class="form-group">
-                <label for="selectArt22">Art. 22</label>
-                <select name="selectArt22" id="selectArt22">
-                    <option value="N">No</option>
-                    <option value="S" selected>Si</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="selectEstado">Estado</label>
-                <select name="selectEstado" id="selectEstado">
-                    <option value="0">No Vigente</option>
-                    <option value="1" selected>Vigente</option>
-                </select>
-            </div>
-        </div>
-        <div class="modal-footer border-top-0 d-flex justify-content-center">
-            <input type="hidden" name="action" id="accion" value="create">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        	<button type="submit" class="btn btn-primary">Guardar cambios</button>
-        
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
-<!-- Fin modal para insertar registro -->
-     
 </body>
 </html>

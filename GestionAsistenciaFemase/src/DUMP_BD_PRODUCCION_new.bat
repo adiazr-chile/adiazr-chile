@@ -1,0 +1,2 @@
+set pgpassword=gestion
+"pg_dump.exe" -h "localhost" -U femase --encoding utf8 -F c -f "G:\Mi unidad\RESPALDO BDD\femasePROD_backup%date:~-4%%date:~3,2%%date:~0,2%%time:~0,2%%time:~3,2%%time:~6,2%.dump" --compress=5 "femase"
