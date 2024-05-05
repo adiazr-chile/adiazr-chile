@@ -1,11 +1,14 @@
 package cl.femase.gestionweb.servlet.crud;
 
+import cl.femase.gestionweb.business.AsignacionDispositivoBp;
 import cl.femase.gestionweb.servlet.BaseServlet;
 import cl.femase.gestionweb.business.CentroCostoBp;
 import cl.femase.gestionweb.vo.FiltroBusquedaCRUDVO;
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
 import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.CentroCostoVO;
+import cl.femase.gestionweb.vo.DispositivoCentroCostoVO;
+import cl.femase.gestionweb.vo.DispositivoVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import cl.femase.gestionweb.vo.UsuarioVO;
 import java.io.IOException;
@@ -17,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import java.util.Date;
+import java.util.HashMap;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
@@ -29,7 +33,7 @@ public class CentrosDeCosto extends BaseServlet {
     private static final String CRUD_SERVLET_NAME   = "[" + CRUD_TABLE_NAME + ".servlet]";
     private static final String FORWARD_PAGE        = "cruds/centros_de_costo.jsp";
     private static final String DEFAULT_SORT_COLUMN = "ccosto_nombre";
-        
+    List<CentroCostoVO> listaCencos = new ArrayList<>();    
     
     public CentrosDeCosto() {
         
@@ -180,7 +184,22 @@ public class CentrosDeCosto extends BaseServlet {
             if (action.compareTo("list") == 0) {
                 System.out.println(WEB_NAME + CRUD_SERVLET_NAME + "CRUD - " + CRUD_TABLE_NAME
                     + ". Mostrar registros");
-                forwardToCRUDPage(request, response, claseBp, filtroVO);   
+                
+                forwardToCRUDPage(request, response, claseBp, filtroVO);
+                /*
+                1.- Rescatar todos los cencos del depto seleccionado
+                2.- Por cada cenco
+                       - rescatar los dispositivos asignados
+                       - llenar hashmap.key=cenco_id, hashmap.value=dispositivo_id        
+                */
+                HashMap<Integer,List<DispositivoVO>> hashDispositivos = new HashMap<>(); 
+                for (int i = 0; i < listaCencos.size(); i++) {
+                    CentroCostoVO cenco = listaCencos.get(i);
+                    List<DispositivoVO> devicesCc = claseBp.getDispositivosAsignados(cenco.getId());
+                    hashDispositivos.put(cenco.getId(), devicesCc);
+                }
+                request.setAttribute("dispositivosAsignados", hashDispositivos);
+                
             }else if (action.compareTo("create") == 0) {
                     System.out.println(WEB_NAME + CRUD_SERVLET_NAME + "CRUD - " + CRUD_TABLE_NAME
                         + ". Insertar registro");
@@ -191,6 +210,22 @@ public class CentrosDeCosto extends BaseServlet {
                     System.out.println(WEB_NAME + CRUD_SERVLET_NAME + "CRUD - " + CRUD_TABLE_NAME
                         + ". Modificar registro");
                     ResultCRUDVO doUpdate = claseBp.update(registro, resultado);
+                    //insertar asignacion de dispotivos al cenco
+                    AsignacionDispositivoBp asignacionBp = new AsignacionDispositivoBp(appProperties);
+                    String[] dispositivos = request.getParameterValues("dispositivo");
+                    
+                    if (dispositivos != null && dispositivos.length > 0) {
+                        asignacionBp.deleteAsignacionesCentroCosto(registro.getId(), resultado);
+                        for (int x = 0; x < dispositivos.length; x++){
+                            System.out.println(WEB_NAME + CRUD_SERVLET_NAME + "CRUD - " + CRUD_TABLE_NAME 
+                                + "dispositivo seleccionado[" + x + "] = " + dispositivos[x]);
+                            DispositivoCentroCostoVO newCenco = new DispositivoCentroCostoVO(dispositivos[x], registro.getId());
+                            asignacionBp.insertAsignacionCentroCosto(newCenco, resultado);
+                        }
+                    } else {
+                        System.err.println(WEB_NAME + CRUD_SERVLET_NAME + "CRUD - " + CRUD_TABLE_NAME 
+                            + "No se han seleccionado dispositivos");
+                    }
                     forwardToCRUDPage(request, response, claseBp, filtroVO);
             }
         }
@@ -199,20 +234,20 @@ public class CentrosDeCosto extends BaseServlet {
     /**
     * 
     */
-    private void forwardToCRUDPage(HttpServletRequest _request, 
+     private void forwardToCRUDPage(HttpServletRequest _request, 
         HttpServletResponse _response,
         CentroCostoBp _auxnegocio,
         FiltroBusquedaCRUDVO _filtroBusqueda){
     
         try {
-            List<CentroCostoVO> listaObjetos = new ArrayList<>();
+            
             System.out.println(WEB_NAME + CRUD_SERVLET_NAME + "CRUD - " + CRUD_TABLE_NAME + " - "
                 + "Listar cencos");
-            listaObjetos = _auxnegocio.getCentrosCosto(_filtroBusqueda.getDepartamentoId(),
+            listaCencos = _auxnegocio.getCentrosCosto(_filtroBusqueda.getDepartamentoId(),
                 _filtroBusqueda.getNombreCenco(), _filtroBusqueda.getEstado(),
                 0, 0, DEFAULT_SORT_COLUMN);
             
-            _request.setAttribute("lista", listaObjetos);
+            _request.setAttribute("lista", listaCencos);
             RequestDispatcher vista = _request.getRequestDispatcher(FORWARD_PAGE);
             vista.forward(_request, _response);
         } catch (ServletException ex) {

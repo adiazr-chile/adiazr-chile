@@ -64,7 +64,7 @@ public class TurnoRotativoDetalleBp  extends BaseBp{
      * @param _mes
      * @param _fecha
      * 
-     * @deprecated 
+     * @Deprecated 
      * 
      * @return 
      */
@@ -81,7 +81,7 @@ public class TurnoRotativoDetalleBp  extends BaseBp{
     
     /**
      * @return 
-     * @deprecated 
+     * @Deprecated 
      */
     public DetalleTurnoVO getDetalleTurnoLibreByFecha(String _empresaId, 
             String _rutEmpleado,

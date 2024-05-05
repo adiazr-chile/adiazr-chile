@@ -240,6 +240,14 @@ public class CentroCostoBp  extends BaseBp{
     
     /**
     * 
+    * @return 
+    */
+    public HashMap<String,DispositivoVO> getDispositivosNoAsignados(){
+        return centrocostoDao.getDispositivosNoAsignados();
+    }
+    
+    /**
+    * 
     * Retorna nombre de empresa, depto y centro de costo
     * @param _empresaId
     * @param _deptoId

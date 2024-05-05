@@ -26,7 +26,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 
 /**
- * @deprecated 
+ * @Deprecated 
  */
 public class OrganizacionEmpresaController extends BaseServlet {
     protected static Logger m_logger = Logger.getLogger("gestionweb");

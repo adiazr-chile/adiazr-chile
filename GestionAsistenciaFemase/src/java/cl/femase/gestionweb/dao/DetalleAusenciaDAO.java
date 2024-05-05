@@ -1087,8 +1087,8 @@ public class DetalleAusenciaDAO extends BaseDAO{
     public List<DetalleAusenciaVO> getDetallesAusencias(String _source,
             String _rutEmpleado,
             String _rutAutorizador, 
-            String _fechaIngresoInicio, 
-            String _fechaIngresoFin,
+            String _fechaInicio, 
+            String _fechaFin,
             int _ausenciaId,
             int _jtStartIndex, 
             int _jtPageSize, 
@@ -1156,12 +1156,12 @@ public class DetalleAusenciaDAO extends BaseDAO{
             if (_rutAutorizador != null && _rutAutorizador.compareTo("-1")!=0){        
                 sql += " and detalle_ausencia.rut_autoriza_ausencia = '" + _rutAutorizador + "'";
             }
-            if (_fechaIngresoInicio != null && _fechaIngresoInicio.compareTo("") != 0){        
-                if (_fechaIngresoFin==null || _fechaIngresoFin.compareTo("")==0)
-                    _fechaIngresoFin = _fechaIngresoInicio; 
+            if (_fechaInicio != null && _fechaInicio.compareTo("") != 0){        
+                if (_fechaFin==null || _fechaFin.compareTo("")==0)
+                    _fechaFin = _fechaInicio; 
                 sql += " and detalle_ausencia.fecha_inicio "
-                    + "between '" + _fechaIngresoInicio +"' "
-                    + "and '" + _fechaIngresoFin +"'";
+                    + "between '" + _fechaInicio +"' "
+                    + "and '" + _fechaFin +"'";
             }
             if (_ausenciaId != -1){
                 sql += " and detalle_ausencia.ausencia_id = " + _ausenciaId;

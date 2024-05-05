@@ -758,7 +758,7 @@ div.thumbnail .glyphicon-ok-circle{
   <h3>Your form has been submitted. Thank You!</h3>
 </div>
                 
-<form name="redirectForm" id="redirectForm" method="post" action="<%=request.getContextPath()%>/mantencion/lista_empleados.jsp">  
+<form name="redirectForm" id="redirectForm" method="post" action="<%=request.getContextPath()%>/cruds/empleados.jsp">  
     <input type="hidden" name="cco" id="cco" value="emp01|05|38">  
 </form>
 <!-- ----------------------------------------------- -->

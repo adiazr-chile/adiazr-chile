@@ -9,7 +9,7 @@ import javax.sql.DataSource;
 import org.apache.commons.dbcp.BasicDataSource;
 
 /**
- * @deprecated 
+ * @Deprecated 
  * @author Alexander
  */
 public class DbConnectionPool {

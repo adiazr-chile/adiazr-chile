@@ -621,6 +621,23 @@ public class EmpleadosBp  extends BaseBp{
         return lista;
     }
     
+    /**
+    * 
+    * @param _empresaId
+    * @param _deptoId
+    * @param _cencoId
+    * @param _cargo
+    * @param _idTurno
+    * @param _rutEmpleado
+    * @param _nombres
+    * @param _apePaterno
+    * @param _apeMaterno
+    * @param _estado
+    * @param _jtStartIndex
+    * @param _jtPageSize
+    * @param _jtSorting
+    * @return 
+    */
     public List<EmpleadoVO> getEmpleados(String _empresaId, 
             String _deptoId, 
             int _cencoId,

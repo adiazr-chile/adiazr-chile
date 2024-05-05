@@ -10,7 +10,7 @@ import java.util.ArrayList;
 /**
  *
  * @author Alexander
- * @deprecated 
+ * @Deprecated 
  */
 public class GanttItemVO {
     String id;

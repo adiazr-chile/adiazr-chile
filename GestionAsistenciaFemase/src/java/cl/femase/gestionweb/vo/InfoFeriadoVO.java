@@ -10,7 +10,7 @@ import java.io.Serializable;
 /**
 *
 * @author Alexander
-* @deprecated 
+* @Deprecated 
 */
 public class InfoFeriadoVO implements Serializable{
     

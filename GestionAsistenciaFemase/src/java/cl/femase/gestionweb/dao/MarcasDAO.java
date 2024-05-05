@@ -2148,16 +2148,20 @@ public class MarcasDAO extends BaseDAO{
         int result=0;
         String msgError = "Error al eliminar "
             + "marca. "
-            + ",rutEmpleado: "+_data.getRutEmpleado()
-            + ",fechaHora_original: "+_data.getFechaHora()
-            + ",hora_modificada: "+_data.getHora()+":"+_data.getMinutos()
-            + ",tipoMarca: "+_data.getTipoMarca();
+            + ",rutEmpleado: " + _data.getRutEmpleado()
+            + ",fechaHora_original: " + _data.getFechaHora()
+            + ",hora_modificada: " + _data.getHora()+":"+_data.getMinutos()
+            + ",tipoMarca: " + _data.getTipoMarca()
+            + ",hashcode: " + _data.getHashcode()
+            + ",correlativo: " + _data.getCorrelativo();
         
        String msgFinal = " Elimina marca:"
             + ", rutEmpleado [" + _data.getRutEmpleado() + "]"
             + ", fechaHoraOriginal [" + _data.getFechaHora() + "]"
             + ", tipoMarca [" + _data.getTipoMarca() + "]"
-            + ", comentario [" + _data.getComentario() + "]";
+            + ", comentario [" + _data.getComentario() + "]"
+            + ", hashcode [" + _data.getHashcode() + "]"
+            + ", correltivo [" + _data.getCorrelativo() + "]";
         
         System.out.println(WEB_NAME+"cl.femase.gestionweb."
             + "service.MarcasDAO."
@@ -2169,11 +2173,13 @@ public class MarcasDAO extends BaseDAO{
         try{
             String sql= "delete from marca "
                 + "where rut_empleado = ? "
-                + "and fecha_hora= '"+_data.getFechaHora()+"'";
-                    
+                + " and correlativo = ?";
+            
+               // + "and fecha_hora= '"+_data.getFechaHora()+"'";
             dbConn = dbLocator.getConnection(m_dbpoolName,"[MarcasDAO.delete]");
             insert = dbConn.prepareStatement(sql);
             insert.setString(1, _data.getRutEmpleado());
+            insert.setInt(2, _data.getCorrelativo());
                                                 
             int filasAfectadas = insert.executeUpdate();
             if (filasAfectadas == 1){

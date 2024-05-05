@@ -359,7 +359,7 @@ public class TurnoRotativoDetalleDAO extends BaseDAO{
      * @param _fecha
      * @return 
      * 
-     * @deprecated 
+     * @Deprecated 
      */
     public DetalleTurnoVO getDetalleTurnoLaboralByFecha(String _empresaId, 
             String _rutEmpleado,

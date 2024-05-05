@@ -1,0 +1,41 @@
+# ---------------------------------------------------------------------------------------
+# ----------------- Archivo de propiedades para el proyecto FEMASE Gestion WEB ------
+# ---------------------------------------------------------------------------------------
+
+version=_VERSION
+launchYear=_STARTYEAR
+
+# envio de correos desde la aplicacion
+mailHost = _MAILHOST
+mailPort = _MAILPORT
+mailFrom = _MAILFROM
+mailTo = _MAILTO
+mailUsuario = _MAIL_USUARIO
+mailPassword = _MAIL_PASSWORD
+
+mailAdmin = _MAILADMIN  
+mailSubject = _MAILSUBJECT
+mailBody = _MAILBODY
+
+#Datasource para BD 
+dbpoolname=_DATASOURCENAME
+
+#destinatarios correos de operaciones
+mailToAdmin = _MAILADMIN
+
+#--------------- Rutas Fisicas ----------------------------
+
+#Ruta donde se dejan los archivos generados en la exportacion de transacciones u otra data
+pathExportedFiles=_OUTPUTPATH
+
+#Ruta donde se dejan las imagenes, fotos de empleados y logos para generar documentos
+imagesPath=_IMAGESPATH
+
+#Ruta donde se dejan los archivos subidos desde el web (upload file)
+uploadsPath=_UPLOADPATH
+
+#Ruta donde se alojan los reportes (plantillas)
+reportesPath=_REPORTESPATH
+
+#Ruta donde se alojan las plantillas usadas para reportes (usando Api Freemarker)
+freemarkerTemplatesPath=_FREEMARKER_PATH

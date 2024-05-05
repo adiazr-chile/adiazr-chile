@@ -264,6 +264,9 @@ public class AsignacionDispositivoDAO extends BaseDAO{
         return objresultado;
     }
     
+    /**
+    * 
+    */
     public ResultCRUDVO deleteAsignacionesCentroCosto(String _deviceId){
         ResultCRUDVO objresultado = new ResultCRUDVO();
         int result=0;
@@ -297,6 +300,60 @@ public class AsignacionDispositivoDAO extends BaseDAO{
             dbLocator.freeConnection(dbConn);
         }catch(SQLException|DatabaseException sqle){
             System.err.println("delete dispositivo_centrocosto Error1: "+sqle.toString());
+            objresultado.setThereError(true);
+            objresultado.setCodError(result);
+            objresultado.setMsgError(msgError+" :"+sqle.toString());
+        }
+        finally{
+            try {
+                if (insert != null) insert.close();
+                dbLocator.freeConnection(dbConn);
+            } catch (SQLException ex) {
+                System.err.println("delete Error: "+ex.toString());
+            }
+        }
+
+        return objresultado;
+    }
+    
+    /**
+    * 
+    * @param _cencoId
+    * @return 
+    */
+    public ResultCRUDVO deleteAsignacionesCentroCosto(int _cencoId){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
+        int result=0;
+        String msgError = "Error al eliminar asignacion "
+            + "dispositivo-centroCosto. "
+            + " cencoId: " + _cencoId;
+        
+       String msgFinal = " Elimina asignacion dispositivo-centroCosto:"
+            + "cencoId [" + _cencoId + "]";
+            
+        objresultado.setMsg(msgFinal);
+        PreparedStatement insert    = null;
+        
+        try{
+            String sql = "delete "
+                + "from dispositivo_centrocosto "
+                + "where cenco_id = ? ";
+
+            dbConn = dbLocator.getConnection(m_dbpoolName,"[AsignacionDispositivoDAO.deleteAsignacionesCentroCosto]");
+            insert = dbConn.prepareStatement(sql);
+            insert.setInt(1,  _cencoId);
+           
+            int filasAfectadas = insert.executeUpdate();
+            if (filasAfectadas == 1){
+                System.out.println(WEB_NAME+"[delete dispositivo_centrocosto]"
+                    + ", cencoId:" + _cencoId
+                    +" insertado OK!");
+            }
+            
+            insert.close();
+            dbLocator.freeConnection(dbConn);
+        }catch(SQLException|DatabaseException sqle){
+            System.err.println("delete dispositivo_centrocosto Error_1: " + sqle.toString());
             objresultado.setThereError(true);
             objresultado.setCodError(result);
             objresultado.setMsgError(msgError+" :"+sqle.toString());
@@ -386,7 +443,7 @@ public class AsignacionDispositivoDAO extends BaseDAO{
                     + "  device_id, "
                     + "cenco_id, "
                     + "fecha_asignacion) "
-                    + " VALUES (?, ?, current_date)";
+                    + " VALUES (?, ?, current_date) on conflict (device_id, cenco_id) do nothing";
 
             dbConn = dbLocator.getConnection(m_dbpoolName,"[AsignacionDispositivoDAO.insertAsignacionCentroCosto]");
             insert = dbConn.prepareStatement(sql);

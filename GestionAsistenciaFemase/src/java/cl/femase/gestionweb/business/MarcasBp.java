@@ -184,7 +184,7 @@ public class MarcasBp  extends BaseBp{
      * @param _jtSorting
      * @return 
      * 
-     * @deprecated 
+     * @Deprecated 
      */
     public List<MarcaVO> getMarcas(String _empresaId,
             String _deptoId,
@@ -318,18 +318,24 @@ public class MarcasBp  extends BaseBp{
             marcaFinal.setRowKey(registro.getEmpresaId()
                 + "|" + registro.getRutEmpleado()
                 + "|" + registro.getFecha()
-                + "|" + registro.getTipoMarca());
+                + "|" + registro.getTipoMarca()
+                + "|" + registro.getHashcode()
+                + "|" + registro.getCorrelativo());
             
             if (registro.getFechaHoraMarca() != null){
                 System.out.println(WEB_NAME + ". (2)Set rowKey: "
                     + registro.getEmpresaId()
                     + "|" + registro.getRutEmpleado()
                     + "|" + registro.getFechaHoraMarca()
-                    + "|" + registro.getTipoMarca());
+                    + "|" + registro.getTipoMarca()
+                    + "|" + registro.getHashcode()
+                    + "|" + registro.getCorrelativo());
                 marcaFinal.setRowKey(registro.getEmpresaId()
                     + "|" + registro.getRutEmpleado()
                     + "|" + registro.getFechaHoraMarca()
-                    + "|" + registro.getTipoMarca());
+                    + "|" + registro.getTipoMarca()
+                    + "|" + registro.getHashcode()
+                    + "|" + registro.getCorrelativo());
             }
             //if (labelTurno.compareTo(SIN_TURNO) == 0) labelTurno = "";
             marcaFinal.setLabelTurno(registro.getLabelTurno());
@@ -360,53 +366,6 @@ public class MarcasBp  extends BaseBp{
             
             hashMarcasFinal.put(key, marcaFinal);
         });
-        
-        /*
-        marcaDummy.setEmpresaCod(_empresaId);
-        marcaDummy.setRutEmpleado(_rutEmpleado);
-        marcaDummy.setFecha(date.toString());
-        marcaDummy.setFechaHoraStr(
-            date.getDayOfWeek().getDisplayName(TextStyle.FULL, localeCl) 
-            + " " + fechaHoraFmt3.format(fechaMarca));
-        marcaDummy.setTipoMarca(300);//FALTA MARCA POR AUSENCIA
-        marcaDummy.setComentario(ausencia.getNombreAusencia());
-        marcaDummy.setRowKey(marcaDummy.getEmpresaCod()
-            + "|" + marcaDummy.getRutEmpleado()
-            + "|" + marcaDummy.getFecha()
-            + "|" + marcaDummy.getTipoMarca());
-        if (labelTurno.compareTo(SIN_TURNO) == 0) labelTurno = "";
-        marcaDummy.setLabelTurno(labelTurno);
-        
-        data.setCodDispositivo(rs.getString("cod_dispositivo"));
-        data.setEmpresaCod(rs.getString("empresa_cod"));
-        data.setRutEmpleado(rs.getString("rut_empleado"));
-        data.setRutKey(data.getRutEmpleado());
-        data.setCencoId(rs.getInt("cod_tipo_marca"));
-        data.setFechaHora(rs.getString("fecha_hora"));
-        data.setSoloHora(rs.getString("solohora_str"));
-
-        data.setFechaHoraStr(rs.getString("fecha_hora_str"));
-        data.setFechaHoraKey(data.getFechaHora());
-        data.setFechaHoraCalculos(rs.getString("fecha_hora_fmt"));
-        data.setHora(rs.getString("solohora"));
-        data.setFecha(rs.getString("solofecha"));
-        data.setMinutos(rs.getString("solomins"));
-        data.setSegundos(rs.getString("solosecs"));
-        data.setTipoMarca(rs.getInt("cod_tipo_marca"));
-        data.setId(rs.getString("id"));
-        data.setHashcode(rs.getString("hashcode"));
-        data.setComentario(rs.getString("comentario"));
-        data.setFechaHoraActualizacion(rs.getString("fecha_actualizacion"));
-        data.setCodTipoMarcaManual(rs.getInt("code"));
-        data.setNombreTipoMarcaManual(rs.getString("display_name"));
-
-        data.setRowKey(data.getEmpresaCod()
-            + "|" + data.getRutEmpleado()
-            + "|" + data.getFechaHora()
-            + "|" + data.getTipoMarca());
-        
-        
-        */
         
         return hashMarcasFinal;
     }

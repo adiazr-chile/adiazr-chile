@@ -915,7 +915,11 @@ public class CentroCostoDAO extends BaseDAO{
         return count;
     }
    
-    
+    /**
+    * 
+    * @param _cencoId
+    * @return 
+    */
     public HashMap<String,DispositivoVO> getDispositivosAsignados(int _cencoId){
         HashMap<String,DispositivoVO> listado = new HashMap<>();
         DispositivoVO data=new DispositivoVO();
@@ -935,13 +939,12 @@ public class CentroCostoDAO extends BaseDAO{
                     + "inner join tipo_dispositivo tipo on dispositivo.type_id = tipo.dev_type_id "
                     + "left outer join comuna on (dispositivo.comuna_id = comuna.comuna_id) " 
                     + "left outer join region on (comuna.region_id = region.region_id) "
-                + " where asignacion.cenco_id = " + _cencoId 
-                    + " and dispositivo.estado = 1 "
-                + "order by asignacion.device_id";
-            
-////            System.out.println(WEB_NAME+"cl.femase.gestionweb.service."
-////                + "CentroCostoDAO.getDispositivosAsignados() "
-////                + "cencoId: "+_cencoId);  
+                + " where dispositivo.estado = 1 ";
+            if (_cencoId != -1){
+                sql += " and asignacion.cenco_id = " + _cencoId; 
+            }
+            sql += " order by asignacion.device_id";
+              
             rs = statement.executeQuery(sql);		
             while (rs.next()) {
                 data = new DispositivoVO();
@@ -972,6 +975,66 @@ public class CentroCostoDAO extends BaseDAO{
         
         return listado;
     }
+    
+    
+    /**
+    *   Retorna aquellos dispositivos que no estan asignados a ningun centro de costo 
+    *   @return 
+    */
+    public HashMap<String,DispositivoVO> getDispositivosNoAsignados(){
+        HashMap<String,DispositivoVO> listado = new HashMap<>();
+        DispositivoVO data=new DispositivoVO();
+        Statement statement = null;
+        ResultSet rs = null;
+        try {
+            if (!m_usedGlobalDbConnection) dbConn = dbLocator.getConnection(m_dbpoolName,"[CentroCostoDAO.getDispositivosAsignados]");
+            statement = dbConn.createStatement();
+            String sql = "SELECT "
+                    + "dispositivo.device_id,"
+                    + "tipo.dev_type_name tipo,"
+                    + "dispositivo.fabricante,"
+                    + "dispositivo.modelo,"
+                    + "dispositivo.direccion,"
+                    + "region.short_name || '-' || comuna.comuna_nombre label_comuna "
+                    + "FROM dispositivo "
+                    + "inner join tipo_dispositivo tipo on dispositivo.type_id = tipo.dev_type_id "
+                    + "left outer join comuna on (dispositivo.comuna_id = comuna.comuna_id) "
+                    + "left outer join region on (comuna.region_id = region.region_id) "
+                    + "where dispositivo.device_id not in (select device_id from dispositivo_centrocosto) "
+                    + "and dispositivo.estado = 1 "
+                    + "order by dispositivo.device_id";            
+            rs = statement.executeQuery(sql);		
+            while (rs.next()) {
+                data = new DispositivoVO();
+                data.setId(rs.getString("device_id"));
+                data.setNombreTipo(rs.getString("tipo"));
+                data.setFabricante(rs.getString("fabricante"));
+                data.setModelo(rs.getString("modelo"));
+                data.setLabelComuna(rs.getString("label_comuna"));
+                data.setDireccion(rs.getString("direccion"));
+                
+                listado.put("" + data.getId(), data);
+            }
+            
+            statement.close();
+            rs.close();
+            if (!m_usedGlobalDbConnection) dbLocator.freeConnection(dbConn);
+        } catch (SQLException|DatabaseException e) {
+                e.printStackTrace();
+        }finally{
+            try {
+                if (statement != null) statement.close();
+                if (rs != null) rs.close();
+                if (!m_usedGlobalDbConnection) dbLocator.freeConnection(dbConn);
+            } catch (SQLException ex) {
+                System.err.println("Error: "+ex.toString());
+            }
+        }
+        
+        return listado;
+    }
+    
+    
     
     public void openDbConnection(){
         try {

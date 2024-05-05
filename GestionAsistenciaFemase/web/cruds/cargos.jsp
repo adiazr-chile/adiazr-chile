@@ -414,7 +414,7 @@
                 
             <th>Id </th>
             <th>Nombre</th>
-            <th>EstadoId</th>
+            <th style="display: none;">EstadoId</th>
             <th>Estado nombre</th>
                 <%if (!list.isEmpty()){%>
                     <th style="text-align:center;width:100px;">Nuevo registro 
@@ -436,7 +436,7 @@
             <tr>
                 <td><%= registro.getId()%></td>
                 <td><%= registro.getNombre()%></td>
-                <td><%= registro.getEstado()%></td>
+                <td style="display: none;"><%= registro.getEstado()%></td>
                 <td><%= registro.getEstadoNombre()%></td>
                 <td>
                     <button class="btnSelect btn btn-primary btn-xs" style="margin-right:16px;">

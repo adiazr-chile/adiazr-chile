@@ -16,7 +16,7 @@ import java.util.List;
 /**
  *
  * @author Alexander
- * @deprecated 
+ * @Deprecated 
  */
 public class OrganizacionEmpresaBp  extends BaseBp{
 

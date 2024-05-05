@@ -20,9 +20,70 @@ public class FiltroBusquedaCRUDVO implements Serializable{
     private String descripcion;
     private String nombreCenco;
     
-    private int estado = 1;
-    private int regionId = 1;
+    private int estado      = 1;
+    private int regionId    = 1;
+    private int cencoId     = -1;
+    private int turnoId     = -1;
+    private String runEmpleado;
 
+    private String tipo;
+    private String justificaHrs; 
+    private String pagadaPorEmpleador;
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
+    public String getJustificaHrs() {
+        return justificaHrs;
+    }
+
+    public void setJustificaHrs(String justificaHrs) {
+        this.justificaHrs = justificaHrs;
+    }
+
+    public String getPagadaPorEmpleador() {
+        return pagadaPorEmpleador;
+    }
+
+    public void setPagadaPorEmpleador(String pagadaPorEmpleador) {
+        this.pagadaPorEmpleador = pagadaPorEmpleador;
+    }
+    
+    
+    
+    public int getTurnoId() {
+        return turnoId;
+    }
+
+    public void setTurnoId(int turnoId) {
+        this.turnoId = turnoId;
+    }
+
+    public String getRunEmpleado() {
+        return runEmpleado;
+    }
+
+    public void setRunEmpleado(String runEmpleado) {
+        this.runEmpleado = runEmpleado;
+    }
+    
+    
+    
+    public int getCencoId() {
+        return cencoId;
+    }
+
+    public void setCencoId(int cencoId) {
+        this.cencoId = cencoId;
+    }
+    
+    
+    
     public String getDepartamentoId() {
         return departamentoId;
     }

@@ -43,7 +43,7 @@ public class VacacionesVO implements Serializable{
     
     //nuevos atributos. 23-02-2020
     /**
-    * @deprecated
+    * @Deprecated
     */
     private int numActualCotizaciones;
     

@@ -24,7 +24,7 @@ import org.apache.log4j.Logger;
 /**
  *
  * @author Alexander
- * @deprecated 
+ * @Deprecated 
  */
 public class PersonalEmpresaDAO extends BaseDAO{
 

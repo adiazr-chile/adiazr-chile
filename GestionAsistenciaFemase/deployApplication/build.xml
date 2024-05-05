@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<project name="inicial" default="menu">
+
+	<!-- ***************** -->
+	<!-- MENU  -->
+	<!-- ***************** -->
+	<target name="menu" description="Opciones Deploy para Sistema Femase Gestion WEB">
+		<echo message=" Opciones Deploy para Sistema Femase Gestion WEB" />
+		<echo message=" " />
+		<echo message="Use: " />
+		<echo message="ant clean: Limpia archivos generados en instalacion anterior" />
+		<echo message="ant configDummy: Configura variables para web dummy" />
+		<echo message="ant configProd: Configura variables para web produccion" />
+		<echo message="ant deployDummy: Instala WAR Dummy en wildfly " />
+		<echo message="ant deployProd: Instala WAR Produccion en wildfly" />
+		<echo message="ant undeployWarDummy: Elimina war dummy existente en el servidor de aplicaciones" />
+		<echo message="ant undeployWarProd: Elimina war produccion existente en el servidor de aplicaciones" />
+		
+		<!--<echo message="ant undeploy  :  Desinstala la aplicacion" />-->
+	</target>
+
+	<!-- *************************** -->
+	<!-- SETEO de Variables de entorno -->
+	<!-- *************************** -->
+	<target name="set" description="Seteando Variables de entorno. ">
+		<echo message="------------------- Seteando Variables de entorno  ----------------" />
+		
+		<mkdir dir="tmp" />	
+
+		<property file="config_base.properties" />
+		
+		<!-- Definir directorios de módulos fuentes -->
+		<property name="src-tmp" value="./tmp" />
+		<property name="reportes" value="./reportes" />
+		<property name="freemarker_templates" value="./freemarker_templates" />
+				
+	</target>
+
+	<target name="configProd" depends="set" description="Modifica el archivo de properties">
+		<echo message="------------------- INICIO CONFIGURACION WAR PRODUCCION ----------------" />
+		<!-- *************************** -->
+		<!-- CONFIGURACION log4j.xml -->
+		<!-- *************************** -->
+		<!--<copy file="log4j.template" tofile="log4j.xml_tmp" />
+		<replace file="log4j.xml_tmp" token="_INSTALLPATH" value="${pathInstall}" />
+		<delete file="log4j.xml" />
+		<copy file="log4j.xml_tmp" tofile="log4j.xml" />
+		<delete file="log4j.xml_tmp" />
+		-->
+
+		<!-- *************************** -->
+		<!-- CONFIGURACION mysql-ds.xml -->
+		<!-- *************************** -->
+		<!--
+		<copy file="mysql-ds.template" tofile="mysql-ds.xml_tmp" />
+		<replace file="mysql-ds.xml_tmp" token="_URL_CONNECTION" value="${connection-url}" />
+		<replace file="mysql-ds.xml_tmp" token="_DRIVER_CLASS" value="${driver-class}" />
+		<replace file="mysql-ds.xml_tmp" token="_USERNAME" value="${user-name}" />
+		<replace file="mysql-ds.xml_tmp" token="_PASSWORD" value="${password}" />
+		
+		<delete file="mysql-ds.xml" />
+		<copy file="mysql-ds.xml_tmp" tofile="mysql-ds.xml" />
+		<delete file="mysql-ds.xml_tmp" />
+		-->
+		
+		<echo message="------------------- Configurando .properties dentro del Web-inf/clasess del WAR--------------" />
+		<unwar src="FemaseGestionWEB.war" dest="${src-tmp}/war-content" />
+		<delete file="${src-tmp}/war-content/WEB-INF/classes/cl/femase/gestionweb/props/gestionfemase.properties" />
+		<copy file="gestionfemase.template" tofile="gestionfemase.temp" />
+		
+		<replace file="gestionfemase.temp" token="_MAILHOST" value="${mailHost}" />
+		<replace file="gestionfemase.temp" token="_MAILPORT" value="${mailPort}" />
+		<replace file="gestionfemase.temp" token="_MAILFROM" value="${mailFrom}" />
+		<replace file="gestionfemase.temp" token="_MAILTO" value="${mailTo}" />
+		<replace file="gestionfemase.temp" token="_MAILSUBJECT" value="${mailSubject}" />
+		<replace file="gestionfemase.temp" token="_MAILBODY" value="${mailBody}" />
+		<replace file="gestionfemase.temp" token="_MAILADMIN" value="${mailToAdmin}" />
+		<replace file="gestionfemase.temp" token="_MAIL_PASSWORD" value="${mailPassword}" />
+		<replace file="gestionfemase.temp" token="_MAIL_USUARIO" value="${mailUsuario}" />
+								
+		<replace file="gestionfemase.temp" token="_DATASOURCENAME" value="${dbpoolnameProd}" />
+		<replace file="gestionfemase.temp" token="_OUTPUTPATH" value="${pathExportedFiles}" />
+		<replace file="gestionfemase.temp" token="_IMAGESPATH" value="${imagesPath}" />
+		<replace file="gestionfemase.temp" token="_UPLOADPATH" value="${uploadsPath}" />		
+		<replace file="gestionfemase.temp" token="_REPORTESPATH" value="${reportesPath}" />
+		<replace file="gestionfemase.temp" token="_FREEMARKER_PATH" value="${freemarkerTemplatesPath}" />
+		
+		<echo message="Version del Sistema: ${version}, anio de lanzamiento: ${launchYear}" />
+		<replace file="gestionfemase.temp" token="_VERSION" value="${version}" />
+		<replace file="gestionfemase.temp" token="_STARTYEAR" value="${launchYear}" />
+
+		<copy file="gestionfemase.temp" tofile="gestionfemase.properties" />
+		<delete file="gestionfemase.temp" />		
+		<copy file="gestionfemase.properties" tofile="${src-tmp}/war-content/WEB-INF/classes/gestionfemase.properties" />
+		
+		<delete file="jboss-web.xml" />
+		<delete file="jboss-web.temp" />
+		
+		<delete file="${src-tmp}/war-content/WEB-INF/jboss-web.xml" />
+		<copy file="jboss-web.xml.template" tofile="jboss-web.temp" />
+		<echo message="-------------------Contexto a setear: ${contextoWeb} ----------------" />
+		<replace file="jboss-web.temp" token="_WEBCONTEXT" value="${contextoWeb}" />
+		<copy file="jboss-web.temp" tofile="jboss-web.xml" />
+		<copy file="jboss-web.xml" tofile="${src-tmp}/war-content/WEB-INF/jboss-web.xml" />
+		
+		<echo message="-------------------Copiar web.xml para War de produccion----------------" />
+		<copy file="web.xml.produccion" tofile="${src-tmp}/war-content/WEB-INF/web.xml" />
+				
+		<war destfile="${src-tmp}/FemaseGestionWEB.war" webxml="${src-tmp}/war-content/WEB-INF/web.xml">
+		  <fileset dir="${src-tmp}/war-content"/>
+		</war> 
+		
+		<!--<delete dir="${src-tmp}" />	-->	
+		<echo message="------------------- FIN CONFIGURACION WAR PRODUCCION ----------------" />
+		
+	</target>
+	
+	<target name="configDummy" depends="set" description="Modifica el archivo de properties">
+		<echo message="------------------- INICIO CONFIGURACION WAR DUMMY ----------------" />
+		<!-- *************************** -->
+		<!-- CONFIGURACION log4j.xml -->
+		<!-- *************************** -->
+		<!--<copy file="log4j.template" tofile="log4j.xml_tmp" />
+		<replace file="log4j.xml_tmp" token="_INSTALLPATH" value="${pathInstall}" />
+		<delete file="log4j.xml" />
+		<copy file="log4j.xml_tmp" tofile="log4j.xml" />
+		<delete file="log4j.xml_tmp" />
+		-->
+
+		<!-- *************************** -->
+		<!-- CONFIGURACION mysql-ds.xml -->
+		<!-- *************************** -->
+		<!--
+		<copy file="mysql-ds.template" tofile="mysql-ds.xml_tmp" />
+		<replace file="mysql-ds.xml_tmp" token="_URL_CONNECTION" value="${connection-url}" />
+		<replace file="mysql-ds.xml_tmp" token="_DRIVER_CLASS" value="${driver-class}" />
+		<replace file="mysql-ds.xml_tmp" token="_USERNAME" value="${user-name}" />
+		<replace file="mysql-ds.xml_tmp" token="_PASSWORD" value="${password}" />
+		
+		<delete file="mysql-ds.xml" />
+		<copy file="mysql-ds.xml_tmp" tofile="mysql-ds.xml" />
+		<delete file="mysql-ds.xml_tmp" />
+		-->
+		
+		<echo message="------------------- Configurando .properties dentro del Web-inf/clasess del WAR--------------" />
+		<unwar src="FemaseGestionWEB.war" dest="${src-tmp}/war-content" />
+		<delete file="${src-tmp}/war-content/WEB-INF/classes/cl/femase/gestionweb/props/gestionfemase.properties" />
+		<copy file="gestionfemase.template" tofile="gestionfemase.temp" />
+		
+		<replace file="gestionfemase.temp" token="_MAILHOST" value="${mailHost}" />
+		<replace file="gestionfemase.temp" token="_MAILPORT" value="${mailPort}" />
+		<replace file="gestionfemase.temp" token="_MAILFROM" value="${mailFrom}" />
+		<replace file="gestionfemase.temp" token="_MAILTO" value="${mailTo}" />
+		<replace file="gestionfemase.temp" token="_MAILSUBJECT" value="${mailSubject}" />
+		<replace file="gestionfemase.temp" token="_MAILBODY" value="${mailBody}" />
+		<replace file="gestionfemase.temp" token="_MAILADMIN" value="${mailToAdmin}" />
+		<replace file="gestionfemase.temp" token="_MAIL_PASSWORD" value="${mailPassword}" />
+		<replace file="gestionfemase.temp" token="_MAIL_USUARIO" value="${mailUsuario}" />
+								
+		<replace file="gestionfemase.temp" token="_DATASOURCENAME" value="${dbpoolnameDummy}" />
+		<replace file="gestionfemase.temp" token="_OUTPUTPATH" value="${pathExportedFiles}" />
+		<replace file="gestionfemase.temp" token="_IMAGESPATH" value="${imagesPath}" />
+		<replace file="gestionfemase.temp" token="_UPLOADPATH" value="${uploadsPath}" />		
+		<replace file="gestionfemase.temp" token="_REPORTESPATH" value="${reportesPath}" />	
+		<replace file="gestionfemase.temp" token="_FREEMARKER_PATH" value="${freemarkerTemplatesPath}" />
+		
+		<echo message="Version del Sistema: ${version}, anio de lanzamiento: ${launchYear}" />
+		<replace file="gestionfemase.temp" token="_VERSION" value="${version}" />
+		<replace file="gestionfemase.temp" token="_STARTYEAR" value="${launchYear}" />
+
+		<copy file="gestionfemase.temp" tofile="gestionfemase.properties" />
+		<delete file="gestionfemase.temp" />		
+		<copy file="gestionfemase.properties" tofile="${src-tmp}/war-content/WEB-INF/classes/gestionfemase.properties" />
+		
+		<delete file="${src-tmp}/war-content/WEB-INF/jboss-web.xml" />
+		<copy file="jboss-web.xml.template" tofile="jboss-web.temp" />
+		<replace file="jboss-web.temp" token="_WEBCONTEXT" value="${contextoWebDummy}" />
+		<copy file="jboss-web.temp" tofile="jboss-web.xml" />
+		<copy file="jboss-web.xml" tofile="${src-tmp}/war-content/WEB-INF/jboss-web.xml" />
+		
+		<delete file="jboss-web.temp" />
+		<delete file="jboss-web.xml" />
+		
+		<copy file="web.xml.dummy" tofile="${src-tmp}/war-content/WEB-INF/web.xml" />
+		<war destfile="${src-tmp}/FemaseGestionWEB_dummy.war" webxml="${src-tmp}/war-content/WEB-INF/web.xml">
+		  <fileset dir="${src-tmp}/war-content"/>
+		</war> 
+		
+		<!--<delete dir="${src-tmp}" />-->		
+		<echo message="------------------- FIN CONFIGURACION WAR DUMMY ----------------" />
+		
+	</target>
+
+	<!-- ************************************* -->
+	<!-- INSTALAR WAR PRODUCCION -->
+	<!-- ************************************* -->
+	<target name="deployProd" depends="set" description="Copia War Prod a Wildfly-deployments">
+		<echo message="-------------- Instalando WAR de produccion y archivos utilizados --------------" />
+		<mkdir dir="${installPath}/images" />
+		<mkdir dir="${installPath}/log" />
+		<mkdir dir="${installPath}/output" />
+		<mkdir dir="${installPath}/freemarker_templates" />
+		
+		<copy file="logo_femase_encabezado.png" tofile="${installPath}/images/logo_femase_encabezado.png" />
+		<copy file="${src-tmp}/FemaseGestionWEB.war" tofile="${wildflyPath}/FemaseGestionWEB.war" />		
+		<echo message="-------------- Copiar reportes Jasper --------------" />
+		<copy todir="${installPath}/reportes">
+			<fileset dir="${reportes}">
+				<include name="*.*"/>
+			</fileset>
+		</copy>
+		<copy todir="${installPath}/freemarker_templates">
+			<fileset dir="${freemarker_templates}">
+				<include name="*.*"/>
+			</fileset>
+		</copy>
+		<delete dir="${src-tmp}" />
+		<copy file="FemaseGestionWEB.war" tofile="FemaseGestionWEB_${version}.war" />		
+	</target>
+	
+	<!-- ************************************* -->
+	<!-- INSTALAR WAR DUMMY -->
+	<!-- ************************************* -->
+	<target name="deployDummy" depends="set" description="Copia War Dummy a Wildfly-deployments">
+		<echo message="-------------- Instalando WAR Dummy y archivos utilizados --------------" />
+		<mkdir dir="${installPath}/images" />
+		<mkdir dir="${installPath}/log" />
+		<mkdir dir="${installPath}/output" />
+		<mkdir dir="${installPath}/freemarker_templates" />	
+		
+		<copy file="logo_femase_encabezado.png" tofile="${installPath}/images/logo_femase_encabezado.png" />
+		<copy file="${src-tmp}/FemaseGestionWEB_dummy.war" tofile="${wildflyPath}/FemaseGestionWEB_dummy.war" />		
+		<echo message="-------------- Copiar reportes Jasper --------------" />
+		
+		<copy todir="${installPath}/reportes">
+			<fileset dir="${reportes}">
+				<include name="*.*"/>
+			</fileset>
+		</copy>
+		
+		<copy todir="${installPath}/freemarker_templates">
+			<fileset dir="${freemarker_templates}">
+				<include name="*.*"/>
+			</fileset>
+		</copy>
+		
+		<copy file="FemaseGestionWEB.war" tofile="FemaseGestionWEB_${version}.war" />
+		<delete dir="${src-tmp}" />
+	</target>
+
+	<!-- **************************************** -->
+	<!-- LIMPIAR ARCHIVOS GENERADOS EN ANTERIOR INSTALACION  -->
+	<!-- **************************************** -->
+	<target name="clean" depends="set" description="Limpia archivos generados en instalacion previa">
+		<echo message="-------------- Limpiando archivos generados en instalacion previa--------------" />
+		<delete dir="${src-tmp}" />
+		<delete file="jboss-web.temp" />
+		<delete file="jboss-web.xml" />
+	</target>
+
+	<!-- **************************************** -->
+	<!-- LIMPIAR ARCHIVOS GENERADOS EN ANTERIOR INSTALACION  -->
+	<!-- **************************************** -->
+	<target name="undeployWarProd" depends="set" description="Realiza undeploy del WAR existente en WildFly">
+		<echo message="-------------- Realiza undeploy del WAR existente en WildFly--------------" />
+		<delete file="${wildflyPath}/FemaseGestionWEB.war" />
+	</target>
+	
+	<target name="undeployWarDummy" depends="set" description="Realiza undeploy del WAR Dummy existente en WildFly">
+		<echo message="-------------- Realiza undeploy del WAR Dummy existente en WildFly--------------" />
+		<delete file="${wildflyPath}/FemaseGestionWEB_dummy.war" />
+	</target>
+	
+</project>
+

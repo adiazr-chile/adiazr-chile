@@ -38,8 +38,8 @@ public class DetalleAusenciaBp  extends BaseBp{
     * @param _source
     * @param _rutEmpleado
     * @param _rutAutorizador
-    * @param _fechaIngresoInicio
-    * @param _fechaIngresoFin
+    * @param _fechaInicio
+    * @param _fechaFin
     * @param _ausenciaId
     * @param _jtStartIndex
     * @param _jtPageSize
@@ -50,8 +50,8 @@ public class DetalleAusenciaBp  extends BaseBp{
             String _source,
             String _rutEmpleado,
             String _rutAutorizador, 
-            String _fechaIngresoInicio, 
-            String _fechaIngresoFin,
+            String _fechaInicio, 
+            String _fechaFin,
             int _ausenciaId,
             int _jtStartIndex, 
             int _jtPageSize, 
@@ -60,8 +60,8 @@ public class DetalleAusenciaBp  extends BaseBp{
         List<DetalleAusenciaVO> lista = 
             detAusenciaDao.getDetallesAusencias(_source, 
                 _rutEmpleado, 
-                _rutAutorizador, _fechaIngresoInicio,
-                _fechaIngresoFin, _ausenciaId, _jtStartIndex, 
+                _rutAutorizador, _fechaInicio,
+                _fechaFin, _ausenciaId, _jtStartIndex, 
                 _jtPageSize, _jtSorting);
 
         return lista;

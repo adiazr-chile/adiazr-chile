@@ -265,7 +265,7 @@ public class CalculoAsistenciaBp  extends BaseBp{
 //     * @param _empresaId
 //     * @param _rutsEmpleados
 //     * 
-//     * @deprecated 
+//     * @Deprecated 
 //     */
 //    public void setDetallesTurnoRotativoLaboral(String _empresaId, List<String> _rutsEmpleados){
 //        System.out.println(WEB_NAME+"[GestionFemase."
@@ -305,7 +305,7 @@ public class CalculoAsistenciaBp  extends BaseBp{
 //     * 
 //     * @param _empresaId
 //     * @param _rutsEmpleados
-//     * @deprecated
+//     * @Deprecated
 //    */
 //    public void setDetallesTurnoRotativoLibre(String _empresaId, List<String> _rutsEmpleados){
 //        System.out.println(WEB_NAME+"[GestionFemase."
@@ -383,16 +383,17 @@ public class CalculoAsistenciaBp  extends BaseBp{
     }
     
     /**
-     * Obtiene lista de empleados, con toda la info de cada empleado.
-     * Recibe como parametro una lista de ruts
-     * @param _empresaId
-     * @param _deptoId
-     * @param _cencoId
-     * @param _listaRuts
-     * @return
-     * 
-     * @deprecated
-     */
+    * Obtiene lista de empleados, con toda la info de cada empleado.
+    * Recibe como parametro una lista de ruts
+    * 
+    * @param _empresaId
+    * @param _deptoId
+    * @param _cencoId
+    * @param _listaRuts
+    * @return
+    * 
+    * @Deprecated
+    */
     public List<EmpleadoVO> getListaEmpleadosComplete(String _empresaId,
             String _deptoId, 
             int _cencoId,

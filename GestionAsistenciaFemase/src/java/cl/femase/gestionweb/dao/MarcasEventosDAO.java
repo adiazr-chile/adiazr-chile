@@ -392,13 +392,14 @@ public class MarcasEventosDAO extends BaseDAO{
         String msgError = "Error al insertar "
             + "marca evento. "
             + "CodDispositivo: " + _data.getCodDispositivo()
-            + ",codEmpresa: " + _data.getEmpresaCod()
-            + ",rutEmpleado: " + _data.getRutEmpleado()
-            + ",tipoEvento: " + _data.getTipoEvento()
-            + ",fechaHoraOriginal: " + _data.getFechaHoraOriginal()
-            + ",fechaHoraNew: " + _data.getFechaHoraNew()    
-            + ",tipoMarcaOriginal: " + _data.getTipoMarcaOriginal()
-            + ",tipoMarcaNew: " + _data.getTipoMarcaNew();
+            + ", codEmpresa: " + _data.getEmpresaCod()
+            + ", rutEmpleado: " + _data.getRutEmpleado()
+            + ", tipoEvento: " + _data.getTipoEvento()
+            + ", fechaHoraOriginal: " + _data.getFechaHoraOriginal()
+            + ", fechaHoraNew: " + _data.getFechaHoraNew()    
+            + ", tipoMarcaOriginal: " + _data.getTipoMarcaOriginal()
+            + ", tipoMarcaNew: " + _data.getTipoMarcaNew()
+            + ", correlativo marca: " + _data.getCorrelativo();
         
        String msgFinal = " Inserta marcas_eventos:"
             + "dispositivoId [" + _data.getCodDispositivo() + "]"
@@ -408,7 +409,8 @@ public class MarcasEventosDAO extends BaseDAO{
             + ", fechaHoraOriginal [" + _data.getFechaHoraOriginal() + "]"
             + ", fechaHoraNew [" + _data.getFechaHoraNew() + "]"
             + ", tipoMarcaOriginal [" + _data.getTipoMarcaOriginal() + "]"
-            + ", tipoMarcaNew [" + _data.getTipoMarcaNew() + "]";
+            + ", tipoMarcaNew [" + _data.getTipoMarcaNew() + "]"
+            + ", correlativo marca [" + _data.getCorrelativo() + "]";
         
         objresultado.setMsg(msgFinal);
         PreparedStatement insert    = null;

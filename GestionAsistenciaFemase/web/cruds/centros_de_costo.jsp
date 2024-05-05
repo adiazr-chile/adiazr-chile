@@ -1,4 +1,6 @@
 
+<%@page import="java.util.Map"%>
+<%@page import="cl.femase.gestionweb.business.CentroCostoBp"%>
 <%@page import="cl.femase.gestionweb.vo.DispositivoVO"%>
 <%@page import="java.util.HashMap"%>
 <%@page import="cl.femase.gestionweb.vo.UsuarioVO"%>
@@ -27,11 +29,22 @@
     
     LinkedHashMap<String, List<DepartamentoVO>> departamentosHash = 
         (LinkedHashMap<String, List<DepartamentoVO>>)session.getAttribute("allDepartamentos");
-    
+    if (departamentosHash == null) departamentosHash = new LinkedHashMap<>();
+        
     List<DepartamentoVO> departamentos = departamentosHash.get(empresaId);
     if (departamentos == null) System.out.println("[centro_costo.jsp]departamentos es NULL");
         
     List<ComunaVO> comunas = (List<ComunaVO>)session.getAttribute("comunas");
+   
+    CentroCostoBp cencosBp = new CentroCostoBp(null);
+    
+    HashMap<String,DispositivoVO> hashDispositivosNoAsignados = cencosBp.getDispositivosNoAsignados();
+    if (hashDispositivosNoAsignados == null) hashDispositivosNoAsignados = new HashMap<>();
+    
+    HashMap<Integer,List<DispositivoVO>> hashDispositivosAsignados = 
+        (HashMap<Integer,List<DispositivoVO>>)request.getAttribute("dispositivosAsignados");
+    if (hashDispositivosAsignados == null) hashDispositivosAsignados = new HashMap<>();
+    
     
     String filtroDepartamentoId = (String)request.getAttribute("filtroDepartamentoId");
     String filtroNombreCenco = (String)request.getAttribute("filtroNombreCenco");
@@ -88,6 +101,8 @@
     
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" rel="stylesheet"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+    
+   
     
     <script src="<%=request.getContextPath()%>/cruds/js/datatable_idioma.js"></script>
     <script src="<%=request.getContextPath()%>/cruds/js/datepicker_init.js"></script>
@@ -254,7 +269,11 @@
         document.getElementById("filtroNombreCenco").value='<%=filtroNombreCenco%>';
         document.getElementById("filtroDepartamentoId").value='<%=filtroDepartamentoId%>';
         document.getElementById("filtroEstadoId").value='<%=filtroEstadoId%>';
-         
+       
+       
+     
+
+    
     } );
 
     /**
@@ -333,6 +352,58 @@
         
     }
 
+        /**
+        * 
+        * */
+        function displayDispositivos(){
+            var dispositivosAsignados = document.getElementById('dispositivos').value;
+            var myArray = dispositivosAsignados.split(",");
+            console.log(myArray);
+            for (var i = 0; i < myArray.length; i++) {
+                // Accedemos al elemento actual usando el índice 'i'
+                var deviceId = myArray[i];
+                // Hacemos algo con el elemento actual, por ejemplo, mostrarlo en la consola
+                console.log("DeviceId " + i + ": " + deviceId);
+                addCheckbox(deviceId,'checked');
+            }
+            
+            <%
+                for (Map.Entry<String, DispositivoVO> entry : hashDispositivosNoAsignados.entrySet()) {
+                    String clave = entry.getKey();
+                    DispositivoVO dispositivo = entry.getValue();
+                    String strId = dispositivo.getId();
+                    %>
+                    addCheckbox('<%=strId%>','');
+                <%}%>
+            
+            $("#dispositivosModal").modal("show");
+        }
+
+        function addCheckbox(_deviceId, strChecked){
+            var checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.id = 'dispositivo';
+            checkbox.name = 'dispositivo';
+            checkbox.value = _deviceId;
+            if (strChecked === 'checked'){
+                checkbox.checked = 'checked';
+            }
+            var label = document.createElement('label');
+            label.htmlFor = 'Asignado';
+            label.appendChild(document.createTextNode(_deviceId));
+
+            var br = document.createElement('br');
+
+            var container = document.getElementById('devices');
+            container.appendChild(checkbox);
+            container.appendChild(label);
+            container.appendChild(br);
+            
+        } 
+        
+        //inicio js manejo de listas
+       
+        //fin manejo de listas
     </script>
                         
     <style> 
@@ -364,7 +435,7 @@
             max-width: 400px;
             }
             .modal .modal-header, .modal .modal-body, .modal .modal-footer {
-            padding: 20px 30px;
+            padding: 6px 30px;
             }
             .modal .modal-content {
             border-radius: 3px;
@@ -391,6 +462,15 @@
             .modal form label {
             font-weight: normal;
             }
+            
+
+            <!-- estilos para add items -->
+               
+            
+            <!--fin estilos para add items -->
+
+
+            
     </style>                    
 </head>
 <body>
@@ -614,7 +694,7 @@
                  
                  <!-- Inicio nueva fila -->
                  <div class="row">       
-                    <div class="col">Dispositivos <a href='javascript:;' >[Modificar]</a><input type="text" class="form-control" name="dispositivos" id="dispositivos">
+                    <div class="col">Dispositivos <a href='javascript:displayDispositivos();' >[Modificar]</a><input type="text" class="form-control" name="dispositivos" id="dispositivos">
                     </div>    
                  </div>   
                  <!-- fin fila -->       
@@ -637,10 +717,40 @@
             </div>
         </div>
     </div>
+                        
+                        
+     <div class="modal fade" 
+            id="dispositivosModal" name="dispositivosModal" 
+            tabindex="-1" 
+            role="dialog" 
+            aria-labelledby="exampleModalLabel" 
+            aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modificar Dispositivos</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="container-fluid" id="devices">
+                    <!-- Seleccion de dispositivos -->
+                        
+                        
+                        
+                        
+                        
+                    
+                </div>
+            
+            </div>
+        </div>
+    </div>                   
+                        
+                        
 </form>
 
 <!-- Fin modal para editar registro -->
-
 
 </body>
 </html>

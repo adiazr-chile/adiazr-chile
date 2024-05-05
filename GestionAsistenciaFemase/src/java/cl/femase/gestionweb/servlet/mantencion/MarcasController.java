@@ -557,11 +557,20 @@ public class MarcasController extends BaseServlet {
                     int tipoMarcaKey = Integer.parseInt(tokenKey.nextToken());
                     infomarca.setTipoMarca(tipoMarcaKey);
                     
+                    String strHashcode = tokenKey.nextToken();
+                    infomarca.setHashcode(strHashcode);
+                    
+                    int intCorrelativo = Integer.parseInt(tokenKey.nextToken());
+                    infomarca.setCorrelativo(intCorrelativo);
+                    
                     System.out.println(WEB_NAME+"[MarcasController]}"
                         + "Eliminar marca,"
                         + " rut: " + infomarca.getRutEmpleado()
                         + ", fechaHora: " + infomarca.getFechaHora()
-                        + ", tipoMarca: " + infomarca.getTipoMarca());
+                        + ", tipoMarca: " + infomarca.getTipoMarca()
+                        + ", hashCode: " + infomarca.getHashcode()
+                        + ", correlativo: " + infomarca.getCorrelativo()    
+                    );
                     try{
                         resultado.setEmpresaId(infomarca.getEmpresaCod());
                         resultado.setRutEmpleado(infomarca.getRutEmpleado());
@@ -578,10 +587,13 @@ public class MarcasController extends BaseServlet {
                             fechaHoraKey, tipoMarcaKey, false);
                         
                         ResultCRUDVO doDelete = auxnegocio.delete(infomarca, resultado);
+                        
                         infomarca.setRowKey(infomarca.getEmpresaCod()
                             + "|" + infomarca.getRutEmpleado()
                             + "|" + infomarca.getFechaHora()
-                            + "|" + infomarca.getTipoMarca());
+                            + "|" + infomarca.getTipoMarca()
+                            + "|" + infomarca.getHashcode()
+                            + "|" + infomarca.getCorrelativo());
                         hashMarcas.put(infomarca.getRowKey(), infomarca);
 
                         //guardar evento en tabla marcas_eventos
@@ -591,7 +603,7 @@ public class MarcasController extends BaseServlet {
                             
                             System.out.println(WEB_NAME+"[MarcasController]inserta "
                                 + "marca evento: ELIMINACION.");
-                            
+                            aux.setCorrelativo(infomarca.getCorrelativo());
                             aux.setCodDispositivo(marcaOriginal.getCodDispositivo());
                             aux.setCodUsuario(userConnected.getUsername());
                             aux.setEmpresaCod(marcaOriginal.getEmpresaCod());

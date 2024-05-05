@@ -1206,7 +1206,7 @@ public class VacacionesDAO extends BaseDAO{
     * 
     * @return 
     * 
-    * @deprecated 
+    * @Deprecated 
     */
     public ArrayList<DetalleAusenciaVO> getVacacionesRangoMeses(String _rutEmpleado, 
             String _mesInicio, 

@@ -81,6 +81,12 @@ public class AsignacionDispositivoBp  extends BaseBp{
         return insValues;
     }
     
+    /**
+    * 
+    * @param _deviceId
+    * @param _eventdata
+    * @return 
+    */
     public ResultCRUDVO deleteAsignacionesCentroCosto(String _deviceId, 
             MaintenanceEventVO _eventdata){
         
@@ -97,6 +103,34 @@ public class AsignacionDispositivoBp  extends BaseBp{
         return insValues;
     }
     
+    /**
+    * 
+    * @param _cencoId
+    * @param _eventdata
+    * @return 
+    */
+    public ResultCRUDVO deleteAsignacionesCentroCosto(int _cencoId, 
+            MaintenanceEventVO _eventdata){
+        
+        ResultCRUDVO insValues = asignacionDispositivoService.deleteAsignacionesCentroCosto(_cencoId);
+        
+        //if (!updValues.isThereError()){
+            String msgFinal = insValues.getMsg();
+            insValues.setMsg(msgFinal);
+            _eventdata.setDescription(msgFinal);
+            //insertar evento 
+            eventsService.addEvent(_eventdata); 
+        //}
+        
+        return insValues;
+    }
+    
+    /**
+    * 
+    * @param _deviceId
+    * @param _eventdata
+    * @return 
+    */
     public ResultCRUDVO deleteAsignacionesDepartamento(String _deviceId, 
             MaintenanceEventVO _eventdata){
         
@@ -113,6 +147,12 @@ public class AsignacionDispositivoBp  extends BaseBp{
         return insValues;
     }
     
+    /**
+    * 
+    * @param _deviceId
+    * @param _eventdata
+    * @return 
+    */
     public ResultCRUDVO deleteAsignacionesEmpresa(String _deviceId, 
             MaintenanceEventVO _eventdata){
         
