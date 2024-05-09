@@ -145,15 +145,21 @@ public class Empleados extends BaseServlet {
             filtroVO.setEstado(filtroEstado);
             
             //Set filtros de busqueda seleccionados
-            request.setAttribute("filtroCenco", filtroCenco);
-            request.setAttribute("filtroRun", filtroRun);
-            request.setAttribute("filtroNombre", filtroNombreEmpleado);
-            request.setAttribute("filtroEstado", String.valueOf(filtroEstado));
+            session.removeAttribute("filtroCencoEMPL");
+            session.removeAttribute("filtroRunEMPL");
+            session.removeAttribute("filtroNombreEMPL");
+            session.removeAttribute("filtroEstadoEMPL");
+            
+            session.setAttribute("filtroCencoEMPL", filtroCenco);
+            session.setAttribute("filtroRunEMPL", filtroRun);
+            session.setAttribute("filtroNombreEMPL", filtroNombreEmpleado);
+            session.setAttribute("filtroEstadoEMPL", String.valueOf(filtroEstado));
            
             if (action.compareTo("list") == 0) {
                 System.out.println(WEB_NAME + CRUD_SERVLET_NAME + "CRUD - " + CRUD_TABLE_NAME
                     + ". Mostrar registros");
-                forwardToCRUDPage(request, response, claseBp, filtroVO);   
+                session.removeAttribute("lista_CRUD_empleados");
+                forwardToCRUDPage(request, response, session, claseBp, filtroVO);   
             }
         }
     }
@@ -161,8 +167,9 @@ public class Empleados extends BaseServlet {
     /**
     * 
     */
-    private void forwardToCRUDPage(HttpServletRequest _request, 
+    private void forwardToCRUDPage(HttpServletRequest _request,
         HttpServletResponse _response,
+        HttpSession _session,
         EmpleadosBp _empleadoBp,
         FiltroBusquedaCRUDVO _filtroBusqueda){
     
@@ -171,22 +178,33 @@ public class Empleados extends BaseServlet {
             System.out.println(WEB_NAME + CRUD_SERVLET_NAME + "CRUD - " + CRUD_TABLE_NAME
                 + ". filtroNombre: " + _filtroBusqueda.getNombre()
                 + ". filtroEstado: " + _filtroBusqueda.getEstado());
+            if (_filtroBusqueda.getCencoId() == -1){
+                System.out.println("--------->Eliminar lista de empleados de la sesion<---------");
+                _session.removeAttribute("lista_CRUD_empleados");
+                listaObjetos = null;
+            }else{
+                listaObjetos = _empleadoBp.getEmpleados(_filtroBusqueda.getEmpresaId(), 
+                    null, 
+                    _filtroBusqueda.getCencoId(),
+                    -1,
+                    _filtroBusqueda.getTurnoId(),
+                    _filtroBusqueda.getRunEmpleado(), 
+                    _filtroBusqueda.getNombre(), 
+                    null, 
+                    null,
+                    _filtroBusqueda.getEstado(),
+                    0, 
+                    0, 
+                    "empl.empl_rut");
+            }
             
-            listaObjetos = _empleadoBp.getEmpleados(_filtroBusqueda.getEmpresaId(), 
-                null, 
-                _filtroBusqueda.getCencoId(),
-                -1,
-                _filtroBusqueda.getTurnoId(),
-                _filtroBusqueda.getRunEmpleado(), 
-                _filtroBusqueda.getNombre(), 
-                null, 
-                null,
-                _filtroBusqueda.getEstado(),
-                0, 
-                0, 
-                "empl.empl_rut");
+//            if (listaObjetos.isEmpty()){
+//                System.out.println("--------->Eliminar lista de empleados de la sesion<---------");
+//                _session.removeAttribute("lista_CRUD_empleados");
+//                listaObjetos = null;
+//            }
             
-            _request.setAttribute("lista", listaObjetos);
+            _session.setAttribute("lista_CRUD_empleados", listaObjetos);
             RequestDispatcher vista = _request.getRequestDispatcher(FORWARD_PAGE);
             vista.forward(_request, _response);
         } catch (ServletException ex) {

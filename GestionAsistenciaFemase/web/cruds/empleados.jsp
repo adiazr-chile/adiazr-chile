@@ -10,16 +10,22 @@
     String mainTitle    = "Empleados";
     String fileTitle    = "empleados";
     String urlPattern   = "EmpleadosCRUD";
-    List<EmpleadoVO> listaEmpleados = (List<EmpleadoVO>)request.getAttribute("lista");
+    List<EmpleadoVO> listaEmpleados = (List<EmpleadoVO>)session.getAttribute("lista_CRUD_empleados");
     if (listaEmpleados == null) listaEmpleados = new ArrayList<>();
    
     //filtros de busqueda
     List<UsuarioCentroCostoVO> cencos   = (List<UsuarioCentroCostoVO>)session.getAttribute("cencos_empleado");
     
-    String filtroCenco = (String)request.getAttribute("filtroCenco");
-    String filtroRun = (String)request.getAttribute("filtroRun");
-    String filtroNombre = (String)request.getAttribute("filtroNombre");
-    String filtroEstado = (String)request.getAttribute("filtroEstado");
+    String filtroCenco = (String)session.getAttribute("filtroCencoEMPL");
+    String filtroRun = (String)session.getAttribute("filtroRunEMPL");
+    String filtroNombre = (String)session.getAttribute("filtroNombreEMPL");
+    String filtroEstado = (String)session.getAttribute("filtroEstadoEMPL");
+    
+    System.out.println("[crud.empleados]filtros en sesion: "
+        + "filtroCenco: " + filtroCenco
+        + ", filtroRun " + filtroRun
+        + ", filtroNombre " + filtroNombre
+        + ", filtroEstado " + filtroEstado);
     
     if (filtroCenco == null) filtroCenco = "-1";
     if (filtroRun == null) filtroRun = "";
@@ -37,9 +43,10 @@
     *       - Cargo Id
     *       - NombreCargo
     *       - Email
+    *       
     */
     //num columnas
-    String columnas = "0,1,2,3,4,5,6,7,8";
+    String columnas = "0,1,2,3,4,5,6,7,8,9,10,11";
 %>
 
 <!doctype html>
@@ -229,14 +236,6 @@
              setValuesToEdit(id, nombre, estadoId);
         });
         */
-        
-        
-        
-        //set params de busqueda previa
-        document.getElementById("filtroCenco").value='<%=filtroCenco%>';
-        document.getElementById("filtroRun").value='<%=filtroRun%>';
-        document.getElementById("filtroNombre").value='<%=filtroNombre%>';
-        document.getElementById("filtroEstado").value='<%=filtroEstado%>';
         
         /*
         $("#datepicker").datepicker({ 
@@ -463,19 +462,22 @@
             <th>Run </th>
             <th>N&deg; ficha</th>
             <th>Nombre</th>
-            <th>Estado Id</th>
+            <th style="display: none;">Estado Id</th>
             <th>Estado</th>
-            <th>Turno Id</th>
-            <th>Cargo Id</th>
+            <th style="display: none;">Turno Id</th>
+            <th style="display: none;">Cargo Id</th>
             <th>Cargo</th>
             <th>Email</th>
-                <%if (!listaEmpleados.isEmpty()){%>
+            <th>Inicio Contrato</th>
+            <th>Fin Contrato</th>
+            <th>Turno</th>
+                <%//if (!listaEmpleados.isEmpty()){%>
                     <th style="text-align:center;width:100px;">Nuevo registro 
                         <button type="button" class="btn btn-success btn-xs dt-add">
                             <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                         </button>
                     </th>
-                <%}%>
+                <%//}%>
             </tr>
         </thead>
         <tbody>
@@ -491,12 +493,15 @@
                 <td><%= registro.getCodInterno()%></td>
                 <td><%= registro.getRut()%></td>
                 <td><%= fullName%></td>
-                <td><%= registro.getEstado()%></td>
+                <td style="display: none;"><%= registro.getEstado()%></td>
                 <td><%= Constantes.ESTADO_LABEL.get(registro.getEstado())%></td>
-                <td><%= registro.getIdTurno()%></td>
-                <td><%= registro.getIdCargo()%></td>
+                <td style="display: none;"><%= registro.getIdTurno()%></td>
+                <td style="display: none;"><%= registro.getIdCargo()%></td>
                 <td><%= registro.getNombreCargo()%></td>
                 <td><%= registro.getEmail()%></td>
+                <td><%= registro.getFechaInicioContratoAsStr()%></td>
+                <td><%= registro.getFechaTerminoContratoAsStr()%></td>
+                <td><%= registro.getNombreTurno()%></td>
                 <td>
                     <button class="btnSelect btn btn-primary btn-xs" style="margin-right:16px;">
                         <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
@@ -521,6 +526,13 @@
         
 <!-- Fin tabla con datos -->
 
-
+<script>
+    //set params de busqueda previa
+    document.getElementById("filtroCenco").value='<%=filtroCenco%>';
+    document.getElementById("filtroRun").value='<%=filtroRun%>';
+    document.getElementById("filtroNombre").value='<%=filtroNombre%>';
+    document.getElementById("filtroEstado").value='<%=filtroEstado%>';
+        
+</script>
 </body>
 </html>

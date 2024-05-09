@@ -1387,7 +1387,8 @@ public class EmpleadosDAO extends BaseDAO{
                 + "cargo.cargo_nombre,"
                 + "contrato_indefinido,"
                 + "art_22,"
-                + "cod_interno,clave_marcacion "
+                + "cod_interno,clave_marcacion,"
+                + "turno.nombre_turno "
                 + "FROM empleado empl "
                     + "inner join comuna on (empl.id_comuna = comuna.comuna_id) "
                     + "inner join region on (comuna.region_id = region.region_id) "
@@ -1395,6 +1396,7 @@ public class EmpleadosDAO extends BaseDAO{
                     + "inner join departamento depto on (empl.depto_id = depto.depto_id) "
                     + "inner join centro_costo cenco on (empl.cenco_id = cenco.ccosto_id) "
                     + "inner join cargo on (empl.empl_id_cargo = cargo.cargo_id) "
+                    + "inner join turno on (empl.empl_id_turno = turno.id_turno) "
                     + "where (1 = 1) ";
                         
             if (_empresaId!=null && _empresaId.compareTo("-1")!=0){        
@@ -1495,6 +1497,7 @@ public class EmpleadosDAO extends BaseDAO{
                 //data.setFechaIngresoPersonal(rs.getDate("fec_ingreso_depto_cenco"));
                 //data.setEstadoPersonal(rs.getInt("estado_depto_cenco"));
                 data.setIdTurno(rs.getInt("empl_id_turno"));
+                data.setNombreTurno(rs.getString("nombre_turno"));
                 data.setAutorizaAusencia(rs.getBoolean("autoriza_ausencia"));
                 data.setIdCargo(rs.getInt("empl_id_cargo"));
                 

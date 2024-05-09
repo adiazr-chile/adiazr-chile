@@ -3529,7 +3529,37 @@
 					
 					.- Problema: Los hashcode no son únicos, No sirve como PK
 			
+			5.0.6 06-05-2024
+				.- Admin Empleados: Al volver del formulario de nuevo/modificar empleado: mantener los valores seleccionados previamente en los campos de búsqueda.
+				
+			5.0.7 07-05-2024
+				.- Admin Empleados: Al volver del formulario de nuevo/modificar empleado: Se deben mantener los filtros de búsqueda 
+				previamente seleccionados y también, se debe mostrar la lista de empleados que se mostraba al momento de hacer clic 
+				el botón "Nuevo registro" o Modificar empleado.
+				Además, el botón "Nuevo registro" debe estar siempre visible.
+
+			***************************************************************************
+			************** Versión 5.0.7 en Produccion desde el 07-05-2024
+			***************************************************************************
 			
+			5.0.8 08-05-2024
+			.- CRUD Empleados: 
+				Cambios realizados a la vista:
+
+				Quitar las columnas:
+					- Estado ID.
+					- Turno ID.
+					- Cargo ID.
+
+				Agregar las columnas:
+					- Fecha inicio contrato.
+					- Fecha Fin contrato.
+					- Nombre Turno.
+
+			***************************************************************************
+			************** Versión 5.0.8 en Produccion desde el 08-05-2024
+			***************************************************************************
+
 
 		v4.6.0 16-04-2023.
 			.- Nuevo módulo de "Permisos Examen Salud Preventiva".
