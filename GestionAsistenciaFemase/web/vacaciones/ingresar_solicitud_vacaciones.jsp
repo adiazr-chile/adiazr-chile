@@ -250,7 +250,7 @@
             $('#fechaDesde').datepick(
                 {
                     dateFormat: 'yyyy-mm-dd',
-                    minDate: 0,
+                    //minDate: 0,
                     directionReverse: true,
                         onSelect: function(dateText) {
                           //alert("Selected date desde: " + dateText + ", Current Selected Value= " + this.value);
@@ -265,7 +265,7 @@
             $('#fechaHasta').datepick(
             {
                 dateFormat: 'yyyy-mm-dd',
-                minDate: 0,
+                //minDate: 0,
                 directionReverse: true,
                 onSelect: function(dateText) {
                   //alert("Selected date desde: " + dateText + ", Current Selected Value= " + this.value);

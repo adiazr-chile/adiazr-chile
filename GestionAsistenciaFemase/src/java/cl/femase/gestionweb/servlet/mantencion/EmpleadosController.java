@@ -850,6 +850,9 @@ public class EmpleadosController extends BaseServlet {
                             case "email":
                                 auxdata.setEmail(fieldValue);
                                 break;
+                            case "email_personal":
+                                auxdata.setEmailPersonal(fieldValue);
+                                break;    
                             case "fechaInicioContratoAsStr":
                                 {
                                     Date auxDate = null;

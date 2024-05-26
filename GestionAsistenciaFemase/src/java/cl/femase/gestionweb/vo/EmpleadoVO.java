@@ -12,9 +12,9 @@ import java.util.Date;
 import java.util.stream.Collectors;
 
 /**
- *
- * @author Alexander
- */
+*
+* @author Alexander
+*/
 public class EmpleadoVO implements Serializable{
 
     private static final long serialVersionUID = 7599472295789776220L;
@@ -35,6 +35,7 @@ public class EmpleadoVO implements Serializable{
     private String fechaNacimientoAsStr;
     private String direccion="";
     private String email="";
+    private String emailPersonal="";
     private Date fechaInicioContrato;
     private String fechaInicioContratoAsStr;
     private Date fechaTerminoContrato;
@@ -110,6 +111,14 @@ public class EmpleadoVO implements Serializable{
     private String continuidadLaboral = "N";
     private Date nuevaFechaIniContrato;
     private String nuevaFechaIniContratoAsStr;
+
+    public String getEmailPersonal() {
+        return emailPersonal;
+    }
+
+    public void setEmailPersonal(String emailPersonal) {
+        this.emailPersonal = emailPersonal;
+    }
 
     public String getContinuidadLaboral() {
         return continuidadLaboral;

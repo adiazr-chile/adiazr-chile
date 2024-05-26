@@ -1,53 +1,53 @@
 
 <%@page import="cl.femase.gestionweb.vo.UsuarioCentroCostoVO"%>
 <%@page import="cl.femase.gestionweb.common.Constantes"%>
-<%@page import="cl.femase.gestionweb.vo.EmpleadoVO"%>
+<%@page import="cl.femase.gestionweb.vo.DetalleAusenciaVO"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.Iterator"%>
 <%@page import="java.util.List"%>
 
 <%
-    String mainTitle    = "Empleados";
-    String fileTitle    = "empleados";
-    String urlPattern   = "EmpleadosCRUD";
-    List<EmpleadoVO> listaEmpleados = (List<EmpleadoVO>)session.getAttribute("lista_CRUD_empleados");
-    if (listaEmpleados == null) listaEmpleados = new ArrayList<>();
+    String mainTitle    = "Justificaciones Inasistencia";
+    String fileTitle    = "justifica_inasistencias";
+    String urlPattern   = "JustificacionesInasistenciasCRUD";
+    List<DetalleAusenciaVO> registros = (List<DetalleAusenciaVO>)session.getAttribute("lista_CRUD_detalle_ausencias");
+    if (registros == null) registros = new ArrayList<>();
    
     //filtros de busqueda
     List<UsuarioCentroCostoVO> cencos   = (List<UsuarioCentroCostoVO>)session.getAttribute("cencos_empleado");
     
-    String filtroCenco = (String)session.getAttribute("filtroCencoEMPL");
-    String filtroRun = (String)session.getAttribute("filtroRunEMPL");
-    String filtroNombre = (String)session.getAttribute("filtroNombreEMPL");
-    String filtroEstado = (String)session.getAttribute("filtroEstadoEMPL");
+    String filtroRun            = (String)request.getAttribute("filtroRunEmpleadoDetAusencia");
+    String filtroInicioAusencia = (String)request.getAttribute("filtroInicioAusenciaDetAusencia");
+    String filtroFinAusencia    = (String)request.getAttribute("filtroFinAusenciaDetAusencia");
+    String filtroTipoAusencia   = (String)request.getAttribute("filtroTipoAusenciaDetAusencia");
     
-    System.out.println("[crud.empleados]filtros en sesion: "
-        + "filtroCenco: " + filtroCenco
-        + ", filtroRun " + filtroRun
-        + ", filtroNombre " + filtroNombre
-        + ", filtroEstado " + filtroEstado);
+    System.out.println("[crud.detalle_ausencia]filtros en request: "
+        + "filtroRun: " + filtroRun
+        + ", filtroInicioAusencia: " + filtroInicioAusencia
+        + ", filtroFinAusencia: " + filtroFinAusencia
+        + ", filtroTipoAusencia: " + filtroTipoAusencia);
     
-    if (filtroCenco == null) filtroCenco = "-1";
-    if (filtroRun == null) filtroRun = "";
-    if (filtroNombre == null) filtroNombre = "";
-    if (filtroEstado == null) filtroEstado = "1";
+    if (filtroRun == null) filtroRun = "-1";
+    if (filtroInicioAusencia == null) filtroInicioAusencia = "";
+    if (filtroFinAusencia == null) filtroFinAusencia = "";
+    if (filtroTipoAusencia == null) filtroTipoAusencia = "1";
     
     /**
     *   Columnas para mostrar:
-    *       - Run
-    *       - Num ficha
-    *       - Nombre
-    *       - Estado Id
-    *       - Estado Nombre
-    *       - Turno Id
-    *       - Cargo Id
-    *       - NombreCargo
-    *       - Email
-    *       - Email personal
-    *       
+    *       - Id ausencia detalle (correlativo)
+    *       - Empleado (rut + nombre)
+    *       - Fecha ingreso ausencia
+    *       - Motivo ausencia
+    *       - Tipo (x hora o x el dia)
+    *       - Fecha Inicio
+    *       - Hora inicio
+    *       - Fecha fin
+    *       - Hora fin
+    *       - Run autorizador
+    *       - Autorizada (Si/No)
     */
     //num columnas
-    String columnas = "0,1,2,3,4,5,6,7,8,9,10,11,12";
+    String columnas = "0,1,2,3,4,5,6,7,8,9,10";
 %>
 
 <!doctype html>
@@ -124,10 +124,7 @@
             { "width": "10%", "targets": 6 },
             { "width": "10%", "targets": 7 },
             { "width": "10%", "targets": 8 },
-            { "width": "10%", "targets": 9 },
-            { "width": "10%", "targets": 10 },
-            { "width": "10%", "targets": 11 },
-            { "width": "10%", "targets": 12 }
+            { "width": "10%", "targets": 9 }
           ],
           buttons: {
               dom: {
@@ -472,7 +469,6 @@
             <th style="display: none;">Cargo Id</th>
             <th>Cargo</th>
             <th>Email</th>
-            <th>Email personal</th>
             <th>Inicio Contrato</th>
             <th>Fin Contrato</th>
             <th>Turno</th>
@@ -504,7 +500,6 @@
                 <td style="display: none;"><%= registro.getIdCargo()%></td>
                 <td><%= registro.getNombreCargo()%></td>
                 <td><%= registro.getEmail()%></td>
-                <td><%= registro.getEmailPersonal()%></td>
                 <td><%= registro.getFechaInicioContratoAsStr()%></td>
                 <td><%= registro.getFechaTerminoContratoAsStr()%></td>
                 <td><%= registro.getNombreTurno()%></td>

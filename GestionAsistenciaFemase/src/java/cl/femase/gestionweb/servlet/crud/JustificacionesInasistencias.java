@@ -1,10 +1,9 @@
 package cl.femase.gestionweb.servlet.crud;
 
 import cl.femase.gestionweb.servlet.BaseServlet;
-import cl.femase.gestionweb.business.EmpleadosBp;
-import cl.femase.gestionweb.vo.FiltroBusquedaCRUDVO;
+import cl.femase.gestionweb.business.DetalleAusenciaBp;
+import cl.femase.gestionweb.vo.DetalleAusenciaVO;
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
-import cl.femase.gestionweb.vo.EmpleadoVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import cl.femase.gestionweb.vo.UsuarioVO;
 import java.io.IOException;
@@ -16,20 +15,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import java.util.Date;
-import java.util.StringTokenizer;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 
-public class Empleados extends BaseServlet {
+public class JustificacionesInasistencias extends BaseServlet {
     protected static Logger m_logger = Logger.getLogger("gestionweb");
 
-    private static final String CRUD_TABLE_NAME     = "Empleados";
-    private static final String CRUD_SERVLET_NAME   = "[Empleados.servlet]";
-    private static final String FORWARD_PAGE        = "cruds/empleados.jsp";
-        
-    public Empleados() {
+    private static final String CRUD_TABLE_NAME     = "Justificaciones Inasistencia";
+    private static final String CRUD_SERVLET_NAME   = "[JustificacionesInasistencias.servlet]";
+    private static final String FORWARD_PAGE        = "cruds/justificacion_inasistencias.jsp";
+    private static final String ATTRIBUTE_NAME_FOR_LIST= "lista_CRUD_detalle_ausencias";
+    
+    public JustificacionesInasistencias() {
         
     }
 
@@ -76,9 +75,6 @@ public class Empleados extends BaseServlet {
         }
     }
 
-    /**
-    * 
-    */
     @Override
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -87,7 +83,7 @@ public class Empleados extends BaseServlet {
         PropertiesVO appProperties=(PropertiesVO)application.getAttribute("appProperties");
         UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
 
-        EmpleadosBp claseBp = new EmpleadosBp(appProperties);
+        DetalleAusenciaBp claseBp = new DetalleAusenciaBp(appProperties);
 
         if(request.getParameter("action") != null){
             System.out.println(WEB_NAME + CRUD_SERVLET_NAME
@@ -99,70 +95,43 @@ public class Empleados extends BaseServlet {
             resultado.setUsername(userConnected.getUsername());
             resultado.setDatetime(new Date());
             resultado.setUserIP(request.getRemoteAddr());
-            resultado.setType("AEM");
+            resultado.setType("DAU");
             resultado.setEmpresaIdSource(userConnected.getEmpresaId());
                    
             /** filtros de busqueda */
-            String filtroCenco          = "";//Ej. 'emp01|02|80'--> empresa|deptoId|cencoId 
-            String filtroRun            = "";
-            String filtroNombreEmpleado = "";
-            int filtroEstado           = -1;
-            
+            String runEmpleado          = null;
+            String fechaInicioAusencia  = null; 
+            String fechaFinAusencia    = null;
+            int tipoAusencia           = -1;
+                
             //if (jtSorting.contains("code")) jtSorting = jtSorting.replaceFirst("code","param_code");
             System.out.println(WEB_NAME + CRUD_SERVLET_NAME
-                + "Param busqueda cenco: " + request.getParameter("filtroCenco")
-                + ", param busqueda Run: " + request.getParameter("filtroRun")
-                + ", param busqueda nombre: " + request.getParameter("filtroNombreEmpleado")
-                + ", param busqueda estado: " + request.getParameter("filtroEstado")    
+                + "Params busqueda. runEmpleado: " + request.getParameter("runEmpleado")
+                + ", inicio ausencia: " + request.getParameter("inicioAusencia")
+                + ", fin ausencia: " + request.getParameter("finAusencia")
+                + ", tipo ausencia: " + request.getParameter("tipoAusencia")    
             );
-            if (request.getParameter("filtroCenco") != null) 
-                filtroCenco = request.getParameter("filtroCenco");
-            if (request.getParameter("filtroRun") != null) 
-                filtroRun = request.getParameter("filtroRun");
-            if (request.getParameter("filtroNombre") != null) 
-                filtroNombreEmpleado = request.getParameter("filtroNombre");
-            if (request.getParameter("filtroEstado") != null) 
-                filtroEstado = Integer.parseInt(request.getParameter("filtroEstado"));
-            
-            String empresaid="-1";
-            String deptoid="-1";
-            int cencoid=-1;
-            System.out.println(WEB_NAME+ CRUD_SERVLET_NAME + "[processRequest]"
-                + "token param 'cencoID'= " + filtroCenco);
-            if (filtroCenco != null && filtroCenco.compareTo("-1") != 0){
-                StringTokenizer tokenCenco  = new StringTokenizer(filtroCenco, "|");
-                if (tokenCenco.countTokens() > 0){
-                    while (tokenCenco.hasMoreTokens()){
-                        empresaid   = tokenCenco.nextToken();
-                        deptoid     = tokenCenco.nextToken();
-                        cencoid     = Integer.parseInt(tokenCenco.nextToken());
-                    }
-                }
-            }
-            
-            FiltroBusquedaCRUDVO filtroVO = new FiltroBusquedaCRUDVO();
-            filtroVO.setEmpresaId(empresaid);
-            filtroVO.setCencoId(cencoid);
-            filtroVO.setRunEmpleado(filtroRun);
-            filtroVO.setNombre(filtroNombreEmpleado);
-            filtroVO.setEstado(filtroEstado);
+            if (request.getParameter("runEmpleado") != null) 
+                runEmpleado = request.getParameter("runEmpleado");
+            if (request.getParameter("inicioAusencia") != null) 
+                fechaInicioAusencia = request.getParameter("inicioAusencia");
+            if (request.getParameter("finAusencia") != null) 
+                fechaFinAusencia = request.getParameter("finAusencia");
+            if (request.getParameter("tipoAusencia") != null) 
+                tipoAusencia = Integer.parseInt(request.getParameter("tipoAusencia"));
             
             //Set filtros de busqueda seleccionados
-            session.removeAttribute("filtroCencoEMPL");
-            session.removeAttribute("filtroRunEMPL");
-            session.removeAttribute("filtroNombreEMPL");
-            session.removeAttribute("filtroEstadoEMPL");
-            
-            session.setAttribute("filtroCencoEMPL", filtroCenco);
-            session.setAttribute("filtroRunEMPL", filtroRun);
-            session.setAttribute("filtroNombreEMPL", filtroNombreEmpleado);
-            session.setAttribute("filtroEstadoEMPL", String.valueOf(filtroEstado));
+            request.setAttribute("filtroRunEmpleadoDetAusencia", runEmpleado);
+            request.setAttribute("filtroInicioAusenciaDetAusencia", fechaInicioAusencia);
+            request.setAttribute("filtroFinAusenciaDetAusencia", fechaFinAusencia);
+            request.setAttribute("filtroTipoAusenciaDetAusencia", String.valueOf(tipoAusencia));
            
             if (action.compareTo("list") == 0) {
                 System.out.println(WEB_NAME + CRUD_SERVLET_NAME + "CRUD - " + CRUD_TABLE_NAME
                     + ". Mostrar registros");
-                session.removeAttribute("lista_CRUD_empleados");
-                forwardToCRUDPage(request, response, session, claseBp, filtroVO);   
+                request.removeAttribute(ATTRIBUTE_NAME_FOR_LIST);
+                forwardToCRUDPage(request, response, session, claseBp, 
+                    runEmpleado,fechaInicioAusencia,fechaFinAusencia,tipoAusencia);   
             }
         }
     }
@@ -173,41 +142,36 @@ public class Empleados extends BaseServlet {
     private void forwardToCRUDPage(HttpServletRequest _request,
         HttpServletResponse _response,
         HttpSession _session,
-        EmpleadosBp _empleadoBp,
-        FiltroBusquedaCRUDVO _filtroBusqueda){
+        DetalleAusenciaBp _ausenciasBp,
+        String _runEmpleado,
+        String _fechaInicioAusencia, 
+        String _fechaFinAusencia,
+        int _tipoAusencia){
     
         try {
-            List<EmpleadoVO> listaObjetos = new ArrayList<>();
+            List<DetalleAusenciaVO> lista = new ArrayList<>();
             System.out.println(WEB_NAME + CRUD_SERVLET_NAME + "CRUD - " + CRUD_TABLE_NAME
-                + ". filtroNombre: " + _filtroBusqueda.getNombre()
-                + ". filtroEstado: " + _filtroBusqueda.getEstado());
-            if (_filtroBusqueda.getCencoId() == -1){
-                System.out.println("--------->Eliminar lista de empleados de la sesion<---------");
-                _session.removeAttribute("lista_CRUD_empleados");
-                listaObjetos = null;
+                + ". filtroRun: " + _runEmpleado
+                + ", filtro fecha inicio ausencia: " + _fechaInicioAusencia
+                + ", filtro fecha fin ausencia: " + _fechaFinAusencia
+                + ", filtro tipo ausencia: " + _tipoAusencia);
+            if (_runEmpleado.compareTo("-1") == 0 ){
+                System.out.println("--------->Eliminar lista de Justificaciones ausencia de la sesion<---------");
+                _request.removeAttribute(ATTRIBUTE_NAME_FOR_LIST);
+                lista = null;
             }else{
-                listaObjetos = _empleadoBp.getEmpleados(_filtroBusqueda.getEmpresaId(), 
+                lista = _ausenciasBp.getDetallesAusencias("detalle_ausencias",
+                    _runEmpleado,
                     null, 
-                    _filtroBusqueda.getCencoId(),
-                    -1,
-                    _filtroBusqueda.getTurnoId(),
-                    _filtroBusqueda.getRunEmpleado(), 
-                    _filtroBusqueda.getNombre(), 
-                    null, 
-                    null,
-                    _filtroBusqueda.getEstado(),
+                    _fechaInicioAusencia, 
+                    _fechaFinAusencia,
+                    _tipoAusencia,
                     0, 
                     0, 
-                    "empl.empl_rut");
+                    "detalle_ausencia.correlativo");
             }
             
-//            if (listaObjetos.isEmpty()){
-//                System.out.println("--------->Eliminar lista de empleados de la sesion<---------");
-//                _session.removeAttribute("lista_CRUD_empleados");
-//                listaObjetos = null;
-//            }
-            
-            _session.setAttribute("lista_CRUD_empleados", listaObjetos);
+            _request.setAttribute(ATTRIBUTE_NAME_FOR_LIST, lista);
             RequestDispatcher vista = _request.getRequestDispatcher(FORWARD_PAGE);
             vista.forward(_request, _response);
         } catch (ServletException ex) {

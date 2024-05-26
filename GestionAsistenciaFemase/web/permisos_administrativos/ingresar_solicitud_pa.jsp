@@ -58,8 +58,15 @@
             int semestreActual = Utilidades.getSemestre(currentDate);
             diasDisponibles = saldoPA.getDiasDisponiblesSemestre1();
             diasUtilizados  = saldoPA.getDiasUtilizadosSemestre1();
-            minDate = fechaActual;
-            maxDate = anioActual + "-06-30";
+            /**
+             * Se comenta esta restriccion del calendario 
+             * segun lo solicitado por Felipe Galindo en correo del 22-05-2024
+             * 
+             */
+            /*
+                minDate = fechaActual;
+                maxDate = anioActual + "-06-30";
+            */
             if (semestreActual == 2){
                 diasDisponibles = saldoPA.getDiasDisponiblesSemestre2();
                 diasUtilizados  = saldoPA.getDiasUtilizadosSemestre2();

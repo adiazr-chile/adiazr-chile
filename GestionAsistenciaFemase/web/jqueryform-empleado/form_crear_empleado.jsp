@@ -442,14 +442,10 @@ div.thumbnail .glyphicon-ok-circle{
   
 </div>
 
-
-
-
 <div class="email required" data-fid="email">
   <label class="control-label" for="email">Email</label>
-
-<div >
-		<input type="email" 
+    <div >
+    <input type="email" 
                     id="email" 
                     name="email" 
                     value="" 
@@ -471,12 +467,39 @@ div.thumbnail .glyphicon-ok-circle{
                             }
                         %>
           </select>
+    </div>
 </div>
-  
+
+<!-- Email personal -->          
+<div class="email_personal" data-fid="email_personal">
+  <label class="control-label" for="email_personal">Email personal</label>
+    <div >
+		<input type="email_personal" 
+		id="email_personal" 
+		name="email_personal" 
+		value="" 
+		placeholder="Ingrese correo electronico personal" 
+		data-rule-required="false" data-msg-required="No Requerido" 
+		data-rule-maxlength="70" data-msg-maxlength="No debe exceder de {0} caracteres"   />
+		@
+		<select id="email_domain" name="email_domain"   
+			data-rule-required="false" 
+                        data-msg-required="Requerido" >
+			<option selected value="-1">- Seleccione servicio de correo -</option>
+				<%
+					Iterator<ProveedorCorreoVO> iteraservidores2 = proveedoresCorreo.iterator();
+					while(iteraservidores2.hasNext() ) {
+						ProveedorCorreoVO aux1 = iteraservidores2.next();
+						%>
+						<option value="<%=aux1.getDomain()%>"><%=aux1.getDomain()%></option>
+						<%
+							
+					}
+				%>
+		</select>
+    </div>
 </div>
-
-
-
+<!-- Fin email personal -->
 
 <div class="form-group foto" data-fid="foto">
   <label class="control-label" for="foto">Fotograf&iacute;a</label>
