@@ -614,6 +614,11 @@ public class EmpleadosBp  extends BaseBp{
         return lista;
     }
     
+    /**
+    * 
+    * @param _empleado
+    * @return 
+    */
     public List<EmpleadoVO> getEmpleadosByFiltro(EmpleadoVO _empleado){
         List<EmpleadoVO> lista = 
             empleadosDao.getEmpleadosByFiltro(_empleado);

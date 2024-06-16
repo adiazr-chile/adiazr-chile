@@ -25,7 +25,7 @@ import javax.servlet.http.HttpSession;
  * @author aledi
  */
 @WebServlet(name = "CalculoVacacionesServlet", urlPatterns = {"/servlet/CalculoVacacionesServlet"})
-public class CalculoVacacionesServlet extends BaseServlet {
+public class NewCalculoVacacionesServlet extends BaseServlet {
 
     /**
     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -59,6 +59,7 @@ public class CalculoVacacionesServlet extends BaseServlet {
             String paramDeptoId = request.getParameter("depto_id");
             String paramCencoId = request.getParameter("cenco_id");
             String rutEmpleado = request.getParameter("rutEmpleado");
+            //Calcular vacaciones...
             System.out.println(WEB_NAME+"[CalculoVacacionesServlet]"
                 + "Calcular saldo dias de vacaciones. "
                 + "empresa_id= " + paramEmpresa
@@ -78,18 +79,24 @@ public class CalculoVacacionesServlet extends BaseServlet {
                 System.out.println(WEB_NAME+"[CalculoVacacionesServlet]"
                     + "Calcular saldo dias de vacaciones "
                     + "para un solo empleado.");
-                ResultCRUDVO fnExec = calculoVacacionesBp.setVBA_Empleado(paramEmpresa, rutEmpleado, resultVO);
-                if (fnExec != null && fnExec.getFilasAfectadasObj() != null){
-                    System.out.println(WEB_NAME + "[CalculoVacacionesServlet]"
-                        + "Filas afectadas, post ejecucion de la funcion " + Constantes.fnSET_VBA_EMPLEADO
-                        + ": " + fnExec.getFilasAfectadasObj().toString());
-                }
-                fnExec = calculoVacacionesBp.setVP_Empleado(paramEmpresa, rutEmpleado, resultVO);
-                if (fnExec != null && fnExec.getFilasAfectadasObj() != null){
-                    System.out.println(WEB_NAME + "[CalculoVacacionesServlet]"
-                        + "Filas afectadas, post ejecucion de la funcion " + Constantes.fnSET_VP_EMPLEADO
-                        + ": " + fnExec.getFilasAfectadasObj().toString());
-                }
+                
+                //descomentar
+////                Calcular vacaciones...para un solo empleado
+////                Invocar al metodo 'calculoVacacionesBp.setVBANew', con rutEmpleado= RUT seleccionado        
+////                        
+////                ResultCRUDVO fnExec = calculoVacacionesBp.setVBA_Empleado(paramEmpresa, rutEmpleado, resultVO);
+////                if (fnExec != null && fnExec.getFilasAfectadasObj() != null){
+////                    System.out.println(WEB_NAME + "[CalculoVacacionesServlet]"
+////                        + "Filas afectadas, post ejecucion de la funcion " + Constantes.fnSET_VBA_EMPLEADO
+////                        + ": " + fnExec.getFilasAfectadasObj().toString());
+////                }
+                //descomentar
+////                fnExec = calculoVacacionesBp.setVP_Empleado(paramEmpresa, rutEmpleado, resultVO);
+////                if (fnExec != null && fnExec.getFilasAfectadasObj() != null){
+////                    System.out.println(WEB_NAME + "[CalculoVacacionesServlet]"
+////                        + "Filas afectadas, post ejecucion de la funcion " + Constantes.fnSET_VP_EMPLEADO
+////                        + ": " + fnExec.getFilasAfectadasObj().toString());
+////                }
                 System.out.println(WEB_NAME+"[CalculoVacacionesServlet]"
                     + "Actualizar saldos de vacaciones "
                     + "en tabla detalle_ausencia "
@@ -104,6 +111,7 @@ public class CalculoVacacionesServlet extends BaseServlet {
                     + "empresa_id: " + paramEmpresa
                     + ", deptoId: " + paramDeptoId    
                     + ", cencoId: " + paramCencoId);
+                //descomentar Invocar al metodo 'calculoVacacionesBp.setVBANew', con rutEmpleado= null
                 ArrayList<FilasAfectadasJsonVO> empleadosAfectados;
                 ResultCRUDVO fnExec = calculoVacacionesBp.setVBA_Cenco(paramEmpresa, intCencoId, resultVO);
                 if (fnExec != null){

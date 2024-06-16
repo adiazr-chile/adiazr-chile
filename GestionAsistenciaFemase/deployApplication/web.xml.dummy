@@ -131,6 +131,10 @@
         <servlet-name>TiposAusenciasCRUD</servlet-name>
         <servlet-class>cl.femase.gestionweb.servlet.crud.TiposAusencias</servlet-class>
     </servlet>
+	<servlet>
+        <servlet-name>JustificacionesInasistenciasCRUD</servlet-name>
+        <servlet-class>cl.femase.gestionweb.servlet.crud.JustificacionesInasistencias</servlet-class>
+    </servlet>
 	
 	<!-- Fin CRUDS -->
 	
@@ -558,6 +562,11 @@
 	<servlet-mapping>
         <servlet-name>TiposAusenciasCRUD</servlet-name>
         <url-pattern>/TiposAusenciasCRUD</url-pattern>
+    </servlet-mapping>
+	
+	<servlet-mapping>
+        <servlet-name>JustificacionesInasistenciasCRUD</servlet-name>
+        <url-pattern>/JustificacionesInasistenciasCRUD</url-pattern>
     </servlet-mapping>
 	
 	

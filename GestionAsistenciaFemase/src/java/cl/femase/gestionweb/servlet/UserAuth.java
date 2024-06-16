@@ -198,6 +198,7 @@ public class UserAuth extends BaseServlet {
 
                 session.setAttribute("empresas", listaEmpresas);
                 
+                System.out.println(WEB_NAME+"UserAuth]Obtener listado de AFPs");
                 AfpDAO afpdao = new AfpDAO(appProperties);
                 session.setAttribute("afps", afpdao.getAfps());
 

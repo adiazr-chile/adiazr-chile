@@ -608,11 +608,14 @@ public class Utilidades {
         return yyyyFecha + "-" + mmFecha + "-" + ddFecha;
     }
     
-     /**
-     * Retorna solo la parte solicitada de una fecha.
-     * params: date, fecha en formato yyyyMMdd
-     * formato: parte de la fecha requerida. dd: dia, MM: mes, yyyy: year
-     */
+    /**
+    * Retorna solo la parte solicitada de una fecha.
+    * params: date, fecha en formato yyyyMMdd
+    * formato: parte de la fecha requerida. dd: dia, MM: mes, yyyy: year
+    * @param _date
+    * @param _formato
+    * @return 
+    */
     public static String getDatePartAsString(Date _date, String _formato){
         if (null == _date){
             return "";

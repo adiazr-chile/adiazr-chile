@@ -56,8 +56,11 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
 
     private static final long serialVersionUID = 995L;
 
-    SimpleDateFormat anioFormat = 
-        new SimpleDateFormat("yyyy", new Locale("es","CL"));    
+//    SimpleDateFormat anioFormat = 
+//        new SimpleDateFormat("yyyy", new Locale("es","CL"));
+
+    SimpleDateFormat FECHA_FORMAT = 
+        new SimpleDateFormat("yyyy-MM-dd", new Locale("es","CL"));    
 
     public SolicitudPermisoAdministrativoController() {
         
@@ -354,15 +357,28 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
                     ex.printStackTrace();
                 }   
             }else if (action.compareTo("precreate") == 0) {//**********************************************************************************  
-                    Calendar cal = Calendar.getInstance(new Locale("es","CL"));
-                    Date fechaActual = cal.getTime();    
+                    Calendar currentCalendar = Calendar.getInstance(new Locale("es","CL"));
+                    Date laFechaActual = currentCalendar.getTime();    
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", new Locale("es","CL"));
-                    int semestreActual = Utilidades.getSemestre(fechaActual);
-                    String strFechaHoraActual = sdf.format(fechaActual);
+                    //int currentSemester = Utilidades.getSemestre(fechaActual);
+                    String strFechaHoraActual = sdf.format(laFechaActual);
                     String reqDesde = request.getParameter("fechaDesde");
                     String reqHasta = request.getParameter("fechaHasta");
                     String jornada  = request.getParameter("jornada");
              
+                    Date fechaInicioPA  = null;
+                    int semestrePA      = 0;
+                    int anioPA          = 0;
+                    try{    
+                        fechaInicioPA   = FECHA_FORMAT.parse(reqDesde);
+                        anioPA          = Integer.parseInt(Utilidades.getDatePartAsString(fechaInicioPA, "yyyy"));
+                        semestrePA      = Utilidades.getSemestre(fechaInicioPA);
+                    }catch(ParseException pex){
+                        System.err.println(WEB_NAME+"[SolicitudPermisoAdministrativoController."
+                            + "insertarPermisoAdministrativo]"
+                            + "Error al parsear fecha inicio PA: " + pex.toString());
+                    }
+                    
                     if (reqHasta == null || reqHasta.compareTo("") == 0) reqHasta = reqDesde;
                     
                     SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
@@ -393,8 +409,8 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
                     solicitud.setFechaInicioPA(reqDesde);
                     solicitud.setFechaFinPA(reqHasta);
                     solicitud.setJornada(jornada);
-                    solicitud.setAnio(cal.get(Calendar.YEAR));
-                    solicitud.setSemestre(semestreActual);
+                    solicitud.setAnio(anioPA);
+                    solicitud.setSemestre(semestrePA);
                     
                     ArrayList<MensajeUsuarioVO> mensajes = new ArrayList<>();
                     Utilidades.IntervaloVO intervalo = null;
@@ -481,18 +497,18 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
                         }
                     }
                                         
-                    Calendar mycal = Calendar.getInstance(new Locale("es","CL"));
-                    int anioActual = mycal.get(Calendar.YEAR);
+                    //Calendar mycal = Calendar.getInstance(new Locale("es","CL"));
+                    //int anioActual = mycal.get(Calendar.YEAR);
     
                     double doubleSaldoPADisponible = 0;
                     List<PermisoAdministrativoVO> infoPA = 
                         permisoAdminDao.getResumenPermisosAdministrativos(userConnected.getEmpresaId(), 
-                            solicitud.getRunEmpleado(),anioActual, -1, -1, -1, "pa.run_empleado");
+                            solicitud.getRunEmpleado(),anioPA, -1, -1, -1, "pa.run_empleado");
                     if (!infoPA.isEmpty()){
                         PermisoAdministrativoVO saldoPA = infoPA.get(0);
                         
                         doubleSaldoPADisponible = saldoPA.getDiasDisponiblesSemestre1();
-                        if (semestreActual == 2) doubleSaldoPADisponible = saldoPA.getDiasDisponiblesSemestre2();
+                        if (semestrePA == 2) doubleSaldoPADisponible = saldoPA.getDiasDisponiblesSemestre2();
                     }
                     
                     double saldoPostPA = doubleSaldoPADisponible - solicitud.getDiasSolicitados();
@@ -522,7 +538,7 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
                     mensajes.add(new MensajeUsuarioVO("Nombre de usuario solicitante", solicitud.getUsernameSolicita()));
                     mensajes.add(new MensajeUsuarioVO("Institucion", infoEmpleado.getEmpresaNombre()));
                     mensajes.add(new MensajeUsuarioVO("Centro de costo", infoEmpleado.getCencoNombre()));
-                    mensajes.add(new MensajeUsuarioVO("Fecha/Hora solicitud", sdf.format(fechaActual)));
+                    mensajes.add(new MensajeUsuarioVO("Fecha/Hora solicitud", sdf.format(laFechaActual)));
                     mensajes.add(new MensajeUsuarioVO("Inicio Permiso Administrativo", solicitud.getFechaInicioPA()));
                     mensajes.add(new MensajeUsuarioVO("Termino Permiso Administrativo", solicitud.getFechaFinPA()));
                     mensajes.add(new MensajeUsuarioVO("Jornada", jornada));
@@ -562,15 +578,28 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
                     request.getRequestDispatcher("/permisos_administrativos/vista_previa.jsp").forward(request, response);//like mensaje.jsp
             }
             else if (action.compareTo("create") == 0) {//**********************************************************************************  
-                    Calendar cal = Calendar.getInstance(new Locale("es","CL"));
-                    Date fechaActual = cal.getTime();  
-                    int semestreActual = Utilidades.getSemestre(fechaActual);
+                    Calendar currentCalendar = Calendar.getInstance(new Locale("es","CL"));
+                    Date laFechaActual = currentCalendar.getTime();
+                    int currentSemester = Utilidades.getSemestre(laFechaActual);
+                    
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", new Locale("es","CL"));
-                    String strFechaHoraActual = sdf.format(fechaActual);
+                    String strFechaHoraActual = sdf.format(laFechaActual);
                     String reqDesde = request.getParameter("fechaDesde");
                     String reqHasta = request.getParameter("fechaHasta");
                     String jornada  = request.getParameter("jornada");
-                    
+                  
+                    Date fechaInicioPA  = null;
+                    int semestrePA      = 0;
+                    int anioPA          = 0;
+                    try{    
+                        fechaInicioPA   = FECHA_FORMAT.parse(reqDesde);
+                        anioPA          = Integer.parseInt(Utilidades.getDatePartAsString(fechaInicioPA, "yyyy"));
+                        semestrePA      = Utilidades.getSemestre(fechaInicioPA);
+                    }catch(ParseException pex){
+                        System.err.println(WEB_NAME+"[SolicitudPermisoAdministrativoController."
+                            + "insertarPermisoAdministrativo]"
+                            + "Error al parsear fecha inicio PA: " + pex.toString());
+                    }
                     //en caso de permiso administrativo por mediodia
                     String horaInicio  = request.getParameter("hora_inicio");
                     String horaFin  = request.getParameter("hora_fin");
@@ -586,8 +615,8 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
                     solicitud.setFechaInicioPA(reqDesde);
                     solicitud.setFechaFinPA(reqHasta);
                     solicitud.setJornada(jornada);
-                    solicitud.setAnio(cal.get(Calendar.YEAR));
-                    solicitud.setSemestre(semestreActual);
+                    solicitud.setAnio(anioPA);
+                    solicitud.setSemestre(semestrePA);
                     solicitud.setDiasSolicitados(Double.parseDouble(diasEfectivosSolicitados));
                     if (horaInicio != null){
                         solicitud.setHoraInicioPA_AMPM(horaInicio);
@@ -602,8 +631,8 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
                         + ", fin_permiso administrativo: " + solicitud.getFechaFinPA()
                         + ", dias solicitados: " + solicitud.getDiasSolicitados()    
                         + ", jornada: " + solicitud.getJornada()
-                        + ", anio: " + solicitud.getAnio()
-                        + ", semestre: " + solicitud.getSemestre());
+                        + ", anio PA: " + solicitud.getAnio()
+                        + ", semestre PA: " + solicitud.getSemestre());
                     EmpleadoVO infoEmpleado = empleadosbp.getEmpleado(solicitud.getEmpresaId(), 
                         solicitud.getRunEmpleado());
                     resultado.setEmpresaId(infoEmpleado.getEmpresa().getId());
@@ -646,12 +675,12 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
                     mensajes.add(new MensajeUsuarioVO("Nombre de usuario solicitante", solicitud.getUsernameSolicita()));
                     mensajes.add(new MensajeUsuarioVO("Institucion", infoEmpleado.getEmpresaNombre()));
                     mensajes.add(new MensajeUsuarioVO("Centro de costo", infoEmpleado.getCencoNombre()));
-                    mensajes.add(new MensajeUsuarioVO("Fecha/Hora solicitud", sdf.format(fechaActual)));
+                    mensajes.add(new MensajeUsuarioVO("Fecha/Hora solicitud", sdf.format(laFechaActual)));
                     mensajes.add(new MensajeUsuarioVO("Inicio Permiso Administrativo", solicitud.getFechaInicioPA()));
                     mensajes.add(new MensajeUsuarioVO("Termino Permiso Administrativo", solicitud.getFechaFinPA()));
                     mensajes.add(new MensajeUsuarioVO("Dias solicitados", "" + solicitud.getDiasSolicitados()));
                     mensajes.add(new MensajeUsuarioVO("Jornada", solicitud.getJornada()));
-                    mensajes.add(new MensajeUsuarioVO("Año", "" + cal.get(Calendar.YEAR)));
+                    mensajes.add(new MensajeUsuarioVO("Año", "" + solicitud.getAnio()));
                     mensajes.add(new MensajeUsuarioVO("Semestre", "" + solicitud.getSemestre()));
                                
                     if (solicitud.getJornada().compareTo(Constantes.JORNADA_PERMISO_ADMINISTRATIVO_AM) == 0 || 
@@ -900,37 +929,59 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
             UsuarioVO _userConnected, 
             DetalleAusenciaVO _ausencia){
        
-        Calendar mycal = Calendar.getInstance(new Locale("es","CL"));
-        int anioActual = mycal.get(Calendar.YEAR);
-        Date currentDate = mycal.getTime();
-        int semestreActual = Utilidades.getSemestre(currentDate);
-        
+        /**
+        * Correccion observacion
+        * 20240612-02: Error al aprobar Solicitud de Permiso administrativo
+        */
+        Calendar mycal      = Calendar.getInstance(new Locale("es","CL"));
+        int currentYear     = mycal.get(Calendar.YEAR);
+        Date currentDate    = mycal.getTime();
+        int currentSemester = Utilidades.getSemestre(currentDate);
+        Date fechaInicioPA  = null;
+        int anioPA          = 0;
+        int semestrePA      = 0;
+        try{    
+            fechaInicioPA   = FECHA_FORMAT.parse(_ausencia.getFechaInicioAsStr());
+            anioPA          = Integer.parseInt(Utilidades.getDatePartAsString(fechaInicioPA, "yyyy"));
+            semestrePA      = Utilidades.getSemestre(fechaInicioPA);
+            System.out.println(WEB_NAME+"[SolicitudPermisoAdministrativoController."
+                + "insertarPermisoAdministrativo]"
+                + "Insertar detalle ausencia (PERMISO ADMINISTRATIVO). "
+                + "EmpresaId: " + _ausencia.getEmpresaId()
+                + ", Run empleado: " + _ausencia.getRutEmpleado()
+                + ", Fecha inicio PA: " + _ausencia.getFechaInicioAsStr()
+                + ", anio del PA: " + anioPA);
+        }catch(ParseException pex){
+            System.err.println(WEB_NAME+"[SolicitudPermisoAdministrativoController."
+                + "insertarPermisoAdministrativo]Error al parsear fecha inicio PA: " + pex.toString());
+        }    
         System.out.println(WEB_NAME+"[SolicitudPermisoAdministrativoController."
             + "insertarPermisoAdministrativo]"
             + "Insertar detalle ausencia (PERMISO ADMINISTRATIVO). "
             + "EmpresaId: " + _ausencia.getEmpresaId()
             + ", Run empleado: " + _ausencia.getRutEmpleado()
-            + ", Anio: " + anioActual
-            + ", Semestre actual: " + semestreActual);
+            + ", Anio actual: " + currentYear
+            + ", Semestre actual: " + currentSemester
+            + ", Anio PA: " + anioPA
+            + ", Semestre PA: " + semestrePA);
         PermisosAdministrativosDAO permisosDao = new PermisosAdministrativosDAO(_appProperties);
         double doubleSaldoPADisponible = 0;
         double doubleSaldoPAUtilizados = 0;
         List<PermisoAdministrativoVO> infoPA = 
             permisosDao.getResumenPermisosAdministrativos(_ausencia.getEmpresaId(), 
-                _ausencia.getRutEmpleado(),anioActual, -1, -1, -1, "pa.run_empleado");
+                _ausencia.getRutEmpleado(), anioPA, -1, -1, -1, "pa.run_empleado");
         if (!infoPA.isEmpty()){
             PermisoAdministrativoVO saldoPA = infoPA.get(0);
             doubleSaldoPADisponible = saldoPA.getDiasDisponiblesSemestre1();
             doubleSaldoPAUtilizados = saldoPA.getDiasUtilizadosSemestre1();
-            if (semestreActual == 2){
+            if (semestrePA == 2){
                 doubleSaldoPADisponible = saldoPA.getDiasDisponiblesSemestre2();
                 doubleSaldoPAUtilizados = saldoPA.getDiasUtilizadosSemestre2();
             }
         }
-        
         System.out.println(WEB_NAME+"[SolicitudPermisoAdministrativoController."
             + "insertarPermisoAdministrativo]"
-            + "Semestre actual: " + semestreActual
+            + "Semestre PA: " + semestrePA
             + ", saldoPA disponible: " + doubleSaldoPADisponible
             + ", saldoPA utilizados: " + doubleSaldoPAUtilizados
             + ", ausencia.dias_solicitados: " + _ausencia.getDiasSolicitados()    
@@ -941,7 +992,7 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
         
         System.out.println(WEB_NAME+"[SolicitudPermisoAdministrativoController."
             + "insertarPermisoAdministrativo]"
-            + "Semestre actual: " + semestreActual
+            + "Semestre PA: " + semestrePA
             + ", saldoDiasUtilizadosPostPA: " + saldoDiasUtilizadosPostPA
             + ", saldoDisponiblePostPA: " + saldoDisponiblePostPA    
         );
@@ -970,13 +1021,13 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
             System.out.println(WEB_NAME+"[SolicitudPermisoAdministrativoController."
                 + "insertarPermisoAdministrativo]"
                 + "Actualizar resumen de Permisos Administrativos, "
-                + "Anio-Semestre= ["+ anioActual + "-" + semestreActual +"]");
+                + "Anio-Semestre del PA= ["+ anioPA + "-" + semestrePA +"]");
             PermisoAdministrativoVO objPA = new PermisoAdministrativoVO();
             objPA.setEmpresaId(_ausencia.getEmpresaId());
             objPA.setRunEmpleado(_ausencia.getRutEmpleado());
-            objPA.setAnio(anioActual);
+            objPA.setAnio(anioPA);
             
-            if (semestreActual == 1){
+            if (semestrePA == 1){
                 objPA.setDiasDisponiblesSemestre1(saldoDisponiblePostPA);
                 objPA.setDiasUtilizadosSemestre1(saldoDiasUtilizadosPostPA);
             }else{
@@ -985,7 +1036,6 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
             }
             
             ResultCRUDVO resultadoUpdate = permisosDao.updateResumenPA(objPA);
-             
         }
         
         System.out.println(WEB_NAME+"[SolicitudPermisoAdministrativoController."

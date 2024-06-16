@@ -117,8 +117,20 @@ public class Empleados extends BaseServlet {
             );
             if (request.getParameter("filtroCenco") != null) 
                 filtroCenco = request.getParameter("filtroCenco");
-            if (request.getParameter("filtroRun") != null) 
+            if (request.getParameter("filtroRun") != null){ 
                 filtroRun = request.getParameter("filtroRun");
+                
+                /**
+                * Busqueda por Rut: 
+                *   Al buscar por rut, se deben quitar los puntos y guion, 
+                *   luego buscar en la modalidad 'empiece con' (like 'sssss%')
+                * 
+                */
+                String auxRun = filtroRun;
+                String newRun =  auxRun.replace(".", "");
+                filtroRun = newRun;
+                
+            }
             if (request.getParameter("filtroNombre") != null) 
                 filtroNombreEmpleado = request.getParameter("filtroNombre");
             if (request.getParameter("filtroEstado") != null) 

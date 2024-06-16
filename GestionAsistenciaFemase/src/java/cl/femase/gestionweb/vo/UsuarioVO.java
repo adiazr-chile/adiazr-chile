@@ -6,8 +6,11 @@ package cl.femase.gestionweb.vo;
 
 import cl.femase.gestionweb.common.Utilidades;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -45,6 +48,8 @@ public class UsuarioVO implements Serializable {
     private String fechaCreacion;
     private String fechaActualizacion;
     
+    private List<String> listaDeptosUsuario;
+            
     /**
     * Campos relacionados con la asignacion de marcacion virtual
     */
@@ -220,8 +225,24 @@ public class UsuarioVO implements Serializable {
 
     public void setCencos(List<UsuarioCentroCostoVO> cencos) {
         this.cencos = cencos;
+        
+        // Crear conjunto para almacenar deptoIds únicos
+        Set<String> deptoIdsUnicos = new HashSet<>();
+
+        // Iterar sobre la lista original y agregar deptoIds al conjunto
+        for (UsuarioCentroCostoVO usuario : cencos) {
+            deptoIdsUnicos.add(usuario.getDeptoId());
+        }
+
+        // Crear lista nueva a partir del conjunto de deptoIds únicos
+        listaDeptosUsuario = new ArrayList<>(deptoIdsUnicos);
+        
     }
 
+    public List<String> getDeptosUsuario(){
+        return listaDeptosUsuario;
+    }
+    
     public String getCencoUsuario() {
         return cencoUsuario;
     }

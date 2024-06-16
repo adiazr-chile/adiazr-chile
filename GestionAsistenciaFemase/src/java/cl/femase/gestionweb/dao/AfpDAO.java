@@ -50,9 +50,9 @@ public class AfpDAO extends BaseDAO{
                 + "afp_name,"
                 + "afp_status "
             + "FROM afp "
-                + "where afp_status = 1"
-                + "order by afp_code";
-
+                + "where afp_status = 1 "
+                + " order by afp_code";
+            System.out.println("SQL getAFPS: " + sql);
             dbConn = dbLocator.getConnection(m_dbpoolName,"[AfpDAO.getAfps]");
             ps = dbConn.prepareStatement(sql);
             rs = ps.executeQuery();
@@ -68,7 +68,9 @@ public class AfpDAO extends BaseDAO{
             rs.close();
             dbLocator.freeConnection(dbConn);
         }catch(SQLException|DatabaseException sqle){
+            System.err.println("getAFPS Error: " + sqle.toString());
             m_logger.error("Error: "+sqle.toString());
+            sqle.printStackTrace();
         }finally{
             try {
                 if (ps != null) ps.close();

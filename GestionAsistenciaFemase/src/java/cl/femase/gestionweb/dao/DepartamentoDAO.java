@@ -390,13 +390,18 @@ public class DepartamentoDAO extends BaseDAO{
                 System.out.println(WEB_NAME+"[DepartamentoDAO]"
                     + "getDepartamentosEmpresa. "
                     + "Cencos usuario.size= " + cencos.size());
-                if (cencos.size() > 0){
+                if (!cencos.isEmpty()){
                     strdeptos = "";
-                    Iterator<UsuarioCentroCostoVO> cencosIt = cencos.iterator();
-                    while (cencosIt.hasNext()) {
-                        strdeptos += "'" + cencosIt.next().getDeptoId()+"',";
+                    for (String deptoId : _usuario.getDeptosUsuario()) {
+                        strdeptos += "'" + deptoId + "',";
                     }
                     strdeptos = strdeptos.substring(0, strdeptos.length()-1);
+                    
+//                    Iterator<UsuarioCentroCostoVO> cencosIt = cencos.iterator();
+//                    while (cencosIt.hasNext()) {
+//                        strdeptos += "'" + cencosIt.next().getDeptoId()+"',";
+//                    }
+//                    strdeptos = strdeptos.substring(0, strdeptos.length()-1);
                 }
             }
             

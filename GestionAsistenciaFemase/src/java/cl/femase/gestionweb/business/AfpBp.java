@@ -27,7 +27,16 @@ public class AfpBp  extends BaseBp{
         eventsService = new cl.femase.gestionweb.dao.MaintenanceEventsDAO(this.props);
         afpService = new cl.femase.gestionweb.dao.AfpDAO(this.props);
     }
-
+    
+    /**
+    * 
+    * @param _nombre
+    * @param _estado
+    * @param _jtStartIndex
+    * @param _jtPageSize
+    * @param _jtSorting
+    * @return 
+    */
     public List<AfpVO> getAfps(String _nombre,int _estado,
             int _jtStartIndex, 
             int _jtPageSize, 

@@ -978,7 +978,8 @@ public class EmpleadosDAO extends BaseDAO{
         
         List<EmpleadoVO> lista = new ArrayList<>();
         
-        SimpleDateFormat sdf=new SimpleDateFormat("dd-MM-yyyy");
+        SimpleDateFormat sdf    = new SimpleDateFormat("dd-MM-yyyy");
+        
         PreparedStatement ps = null;
         ResultSet rs = null;
         EmpleadoVO data;
@@ -1442,6 +1443,8 @@ public class EmpleadosDAO extends BaseDAO{
             
             if (_estado != -1){        
                 sql += " and empl.empl_estado = " + _estado + " ";
+            }else {        
+                sql += " and empl.empl_estado in (1, 2) ";
             }
                         
             sql += " order by " + _jtSorting; 

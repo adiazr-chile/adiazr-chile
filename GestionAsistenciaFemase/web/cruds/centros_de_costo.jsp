@@ -201,9 +201,12 @@
                 //document.getElementById("labelForm").value='Crear Registro';
                 document.getElementById("action").value='create';
                 document.getElementById('id').readOnly= true;
+                document.getElementById('deptoId').readOnly= true;
+                
+                var departamentoBuscar  = document.searchForm.filtroDepartamentoId;
                 
                 document.getElementById("id").value = '';//textbox
-                document.getElementById("deptoId").value = '-1';//combobox
+                document.getElementById("deptoId").value = departamentoBuscar.value;//combobox
                 document.getElementById("nombre").value = '';//textbox
                 document.getElementById("estado").value='1';//combobox
                 document.getElementById("direccion").value='';//textbox
@@ -533,13 +536,13 @@
                 <th>Email notificacion</th>
                 <th>Dispositivos</th>
                 <th>�Zona extrema?</th>
-                    <%if (!list.isEmpty()){%>
+                    <%//if (!list.isEmpty()){%>
                         <th style="text-align:center;width:100px;">Nuevo registro 
                             <button type="button" class="btn btn-success btn-xs dt-add">
                                 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                             </button>
                         </th>
-                    <%}%>
+                    <%//}%>
             </tr>
         </thead>
         <tbody>

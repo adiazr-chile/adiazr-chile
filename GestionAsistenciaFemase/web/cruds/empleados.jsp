@@ -30,7 +30,7 @@
     if (filtroCenco == null) filtroCenco = "-1";
     if (filtroRun == null) filtroRun = "";
     if (filtroNombre == null) filtroNombre = "";
-    if (filtroEstado == null) filtroEstado = "1";
+    if (filtroEstado == null) filtroEstado = "-1";
     
     /**
     *   Columnas para mostrar:
@@ -439,6 +439,7 @@
         <td width="15%">Estado</td>
         <td width="25%">
             <select name="filtroEstado" id="filtroEstado">
+                <option value="-1" selected>Todos</option>
                 <option value="1">Vigente</option>
                 <option value="2">No Vigente</option>
             </select>

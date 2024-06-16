@@ -3559,6 +3559,71 @@
 			***************************************************************************
 			************** Versión 5.0.8 en Produccion desde el 08-05-2024
 			***************************************************************************
+			5.0.9 11-05-2024
+				.- 20240514-002: Perfil Empleado. Ingreso solicitud de vacaciones: Quitar restricción de calendario al ingresar nueva solicitud.
+				.- 20240514-003: Perfil Empleado. Ingreso solicitud de Permiso Administrativo: Quitar restricción de calendario al ingresar una nueva solicitud.
+			
+			***************************************************************************
+			************** Versión 5.0.9 en Produccion desde el 22-05-2024
+			***************************************************************************
+			
+			5.0.10 26-05-2024
+				.- 20240514-001: Tabla empleado: Nueva columna 'correo personal'.
+				Cambio en base de datos:
+					ALTER TABLE IF EXISTS admingestionweb.empleado
+					ADD COLUMN empl_email_personal character varying(70) COLLATE pg_catalog."default";
+	
+			***************************************************************************
+			************** Versión 5.0.10 en Produccion desde el 26-05-2024
+			***************************************************************************
+			
+			5.0.11 28-05-2024
+				.- 20240528-01: sistema WEB no se puede crear centro de costo:
+				Error detectado: En el Admin de cencos, en el filtro "Departamento": no aparecen todos los departamentos existentes.
+				Se detecta que esa lista sólo estaba trayendo los departamentos que tienen al menos un centro de costo asignado.
+				El depto {Id: 12, Nombre: "XII - Magallanes"} no se mostraba en el filtro, debido a que no tiene ningún centro de costo asignado.
+				Acción correctiva: se modificó el query para que incluya todos los departamentos aún si no tienen cencos asignados.	
+				
+				
+				En la nueva vista CRUD:
+					Además, se habilita el botón 'Nuevo registro' aún cuando no existan centros de costo asignados al departamento seleccionado
+					como filtro de búsqueda.
+					
+					Se deben crear las comunas faltantes en el Sistema, por ejemplo: Las comunas de la region de Magallanes.
+					Se deben crear los dispositivos para el nuevo cenco.
+				
+				Se habilita nuevamente el antiguo Admin Centros de costo.				-->/mantencion/centros_costo.jsp
+				Una vez corregidos los errores, se volverá a habilitar el nuevo CRUD: 	cruds/centros_de_costo.jsp
+				
+			***************************************************************************
+			************** Versión 5.0.11 en Produccion desde el 28-05-2024
+			***************************************************************************	
+			
+			5.0.12 12-06-2024
+				.- 20240612-01: Observaciones CRUD empleados:
+					- Al buscar un empleado en admin empleados. El campo rut. Antes funcionaba buscando por empl_rut y por cod_interno. Ahora sólo por empl_rut.
+					- Filtro de búsqueda: En el combo Estado: Agregar opción TODOS.
+				
+				.- 20240612-02: Error al aprobar Solicitud de Permiso administrativo
+					Al aprobar una solicitud de PA de un semestre o de un año pa otro, este descuenta el saldo del semestre en curso.
+					
+					
+			
+			
+			
+			5.1.0 28-05-2024	
+			
+
+			
+				
+				
+
+			Cambio en vistas de administracion/mantenedores:
+				Perfil		Módulo						Menú item									Url
+				---------	--------------------		-----------------------------------------	-----------------------------------------
+				Admin		Ausencias(Justificaciones)	Ausencias (detalle)							cruds/justificacion_inasistencias.jsp
+
+
 
 
 		v4.6.0 16-04-2023.

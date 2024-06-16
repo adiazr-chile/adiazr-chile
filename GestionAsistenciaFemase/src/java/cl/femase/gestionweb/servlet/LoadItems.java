@@ -255,12 +255,22 @@ public class LoadItems extends BaseServlet {
                 }
         }else if (type.compareTo("afps") == 0) {
                 System.out.println(WEB_NAME+"[LoadItems]Cargando lista de afps...");
-                HashMap<String, AfpVO> hashAfps = (HashMap<String, AfpVO>)session.getAttribute("afps");
-                for (Map.Entry mapElement : hashAfps.entrySet()) { 
-                    String key = (String)mapElement.getKey(); 
-                    AfpVO auxobj = (AfpVO)mapElement.getValue();
-                    listData += "{\"DisplayText\":\""+auxobj.getNombre()+"\",\"Value\":\""+auxobj.getCode()+"\"},";
+                try{
+                    HashMap<String, AfpVO> hashAfps = (HashMap<String, AfpVO>)session.getAttribute("afps");
+                    if (hashAfps != null){
+                        System.out.println(WEB_NAME+"[LoadItems]Items en lista de afps: " + hashAfps.size());
+                        for (Map.Entry mapElement : hashAfps.entrySet()) { 
+                            String key = (String)mapElement.getKey(); 
+                            AfpVO auxobj = (AfpVO)mapElement.getValue();
+                            listData += "{\"DisplayText\":\""+auxobj.getNombre()+"\",\"Value\":\""+auxobj.getCode()+"\"},";
+                        }
+                    }else System.out.println(WEB_NAME+"[LoadItems]Lista de afps NULA");
+                }catch(Exception ex){
+                    System.err.println(WEB_NAME+"[LoadItems]"
+                        + "Error al cargar lista de afps en combo: " + ex.toString());
+                    ex.printStackTrace();
                 }
+                
         }
         else if (type.compareTo("departamentos") == 0) {
                 //listData += "{\"DisplayText\":\""+"Ninguno"+"\",\"Value\":\""+"-1"+"\"},";
