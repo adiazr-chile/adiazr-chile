@@ -350,7 +350,7 @@ public class EmpleadosController extends BaseServlet {
                     EmpleadosBp empleadosBp = 
                         new EmpleadosBp(appProperties);    
                     session.setAttribute("empleados", 
-                        empleadosBp.getEmpleados(null,null,-1,-1,null,null,null,null,0,0,"empl_rut"));
+                        empleadosBp.getEmpleados(auxdata.getEmpresa().getId(),null,-1,-1,null,null,null,null,0,0,"empl_rut"));
                     
                     System.out.println(WEB_NAME+"[EmpleadosController.processRequest]FIN CREAR EMPLEADO - Mensaje a mostrar: " + strMsg);
                     
@@ -478,6 +478,8 @@ public class EmpleadosController extends BaseServlet {
                     System.out.println(WEB_NAME+"[EmpleadosController.processRequest]"
                         + "Editar Data Empleado. Path images: "+appProperties.getImagesPath());
                     EmpleadoVO toedit = listaObjetos.get(0);
+                    System.out.println(WEB_NAME+"[EmpleadosController.processRequest]"
+                        + "Empleado.clave_marcacion: " + toedit.getClaveMarcacion());
                     request.removeAttribute("empleado");
                     session.setAttribute("empleado", toedit);
                     request.setAttribute("images_path", appProperties.getImagesPath());

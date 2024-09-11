@@ -280,7 +280,7 @@ public class UserAuth extends BaseServlet {
                     autorizaAusenciaBp.getAutorizadoresDisponibles(userOk));
 
                 session.setAttribute("empleados", 
-                    empleadosBp.getEmpleados(null,null,-1,-1,null,null,null,null,0,0,"empl_rut"));
+                    empleadosBp.getEmpleados(userOk.getEmpresaId(),null,-1,-1,null,null,null,null,0,0,"empl_rut"));
 
                 session.setAttribute("ausencias", 
                     ausenciasBp.getAusencias(null,

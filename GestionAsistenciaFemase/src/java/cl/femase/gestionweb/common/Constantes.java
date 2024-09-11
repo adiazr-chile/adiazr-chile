@@ -15,11 +15,11 @@ import java.util.Map;
 public class Constantes {
     
     public static final String MARCA_MODIFICADA = "M";
-    public static final String MARCA_ELIMINADA = "E";
-    public static final int MARCA_ENTRADA = 1;
-    public static final int MARCA_SALIDA = 2;
-    public static final int ESTADO_VIGENTE = 1;
-    public static final int ESTADO_NO_VIGENTE = 2;
+    public static final String MARCA_ELIMINADA  = "E";
+    public static final int MARCA_ENTRADA       = 1;
+    public static final int MARCA_SALIDA        = 2;
+    public static final int ESTADO_VIGENTE      = 1;
+    public static final int ESTADO_NO_VIGENTE   = 2;
     
     /**
     * Id en tabla tipo_marca_manual
@@ -199,6 +199,9 @@ public class Constantes {
     *   o de la nueva fecha de inicio de contrato si es que cuenta con continuidad laboral 
     */
     public static String fnSET_VBA_EMPLEADO   = "set_saldo_vacaciones_basicas_anuales_empleado";
+    
+    //new
+    public static String fnSET_VBA_EMPLEADOS   = "set_vba_empleados";
     
     /**
     *   Db Function: 'set_saldo_vacaciones_basicas_anuales' 

@@ -145,6 +145,13 @@
         <servlet-class>cl.femase.gestionweb.servlet.crud.JustificacionesInasistencias</servlet-class>
     </servlet>
 	
+	<servlet>
+        <servlet-name>VacacionesSaldosPeriodosCRUD</servlet-name>
+        <servlet-class>cl.femase.gestionweb.servlet.crud.VacacionesSaldosPeriodos</servlet-class>
+    </servlet>
+	
+	
+	
 	<!-- Fin CRUDS -->
 	
     <servlet>
@@ -576,6 +583,11 @@
 	<servlet-mapping>
         <servlet-name>JustificacionesInasistenciasCRUD</servlet-name>
         <url-pattern>/JustificacionesInasistenciasCRUD</url-pattern>
+    </servlet-mapping>
+	
+	<servlet-mapping>
+        <servlet-name>VacacionesSaldosPeriodosCRUD</servlet-name>
+        <url-pattern>/VacacionesSaldosPeriodosCRUD</url-pattern>
     </servlet-mapping>
 	
 	<!-- Fin CRUDS -->

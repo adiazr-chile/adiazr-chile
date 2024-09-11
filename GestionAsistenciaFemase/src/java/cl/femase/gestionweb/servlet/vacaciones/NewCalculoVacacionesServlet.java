@@ -24,7 +24,7 @@ import javax.servlet.http.HttpSession;
  *
  * @author aledi
  */
-@WebServlet(name = "CalculoVacacionesServlet", urlPatterns = {"/servlet/CalculoVacacionesServlet"})
+@WebServlet(name = "NewCalculoVacacionesServlet", urlPatterns = {"/servlet/NewCalculoVacacionesServlet"})
 public class NewCalculoVacacionesServlet extends BaseServlet {
 
     /**
@@ -60,7 +60,7 @@ public class NewCalculoVacacionesServlet extends BaseServlet {
             String paramCencoId = request.getParameter("cenco_id");
             String rutEmpleado = request.getParameter("rutEmpleado");
             //Calcular vacaciones...
-            System.out.println(WEB_NAME+"[CalculoVacacionesServlet]"
+            System.out.println(WEB_NAME+"[NewCalculoVacacionesServlet]"
                 + "Calcular saldo dias de vacaciones. "
                 + "empresa_id= " + paramEmpresa
                 + ", depto_id= " + paramDeptoId
@@ -70,34 +70,44 @@ public class NewCalculoVacacionesServlet extends BaseServlet {
             if (paramCencoId.compareTo("") != 0)
                 intCencoId = Integer.parseInt(paramCencoId); 
             
-            System.out.println(WEB_NAME+"[CalculoVacacionesServlet]"
+            System.out.println(WEB_NAME+"[NewCalculoVacacionesServlet]"
                 + "Calcular vacaciones (usando funciones). "
                 + "empresa_id: " + paramEmpresa
                 + ", cencoId: " + paramCencoId     
                 + ", rutEmpleado: " + rutEmpleado);
             if (rutEmpleado != null && rutEmpleado.compareTo("-1") != 0){
-                System.out.println(WEB_NAME+"[CalculoVacacionesServlet]"
+                System.out.println(WEB_NAME+"[NewCalculoVacacionesServlet]"
                     + "Calcular saldo dias de vacaciones "
                     + "para un solo empleado.");
                 
-                //descomentar
-////                Calcular vacaciones...para un solo empleado
-////                Invocar al metodo 'calculoVacacionesBp.setVBANew', con rutEmpleado= RUT seleccionado        
-////                        
-////                ResultCRUDVO fnExec = calculoVacacionesBp.setVBA_Empleado(paramEmpresa, rutEmpleado, resultVO);
-////                if (fnExec != null && fnExec.getFilasAfectadasObj() != null){
-////                    System.out.println(WEB_NAME + "[CalculoVacacionesServlet]"
-////                        + "Filas afectadas, post ejecucion de la funcion " + Constantes.fnSET_VBA_EMPLEADO
-////                        + ": " + fnExec.getFilasAfectadasObj().toString());
-////                }
-                //descomentar
-////                fnExec = calculoVacacionesBp.setVP_Empleado(paramEmpresa, rutEmpleado, resultVO);
-////                if (fnExec != null && fnExec.getFilasAfectadasObj() != null){
-////                    System.out.println(WEB_NAME + "[CalculoVacacionesServlet]"
-////                        + "Filas afectadas, post ejecucion de la funcion " + Constantes.fnSET_VP_EMPLEADO
-////                        + ": " + fnExec.getFilasAfectadasObj().toString());
-////                }
-                System.out.println(WEB_NAME+"[CalculoVacacionesServlet]"
+                ResultCRUDVO fnExec = calculoVacacionesBp.setVBANew(paramEmpresa, paramDeptoId, intCencoId, rutEmpleado, resultVO);
+                //ResultCRUDVO fnExec = calculoVacacionesBp.setVBA_Empleado(paramEmpresa, rutEmpleado, resultVO);
+                if (fnExec != null && fnExec.getFilasAfectadasObj() != null){
+                    System.out.println(WEB_NAME + "[NewCalculoVacacionesServlet]"
+                        + "Filas afectadas, post ejecucion de la funcion " + Constantes.fnSET_VBA_EMPLEADO
+                        + ": " + fnExec.getFilasAfectadasObj().toString());
+                }
+                
+                /**
+                requerimiento. Vacaciones saldo vba x periodo.
+                punto 3.5: Agregar un nuevo procedimiento que se encargue 
+                de modificar la tabla 'vacaciones_saldo_periodo'. 
+
+                modificar el estado de los registros en la nueva tabla 'vacaciones_saldo_periodo'.
+                Si un empleado tiene más de de 2 registros en esta tabla, sólo deben quedar vigentes los últimos dos registros existentes (los más recientes). Quedando el resto en estado 'No Vigente'. En caso contrario, todos los registros existentes deben quedar como 'Vigentes'     
+                **/
+                System.out.println(WEB_NAME+"[NewCalculoVacacionesServlet]"
+                    + "Set estado de saldos de vacaciones por periodos...");
+                ResultCRUDVO fnExec2 = 
+                    calculoVacacionesBp.setEstadoSaldosVacacionesPeriodos(paramEmpresa, rutEmpleado);
+                
+                fnExec = calculoVacacionesBp.setVP_Empleado(paramEmpresa, rutEmpleado, resultVO);
+                if (fnExec != null && fnExec.getFilasAfectadasObj() != null){
+                    System.out.println(WEB_NAME + "[NewCalculoVacacionesServlet]"
+                        + "Filas afectadas, post ejecucion de la funcion " + Constantes.fnSET_VP_EMPLEADO
+                        + ": " + fnExec.getFilasAfectadasObj().toString());
+                }
+                System.out.println(WEB_NAME+"[NewCalculoVacacionesServlet]"
                     + "Actualizar saldos de vacaciones "
                     + "en tabla detalle_ausencia "
                     + "Run: "+ rutEmpleado);
@@ -105,21 +115,34 @@ public class NewCalculoVacacionesServlet extends BaseServlet {
                 detAusenciaBp.actualizaSaldosVacaciones(rutEmpleado);
                 
             }else{
-                System.out.println(WEB_NAME+"[CalculoVacacionesServlet]"
+                System.out.println(WEB_NAME+"[NewCalculoVacacionesServlet]"
                     + "Calcular saldo dias de vacaciones "
                     + "para todos los empleados del centro de costo. "
                     + "empresa_id: " + paramEmpresa
                     + ", deptoId: " + paramDeptoId    
                     + ", cencoId: " + paramCencoId);
-                //descomentar Invocar al metodo 'calculoVacacionesBp.setVBANew', con rutEmpleado= null
+                ////descomentar Invocar al metodo 'calculoVacacionesBp.setVBANew', con rutEmpleado= null
                 ArrayList<FilasAfectadasJsonVO> empleadosAfectados;
-                ResultCRUDVO fnExec = calculoVacacionesBp.setVBA_Cenco(paramEmpresa, intCencoId, resultVO);
+                ResultCRUDVO fnExec = calculoVacacionesBp.setVBANew(paramEmpresa, paramDeptoId, intCencoId, null, resultVO);
+                
+                ////ResultCRUDVO fnExec = calculoVacacionesBp.setVBA_Cenco(paramEmpresa, intCencoId, resultVO);
                 if (fnExec != null){
                     empleadosAfectados = fnExec.getEmpleadosAfectados();
                     for (int x = 0; x < empleadosAfectados.size(); x++) {
                         FilasAfectadasJsonVO empleado = empleadosAfectados.get(x);
-                        System.out.println(WEB_NAME+"[CalculoVacacionesServlet]"
-                            + "setVBA.Cenco -->Empleado afectado: " + empleado.toString() );
+                        System.out.println(WEB_NAME+"[NewCalculoVacacionesServlet]"
+                            + "Iterando empleado: " + empleado.toString() );
+                        /**
+                            requerimiento. Vacaciones saldo vba x periodo.
+                            punto 3.5: Agregar un nuevo procedimiento que se encargue 
+                            de modificar la tabla 'vacaciones_saldo_periodo'. 
+
+                            modificar el estado de los registros en la nueva tabla 'vacaciones_saldo_periodo'.
+                            Si un empleado tiene más de de 2 registros en esta tabla, sólo deben quedar vigentes los últimos dos registros existentes (los más recientes). Quedando el resto en estado 'No Vigente'. En caso contrario, todos los registros existentes deben quedar como 'Vigentes'     
+                        **/
+                        System.out.println(WEB_NAME+"[NewCalculoVacacionesServlet]"
+                            + "Set estado de saldos de vacaciones por periodos...");
+                        ResultCRUDVO fnExec2 = calculoVacacionesBp.setEstadoSaldosVacacionesPeriodos(empleado.getEmpresaId(), empleado.getRunEmpleado());
                     }
                 }
                 fnExec = calculoVacacionesBp.setVP_Cenco(paramEmpresa, intCencoId, resultVO);
@@ -127,11 +150,13 @@ public class NewCalculoVacacionesServlet extends BaseServlet {
                     empleadosAfectados = fnExec.getEmpleadosAfectados();
                     for (int x = 0; x < empleadosAfectados.size(); x++) {
                         FilasAfectadasJsonVO empleado = empleadosAfectados.get(x);
-                        System.out.println(WEB_NAME+"[CalculoVacacionesServlet]"
+                        System.out.println(WEB_NAME+"[NewCalculoVacacionesServlet]"
                             + "setVP.Cenco -->Empleado afectado: " + empleado.toString() );
                     }
                 }
+                
             }
+            
             response.sendRedirect(request.getContextPath()
                 + "/vacaciones/info_vacaciones.jsp");
         } else if (action.compareTo("calcula_vacaciones_desvincula2") == 0) {
@@ -139,7 +164,7 @@ public class NewCalculoVacacionesServlet extends BaseServlet {
                     String paramDeptoId = request.getParameter("depto_id");
                     String paramCencoId = request.getParameter("cenco_id");
                     String rutEmpleado = request.getParameter("rutEmpleado");
-                    System.out.println(WEB_NAME+"[CalculoVacacionesServlet]"
+                    System.out.println(WEB_NAME+"[NewCalculoVacacionesServlet]"
                         + "Calcular vacaciones para empleados desvinculados. "
                         + "empresa_id= " + paramEmpresa
                         + ", depto_id= " + paramDeptoId
@@ -149,29 +174,44 @@ public class NewCalculoVacacionesServlet extends BaseServlet {
                     if (paramCencoId.compareTo("") != 0)
                         intCencoId = Integer.parseInt(paramCencoId); 
                     
-                    System.out.println(WEB_NAME+"[CalculoVacacionesServlet]"
+                    System.out.println(WEB_NAME+"[NewCalculoVacacionesServlet]"
                         + "Calcular vacaciones (desvinculado). "
                         + "empresa_id: " + paramEmpresa
                         + ", cencoId: " + paramCencoId     
                         + ", rutEmpleado: " + rutEmpleado);
                     if (rutEmpleado != null && rutEmpleado.compareTo("-1") != 0){
-                        System.out.println(WEB_NAME+"[CalculoVacacionesServlet]"
+                        System.out.println(WEB_NAME+"[NewCalculoVacacionesServlet]"
                             + "Calcular vacaciones "
                             + "para un solo empleado desvinculado.");
                         
-                        ResultCRUDVO fnExec = calculoVacacionesBp.setVBA_Empleado(paramEmpresa, rutEmpleado, resultVO);
+                        ////ResultCRUDVO fnExec = calculoVacacionesBp.setVBA_Empleado(paramEmpresa, rutEmpleado, resultVO);
+                        ResultCRUDVO fnExec = calculoVacacionesBp.setVBANew(paramEmpresa, paramDeptoId, intCencoId, rutEmpleado, resultVO);
                         if (fnExec != null && fnExec.getFilasAfectadasObj() != null){
-                            System.out.println(WEB_NAME + "[CalculoVacacionesServlet]"
+                            System.out.println(WEB_NAME + "[NewCalculoVacacionesServlet]"
                                 + "Filas afectadas, post ejecucion de la funcion " + Constantes.fnSET_VBA_EMPLEADO
                                 + ": " + fnExec.getFilasAfectadasObj().toString());
                         }
+                        
+                        /**
+                        requerimiento. Vacaciones saldo vba x periodo.
+                        punto 3.5: Agregar un nuevo procedimiento que se encargue 
+                        de modificar la tabla 'vacaciones_saldo_periodo'. 
+
+                        modificar el estado de los registros en la nueva tabla 'vacaciones_saldo_periodo'.
+                        Si un empleado tiene más de de 2 registros en esta tabla, sólo deben quedar vigentes los últimos dos registros existentes (los más recientes). Quedando el resto en estado 'No Vigente'. En caso contrario, todos los registros existentes deben quedar como 'Vigentes'     
+                        **/
+                        System.out.println(WEB_NAME+"[NewCalculoVacacionesServlet]"
+                            + "(desvinculados)Set estado de saldos de vacaciones por periodos...");
+                        ResultCRUDVO fnExec2 = 
+                            calculoVacacionesBp.setEstadoSaldosVacacionesPeriodos(paramEmpresa, rutEmpleado);
+                        
                         fnExec = calculoVacacionesBp.setVP_Empleado(paramEmpresa, rutEmpleado, resultVO);
                         if (fnExec != null && fnExec.getFilasAfectadasObj() != null){
-                            System.out.println(WEB_NAME + "[CalculoVacacionesServlet]"
+                            System.out.println(WEB_NAME + "[NewCalculoVacacionesServlet]"
                                 + "Filas afectadas, post ejecucion de la funcion " + Constantes.fnSET_VP_EMPLEADO
                                 + ": " + fnExec.getFilasAfectadasObj().toString());
                         }
-                        System.out.println(WEB_NAME+"[CalculoVacacionesServlet]"
+                        System.out.println(WEB_NAME+"[NewCalculoVacacionesServlet]"
                             + "Actualizar saldos de vacaciones "
                             + "en tabla detalle_ausencia "
                             + "(usar nueva funcion setsaldodiasvacacionesasignadas). "
@@ -179,29 +219,44 @@ public class NewCalculoVacacionesServlet extends BaseServlet {
                         detAusenciaBp.actualizaSaldosVacaciones(rutEmpleado);
                         
                     }else{
-                        System.out.println(WEB_NAME+"[CalculoVacacionesServlet]"
+                        System.out.println(WEB_NAME+"[NewCalculoVacacionesServlet]"
                             + "Calcular saldo dias de vacaciones "
                             + "para todos los empleados DESVINCULADOS del centro de costo. "
                             + "empresa_id: " + paramEmpresa
                             + ", deptoId: " + paramDeptoId    
                             + ", cencoId: " + paramCencoId);
                         ArrayList<FilasAfectadasJsonVO> empleadosAfectados;
-                                
-                        ResultCRUDVO fnExec = calculoVacacionesBp.setVBA_Cenco(paramEmpresa, intCencoId, resultVO);
+                        ResultCRUDVO fnExec = calculoVacacionesBp.setVBANew(paramEmpresa, paramDeptoId, intCencoId, null, resultVO);
+                        ////ResultCRUDVO fnExec = calculoVacacionesBp.setVBA_Cenco(paramEmpresa, intCencoId, resultVO);
                         if (fnExec != null){    
                             empleadosAfectados = fnExec.getEmpleadosAfectados();
                             for (int x = 0; x < empleadosAfectados.size(); x++) {
                                 FilasAfectadasJsonVO empleado = empleadosAfectados.get(x);
-                                System.out.println(WEB_NAME+"[CalculoVacacionesServlet]"
+                                System.out.println(WEB_NAME+"[NewCalculoVacacionesServlet]"
                                     + "setVBA.Cenco -->Empleado desvinculado afectado: " + empleado.toString() );
                             }
                         }
+                        
+                        /**
+                        * Desvinculados:
+                            requerimiento. Vacaciones saldo vba x periodo.
+                            punto 3.5: Agregar un nuevo procedimiento que se encargue 
+                            de modificar la tabla 'vacaciones_saldo_periodo'. 
+
+                            modificar el estado de los registros en la nueva tabla 'vacaciones_saldo_periodo'.
+                            Si un empleado tiene más de de 2 registros en esta tabla, sólo deben quedar vigentes los últimos dos registros existentes (los más recientes). Quedando el resto en estado 'No Vigente'. En caso contrario, todos los registros existentes deben quedar como 'Vigentes'     
+                        **/
+                        System.out.println(WEB_NAME+"[NewCalculoVacacionesServlet]"
+                            + "Set estado de saldos de vacaciones por periodos...");
+                        ResultCRUDVO fnExec2 = 
+                            calculoVacacionesBp.setEstadoSaldosVacacionesPeriodos(paramEmpresa, rutEmpleado);
+                        
                         fnExec = calculoVacacionesBp.setVP_Cenco(paramEmpresa, intCencoId, resultVO);
                         if (fnExec != null){
                             empleadosAfectados = fnExec.getEmpleadosAfectados();
                             for (int x = 0; x < empleadosAfectados.size(); x++) {
                                 FilasAfectadasJsonVO empleado = empleadosAfectados.get(x);
-                                System.out.println(WEB_NAME+"[CalculoVacacionesServlet]"
+                                System.out.println(WEB_NAME+"[NewCalculoVacacionesServlet]"
                                     + "setVP.Cenco -->Empleado desvinculado afectado: " + empleado.toString() );
                             }
                         }
@@ -224,7 +279,7 @@ public class NewCalculoVacacionesServlet extends BaseServlet {
         }else{
             session.setAttribute("mensaje", "Sesion de usuario "+request.getParameter("username")
                     +" no valida");
-            System.out.println(WEB_NAME+"[CalculoVacacionesServlet]"
+            System.out.println(WEB_NAME+"[NewCalculoVacacionesServlet]"
                 + "Sesion de usuario " + request.getParameter("username")
                 +" no valida");
             request.getRequestDispatcher("/mensaje.jsp").forward(request, response);
@@ -242,7 +297,7 @@ public class NewCalculoVacacionesServlet extends BaseServlet {
         }else{
             session.setAttribute("mensaje", "Sesion de usuario "+request.getParameter("username")
                     +" no valida");
-            System.out.println(WEB_NAME+"[CalculoVacacionesServlet]"
+            System.out.println(WEB_NAME+"[NewCalculoVacacionesServlet]"
                 + "Sesion de usuario " + request.getParameter("username")
                 +" no valida");
             request.getRequestDispatcher("/mensaje.jsp").forward(request, response);

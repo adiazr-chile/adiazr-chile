@@ -279,7 +279,7 @@ public class ProcesosDAO extends BaseDAO{
                 + "WHERE empresa_id='" + _empresaId + "' and proc_estado = 1 ";
            
             if (_jobName != null && _jobName.compareTo("") != 0){        
-                sql += " and proc_jobname = ' " + _jobName + "'";
+                sql += " and proc_jobname = '" + _jobName + "'";
             }
             
             sql += " order by empresa_id, proc_id";

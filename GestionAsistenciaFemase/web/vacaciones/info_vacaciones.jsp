@@ -1,3 +1,4 @@
+<%@page import="cl.femase.gestionweb.vo.PropertiesVO"%>
 <%@page import="cl.femase.gestionweb.common.Constantes"%>
 <%@page import="cl.femase.gestionweb.vo.UsuarioVO"%>
 <%@page import="cl.femase.gestionweb.vo.UsuarioCentroCostoVO"%>
@@ -17,6 +18,11 @@
             || theUser.getIdPerfil() == Constantes.ID_PERFIL_SUPER_ADMIN){//admin o super admin
         editarCampos = true;
     }
+    PropertiesVO appProperties=(PropertiesVO)application.getAttribute("appProperties");
+    boolean vacacionesPeriodo = appProperties.isVacacionesPeriodos();
+    String calculoVacacionesServlet = "CalculoVacacionesServlet";
+    if (vacacionesPeriodo) calculoVacacionesServlet = "NewCalculoVacacionesServlet";
+    
 %>
 <!DOCTYPE html>
 
@@ -103,6 +109,7 @@
         var empresaLabel='';
         var deptoLabel='';
         var cencoLabel='';
+        
         function setCenco(cencoId){
             //var rutEmpleado=$("select#rut").val();
             $('#VacacionesTableContainer').find('.jtable-toolbar-item.jtable-toolbar-item-add-record').hide();
@@ -137,7 +144,7 @@
             if (cencoSelected !== '-1'){
                 //alert('calcular. cencoId:' + cencoSelected + ', rutSelected: '+rutSelected);
                 document.location.href=
-                '<%=request.getContextPath()%>/servlet/CalculoVacacionesServlet?action=calcula_saldo&empresa_id='+empresaId
+                '<%=request.getContextPath()%>/servlet/<%=calculoVacacionesServlet%>?action=calcula_saldo&empresa_id='+empresaId
                 +'&depto_id=' + deptoId + '&cenco_id=' + cencoId + '&rutEmpleado=' + rutSelected;
             }else{
                 alert('La seleccion de centro de costo es obligatoria');

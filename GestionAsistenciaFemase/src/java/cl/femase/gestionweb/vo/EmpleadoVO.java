@@ -65,7 +65,7 @@ public class EmpleadoVO implements Serializable{
     private String deptoNombre;
     private String cencoNombre;
     private String nombreCompleto;
-    private String claveMarcacion;
+    private String claveMarcacion = "";
 
     private int idTurno=-1;
     private int idCargo=-1;
@@ -493,7 +493,7 @@ public class EmpleadoVO implements Serializable{
     }
 
     public String getNombreCompleto() {
-        return getNombres()+" " + getApeMaterno();
+        return getNombres() + " " + getApePaterno() + " " + getApeMaterno();
     }
 
     public boolean isAutorizaAusencia() {

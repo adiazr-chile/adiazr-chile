@@ -806,16 +806,10 @@ public class CentroCostoDAO extends BaseDAO{
                     + "on (departamento.depto_id = centro_costo.depto_id "
                     + "and centro_costo.estado_id = 1)";  
             
-//                + "FROM "
-//                + "empresa "
-//                + "inner join departamento on (empresa.empresa_id = departamento.empresa_id) "
-//                + "inner join centro_costo on (departamento.depto_id = centro_costo.depto_id) ";
-            
             if (_usuario.getIdPerfil() != Constantes.ID_PERFIL_SUPER_ADMIN){  
                 sql += " WHERE (1 = 1) ";
                 if (_usuario.getAdminEmpresa().compareTo("S") == 0){ 
                     sql += " and empresa.empresa_id = '" + _usuario.getEmpresaId() + "' ";
-                //}else {
                     sql += " and (departamento.estado_id = 1) ";
                 }
             }

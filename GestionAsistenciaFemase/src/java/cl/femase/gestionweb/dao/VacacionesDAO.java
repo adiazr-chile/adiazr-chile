@@ -158,6 +158,82 @@ public class VacacionesDAO extends BaseDAO{
         return objresultado;
     }
     
+    /**
+    * Actualiza dias acumulados, dias_progresivos y saldo de dias de vacaciones
+    * 
+    * @param _data
+    * @return 
+    */
+    public ResultCRUDVO updateVBA(VacacionesVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
+        PreparedStatement psupdate = null;
+        int result=0;
+        String msgError = "Error al actualizar "
+            + "tabla Vacaciones, "
+            + "EmpresaId: " + _data.getEmpresaId()
+            + ", rutEmpleado: " + _data.getRutEmpleado()    
+            + ", dias_acumulados: " + _data.getDiasAcumulados()
+            + ", saldo_dias: " + _data.getSaldoDias()
+            + ", saldo_dias_vba: " + _data.getSaldoDiasVBA();
+        
+        try{
+            String msgFinal = " Actualiza tabla vacaciones:"
+                + "EmpresaId [" + _data.getEmpresaId() + "]" 
+                + ", rutEmpleado [" + _data.getRutEmpleado() + "]"    
+                + ", dias_acumulados [" + _data.getDiasAcumulados() + "]"
+                + ", saldo_dias [" + _data.getSaldoDias() + "]"
+                + ", saldo_dias_vba [" + _data.getSaldoDiasVBA() + "]";
+            
+            System.out.println(msgFinal);
+            objresultado.setMsg(msgFinal);
+            
+            String sql = "UPDATE vacaciones "
+                + "SET "
+                    + "dias_acumulados = ?,"
+                    + "saldo_dias = ?,"
+                    + "saldo_dias_vba = ? "
+                    + "WHERE empresa_id = ? "
+                    + "and rut_empleado = ?";
+
+            dbConn = dbLocator.getConnection(m_dbpoolName,"[VacacionesDAO.updateVBA]");
+            psupdate = dbConn.prepareStatement(sql);
+            psupdate.setDouble(1,  _data.getDiasAcumulados());
+            psupdate.setDouble(2,  _data.getSaldoDias());
+            psupdate.setDouble(3,  _data.getSaldoDiasVBA());
+            //filtro update            
+            psupdate.setString(4, _data.getEmpresaId());
+            psupdate.setString(5, _data.getRutEmpleado());
+            
+            int rowAffected = psupdate.executeUpdate();
+            if (rowAffected == 1){
+                System.out.println(WEB_NAME+"[VacacionesDAO.updateVBA]vacaciones"
+                   + ", empresaId:" + _data.getEmpresaId()
+                    + ", rutEmpleado:" + _data.getRutEmpleado()    
+                    + ", dias_acumulados:" +_data.getDiasAcumulados()
+                    + ", saldo_dias:" + _data.getSaldoDias()
+                    + ", saldo_dias_vba:" + _data.getSaldoDiasVBA()
+                    +" actualizada OK!");
+            }
+
+            psupdate.close();
+            dbLocator.freeConnection(dbConn);
+        }catch(SQLException|DatabaseException sqle){
+            System.err.println("update vacaciones Error: "+sqle.toString());
+            objresultado.setThereError(true);
+            objresultado.setCodError(result);
+            objresultado.setMsgError(msgError+" :"+sqle.toString());
+        }finally{
+            try {
+                if (psupdate!=null) psupdate.close();
+                dbLocator.freeConnection(dbConn);
+            } catch (SQLException ex) {
+                System.err.println("Error: "+ex.toString());
+            }
+        }
+
+        return objresultado;
+    }
+    
         
     /**
     * Actualiza dias acumulados, dias_progresivos y saldo de dias de vacaciones

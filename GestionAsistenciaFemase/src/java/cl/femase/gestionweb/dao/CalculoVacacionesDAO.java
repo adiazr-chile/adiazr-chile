@@ -231,6 +231,78 @@ public class CalculoVacacionesDAO extends BaseDAO{
     }
     
     /**
+    * Invoca a la funcion set_vba_empleados con el json
+    * 
+    * @param _jsonB
+    * @return 
+    */
+    public ResultCRUDVO setVBANew(String _jsonB){
+        
+        ResultCRUDVO CRUDResult = new ResultCRUDVO();
+        String strJson = "";
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        int result = 0;
+        String msgError = "Error calling the function '" + Constantes.fnSET_VBA_EMPLEADOS + "'";
+        String msgFinal = "Calling the function '" + Constantes.fnSET_VBA_EMPLEADOS + "'";
+                        
+        CRUDResult.setMsg(msgFinal);
+        
+        /**
+        *   Ejemplo: 
+        *   SELECT set_vba_empleados('[
+        *        {"empresa_id": "Empresa1", "run_empleado": "12345678-9", "fecha_inicio_contrato": "1976-07-14", "fecha_inicio": "2023-01-01", "fecha_fin": "2023-12-31"},
+        *        {"empresa_id": "Empresa2", "run_empleado": "98765432-1", "fecha_inicio_contrato": "1981-09-25", "fecha_inicio": "2023-02-01", "fecha_fin": "2023-11-30"}
+        *    ]'::JSONB);
+        */
+        
+        String sqlFunctionInvoke = 
+            "select " + Constantes.fnSET_VBA_EMPLEADOS + "('" + _jsonB + "'"
+            + "::JSONB) strjson";
+
+        System.out.println("[CalculoVacacionesDAO.setVBANew]Sql: " + sqlFunctionInvoke);
+        
+        try{
+            dbConn = dbLocator.getConnection(m_dbpoolName, "[CalculoVacacionesDAO.setVBANew]");
+            ps = dbConn.prepareStatement(sqlFunctionInvoke);
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                strJson += rs.getString("strjson");
+            }
+
+            FilasAfectadasJsonVO filasAfectadadaObj = (FilasAfectadasJsonVO)new Gson().fromJson(strJson, FilasAfectadasJsonVO.class);
+            CRUDResult.setFilasAfectadasObj(filasAfectadadaObj);
+        }catch(SQLException sqle){
+            System.err.println("[CalculoVacacionesDAO.setVBANew]"
+                + "Error_1: " + sqle.toString());
+            CRUDResult.setThereError(true);
+            CRUDResult.setCodError(result);
+            CRUDResult.setMsgError(msgError+" :"+sqle.toString());
+        }catch(DatabaseException dbex){
+            System.err.println("[CalculoVacacionesDAO.setVBANew]"
+                + "Error_2: " + dbex.toString());
+            CRUDResult.setThereError(true);
+            CRUDResult.setCodError(result);
+            CRUDResult.setMsgError(msgError+" :"+dbex.toString());
+        }
+        finally{
+            try {
+                if (ps != null) {
+                    ps.close();
+                    rs.close();
+                }
+                dbLocator.freeConnection(dbConn);
+            } catch (SQLException ex) {
+                System.err.println("[CalculoVacacionesDAO.setVBANew]"
+                + "Error_3:" + ex.toString());
+            }
+        }
+        
+        return CRUDResult;
+    }
+    
+    /**
     * "Cálculo de vacaciones básicas anuales por CENCO."
     * 
     * Esta función realiza el cálculo de VBA para un CENTRO DE COSTO: 

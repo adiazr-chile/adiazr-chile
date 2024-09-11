@@ -78,6 +78,7 @@ public class CalculoVacacionesServlet extends BaseServlet {
                 System.out.println(WEB_NAME+"[CalculoVacacionesServlet]"
                     + "Calcular saldo dias de vacaciones "
                     + "para un solo empleado.");
+                //ResultCRUDVO fnExec = null;
                 ResultCRUDVO fnExec = calculoVacacionesBp.setVBA_Empleado(paramEmpresa, rutEmpleado, resultVO);
                 if (fnExec != null && fnExec.getFilasAfectadasObj() != null){
                     System.out.println(WEB_NAME + "[CalculoVacacionesServlet]"
@@ -106,6 +107,7 @@ public class CalculoVacacionesServlet extends BaseServlet {
                     + ", cencoId: " + paramCencoId);
                 ArrayList<FilasAfectadasJsonVO> empleadosAfectados;
                 ResultCRUDVO fnExec = calculoVacacionesBp.setVBA_Cenco(paramEmpresa, intCencoId, resultVO);
+                //ResultCRUDVO fnExec = null;
                 if (fnExec != null){
                     empleadosAfectados = fnExec.getEmpleadosAfectados();
                     for (int x = 0; x < empleadosAfectados.size(); x++) {
@@ -150,7 +152,7 @@ public class CalculoVacacionesServlet extends BaseServlet {
                         System.out.println(WEB_NAME+"[CalculoVacacionesServlet]"
                             + "Calcular vacaciones "
                             + "para un solo empleado desvinculado.");
-                        
+                        //ResultCRUDVO fnExec = null;
                         ResultCRUDVO fnExec = calculoVacacionesBp.setVBA_Empleado(paramEmpresa, rutEmpleado, resultVO);
                         if (fnExec != null && fnExec.getFilasAfectadasObj() != null){
                             System.out.println(WEB_NAME + "[CalculoVacacionesServlet]"
@@ -180,6 +182,8 @@ public class CalculoVacacionesServlet extends BaseServlet {
                         ArrayList<FilasAfectadasJsonVO> empleadosAfectados;
                                 
                         ResultCRUDVO fnExec = calculoVacacionesBp.setVBA_Cenco(paramEmpresa, intCencoId, resultVO);
+                        //ResultCRUDVO fnExec = null;
+                        
                         if (fnExec != null){    
                             empleadosAfectados = fnExec.getEmpleadosAfectados();
                             for (int x = 0; x < empleadosAfectados.size(); x++) {

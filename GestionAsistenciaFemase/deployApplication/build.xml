@@ -85,6 +85,7 @@
 		<replace file="gestionfemase.temp" token="_UPLOADPATH" value="${uploadsPath}" />		
 		<replace file="gestionfemase.temp" token="_REPORTESPATH" value="${reportesPath}" />
 		<replace file="gestionfemase.temp" token="_FREEMARKER_PATH" value="${freemarkerTemplatesPath}" />
+		<replace file="gestionfemase.temp" token="_FLAG_VACACIONES_PERIODO" value="${vacacionesPeriodos}" />
 		
 		<echo message="Version del Sistema: ${version}, anio de lanzamiento: ${launchYear}" />
 		<replace file="gestionfemase.temp" token="_VERSION" value="${version}" />
@@ -164,6 +165,7 @@
 		<replace file="gestionfemase.temp" token="_UPLOADPATH" value="${uploadsPath}" />		
 		<replace file="gestionfemase.temp" token="_REPORTESPATH" value="${reportesPath}" />	
 		<replace file="gestionfemase.temp" token="_FREEMARKER_PATH" value="${freemarkerTemplatesPath}" />
+		<replace file="gestionfemase.temp" token="_FLAG_VACACIONES_PERIODO" value="${vacacionesPeriodos}" />
 		
 		<echo message="Version del Sistema: ${version}, anio de lanzamiento: ${launchYear}" />
 		<replace file="gestionfemase.temp" token="_VERSION" value="${version}" />

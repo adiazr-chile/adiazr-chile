@@ -2516,9 +2516,14 @@ public class MarcasDAO extends BaseDAO{
                             + "on (turno_rotativo.empresa_id='" + _empresaId + "' "
                             + "and turno_rotativo.id_turno=turno_rotativo_asignacion.id_turno) "
                         + " left outer join calendario_feriados "
-                            + "	on ( fecha_it::date = calendario_feriados.fecha ) "
-                            + "	and ( calendario_feriados.cal_region_id = " + _infoCenco.getRegionId() + " or calendario_feriados.cal_comuna_id = " + _infoCenco.getComunaId() + " or cal_id_tipo_feriado is not null) "
-                            //+ " and ( empleado.comuna_id = calendario_feriados.cal_comuna_id or empleado.region_id = calendario_feriados.cal_region_id) "
+                        + "	on (fecha_it::date = calendario_feriados.fecha "
+                            + " and ("
+                                + "	calendario_feriados.cal_comuna_id = empleado.comuna_id "
+                                + "	or calendario_feriados.cal_region_id = " + _infoCenco.getRegionId() + " "
+                        + "     or calendario_feriados.cal_comuna_id = " + _infoCenco.getComunaId() + " "
+                                + "	or cal_id_tipo_feriado is not null "
+                            + ")"
+                        + ") "
                         + "left outer join tipo_marca_manual on (marca.cod_tpo_marca_manual = tipo_marca_manual.code) "
                         + "left outer join detalle_ausencia on (detalle_ausencia.rut_empleado='" + _rutEmpleado + "' " +
                         " and fecha_it::date between fecha_inicio and fecha_fin and ausencia_autorizada='S') " +
@@ -2720,18 +2725,15 @@ public class MarcasDAO extends BaseDAO{
                         + "	or detalle_turno.cod_dia=8 )"
                         + ") "
                     + ") "
-                    
-////                    + "left outer join detalle_turno "
-////                            + "on ("
-////                                + "detalle_turno.id_turno = empleado.empl_id_turno "
-////                                + "and (detalle_turno.cod_dia = extract(isodow  from fecha_it::date) or (detalle_turno.cod_dia=8) ) "
-////                        + ") "
-                    
-                    
                     + " left outer join calendario_feriados "
-                        + "	on (fecha_it::date = calendario_feriados.fecha) "
-                        + "	and (calendario_feriados.cal_region_id = " + _infoCenco.getRegionId() + " or calendario_feriados.cal_comuna_id = " + _infoCenco.getComunaId() + " or cal_id_tipo_feriado is not null) "
-                        //+ " and ( empleado.comuna_id = calendario_feriados.cal_comuna_id or empleado.region_id = calendario_feriados.cal_region_id) "
+                    + "	on (fecha_it::date = calendario_feriados.fecha "
+                        + " and ("
+                            + "	calendario_feriados.cal_comuna_id = empleado.comuna_id "
+                            + "	or calendario_feriados.cal_region_id = " + _infoCenco.getRegionId() + " "
+                    + "     or calendario_feriados.cal_comuna_id = " + _infoCenco.getComunaId() + " "
+                            + "	or cal_id_tipo_feriado is not null "
+                        + ")"
+                    + ") " 
                     + "left outer join tipo_marca_manual on (marca.cod_tpo_marca_manual = tipo_marca_manual.code) "
                     + "left outer join detalle_ausencia on (detalle_ausencia.rut_empleado='" + _rutEmpleado + "' " +
                         " and fecha_it::date between fecha_inicio and fecha_fin and ausencia_autorizada='S') " +

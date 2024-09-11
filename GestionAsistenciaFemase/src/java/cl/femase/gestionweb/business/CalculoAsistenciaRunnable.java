@@ -347,11 +347,11 @@ public class CalculoAsistenciaRunnable extends BaseBp implements Runnable{
             + ". StartDate: " + _startDate+", endDate: "+_endDate);
         
         m_fechasCalculo = Utilidades.getFechas(_startDate, _endDate);
-            m_hashTiposHE = m_tiempoExtraBp.getTiposHrasExtras();
-        System.out.println(WEB_NAME+"[GestionFemase."
-            + "CalculoAsistenciaRunnable.setParameters()]INICIO "
-            + ". getFeriados para el rango de fechas seleccionado");
-        //m_hashFeriados = m_feriadosBp.getHashFeriados(_startDate, _endDate);
+        m_hashTiposHE = m_tiempoExtraBp.getTiposHrasExtras();
+//        System.out.println(WEB_NAME+"[GestionFemase."
+//            + "CalculoAsistenciaRunnable.setParameters()]INICIO "
+//            + ". getFeriados para el rango de fechas seleccionado");
+//        //m_hashFeriados = m_feriadosBp.getHashFeriados(_startDate, _endDate);
         
         m_startDate = _startDate;
         m_endDate   = _endDate;

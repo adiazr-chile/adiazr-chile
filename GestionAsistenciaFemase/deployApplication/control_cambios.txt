@@ -3607,9 +3607,110 @@
 				.- 20240612-02: Error al aprobar Solicitud de Permiso administrativo
 					Al aprobar una solicitud de PA de un semestre o de un año pa otro, este descuenta el saldo del semestre en curso.
 					
+			***************************************************************************
+			************** Versión 5.0.12 en Produccion desde el 15-06-2024
+			***************************************************************************		
+			
+			5.0.13	21-07-2024
+				20240715-01: Carga de empledos por CSV. Está seteando campo 'clave_marcacion' con el valor 'null'. Lo correcto es que lo setee con valor= NULL
+				Se corrige Sql Select al editar un empleado desde el 'Admin de Empleados'
+				La carga de empleados por CSV no tiene nadsa que ver con esto.
+			
+			 .- 2024-07-22: El calculo de vacaciones se cae: Esto se debe a que el fuente usa funciones nuevas aún no terminadas respecto 
+					al módulo de vacaciones por periodos (en implementacion).
+				En el jsp se debe invocar al servlet "CalculoVacacionesServlet" que hace el cálculo de vacaciones tal como se hace actualmente (sin saldos por períodos)
+				El servlet "NewCalculoVacacionesServlet" es el que implementa el cálculo de vacaciones por periodo.
+				En la clase "CalculoVacacionesBp" se descomentan los métodos: setVBA_Empleado y setVBA_Cenco
+			
+			.- Se agrega nueva variable de configuracion que indica si se aplica el calculo de vacaciones de 'saldos por periodo' 
+			
+			Archivos modificados:	
+				.- 'config_base.properties': Acá se agregan las siguientes líneas:
+					#Flag que indica si se aplica el calculo de vacaciones de 'saldos por periodo'
+					vacacionesPeriodos=true
+								
+				.- 'build.xml'
+				.- 'gestionfemase.template'
+				
+			***************************************************************************
+			************** Versión 5.0.13 en Produccion desde el 25-07-2024
+			***************************************************************************	
+			
+			5.0.14	21-07-2024
+				20240902-01: El cálculo de asistencia no está tomando los feriados comunales.
+					.- Admin marcas: Se corrige despliegue duplicado de feriado comunal --> 20-agosto-2024
+					.- Se detecta y se corrige error en la funcion 'validafechaferiado': 
+						A pesar de considerar todos los feriados encontrados, ésta se salía inmediatamente después de iterar el 1er registro. 
+						En el caso del feriado del 20 de agosto de 2024, este dia es feriado en dos comunas: comuna_id 175 y 180
+						En la función, la primera iteración del LOOP tomaba 'calendario_feriado.comuna_id' y si no era igual a la comuna del centro 
+						de costo del empleado, se salía y retornaba que se trataba de un día hábil. 
+				
+					Cambio en base de datos: 5_0_14_funcion_validafechaferiado.sql
+			
+			
+			***************************************************************************
+			************** Versión 5.0.14 en Produccion desde el 04-09-2024
+			***************************************************************************
+			
+			5.0.15	10-09-2024
+				.- 20240910-01: Admin marcas no está mostrando los feriados.
+				Se corrige query utilizado al momento de mostrar las marcas.
+				Se debe probar el Admin Marcas con feriados nacionales y con feriados regionales/comunales
+				
+			***************************************************************************
+			************** Versión 5.0.15 en Produccion desde el 10-09-2024 22hrs
+			***************************************************************************	
+				
+				
+			
+			
+			5.1.0, 21-06-2024
+				Saldos Vacaciones por períodos
+				.- Crear nuevo proceso (Job)
+					Label: Setea saldo VBA para cada período (años)
+					Job: SetSaldoVBAPeriodosJob
+					
+				.- Cambios en base de datos:
+					create_table_vacaciones_saldo_periodo_v5_1_0_ .sql
+					funcion_set_vba_empleados_5_1_0_ .sql
+					funcion_set_saldo_vacaciones_basicas_anuales_2_0_v5_1_0.sql
+					get_empleado_json_v5_1_0.sql
+			
 					
 			
 			
+				.- Se agrega nueva variable de configuracion que indica si se aplica el calculo de vacaciones de 'saldos por periodo' 
+			
+				Archivos modificados:	
+				.- 'config_base.properties': Acá se agregan las siguientes líneas:
+					#Flag que indica si se aplica el calculo de vacaciones de 'saldos por periodo'
+					vacacionesPeriodos=true
+								
+				.- 'build.xml'
+				.- 'gestionfemase.template'
+				
+				.- Cambio de nombre del “Reporte Vacaciones” por “ Reporte Historial de vacaciones”.
+					Con usuario 'Super admin": Configuracion Sistema --> Admin Accesos --> nombre=vacaciones_reporte. Modificar el label.
+					
+				.- Reemplazar 'vacaciones.jasper'	
+				.- Nuevo reporte de Vacaciones, copiar al server: "vacaciones_new.jasper"
+				
+				.- Nueva vista para visualizar los saldos de vacaciones por períodos: Acceso para perfil Director y Administrador
+				.- Crear nuevo acceso 'Vacaciones por períodos'. Este nuevo item debe ir bajo el módulo 'Vacaciones'.
+					Con usuario Superadmin: 'Configuracion Sistema' --> 'Admin Accesos' --> 
+						Nombre	: 'vac_periodos'
+						Label	: "Vacaciones por periodos"
+						Url		:  "/cruds/vacaciones_periodos.jsp"
+				.- Asignar este nuevo item a los perfiles Admin y Director, usando el Mantenedor de accesos por Perfil de usuario.
+				
+				.- Se modifican los archivos: 
+					- web.xml.dummy
+					- web.xml.produccion
+					
+				
+				
+				
+				
 			
 			5.1.0 28-05-2024	
 			

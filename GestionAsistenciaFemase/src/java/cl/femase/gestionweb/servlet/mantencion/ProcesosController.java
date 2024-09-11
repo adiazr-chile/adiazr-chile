@@ -370,6 +370,7 @@ public class ProcesosController extends BaseServlet {
                             System.out.println(WEB_NAME+"[ProcesosController."
                                 + "ejecutar]Ejecutar proceso. "
                                 + "jobName: "+ proceso.getJobName());
+                            job.getJobDataMap().put("exec_user_obj", userConnected);
                             job.getJobDataMap().put("exec_user", userConnected.getUsername());
                             job.getJobDataMap().put("proceso_id", paramIdProceso);
                             

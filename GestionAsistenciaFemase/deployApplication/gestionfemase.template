@@ -39,3 +39,6 @@ reportesPath=_REPORTESPATH
 
 #Ruta donde se alojan las plantillas usadas para reportes (usando Api Freemarker)
 freemarkerTemplatesPath=_FREEMARKER_PATH
+
+#Flag que indica si se aplica el calculo de vacaciones de 'saldos por periodo'
+vacacionesPeriodos=_FLAG_VACACIONES_PERIODO

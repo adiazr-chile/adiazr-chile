@@ -39,6 +39,16 @@ public class PropertiesVO {
 
     private String freemarkerTemplatesPath;
 
+    private boolean vacacionesPeriodos = false;
+
+    public boolean isVacacionesPeriodos() {
+        return vacacionesPeriodos;
+    }
+
+    public void setVacacionesPeriodos(boolean vacacionesPeriodos) {
+        this.vacacionesPeriodos = vacacionesPeriodos;
+    }
+    
     public String getFreemarkerTemplatesPath() {
         return freemarkerTemplatesPath;
     }

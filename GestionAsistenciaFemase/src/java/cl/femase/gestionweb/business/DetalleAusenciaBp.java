@@ -563,9 +563,18 @@ public class DetalleAusenciaBp  extends BaseBp{
                     _fechaInicio, _horaInicio, _horaFin);
             if (ausencias.isEmpty()){
                 System.out.println(WEB_NAME+"[DetalleAusenciaBp.getAusenciasConflicto]"
-                    + "-2- Validar si hay ausencias por Dia");
+                    + "-1.1- No hay ausencias por Hora");
+                System.out.println(WEB_NAME+"[DetalleAusenciaBp.getAusenciasConflicto]"
+                    + "-2- Ahora Validar si hay ausencias por Dia");
                 ausencias = detAusenciaDao.getAusenciasDiaConflicto(_rutEmpleado, 
                     _fechaInicio, _fechaFin);
+                if (ausencias.isEmpty()){
+                    System.out.println(WEB_NAME+"[DetalleAusenciaBp.getAusenciasConflicto]"
+                        + "-2.1- No hay ausencias por Dia. Ok");
+                }else{
+                    System.out.println(WEB_NAME+"[DetalleAusenciaBp.getAusenciasConflicto]"
+                        + "-2.2- Ya existen ausencias por Dia. Error");
+                }
             }
         }else{
             System.out.println(WEB_NAME+"[DetalleAusenciaBp.getAusenciasConflicto]"

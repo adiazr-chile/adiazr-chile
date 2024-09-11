@@ -467,6 +467,8 @@ public class DetalleAusenciaController extends BaseServlet {
                                             auxdata.getHoraFinFullAsStr());
                         }
                         if (ausenciasConflicto.isEmpty()){
+                            System.out.println(WEB_NAME+"[DetalleAusenciaController]"
+                                + "No hay conflico con ausencias existentes. Continuar...");
                             VacacionesVO saldoVacaciones = new VacacionesVO();
                             if (auxdata.getIdAusencia() == 1){//VACACIONES
                                 //despues de insertar nuevo registro de vacaciones
@@ -476,10 +478,14 @@ public class DetalleAusenciaController extends BaseServlet {
                                         appProperties,
                                         userConnected,
                                         request);
-                                System.out.println(WEB_NAME+"[DetalleAusenciaController]post create. dias efectivos tomados: "
+                                System.out.println(WEB_NAME + "[DetalleAusenciaController]post create. dias efectivos tomados: "
                                     + saldoVacaciones.getDiasEfectivos());
                                 auxdata.setDiasEfectivosVacaciones(saldoVacaciones.getDiasEfectivos());
+                            }else {
+                                System.out.println(WEB_NAME+"[DetalleAusenciaController](insert) - "
+                                    + "La ausencia no es VACACIONES");
                             }
+                            
                             if (saldoVacaciones.getMensajeValidacion() == null){
                                 resultado.setRutEmpleado(auxdata.getRutEmpleado());
                                 auxdata.setAusenciaAutorizada("S");

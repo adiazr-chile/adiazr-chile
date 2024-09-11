@@ -30,12 +30,13 @@ public class LoadParams extends BaseServlet {
     public PropertiesVO appProperties;
     
     /** 
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
+    * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
+    * @param request servlet request
+    * @param response servlet response
+    * @throws ServletException if a servlet-specific error occurs
+    * @throws IOException if an I/O error occurs
+    */
+    @Override
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         
@@ -83,8 +84,8 @@ public class LoadParams extends BaseServlet {
         return "Short description";
     }// </editor-fold>
 
-     @Override
-   public void init() {
+    @Override
+    public void init() {
 	m_logger.debug("Cargando parametros en sesion");
         System.out.println(WEB_NAME+"[GestionFemase.LoadParams.init]Cargando parametros en sesion...");
         appProperties=new PropertiesVO();
@@ -138,10 +139,14 @@ public class LoadParams extends BaseServlet {
         appProperties.setReportesPath(m_properties.getKeyValue("reportesPath"));
         appProperties.setFreemarkerTemplatesPath(m_properties.getKeyValue("freemarkerTemplatesPath"));
         
-        System.out.println(WEB_NAME+"[GestionFemase.LoadParams.init]"
-            + "reportesPath= "+appProperties.getReportesPath()
-            + ",uploadsPath= "+appProperties.getUploadsPath()
-            + ",imagesPath= "+appProperties.getImagesPath());
+        boolean vacacionesPeriodos = Boolean.parseBoolean(m_properties.getKeyValue("vacacionesPeriodos"));
+        appProperties.setVacacionesPeriodos(vacacionesPeriodos);
+        
+        System.out.println(WEB_NAME+"[GestionFemase.LoadParams.init]Parametros del Sistema: "
+            + "reportesPath= " + appProperties.getReportesPath()
+            + ",uploadsPath= " + appProperties.getUploadsPath()
+            + ",imagesPath= " + appProperties.getImagesPath()
+            + ",vacaciones x periodos= " + appProperties.isVacacionesPeriodos());
         
         //ServletContext application = this.getServletContext();
         application.removeAttribute("appProperties");
