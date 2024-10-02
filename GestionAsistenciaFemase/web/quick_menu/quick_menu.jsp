@@ -27,7 +27,7 @@
     body { 
       background: #ccc;
       font-family: helvetica, arial, serif;
-      font-size: 13px;
+      font-size: smaller;
       text-transform: uppercase;
       text-align: center;
     }
@@ -183,6 +183,7 @@
         display: block;
         background: #272727;
         color: #fff;
+        font-size: smaller; 
       }
 
       ul.sub {

@@ -42,7 +42,29 @@
         resultVO.setType("VAC");
         resultVO.setEmpresaIdSource(userConnected.getEmpresaId());
 
-        ResultCRUDVO fnExec = calculoVacacionesBp.setVBA_Empleado(userConnected.getEmpresaId(), runEmpleado, resultVO);
+        //21-09-2024
+        boolean vacacionesPeriodo = appProperties.isVacacionesPeriodos();
+        ResultCRUDVO fnExec = null;
+        System.out.println("[GestionFemaseWeb.ingreso_solic_vacaciones.jsp]"
+            + "vacacionesPeriodo? " + vacacionesPeriodo);
+        if (!vacacionesPeriodo){
+            System.out.println("[GestionFemaseWeb.ingreso_solic_vacaciones.jsp]"
+                + "Calculo VBA normal");
+            fnExec = calculoVacacionesBp.setVBA_Empleado(userConnected.getEmpresaId(), runEmpleado, resultVO);
+        }else{
+            System.out.println("[GestionFemaseWeb.ingreso_solic_vacaciones.jsp]"
+                + "Calculo VBA New. "
+                + "user.empresa_id: " + userConnected.getEmpresaId()
+                + ", runEmpleado: " + runEmpleado
+                + ", user.depto_id: " + userConnected.getDeptoId()
+                + ", user.cenco_id: " + userConnected.getCencoId());
+            fnExec = calculoVacacionesBp.setVBANew(userConnected.getEmpresaId(), 
+                userConnected.getDeptoId(), 
+                Integer.parseInt(userConnected.getCencoId()), 
+                runEmpleado, 
+                resultVO);
+        }
+        
         if (fnExec != null && fnExec.getFilasAfectadasObj() != null){
             System.out.println("[GestionFemaseWeb.ingreso_solic_vacaciones.jsp]"
                 + "Filas afectadas, post ejecucion de la funcion " + Constantes.fnSET_VBA_EMPLEADO

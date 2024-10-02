@@ -3671,15 +3671,38 @@
 					Job: SetSaldoVBAPeriodosJob
 					
 				.- Cambios en base de datos:
-					create_table_vacaciones_saldo_periodo_v5_1_0_ .sql
-					funcion_set_vba_empleados_5_1_0_ .sql
-					funcion_set_saldo_vacaciones_basicas_anuales_2_0_v5_1_0.sql
-					get_empleado_json_v5_1_0.sql
-			
+					create_table_vacaciones_saldo_periodo_v5_1_0_DUMMY.sql
+					create_table_vacaciones_saldo_periodo_v5_1_0_PROD.sql
 					
-			
-			
+					funcion_set_vba_empleados_5_1_0_DUMMY.sql
+					funcion_set_vba_empleados_5_1_0_PROD.sql
+					
+					set_saldo_vacaciones_basicas_anuales_empleado_2_0_v5_1_0_DUMMY.sql
+					set_saldo_vacaciones_basicas_anuales_empleado_2_0_v5_1_0_PROD.sql
+					
+					get_empleados_json_5_1_0_DUMMY.sql
+					get_empleados_json_5_1_0_PROD.sql
+										
+				.- Reportes Jasper:
+					.- 'historial_vacaciones.jasper'
+					.- 'vacaciones_ult_periodos.jasper'
+					.- 'pa_hasta_la_fecha.jasper'	
+				
+				.- Nuevo reporte Jasper: 'Informe Permisos administrativos': 
+					pa_hasta_la_fecha.jasper
+					pa_hasta_la_fecha.jrxml
+				
+				.- Reemplazar 'vacaciones.jasper' por 'historial_vacaciones.jasper'
+				
+				.- Nuevo reporte creado en reemplazo del actual reporte de vacaciones.
+					Nuevo: 'historial_vacaciones.jasper' (Se accede desde el menú Vacaciones - Reporte Historial de vacaciones)
+					
+				.- Nuevo reporte 'Informe de vacaciones' --> menú 'Vacaciones'. --> Informe vacaciones -->
+					'informe_vacaciones.jasper'. Que muestra las vacaciones de los últimos 2 períodos vigentes.	
+					Jsp: vacaciones/informe_vacaciones.jsp
+					
 				.- Se agrega nueva variable de configuracion que indica si se aplica el calculo de vacaciones de 'saldos por periodo' 
+			
 			
 				Archivos modificados:	
 				.- 'config_base.properties': Acá se agregan las siguientes líneas:
@@ -3692,25 +3715,67 @@
 				.- Cambio de nombre del “Reporte Vacaciones” por “ Reporte Historial de vacaciones”.
 					Con usuario 'Super admin": Configuracion Sistema --> Admin Accesos --> nombre=vacaciones_reporte. Modificar el label.
 					
-				.- Reemplazar 'vacaciones.jasper'	
-				.- Nuevo reporte de Vacaciones, copiar al server: "vacaciones_new.jasper"
+				***********************************************************************************************************************
 				
-				.- Nueva vista para visualizar los saldos de vacaciones por períodos: Acceso para perfil Director y Administrador
-				.- Crear nuevo acceso 'Vacaciones por períodos'. Este nuevo item debe ir bajo el módulo 'Vacaciones'.
+				Accesos (crear/modificar):	
+					.- Crear nuevo acceso 'Vacaciones por períodos' (CRUD sólo para consulta y exportación). 
+						Este nuevo item debe ir bajo el módulo 'Vacaciones'.
 					Con usuario Superadmin: 'Configuracion Sistema' --> 'Admin Accesos' --> 
 						Nombre	: 'vac_periodos'
 						Label	: "Vacaciones por periodos"
 						Url		:  "/cruds/vacaciones_periodos.jsp"
-				.- Asignar este nuevo item a los perfiles Admin y Director, usando el Mantenedor de accesos por Perfil de usuario.
+						
+						Asignar a perfil Director, Administrador	
+						
+					.- Crear nuevo acceso 'Informe Vacaciones'. Este nuevo item debe ir bajo el módulo 'Vacaciones'.
+					Con usuario Superadmin: 'Configuracion Sistema' --> 'Admin Accesos' --> 
+						Nombre	: 'info_vacaciones'
+						Label	: "Informe Vacaciones"
+						Url		:  "/vacaciones/informe_vacaciones.jsp"
+				
+						Asignar a perfil Director, Administrador
+				
+					.- Modificar acceso 'Reporte Vacaciones'. 
+					Con usuario Superadmin: 'Configuracion Sistema' --> 'Admin Accesos' --> 
+						Nombre	: 'vacaciones_reporte'
+						Label	: "Reporte Historial de vacaciones"
+						Url		:  "/vacaciones/historial_vacaciones.jsp"
+					
+						Asignar a perfil Director, Administrador					
+						
+				
+					.- Modificar acceso 'Reporte de PA'. 
+					Con usuario Superadmin: 'Configuracion Sistema' --> 'Admin Accesos' --> 
+						Nombre	: 'report_pa'
+						Label	: "Reporte Historial de PA"
+						Url		:  "/permisos_administrativos/historial_pa.jsp"
+					
+						Asignar a perfil Director, Administrador
+				
+					.- Crear nuevo acceso 'Informe PA'. Este nuevo item debe ir bajo el módulo 'Permisos Administrativos'.
+					Con usuario Superadmin: 'Configuracion Sistema' --> 'Admin Accesos' --> 
+						Nombre	: 'info_pa'
+						Label	: "Informe PA"
+						Url		:  "/permisos_administrativos/informe_pa.jsp"
+				
+						Asignar a perfil Director, Administrador
+				
 				
 				.- Se modifican los archivos: 
+					- build.xml
 					- web.xml.dummy
 					- web.xml.produccion
+					- gestionfemase.template
 					
+				.- Nuevas variables de configuración:
+					- 	#Texto que se debe incluir cuando una solicitud de vacaciones ha sido aprobada
+						txtAprobarSolicVacaciones=No olvide firmar el reporte de vacaciones antes de hacer uso de estas.
+
+						#Texto que se debe incluir cuando una solicitud de vacaciones ha sido aprobada
+						txtAprobarSolicPA=No olvide firmar el reporte de permiso administrativo antes de hacer uso de éste.
 				
-				
-				
-				
+					
+			
 			
 			5.1.0 28-05-2024	
 			

@@ -324,6 +324,8 @@ public class CalculoAsistenciaNew extends BaseBp{
             IT_FECHA = _fechasCalculo[i];
                        
             String strKey = _empleado.getEmpresaid() + "|" + _empleado.getRut() + "|" + IT_FECHA;
+            System.out.println(WEB_NAME+"[GestionFemase.CalculoAsistenciaNew]procesaAsistencia."
+                + "key para buscar feriado: " + strKey);
             InfoFeriadoVO infoFeriado = m_fechasCalendarioFeriados.get(strKey);
             boolean esFeriado = infoFeriado.isFeriado();
             boolean tieneDetalleTurnoCodDiaFeriado = false;

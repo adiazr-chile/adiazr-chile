@@ -87,6 +87,9 @@
 		<replace file="gestionfemase.temp" token="_FREEMARKER_PATH" value="${freemarkerTemplatesPath}" />
 		<replace file="gestionfemase.temp" token="_FLAG_VACACIONES_PERIODO" value="${vacacionesPeriodos}" />
 		
+		<replace file="gestionfemase.temp" token="_TXT_SV" value="${txtAprobarSolicVacaciones}" />
+		<replace file="gestionfemase.temp" token="_TXT_PA" value="${txtAprobarSolicPA}" />
+		
 		<echo message="Version del Sistema: ${version}, anio de lanzamiento: ${launchYear}" />
 		<replace file="gestionfemase.temp" token="_VERSION" value="${version}" />
 		<replace file="gestionfemase.temp" token="_STARTYEAR" value="${launchYear}" />
@@ -166,6 +169,9 @@
 		<replace file="gestionfemase.temp" token="_REPORTESPATH" value="${reportesPath}" />	
 		<replace file="gestionfemase.temp" token="_FREEMARKER_PATH" value="${freemarkerTemplatesPath}" />
 		<replace file="gestionfemase.temp" token="_FLAG_VACACIONES_PERIODO" value="${vacacionesPeriodos}" />
+		
+		<replace file="gestionfemase.temp" token="_TXT_SV" value="${txtAprobarSolicVacaciones}" />
+		<replace file="gestionfemase.temp" token="_TXT_PA" value="${txtAprobarSolicPA}" />
 		
 		<echo message="Version del Sistema: ${version}, anio de lanzamiento: ${launchYear}" />
 		<replace file="gestionfemase.temp" token="_VERSION" value="${version}" />

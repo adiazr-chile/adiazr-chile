@@ -495,7 +495,8 @@ public class SolicitudVacacionesController extends BaseServlet {
                     System.out.println(WEB_NAME+"[SolicitudVacacionesController]"
                         + "Insertar registro en tabla notificaciones, "
                         + "para enviar mail");
-                    NotificacionSolicitudVacacionesVO evento = notificaEventoSolicitud("INGRESO_SOLICITUD",
+                    NotificacionSolicitudVacacionesVO evento = notificaEventoSolicitud(appProperties, 
+                        "INGRESO_SOLICITUD",
                         "Ingreso de Solicitud de Vacaciones", 
                         solicitud, userConnected, null,null,-1,
                         "Solicitud ingresada",
@@ -676,7 +677,8 @@ public class SolicitudVacacionesController extends BaseServlet {
                                 solicitud.setEstadoLabel(Constantes.ESTADO_SOLICITUD_PENDIENTE_LABEL);
                                 System.out.println(WEB_NAME+"[SolicitudVacacionesController]"
                                     + "Notificar error al insertar la Vacacion");
-                                notificaEventoSolicitud("SOLICITUD_ERROR",
+                                notificaEventoSolicitud(appProperties, 
+                                    "SOLICITUD_ERROR",
                                     "Solicitud de Vacaciones Error", 
                                     solicitudFromBd, userConnected, 
                                     solicitudFromBd.getInicioVacaciones(), 
@@ -698,7 +700,8 @@ public class SolicitudVacacionesController extends BaseServlet {
                                         resultado);
                                 solicitud.setEstadoId(Constantes.ESTADO_SOLICITUD_APROBADA);
                                 solicitud.setEstadoLabel(Constantes.ESTADO_SOLICITUD_APROBADA_LABEL);
-                                notificaEventoSolicitud("SOLICITUD_APROBADA",
+                                notificaEventoSolicitud(appProperties, 
+                                    "SOLICITUD_APROBADA",
                                     "Solicitud de Vacaciones Aprobada", 
                                     solicitudFromBd, userConnected, 
                                     solicitudFromBd.getInicioVacaciones(), 
@@ -728,7 +731,8 @@ public class SolicitudVacacionesController extends BaseServlet {
                             solicitud.setEstadoLabel(Constantes.ESTADO_SOLICITUD_RECHAZADA_LABEL);
                             System.out.println(WEB_NAME+"[SolicitudVacacionesController]"
                                 + "Rechazar solicitud de vacaciones. Dias solicitados: " + solicitud.getDiasEfectivosVacacionesSolicitadas());
-                            notificaEventoSolicitud("SOLICITUD_RECHAZADA",
+                            notificaEventoSolicitud(appProperties,
+                                "SOLICITUD_RECHAZADA",
                                 "Solicitud de Vacaciones Rechazada", 
                                 solicitudFromBd, userConnected, 
                                 solicitudFromBd.getInicioVacaciones(), 
@@ -748,7 +752,8 @@ public class SolicitudVacacionesController extends BaseServlet {
                         solicitud.setEstadoLabel(Constantes.ESTADO_SOLICITUD_RECHAZADA_LABEL);
                         System.out.println(WEB_NAME+"[SolicitudVacacionesController]"
                             + "Rechazar solicitud de vacaciones. Dias solicitados: " + solicitud.getDiasEfectivosVacacionesSolicitadas());
-                        notificaEventoSolicitud("SOLICITUD_RECHAZADA",
+                        notificaEventoSolicitud(appProperties, 
+                            "SOLICITUD_RECHAZADA",
                             "Solicitud de Vacaciones Rechazada", 
                             solicitudFromBd, userConnected,
                             solicitudFromBd.getInicioVacaciones(), 
@@ -842,6 +847,7 @@ public class SolicitudVacacionesController extends BaseServlet {
     * 
     */
     private NotificacionSolicitudVacacionesVO notificaEventoSolicitud(
+            PropertiesVO _appProperties,
             String _tipoEvento, 
             String _evento,
             SolicitudVacacionesVO _solicitud,
@@ -886,11 +892,14 @@ public class SolicitudVacacionesController extends BaseServlet {
         boolean hayJefeNacional = true;
         boolean hayJefeDirecto  = true;
         int diasSolicitados     = 0;
-        
+        boolean aprobada = false;
         if (_tipoEvento.compareTo("SOLICITUD_APROBADA") == 0 || _tipoEvento.compareTo("SOLICITUD_RECHAZADA") == 0){
             _solicitud.setInicioVacaciones(_inicioVacaciones);
             _solicitud.setFinVacaciones(_finVacaciones);
             diasSolicitados = _diasSolicitados;
+            if (_tipoEvento.compareTo("SOLICITUD_APROBADA") == 0){
+                aprobada = true;
+            }
         }
         
         if (_tipoEvento.compareTo("INGRESO_SOLICITUD") == 0){
@@ -993,6 +1002,11 @@ public class SolicitudVacacionesController extends BaseServlet {
             + "<br>Termino vacaciones: " + _solicitud.getFinVacaciones()
             + "<br>Dias solicitados: " + diasSolicitados;
         
+        if (aprobada){
+            mensaje += "<br>Importante: " + _appProperties.getTxtAprobarSolicVacaciones();
+            mensaje += "<br>ID solicitud: " + _solicitud.getId();
+        }
+        
         String mailBody = "Evento:" + _evento
             + "<br>RUN trabajador: " + empleado.getCodInterno()
             + "<br>Nombre trabajador: " + empleado.getNombreCompleto()
@@ -1005,6 +1019,10 @@ public class SolicitudVacacionesController extends BaseServlet {
             + "<br>Dias solicitados: " + diasSolicitados
             + "<br>Nota/Observacion: " + _notaObservacion;
         
+        if (aprobada){
+            mailBody += "<br>Importante: " + _appProperties.getTxtAprobarSolicVacaciones();
+            mailBody += "<br>ID solicitud: " + _solicitud.getId();
+        }
         evento.setTipoEvento(_tipoEvento);
         evento.setMensajeFinal(mensaje);
         evento.setRunTrabajador(empleado.getCodInterno());

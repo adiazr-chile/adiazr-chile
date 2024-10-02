@@ -179,7 +179,7 @@ public class CalculoVacacionesBp  extends BaseBp{
         ArrayList<VacacionesSaldoPeriodoVO> noVigentes  = new ArrayList<>();
         
         LinkedHashMap<String, VacacionesSaldoPeriodoVO> periodos = periodosDao.getPeriodos(_empresaId, 
-            _runEmpleado);
+            _runEmpleado, -1);
         int itemPosition = 1;
         
         for (Map.Entry<String, VacacionesSaldoPeriodoVO> entry : periodos.entrySet()) {

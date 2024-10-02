@@ -10,8 +10,6 @@ import cl.femase.gestionweb.vo.PropertiesVO;
 import cl.femase.gestionweb.vo.UsuarioVO;
 import cl.femase.gestionweb.vo.VacacionesSaldoPeriodoVO;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -19,7 +17,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import java.util.Date;
 import java.util.LinkedHashMap;
-import java.util.StringTokenizer;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
@@ -159,7 +156,8 @@ public class VacacionesSaldosPeriodos extends BaseServlet {
             System.out.println(WEB_NAME + CRUD_SERVLET_NAME + "CRUD - " + CRUD_TABLE_NAME
                 + ". filtroEmpresaId: " + _filtroBusqueda.getEmpresaId()
                 + ". filtroRunEmpleado: " + _filtroBusqueda.getRunEmpleado());
-            hashMapPeriodos = _vacacionesPeriodosDao.getPeriodos(_filtroBusqueda.getEmpresaId(),_filtroBusqueda.getRunEmpleado());
+            hashMapPeriodos = _vacacionesPeriodosDao.getPeriodos(_filtroBusqueda.getEmpresaId(),
+                    _filtroBusqueda.getRunEmpleado(), -1);
             
             _session.setAttribute("lista_CRUD_saldovacperiodos", hashMapPeriodos);
             

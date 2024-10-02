@@ -270,8 +270,11 @@ public class CalculoVacacionesDAO extends BaseDAO{
             while (rs.next()) {
                 strJson += rs.getString("strjson");
             }
-
+            System.err.println("[CalculoVacacionesDAO.setVBANew]"
+                + "strJson resultante: " + strJson);
             FilasAfectadasJsonVO filasAfectadadaObj = (FilasAfectadasJsonVO)new Gson().fromJson(strJson, FilasAfectadasJsonVO.class);
+            System.err.println("[CalculoVacacionesDAO.setVBANew]"
+                + "filasAfectadadaObj: " + filasAfectadadaObj);
             CRUDResult.setFilasAfectadasObj(filasAfectadadaObj);
         }catch(SQLException sqle){
             System.err.println("[CalculoVacacionesDAO.setVBANew]"

@@ -142,6 +142,9 @@ public class LoadParams extends BaseServlet {
         boolean vacacionesPeriodos = Boolean.parseBoolean(m_properties.getKeyValue("vacacionesPeriodos"));
         appProperties.setVacacionesPeriodos(vacacionesPeriodos);
         
+        appProperties.setTxtAprobarSolicVacaciones(m_properties.getKeyValue("txtAprobarSolicVacaciones"));
+        appProperties.setTxtAprobarSolicPA(m_properties.getKeyValue("txtAprobarSolicPA"));
+        
         System.out.println(WEB_NAME+"[GestionFemase.LoadParams.init]Parametros del Sistema: "
             + "reportesPath= " + appProperties.getReportesPath()
             + ",uploadsPath= " + appProperties.getUploadsPath()

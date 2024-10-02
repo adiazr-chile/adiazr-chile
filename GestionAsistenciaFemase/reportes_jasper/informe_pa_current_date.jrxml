@@ -1,0 +1,762 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Blank_A4_Landscape_1" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="NoDataSection" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="c41ff0b5-689a-4000-bfeb-4b8f357f8e90">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="313"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="676"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="722"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="267"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="DbFemase"/>
+	<parameter name="rut" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
+	<parameter name="cargo" class="java.lang.String"/>
+	<parameter name="cod_interno" class="java.lang.String"/>
+	<parameter name="fecha_ingreso" class="java.lang.String"/>
+	<parameter name="cenco_id" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
+	<parameter name="cenco_nombre" class="java.lang.String"/>
+	<parameter name="rut_full" class="java.lang.String"/>
+	<parameter name="empresa_id" class="java.lang.String"/>
+	<parameter name="empresa_nombre" class="java.lang.String"/>
+	<parameter name="nombre" class="java.lang.String"/>
+	<parameter name="dias_disponibles" class="java.lang.Double"/>
+	<parameter name="dias_acumulados" class="java.lang.Double"/>
+	<parameter name="dias_utilizados" class="java.lang.Double"/>
+	<parameter name="es_zona_extrema" class="java.lang.String"/>
+	<parameter name="empresa_direccion" class="java.lang.String"/>
+	<parameter name="empresa_region" class="java.lang.String"/>
+	<parameter name="empresa_comuna" class="java.lang.String"/>
+	<parameter name="empresa_rut" class="java.lang.String"/>
+	<parameter name="anio" class="java.lang.Integer"/>
+	<queryString language="SQL">
+		<![CDATA[select 
+detalle_ausencia.correlativo,
+detalle_ausencia.rut_empleado,
+empleado.empresa_id,
+coalesce(empleado.empl_nombres, '') || ' ' || coalesce(empleado.empl_ape_paterno, '') nombre,
+detalle_ausencia.fecha_ingreso,
+to_char(detalle_ausencia.fecha_ingreso, 'yyyy-MM-dd') fecha_ingreso_str,
+detalle_ausencia.ausencia_id,
+ausencia.ausencia_nombre,
+ausencia.ausencia_tipo,
+detalle_ausencia.fecha_inicio,
+detalle_ausencia.fecha_fin,
+to_char(detalle_ausencia.fecha_inicio, 'yyyy-MM-dd') fecha_inicio_str,
+to_char(detalle_ausencia.fecha_fin, 'yyyy-MM-dd') fecha_fin_str,
+coalesce(to_char(detalle_ausencia.hora_inicio, 'HH24:MI:SS'),'-') hora_inicio_str,
+coalesce(to_char(detalle_ausencia.hora_inicio, 'HH24'),'VACIO') solohora_inicio_str,
+to_char(detalle_ausencia.hora_inicio, 'MI') solomins_inicio_str,
+coalesce(to_char(detalle_ausencia.hora_fin, 'HH24:MI:SS'),'-') hora_fin_str,
+to_char(detalle_ausencia.hora_fin, 'HH24') solohora_fin_str,
+to_char(detalle_ausencia.hora_fin, 'MI') solomins_fin_str,
+detalle_ausencia.rut_autoriza_ausencia,
+detalle_ausencia.ausencia_autorizada,
+detalle_ausencia.fecha_actualizacion, 
+to_char(detalle_ausencia.fecha_actualizacion, 'dd-MM-yyyy HH24:MI:SS') fecha_actualizacion_str,
+detalle_ausencia.allow_hour,
+coalesce(autorizador.empl_nombres, '') || ' ' || coalesce(autorizador.empl_ape_paterno, '') nombre_autorizador,
+coalesce(detalle_ausencia.dias_solicitados,0) dias_solicitados,
+ coalesce(detalle_ausencia.saldo_post_pa,0) saldo_post_pa   
+FROM detalle_ausencia 
+inner join empleado on detalle_ausencia.rut_empleado = empleado.empl_rut 
+inner join ausencia on detalle_ausencia.ausencia_id = ausencia.ausencia_id
+left outer join empleado autorizador on detalle_ausencia.rut_autoriza_ausencia = autorizador.empl_rut 
+WHERE detalle_ausencia.rut_empleado = $P{rut} 
+and empleado.empresa_id=$P{empresa_id}
+and (detalle_ausencia.fecha_inicio >= empleado.empl_fec_ini_contrato)
+-- and DATE_PART('year', detalle_ausencia.fecha_inicio)= $P{anio}  
+and detalle_ausencia.fecha_inicio between DATE_TRUNC('year', CURRENT_DATE) and current_date
+ and ausencia.ausencia_id = 4
+order by detalle_ausencia.fecha_inicio asc]]>
+	</queryString>
+	<field name="correlativo" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="correlativo"/>
+		<property name="com.jaspersoft.studio.field.label" value="correlativo"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="detalle_ausencia"/>
+	</field>
+	<field name="rut_empleado" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="rut_empleado"/>
+		<property name="com.jaspersoft.studio.field.label" value="rut_empleado"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="detalle_ausencia"/>
+	</field>
+	<field name="empresa_id" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="empresa_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="empresa_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="empleado"/>
+	</field>
+	<field name="nombre" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="nombre"/>
+		<property name="com.jaspersoft.studio.field.label" value="nombre"/>
+	</field>
+	<field name="fecha_ingreso" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.name" value="fecha_ingreso"/>
+		<property name="com.jaspersoft.studio.field.label" value="fecha_ingreso"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="detalle_ausencia"/>
+	</field>
+	<field name="fecha_ingreso_str" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="fecha_ingreso_str"/>
+		<property name="com.jaspersoft.studio.field.label" value="fecha_ingreso_str"/>
+	</field>
+	<field name="ausencia_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="ausencia_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="ausencia_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="detalle_ausencia"/>
+	</field>
+	<field name="ausencia_nombre" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="ausencia_nombre"/>
+		<property name="com.jaspersoft.studio.field.label" value="ausencia_nombre"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="ausencia"/>
+	</field>
+	<field name="ausencia_tipo" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="ausencia_tipo"/>
+		<property name="com.jaspersoft.studio.field.label" value="ausencia_tipo"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="ausencia"/>
+	</field>
+	<field name="fecha_inicio" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.name" value="fecha_inicio"/>
+		<property name="com.jaspersoft.studio.field.label" value="fecha_inicio"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="detalle_ausencia"/>
+	</field>
+	<field name="fecha_fin" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.name" value="fecha_fin"/>
+		<property name="com.jaspersoft.studio.field.label" value="fecha_fin"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="detalle_ausencia"/>
+	</field>
+	<field name="fecha_inicio_str" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="fecha_inicio_str"/>
+		<property name="com.jaspersoft.studio.field.label" value="fecha_inicio_str"/>
+	</field>
+	<field name="fecha_fin_str" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="fecha_fin_str"/>
+		<property name="com.jaspersoft.studio.field.label" value="fecha_fin_str"/>
+	</field>
+	<field name="hora_inicio_str" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="hora_inicio_str"/>
+		<property name="com.jaspersoft.studio.field.label" value="hora_inicio_str"/>
+	</field>
+	<field name="solohora_inicio_str" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="solohora_inicio_str"/>
+		<property name="com.jaspersoft.studio.field.label" value="solohora_inicio_str"/>
+	</field>
+	<field name="solomins_inicio_str" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="solomins_inicio_str"/>
+		<property name="com.jaspersoft.studio.field.label" value="solomins_inicio_str"/>
+	</field>
+	<field name="hora_fin_str" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="hora_fin_str"/>
+		<property name="com.jaspersoft.studio.field.label" value="hora_fin_str"/>
+	</field>
+	<field name="solohora_fin_str" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="solohora_fin_str"/>
+		<property name="com.jaspersoft.studio.field.label" value="solohora_fin_str"/>
+	</field>
+	<field name="solomins_fin_str" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="solomins_fin_str"/>
+		<property name="com.jaspersoft.studio.field.label" value="solomins_fin_str"/>
+	</field>
+	<field name="rut_autoriza_ausencia" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="rut_autoriza_ausencia"/>
+		<property name="com.jaspersoft.studio.field.label" value="rut_autoriza_ausencia"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="detalle_ausencia"/>
+	</field>
+	<field name="ausencia_autorizada" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="ausencia_autorizada"/>
+		<property name="com.jaspersoft.studio.field.label" value="ausencia_autorizada"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="detalle_ausencia"/>
+		<fieldDescription><![CDATA[S:Si / N: No]]></fieldDescription>
+	</field>
+	<field name="fecha_actualizacion" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.name" value="fecha_actualizacion"/>
+		<property name="com.jaspersoft.studio.field.label" value="fecha_actualizacion"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="detalle_ausencia"/>
+	</field>
+	<field name="fecha_actualizacion_str" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="fecha_actualizacion_str"/>
+		<property name="com.jaspersoft.studio.field.label" value="fecha_actualizacion_str"/>
+	</field>
+	<field name="allow_hour" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="allow_hour"/>
+		<property name="com.jaspersoft.studio.field.label" value="allow_hour"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="detalle_ausencia"/>
+	</field>
+	<field name="nombre_autorizador" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="nombre_autorizador"/>
+		<property name="com.jaspersoft.studio.field.label" value="nombre_autorizador"/>
+	</field>
+	<field name="dias_solicitados" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.name" value="dias_solicitados"/>
+		<property name="com.jaspersoft.studio.field.label" value="dias_solicitados"/>
+	</field>
+	<field name="saldo_post_pa" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.name" value="saldo_post_pa"/>
+		<property name="com.jaspersoft.studio.field.label" value="saldo_post_pa"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="81" splitType="Stretch">
+			<staticText>
+				<reportElement x="280" y="5" width="280" height="20" uuid="1cef8ee2-688f-45cc-9728-040f7f884f5b"/>
+				<textElement textAlignment="Center">
+					<font size="15"/>
+				</textElement>
+				<text><![CDATA[Informe de Permisos Administrativos]]></text>
+			</staticText>
+			<textField pattern="d/M/yyyy">
+				<reportElement x="671" y="25" width="100" height="15" uuid="1236af98-a7ef-49c4-a172-2b1a171efc4c"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="575" y="25" width="95" height="15" uuid="0e35197f-bc3e-4e39-861c-45637dcf8b2f"/>
+				<textElement>
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[Fecha de emisón: ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="-9" y="0" width="210" height="16" uuid="66ff1dba-1c13-4609-ba73-e1dc8370fd2f"/>
+				<textFieldExpression><![CDATA[$P{empresa_nombre}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="-9" y="18" width="211" height="15" uuid="031f3781-e95e-4ba7-8143-39cabf01bef6"/>
+				<textFieldExpression><![CDATA[$P{empresa_direccion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="33" y="34" width="159" height="16" uuid="a7e7ff68-54b5-4e1c-af21-82b8e4bcc2fe"/>
+				<textFieldExpression><![CDATA[$P{empresa_region}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="-9" y="35" width="42" height="15" uuid="b1254318-a908-4adc-8ce0-6e6c03adda1d"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Región : ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="-9" y="52" width="210" height="14" uuid="af33ea2d-7f39-4935-91d4-f8f48a535750"/>
+				<textFieldExpression><![CDATA[$P{empresa_comuna}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="-9" y="68" width="208" height="13" uuid="e4d17b01-c201-4297-ab83-4d6afcba13d2"/>
+				<textFieldExpression><![CDATA[$P{empresa_rut}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="363" y="35" width="45" height="24" uuid="a2ec46b2-87bc-43ac-9127-90a806873bcc"/>
+				<textElement>
+					<font size="15"/>
+				</textElement>
+				<text><![CDATA[Año : ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="422" y="35" width="68" height="24" uuid="a5c49223-e57f-4476-868f-f8f8e54ca192"/>
+				<textElement>
+					<font size="16"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{anio}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="110" splitType="Stretch">
+			<staticText>
+				<reportElement x="-11" y="0" width="98" height="15" uuid="8161b9cc-5359-4683-8ed0-b9b35848b538"/>
+				<textElement textAlignment="Right">
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[Area de Negocio : ]]></text>
+			</staticText>
+			<line>
+				<reportElement x="-11" y="76" width="811" height="1" uuid="0837af6d-a3f0-4b0c-b198-b2f0a69902bb"/>
+			</line>
+			<staticText>
+				<reportElement x="-11" y="19" width="98" height="15" uuid="6c3a9228-2952-4af4-b42c-8a3867dcb634"/>
+				<textElement textAlignment="Right">
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[Centro de Costo : ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-12" y="33" width="98" height="15" uuid="89e812a8-cc98-45f6-b0fc-4c843d059b59"/>
+				<textElement textAlignment="Right">
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[Nombre:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-13" y="48" width="98" height="15" uuid="ddac7972-dd32-4d8c-a961-9fb1b0cdeb50"/>
+				<textElement textAlignment="Right">
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[Cargo:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="444" y="32" width="45" height="15" uuid="5521f5c1-3a7f-4a4e-bd0d-6047e86c552e"/>
+				<textElement textAlignment="Right">
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[Ficha : ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="622" y="33" width="45" height="15" uuid="97f8af63-681e-4c50-85fc-6895602267c3"/>
+				<textElement>
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[R.U.T : ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="408" y="49" width="86" height="15" uuid="b4f9a3ed-a527-4826-ad51-587cb8934012"/>
+				<textElement textAlignment="Right">
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[Fecha Ingreso : ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="133" y="0" width="180" height="16" uuid="43e58d27-fba6-4f84-a64f-9511f5d2cd28"/>
+				<textFieldExpression><![CDATA[$P{empresa_nombre}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="87" y="0" width="42" height="16" uuid="f3c1bcfc-02ac-446c-842d-9fe59c3a167b"/>
+				<textFieldExpression><![CDATA[$P{empresa_id}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="86" y="19" width="70" height="14" uuid="d47dcf36-66f3-41c6-9990-caaf9e3ab56e"/>
+				<textFieldExpression><![CDATA[$P{cenco_id}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="162" y="19" width="228" height="14" uuid="829f3a38-32ef-4b41-92c3-d20fb30adbe4"/>
+				<textFieldExpression><![CDATA[$P{cenco_nombre}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="87" y="32" width="280" height="17" uuid="322fe952-7609-4c9c-8392-ec77dc1d157a"/>
+				<textFieldExpression><![CDATA[$P{nombre}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="87" y="48" width="273" height="16" uuid="4f1981fc-9a97-407a-8dcb-28a7c9ba65e5"/>
+				<textFieldExpression><![CDATA[$P{cargo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="498" y="33" width="116" height="16" uuid="622630fb-13f0-4f0d-94cd-fcba7e5efabb"/>
+				<textFieldExpression><![CDATA[$P{cod_interno}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="496" y="50" width="111" height="15" uuid="8e047c07-4cf4-41b5-9164-2de43ef21dfb"/>
+				<textFieldExpression><![CDATA[$P{fecha_ingreso}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="668" y="32" width="98" height="16" uuid="e7202a83-2f2c-46a6-b52a-d6185be71a44"/>
+				<textFieldExpression><![CDATA[$P{rut_full}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="688" y="54" width="22" height="17" uuid="8851d2a1-b322-4e04-9430-7a74cd681acb"/>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="638" y="54" width="50" height="17" uuid="b8691ff3-79ea-4cf3-8f90-7649c9405e4c"/>
+				<text><![CDATA[Página]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="714" y="54" width="20" height="17" uuid="7eef052b-1e9d-45f1-bb12-b710e9a4e9f3"/>
+				<text><![CDATA[de]]></text>
+			</staticText>
+			<textField evaluationTime="Report">
+				<reportElement x="737" y="55" width="31" height="16" uuid="876260d6-85b6-4062-a383-da98668f71a1"/>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="465" y="81" width="190" height="20" uuid="eea467e1-8285-4d1b-8d6e-2cba0dc3e841">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="10" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Autorizada por]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="4" y="80" width="66" height="14" uuid="aabfee01-bf9a-4274-8667-839856009dd0"/>
+				<textElement>
+					<font size="10" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Fecha inicio]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="81" y="80" width="52" height="13" uuid="fca4bd0d-d5d6-41cf-8c9a-581ff500d776"/>
+				<textElement>
+					<font size="10" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Fecha fin]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="154" y="80" width="88" height="20" uuid="b1a5f42c-fb34-4462-8b24-d66019dbbc1c"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Dias solicitados]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="411" y="18" width="80" height="15" uuid="5e321454-ac63-44ce-8f33-ee0d0eab8c0e"/>
+				<textElement textAlignment="Right">
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[Zona extrema:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="499" y="19" width="100" height="14" uuid="45ad8945-7c75-4bde-8147-866df31f6902">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$P{es_zona_extrema}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="670" y="80" width="98" height="20" uuid="720870a2-197f-42b7-a00a-628ac085f3c7">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Saldo post PA]]></text>
+			</staticText>
+			<line>
+				<reportElement x="-11" y="104" width="811" height="1" uuid="acbd5894-1c99-42d7-8aa7-ed7b05c5651e"/>
+			</line>
+			<staticText>
+				<reportElement x="288" y="81" width="64" height="20" uuid="f5e0dd25-840f-4249-bd17-b7548e01b829"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Hora inicio]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="373" y="81" width="64" height="20" uuid="3da7b773-ebf1-4648-88a0-2581234316ca"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Hora fin]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<textField>
+				<reportElement x="1" y="3" width="74" height="12" uuid="bedc4e01-f4a4-4b2e-9dad-84fa658d69be">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fecha_inicio_str}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="81" y="3" width="64" height="12" uuid="d0eda97f-e657-4faf-b5a0-12ceded6df81">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fecha_fin_str}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="466" y="3" width="188" height="12" uuid="dce95fd8-300c-488e-b4fb-46ed1c53c88a">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nombre_autorizador}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="668" y="3" width="86" height="12" uuid="412685b4-b3d7-46a9-89e7-3611b2bdfe29">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{saldo_post_pa}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="153" y="4" width="84" height="12" uuid="311616bf-6081-4542-978e-2e96d7b63a8c">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{dias_solicitados}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="289" y="2" width="64" height="12" uuid="d628018a-953a-46af-a0e8-f085bd8832f4">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{hora_inicio_str}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="374" y="1" width="64" height="12" uuid="c7ec4dcc-3c0c-43de-b14f-f1aa650cfdbc">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{hora_fin_str}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="136" splitType="Stretch">
+			<line>
+				<reportElement x="344" y="111" width="171" height="1" uuid="dce998d6-ace2-4f65-910e-11b5dc67e6ed"/>
+			</line>
+			<staticText>
+				<reportElement x="380" y="113" width="98" height="15" uuid="13c758a9-c27e-484e-b36f-2eaf424e447b"/>
+				<textElement>
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[V° B° Jefe Directo]]></text>
+			</staticText>
+			<line>
+				<reportElement x="569" y="113" width="171" height="1" uuid="fb5f9dc6-738d-4fa8-a013-61f5d03c9149"/>
+			</line>
+			<staticText>
+				<reportElement x="605" y="115" width="98" height="15" uuid="01a67991-6210-43c1-9625-f07ffffc49e5"/>
+				<textElement>
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[V° B° Trabajador]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="742" y="55" width="36" height="14" uuid="1acab939-d07f-4bdf-8de3-56a698c1fbbe">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$P{dias_disponibles}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="471" y="13" width="71" height="14" forecolor="#070808" backcolor="#EDF7EE" uuid="0e20eb9e-76be-4715-ac3b-0ff0afc73a7f"/>
+				<box>
+					<pen lineColor="#267E80"/>
+				</box>
+				<textElement textAlignment="Left">
+					<font size="10" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Total de días:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="688" y="15" width="49" height="14" uuid="e2658845-882e-4d4d-b703-a4ebe316d039"/>
+				<textElement textAlignment="Right">
+					<font size="10" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Total (+):]]></text>
+			</staticText>
+			<line>
+				<reportElement x="-11" y="52" width="811" height="1" uuid="fe36046b-2eb4-4c97-96ec-66a559d64e56"/>
+			</line>
+			<line>
+				<reportElement x="-11" y="3" width="811" height="1" uuid="9e8c66bd-95e1-47fb-95c8-cfe3084bb6c5"/>
+			</line>
+			<staticText>
+				<reportElement x="635" y="34" width="101" height="14" uuid="f6500a9e-2799-490a-ae6e-6c2d864a3cc5"/>
+				<textElement textAlignment="Right">
+					<font size="10" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Total asignadas (-):]]></text>
+			</staticText>
+			<line>
+				<reportElement x="-6" y="72" width="811" height="1" uuid="5ef20a9d-ddbc-48c6-96af-eb44922b5191"/>
+			</line>
+			<staticText>
+				<reportElement x="622" y="56" width="115" height="14" uuid="c9fef169-7555-46a8-a26f-251d5189a4b4"/>
+				<textElement textAlignment="Right">
+					<font size="10" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Total disponibles (=):]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="742" y="14" width="36" height="14" uuid="1cd526a0-5315-4991-aa1d-961225d3fe79">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$P{dias_acumulados}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="742" y="34" width="36" height="14" uuid="82f14d94-d451-475b-8a40-d3626697568f">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$P{dias_utilizados}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+	<noData>
+		<band height="277">
+			<textField>
+				<reportElement x="-9" y="78" width="208" height="13" uuid="edbe2dd4-7ddb-49a1-ad61-cd6f6cb449e6"/>
+				<textFieldExpression><![CDATA[$P{empresa_rut}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="-9" y="62" width="210" height="14" uuid="c4642386-4d73-4b10-a0aa-6d08143e938d"/>
+				<textFieldExpression><![CDATA[$P{empresa_comuna}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="-9" y="28" width="211" height="15" uuid="939ac11f-c5f0-4014-b149-064b594f74a1"/>
+				<textFieldExpression><![CDATA[$P{empresa_direccion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="-9" y="10" width="210" height="16" uuid="e686c025-f06f-4e7f-bc01-8c2bf0583ed1"/>
+				<textFieldExpression><![CDATA[$P{empresa_nombre}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="33" y="44" width="159" height="16" uuid="ac29b96b-423b-43b7-8cbd-ce7458d499ad"/>
+				<textFieldExpression><![CDATA[$P{empresa_region}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="-9" y="45" width="42" height="15" uuid="0139657b-7a3d-4dc1-809e-025305d358b5"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Región : ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="280" y="5" width="280" height="20" uuid="8a203fd3-8ce3-4482-88c6-73d3538f1867"/>
+				<textElement textAlignment="Center">
+					<font size="15"/>
+				</textElement>
+				<text><![CDATA[Informe de Permisos Administrativos]]></text>
+			</staticText>
+			<textField pattern="d/M/yyyy">
+				<reportElement x="671" y="25" width="100" height="15" uuid="64289522-6d94-4216-be2c-d27f59df12fa"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="575" y="25" width="95" height="15" uuid="9be0e1bb-79c5-4cbc-ad76-08655e6f4735"/>
+				<textElement>
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[Fecha de emisón: ]]></text>
+			</staticText>
+			<line>
+				<reportElement x="-11" y="163" width="811" height="1" uuid="82d10abe-aab8-4032-aa16-a7d2582d0a34"/>
+			</line>
+			<staticText>
+				<reportElement x="-11" y="106" width="98" height="15" uuid="219e9fac-be12-407a-a40b-d25bad2d72f2"/>
+				<textElement textAlignment="Right">
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[Centro de Costo : ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-12" y="120" width="98" height="15" uuid="a31ba1a6-cfbf-45b0-9341-32ba75c35564"/>
+				<textElement textAlignment="Right">
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[Nombre:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-13" y="135" width="98" height="15" uuid="bcd5f8aa-ea0f-460a-bfd2-1e6fdd30b942"/>
+				<textElement textAlignment="Right">
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[Cargo:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="444" y="119" width="45" height="15" uuid="8fdda1a4-9b8c-4577-a008-de9e73ffc5ee"/>
+				<textElement textAlignment="Right">
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[Ficha : ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="622" y="120" width="45" height="15" uuid="27793d53-edf3-4a74-8ff8-d36bf97e1be7"/>
+				<textElement>
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[R.U.T : ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="408" y="136" width="86" height="15" uuid="9e1b92fc-4c83-4bfd-9f58-049de724ed7d"/>
+				<textElement textAlignment="Right">
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[Fecha Ingreso : ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="86" y="106" width="70" height="14" uuid="20805256-b70f-4cce-9b16-d9eee2557c8c"/>
+				<textFieldExpression><![CDATA[$P{cenco_id}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="162" y="106" width="228" height="14" uuid="9bd48e81-71a7-431f-8300-d08267fe4e74"/>
+				<textFieldExpression><![CDATA[$P{cenco_nombre}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="87" y="119" width="280" height="17" uuid="31aa1dc3-801a-49ea-ae67-ca5288b089cb"/>
+				<textFieldExpression><![CDATA[$P{nombre}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="87" y="135" width="273" height="16" uuid="4a5024e4-2262-402b-a7b7-85407b7002da"/>
+				<textFieldExpression><![CDATA[$P{cargo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="498" y="120" width="116" height="16" uuid="1ff60bfa-a41c-441a-80b0-6cf62f44e0ba"/>
+				<textFieldExpression><![CDATA[$P{cod_interno}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="496" y="137" width="111" height="15" uuid="a2132a5e-0f03-4bc7-bce5-323b8c43a81d"/>
+				<textFieldExpression><![CDATA[$P{fecha_ingreso}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="668" y="119" width="98" height="16" uuid="9da5559c-a9b6-4777-b958-9d4bf69641bc"/>
+				<textFieldExpression><![CDATA[$P{rut_full}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="688" y="141" width="22" height="17" uuid="0cfc761c-468b-45d0-a5cf-be2533aafbfe"/>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="638" y="141" width="50" height="17" uuid="6db84343-7ab6-463b-808d-5656521f76da"/>
+				<text><![CDATA[Página]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="714" y="141" width="20" height="17" uuid="7edccecc-766f-4f86-83ee-897127057341"/>
+				<text><![CDATA[de]]></text>
+			</staticText>
+			<textField evaluationTime="Report">
+				<reportElement x="737" y="142" width="31" height="16" uuid="126b1e45-1618-4f30-9e5c-5fbd2b8017a5"/>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="17" y="167" width="697" height="33" uuid="95cfcef8-bb89-4760-ae3a-3166ae300ddf"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[No ha hecho uso de permisos administrativos]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="411" y="105" width="80" height="15" uuid="4e53b1f7-59cf-4ce9-8009-1655ed815117"/>
+				<textElement textAlignment="Right">
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[Zona extrema:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="499" y="106" width="100" height="14" uuid="7d101bb0-e890-47e9-a38d-b8483e550246">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$P{es_zona_extrema}]]></textFieldExpression>
+			</textField>
+		</band>
+	</noData>
+</jasperReport>

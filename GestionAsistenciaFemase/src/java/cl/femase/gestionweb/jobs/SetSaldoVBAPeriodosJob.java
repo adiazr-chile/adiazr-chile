@@ -5,11 +5,10 @@
  */
 package cl.femase.gestionweb.jobs;
         
+import cl.femase.gestionweb.business.CalculoVacacionesBp;
 import cl.femase.gestionweb.business.CentroCostoBp;
 import cl.femase.gestionweb.business.DepartamentoBp;
 import cl.femase.gestionweb.business.EmpleadosBp;
-import cl.femase.gestionweb.business.ProcesosBp;
-import cl.femase.gestionweb.business.UsuarioBp;
 import cl.femase.gestionweb.common.CalculadoraPeriodo;
 import cl.femase.gestionweb.common.Constantes;
 import cl.femase.gestionweb.dao.CalculoVacacionesDAO;
@@ -19,7 +18,6 @@ import cl.femase.gestionweb.vo.DepartamentoVO;
 import cl.femase.gestionweb.vo.EmpleadoVO;
 import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.ProcesoEjecucionVO;
-import cl.femase.gestionweb.vo.ProcesoVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import cl.femase.gestionweb.vo.SetVBAEmpleadoVO;
 import cl.femase.gestionweb.vo.UsuarioVO;
@@ -57,6 +55,8 @@ public class SetSaldoVBAPeriodosJob extends BaseJobs implements Job {
         EmpleadosBp empleadosBp         = new EmpleadosBp(new PropertiesVO());
         //ProcesosBp procesosBp           = new ProcesosBp(new PropertiesVO());
         CalculoVacacionesDAO calculoDao = new CalculoVacacionesDAO();
+        CalculoVacacionesBp calculoVacacionesBp = new CalculoVacacionesBp(null);
+        
         //UsuarioBp usuarioBp             = new UsuarioBp(new PropertiesVO());
         
         JobDataMap data = arg0.getJobDetail().getJobDataMap();
@@ -175,6 +175,8 @@ public class SetSaldoVBAPeriodosJob extends BaseJobs implements Job {
                             
                             ResultCRUDVO modifiedInfo=new ResultCRUDVO();
                             if (!empleadosSetVBA.isEmpty()){
+                                System.out.println(WEB_NAME + "[SetSaldoVBAPeriodosJob.execute]"
+                                    + "Antes de invocar a setVBANew...");
                                 //transformar ArrayList a json
                                 // Convertir la lista de Contratos a JSON usando Gson
                                 Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -186,12 +188,19 @@ public class SetSaldoVBAPeriodosJob extends BaseJobs implements Job {
                                 * El metodo 'calculoDao.setVBANew' invoca a la nueva función "set_vba_empleados"         
                                 **/
                                 modifiedInfo = calculoDao.setVBANew(jsonEmpleadosToSet);
-                                
-                                if (modifiedInfo != null && modifiedInfo.getFilasAfectadasObj() != null){
-                                    System.out.println(WEB_NAME + "[SetSaldoVBAPeriodosJob.execute]"
-                                        + "Filas afectadas, post ejecucion de la funcion " + Constantes.fnSET_VBA_EMPLEADOS
-                                        + ": " + modifiedInfo.getFilasAfectadasObj().toString());
-                                }        
+                                System.out.println(WEB_NAME + "[SetSaldoVBAPeriodosJob.execute]"
+                                    + "Despues de invocar a setVBANew. "
+                                    + "modifiedInfo= " + modifiedInfo);
+                                //if (modifiedInfo != null && modifiedInfo.getFilasAfectadasObj() != null){
+//                                    System.out.println(WEB_NAME + "[SetSaldoVBAPeriodosJob.execute]"
+//                                        + "Filas afectadas, post ejecucion de la funcion " + Constantes.fnSET_VBA_EMPLEADOS
+//                                        + ": " + modifiedInfo.getFilasAfectadasObj().toString());
+//                                    
+                                    System.out.println(WEB_NAME+"[SetSaldoVBAPeriodosJob.execute]"
+                                        + "Set estado de saldos de vacaciones por periodos...");
+                                    ResultCRUDVO fnExec2 = 
+                                        calculoVacacionesBp.setEstadoSaldosVacacionesPeriodos(empresaId, empleado.getRut());
+                                //}        
                                         
                             }else{
                                 System.out.println(WEB_NAME+"[SetSaldoVBAPeriodosJob.execute]No se encontraron empleados...");

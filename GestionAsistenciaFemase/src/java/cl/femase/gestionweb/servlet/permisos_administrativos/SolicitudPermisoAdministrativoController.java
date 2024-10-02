@@ -643,7 +643,8 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
                     System.out.println(WEB_NAME+"[SolicitudPermisoAdministrativoController]"
                         + "Insertar registro en tabla notificaciones, "
                         + "para enviar mail");
-                    NotificacionSolicitudPermisoAdministrativoVO evento = notificaEventoSolicitud("INGRESO_SOLICITUD",
+                    NotificacionSolicitudPermisoAdministrativoVO evento = notificaEventoSolicitud(appProperties,
+                        "INGRESO_SOLICITUD",
                         "Ingreso de Solicitud de Permiso Administrativo", 
                         solicitud, userConnected, null,null,solicitud.getDiasSolicitados(),"Solicitud ingresada",
                         request.getRemoteAddr());
@@ -844,7 +845,8 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
                                     parametrosSistema, 
                                     userConnected, 
                                     newAusencia);
-                            notificaEventoSolicitud("SOLICITUD_APROBADA",
+                            notificaEventoSolicitud(appProperties, 
+                                "SOLICITUD_APROBADA",
                                 "Solicitud de permiso administrativo Aprobada", 
                                 solicitudFromBd, userConnected, 
                                 solicitudFromBd.getFechaInicioPA(), 
@@ -874,7 +876,8 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
                             System.out.println(WEB_NAME+"[SolicitudPermisoAdministrativoController]"
                                 + "Rechazar solicitud de Permiso Administrativo. "
                                 + "Dias solicitados: " + solicitud.getDiasSolicitados());
-                            notificaEventoSolicitud("SOLICITUD_RECHAZADA",
+                            notificaEventoSolicitud(appProperties, 
+                                "SOLICITUD_RECHAZADA",
                                 "Solicitud de Permiso Administrativo Rechazada", 
                                 solicitudFromBd, userConnected, 
                                 solicitudFromBd.getFechaInicioPA(), 
@@ -895,7 +898,8 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
                         System.out.println(WEB_NAME+"[SolicitudPermisoAdministrativoController]"
                             + "Rechazar solicitud de Permiso Administrativo. "
                             + "Dias solicitados: " + solicitud.getDiasSolicitados());
-                        notificaEventoSolicitud("SOLICITUD_RECHAZADA",
+                        notificaEventoSolicitud(appProperties, 
+                            "SOLICITUD_RECHAZADA",
                             "Solicitud de Permiso Administrativo Rechazada", 
                             solicitudFromBd, userConnected, 
                             solicitudFromBd.getFechaInicioPA(), 
@@ -1049,6 +1053,7 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
     * 
     */
     private NotificacionSolicitudPermisoAdministrativoVO notificaEventoSolicitud(
+            PropertiesVO _appProperties,
             String _tipoEvento, 
             String _evento,
             SolicitudPermisoAdministrativoVO _solicitud,
@@ -1082,6 +1087,7 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
         String fromMail         = m_properties.getKeyValue("mailFrom");
         String asuntoMail       = "Sistema de Gestion-" + _evento;
         String mailTo           = empleado.getEmail();
+        boolean aprobada = false;
         System.out.println(WEB_NAME+"[SolicitudPermisoAdministrativoController."
             + "notificaEventoSolicitud]"
             + "Email por defecto: " + mailTo);
@@ -1095,6 +1101,9 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
             _solicitud.setFechaInicioPA(_inicioPermisoAdministrativo);
             _solicitud.setFechaFinPA(_finPermisoAdministrativo);
             diasSolicitados = _diasSolicitados;
+            if (_tipoEvento.compareTo("SOLICITUD_APROBADA") == 0){
+                aprobada = true;
+            }
         }
         
         if (_tipoEvento.compareTo("INGRESO_SOLICITUD") == 0){
@@ -1198,6 +1207,11 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
                 mensaje += "<br>Hora Fin: " + _solicitud.getHoraFinPA_AMPM();
         }
         
+        if (aprobada){
+            mensaje += "<br>Importante: " + _appProperties.getTxtAprobarSolicVacaciones();
+            mensaje += "<br>ID solicitud: " + _solicitud.getId();
+        }
+        
         String mailBody = "Evento:" + _evento
             + "<br>RUN trabajador: " + empleado.getCodInterno()
             + "<br>Nombre trabajador: " + empleado.getNombreCompleto()
@@ -1214,6 +1228,11 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
                 || _solicitud.getJornada().compareTo(Constantes.JORNADA_PERMISO_ADMINISTRATIVO_PM) == 0){
                 mailBody += "<br>Hora Inicio: " + _solicitud.getHoraInicioPA_AMPM();
                 mailBody += "<br>Hora Fin: " + _solicitud.getHoraFinPA_AMPM();
+        }
+        
+        if (aprobada){
+            mailBody += "<br>Importante: " + _appProperties.getTxtAprobarSolicPA();
+            mailBody += "<br>ID solicitud: " + _solicitud.getId();
         }
         
         evento.setTipoEvento(_tipoEvento);

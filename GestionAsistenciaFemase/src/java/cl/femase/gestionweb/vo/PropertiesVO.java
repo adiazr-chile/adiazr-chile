@@ -41,6 +41,25 @@ public class PropertiesVO {
 
     private boolean vacacionesPeriodos = false;
 
+    private String txtAprobarSolicVacaciones;
+    private String txtAprobarSolicPA;
+
+    public String getTxtAprobarSolicVacaciones() {
+        return txtAprobarSolicVacaciones;
+    }
+
+    public void setTxtAprobarSolicVacaciones(String txtAprobarSolicVacaciones) {
+        this.txtAprobarSolicVacaciones = txtAprobarSolicVacaciones;
+    }
+
+    public String getTxtAprobarSolicPA() {
+        return txtAprobarSolicPA;
+    }
+
+    public void setTxtAprobarSolicPA(String txtAprobarSolicPA) {
+        this.txtAprobarSolicPA = txtAprobarSolicPA;
+    }
+    
     public boolean isVacacionesPeriodos() {
         return vacacionesPeriodos;
     }

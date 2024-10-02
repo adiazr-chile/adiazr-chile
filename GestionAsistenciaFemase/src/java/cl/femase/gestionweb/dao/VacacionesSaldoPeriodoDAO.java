@@ -46,11 +46,12 @@ public class VacacionesSaldoPeriodoDAO extends BaseDAO{
     * 
     * @param _empresaId
     * @param _runEmpleado
+    * @param _estado
     * 
     * @return 
     */
     public LinkedHashMap<String, VacacionesSaldoPeriodoVO> getPeriodos(String _empresaId, 
-            String _runEmpleado){
+            String _runEmpleado, int _estado){
         
         LinkedHashMap<String, VacacionesSaldoPeriodoVO> hashmap = new LinkedHashMap<>();
         
@@ -71,8 +72,9 @@ public class VacacionesSaldoPeriodoDAO extends BaseDAO{
                 + "from vacaciones_saldo_periodo vsp "
                     + "inner join estado on vsp.estado_id = estado.estado_id "
                 + "where vsp.empresa_id = '" + _empresaId + "' "
-                    + "and vsp.run_empleado='" + _runEmpleado + "' "
-                + "order by vsp.inicio_periodo desc";
+                    + "and vsp.run_empleado='" + _runEmpleado + "' ";
+            if (_estado != -1) sql += " and vsp.estado_id = " + _estado + " order by vsp.inicio_periodo asc";
+            else sql += " order by vsp.inicio_periodo desc";
            
             System.out.println(WEB_NAME+"[VacacionesSaldoPeriodoDAO."
                 + "getPeriodos]sql: " + sql);

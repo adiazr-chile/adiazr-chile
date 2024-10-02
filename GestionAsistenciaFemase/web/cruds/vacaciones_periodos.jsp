@@ -368,7 +368,7 @@
                 <th>Estado</th>
                 <th>Ult. actualizacion</th>
             
-                <%//if (!listaEmpleados.isEmpty()){%>
+                <%//if (!hashPeriodos.isEmpty()){%>
                     <!--<th style="text-align:center;width:100px;">Nuevo registro 
                         <button type="button" class="btn btn-success btn-xs dt-add">
                             <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
@@ -391,16 +391,17 @@
                 <td style="display: none;"><%= periodo.getEstadoId()%></td>
                 <td><%= Constantes.ESTADO_LABEL.get(periodo.getEstadoId())%></td>
                 <td><%= periodo.getUpdateDatetime()%></td>
-                <td>
-                    <!--<button class="btnSelect btn btn-primary btn-xs" style="margin-right:16px;">
+                <!-- <td>
+                    <button class="btnSelect btn btn-primary btn-xs" style="margin-right:16px;">
                         <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
-                    </button>-->
-                    <!--
+                    </button>
+                    
                     <button type="button" class="btnSelectDelete btn btn-danger btn-xs dt-delete">
                         <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                     </button>
-                    -->
+                    
                 </td>
+                -->
             </tr>
         <%}%>
             
