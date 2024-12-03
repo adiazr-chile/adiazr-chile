@@ -1,4 +1,5 @@
 
+<%@page import="cl.femase.gestionweb.vo.UsuarioVO"%>
 <%@page import="cl.femase.gestionweb.vo.VacacionesSaldoPeriodoVO"%>
 <%@page import="java.util.LinkedHashMap"%>
 <%@page import="cl.femase.gestionweb.vo.UsuarioCentroCostoVO"%>
@@ -9,6 +10,7 @@
 <%@page import="java.util.List"%>
 
 <%
+    UsuarioVO userInSession = (UsuarioVO)session.getAttribute("usuarioObj");
     String mainTitle    = "Vacaciones por periodos";
     String fileTitle    = "vacaciones_saldo_periodo";
     String urlPattern   = "VacacionesSaldosPeriodosCRUD";
@@ -16,8 +18,16 @@
         (LinkedHashMap<String, VacacionesSaldoPeriodoVO>)session.getAttribute("lista_CRUD_saldovacperiodos");
     if (hashPeriodos == null) hashPeriodos = new LinkedHashMap<>();
     //EmpleadosDAO daoEmpleados = n
-    List<EmpleadoVO> listaEmpleados = (List<EmpleadoVO>)session.getAttribute("empleados");
-            
+    
+    /*
+        String sessionAttributeName="empleados_cenco_usuario";
+        if (userInSession.getAdminEmpresa().compareTo("S") == 0)
+            sessionAttributeName="empleados";
+
+        List<EmpleadoVO> listaEmpleados = 
+            (List<EmpleadoVO>)session.getAttribute(sessionAttributeName);
+    */
+    
     //filtros de busqueda
     //List<UsuarioCentroCostoVO> cencos   = (List<UsuarioCentroCostoVO>)session.getAttribute("cencos_empleado");
     
@@ -33,17 +43,20 @@
     /**
     *   Columnas para mostrar:
     *                               columna num
-    *           Run                 1
-                Inicio periodo      2
-                Fin periodo         3
-                Saldo VBA           4
+    *           nombre              1
+    *           Run                 2
+                depto_nombre        3
+                cenco_nombre        4
+                Inicio periodo      5
+                Fin periodo         6
+                Saldo VBA           7
                 Estado Id (oculto)
-                Estado              5
-                Ult. actualizacion  6
+                Estado              8
+                Ult. actualizacion  9
         
     */
     //num columnas
-    String columnas = "0,1,2,3,4,5,6";
+    String columnas = "0,1,2,3,4,5,6,7,8,9";
 %>
 
 <!doctype html>
@@ -99,6 +112,9 @@
     <script type="text/javascript">
         
     $(document).ready(function() {
+        const select = document.getElementById("empleados");
+        select.style.display = "none"; //ocultar combo
+    
         var table = $('#myTable').on( 'draw.dt', function () {
             $("#container").attr("id", "container");
             if ($("#loadercontainer").length) {
@@ -213,7 +229,59 @@
          
     } );
 
+        /**
+        * 
+        * */
+        function buscarEmpleados() {
+            eliminarListaEmpleados();
+            var nombre = document.getElementById("busqueda").value;
+            if (nombre !== '' && nombre !== ' '){
+                var xhr = new XMLHttpRequest();
+                xhr.open("GET", "<%=request.getContextPath()%>/<%=urlPattern%>?action=buscarEmpleados&nombre=" + nombre, true);
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        var jsonString = xhr.responseText;
+                        //document.getElementById("resultado").innerHTML = jsonString; // Maneja el resultado aquí
+                        try {
+                            // Parsear el JSON
+                            const empleados = JSON.parse(jsonString);
+
+                            const select = document.getElementById("empleados");
+                            select.style.display = "block"; // Muestra el select de empleados
     
+                            // Obtener el elemento select
+                            const selectElement = document.getElementById('empleados');
+
+                            // Llenar el select con opciones
+                            empleados.forEach(empleado => {
+                                const option = document.createElement('option');
+                                option.value = empleado.empresaId + '|' + empleado.cencoId + '|' + empleado.run;
+                                option.textContent = '[' + empleado.deptoNombre + '][' + empleado.cencoNombre + '] ' + empleado.nombreCompleto; // Nombre a mostrar en la lista
+                                selectElement.appendChild(option);
+                            });
+                            
+                        } catch (error) {
+                            console.error("Error al parsear el JSON:", error);
+                        }
+                    }
+                };
+                xhr.send();
+            }else{
+                //document.getElementById("resultado").innerHTML = '';
+                eliminarListaEmpleados();
+                const select = document.getElementById("empleados");
+                select.style.display = "none"; //ocultar combo
+            }
+        }
+    
+        function eliminarListaEmpleados() {
+            const select = document.getElementById("empleados");
+            const cantidadOpciones = select.options.length;
+
+            for (let i = cantidadOpciones - 1; i >= 0; i--) {
+                select.remove(i); // Elimina cada opción desde el final hacia el principio
+            }
+        }
     </script>
                         
     <style> 
@@ -340,10 +408,12 @@
 <body>
     <h3 class="titulo-main">Buscar empleado</h3>
     <form id="searchForm" name="searchForm" method="POST" action="<%=request.getContextPath()%>/<%=urlPattern%>?action=list" target="_self">
-       <input type="text" id="searchInput" id="searchInput" placeholder="Ingresa el nombre del empleado...">
         <input type="hidden" name="filtroRun" id="filtroRun" value="filtroRun">
         
-        <ul id="autocompleteList"></ul>
+        <input type="text" id="busqueda" onkeyup="buscarEmpleados()" placeholder="Ingresa el nombre del empleado.">
+        
+        <select id="empleados" name="empleados"></select>
+        
         <button type="submit">Buscar</button>
     </form>
     
@@ -356,11 +426,13 @@
     <div class="col-12" > 
       <h3 class="titulo-tabla"><%=mainTitle%> </h3>
       
-      
       <table id="myTable" class="table table-striped table-bordered" style="width:100%">
         <thead>
             <tr>
+                <th>Nombre</th>
                 <th>Run</th>
+                <th>Depto</th>
+                <th>Cenco</th>
                 <th>Inicio periodo</th>
                 <th>Fin periodo</th>
                 <th>Saldo VBA</th>
@@ -384,7 +456,10 @@
         %>
             
             <tr>
+                <td><%= periodo.getNombreEmpleado()%></td>
                 <td><%= periodo.getRunEmpleado()%></td>
+                <td><%= periodo.getDeptoNombre()%></td>
+                <td><%= periodo.getCencoNombre()%></td>
                 <td><%= periodo.getFechaInicioPeriodo()%></td>
                 <td><%= periodo.getFechaFinPeriodo()%></td>
                 <td><%= periodo.getSaldoVBA()%></td>
@@ -423,77 +498,8 @@
 </script>
 
 <script>
-        // Lista de empleados pre-cargada
-        const empleados = [
-        <%
-            Iterator<EmpleadoVO> iterator = listaEmpleados.iterator();
-            while (iterator.hasNext()) {
-                EmpleadoVO empleado = iterator.next();
-                String deptoNombre = empleado.getDeptoNombre();
-                String cencoNombre = empleado.getCencoNombre();
-                deptoNombre = deptoNombre.replaceAll("'", "");
-                cencoNombre = cencoNombre.replaceAll("'", "");
-                String label=empleado.getNombreCompleto()
-                    + "[" + deptoNombre + "]"
-                    + "[" + cencoNombre + "]";
-                %>
-                { id: '<%= empleado.getRut() %>', nombre: '<%= label %>' },        
-            <%}%>
-        ];
         
-        const searchInput = document.getElementById('searchInput');
-        const autocompleteList = document.getElementById('autocompleteList');
 
-        // Filtrar empleados en tiempo real
-        searchInput.addEventListener('input', function() {
-            const filter = searchInput.value.toLowerCase();
-            autocompleteList.innerHTML = '';
-
-            if (filter.length === 0) {
-                autocompleteList.style.display = 'none';
-                return;
-            }
-
-            const filteredEmpleados = empleados.filter(empleado => 
-                empleado.nombre.toLowerCase().includes(filter)
-            );
-
-            if (filteredEmpleados.length > 0) {
-                autocompleteList.style.display = 'block';
-                filteredEmpleados.forEach(empleado => {
-                    const li = document.createElement('li');
-                    //li.textContent = empleado.nombre;
-                    li.textContent = '[' + empleado.id + '] ' + empleado.nombre;
-                    li.dataset.id = empleado.id;
-                    document.getElementById('filtroRun').value=empleado.id;
-                    autocompleteList.appendChild(li);
-                });
-            } else {
-                autocompleteList.style.display = 'none';
-            }
-        });
-
-        // Seleccionar un empleado
-        autocompleteList.addEventListener('click', function(event) {
-            if (event.target.tagName === 'LI') {
-                searchInput.value = event.target.textContent;
-                autocompleteList.style.display = 'none';
-            }
-        });
-
-        // Manejar el envío del formulario
-        document.getElementById('searchForm').addEventListener('submit', function(event) {
-            //event.preventDefault();
-            if (searchInput.value === '') event.preventDefault();
-            //alert('Empleado seleccionado: ' + searchInput.value);
-        });
-
-        // Ocultar la lista de autocompletar si se hace clic fuera de ella
-        document.addEventListener('click', function(event) {
-            if (!autocompleteList.contains(event.target) && event.target !== searchInput) {
-                autocompleteList.style.display = 'none';
-            }
-        });
     </script>
 
 </body>

@@ -281,6 +281,10 @@ public class UserAuth extends BaseServlet {
 
                 session.setAttribute("empleados", 
                     empleadosBp.getEmpleados(userOk.getEmpresaId(),null,-1,-1,null,null,null,null,0,0,"empl_rut"));
+                session.setAttribute("empleados_cenco_usuario", 
+                    empleadosBp.getEmpleadosByCencosUsuario(userOk.getEmpresaId(), 
+                            userOk.getUsername(),
+                            userOk.getAdminEmpresa()));
 
                 session.setAttribute("ausencias", 
                     ausenciasBp.getAusencias(null,

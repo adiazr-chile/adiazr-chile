@@ -123,11 +123,11 @@ public class AusenciaDAO extends BaseDAO{
         return objresultado;
     }
 
-     /**
-     * Agrega un nuevo acceso
-     * @param _data
-     * @return 
-     */
+    /**
+    * Agrega un nuevo acceso
+    * @param _data
+    * @return 
+    */
     public ResultCRUDVO insert(AusenciaVO _data){
         ResultCRUDVO objresultado = new ResultCRUDVO();
         int result=0;

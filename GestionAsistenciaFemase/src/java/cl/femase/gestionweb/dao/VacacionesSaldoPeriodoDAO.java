@@ -12,6 +12,7 @@ import cl.femase.gestionweb.vo.VacacionesSaldoPeriodoVO;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import org.apache.log4j.Logger;
@@ -57,7 +58,7 @@ public class VacacionesSaldoPeriodoDAO extends BaseDAO{
         
         PreparedStatement ps = null;
         ResultSet rs = null;
-        VacacionesSaldoPeriodoVO data;
+        VacacionesSaldoPeriodoVO periodo;
         
         try{
             String sql = "select "
@@ -68,11 +69,16 @@ public class VacacionesSaldoPeriodoDAO extends BaseDAO{
                     + "vsp.saldo_vba,"
                     + "vsp.estado_id,"
                     + "estado.estado_nombre,"
-                    + "vsp.update_datetime "
+                    + "to_char(vsp.update_datetime, 'YYYY-MM-DD HH24:MI:SS') update_datetime, "
+                    + "CONCAT(e.empl_nombres, ' ', e.empl_ape_paterno, ' ', e.empl_ape_materno) nombre, "
+                    + "d.depto_nombre, cc.ccosto_nombre cenco_nombre "
                 + "from vacaciones_saldo_periodo vsp "
                     + "inner join estado on vsp.estado_id = estado.estado_id "
-                + "where vsp.empresa_id = '" + _empresaId + "' "
-                    + "and vsp.run_empleado='" + _runEmpleado + "' ";
+                    + "inner join empleado e on (vsp.empresa_id = e.empresa_id and vsp.run_empleado = e.empl_rut) "
+                    + "inner join departamento d on (d.empresa_id=e.empresa_id and e.depto_id = d.depto_id) " 
+                    + "inner join centro_costo cc on (e.cenco_id = cc.ccosto_id and d.depto_id = cc.depto_id) "
+                + " where vsp.empresa_id = '" + _empresaId + "' "
+                    + " and vsp.run_empleado='" + _runEmpleado + "' ";
             if (_estado != -1) sql += " and vsp.estado_id = " + _estado + " order by vsp.inicio_periodo asc";
             else sql += " order by vsp.inicio_periodo desc";
            
@@ -84,18 +90,31 @@ public class VacacionesSaldoPeriodoDAO extends BaseDAO{
             rs = ps.executeQuery();
 
             while (rs.next()){
-                data = new VacacionesSaldoPeriodoVO(-1,null,null);
+                periodo = new VacacionesSaldoPeriodoVO(-1,null,null);
                 
-                data.setEmpresaId(rs.getString("empresa_id"));
-                data.setRunEmpleado(rs.getString("run_empleado"));
-                data.setFechaInicioPeriodo(rs.getString("inicio_periodo"));
-                data.setFechaFinPeriodo(rs.getString("fin_periodo"));
-                data.setSaldoVBA(rs.getDouble("saldo_vba"));
-                data.setEstadoId(rs.getInt("estado_id"));
-                data.setEstadoNombre(rs.getString("estado_nombre"));
-                data.setUpdateDatetime(rs.getString("update_datetime"));
-                String rowkey = data.getEmpresaId() + "|" + data.getRunEmpleado()+ "|" + data.getFechaInicioPeriodo();
-                hashmap.put(rowkey, data);
+                periodo.setEmpresaId(rs.getString("empresa_id"));
+                periodo.setRunEmpleado(rs.getString("run_empleado"));
+                periodo.setNombreEmpleado(rs.getString("nombre"));
+                periodo.setFechaInicioPeriodo(rs.getString("inicio_periodo"));
+                periodo.setFechaFinPeriodo(rs.getString("fin_periodo"));
+                periodo.setSaldoVBA(rs.getDouble("saldo_vba"));
+                periodo.setEstadoId(rs.getInt("estado_id"));
+                periodo.setEstadoNombre(rs.getString("estado_nombre"));
+                periodo.setUpdateDatetime(rs.getString("update_datetime"));
+                String rowkey = periodo.getEmpresaId() 
+                    + "|" + periodo.getRunEmpleado()
+                    + "|" + periodo.getFechaInicioPeriodo();
+                
+                LocalDate inicioAsLocalDate = LocalDate.parse(periodo.getFechaInicioPeriodo());
+                LocalDate finAsLocalDate = LocalDate.parse(periodo.getFechaFinPeriodo());
+                
+                periodo.setFechaInicio(inicioAsLocalDate);
+                periodo.setFechaFin(finAsLocalDate);
+                
+                periodo.setDeptoNombre(rs.getString("depto_nombre"));
+                periodo.setCencoNombre(rs.getString("cenco_nombre"));
+                
+                hashmap.put(rowkey, periodo);
             }
 
             ps.close();
@@ -115,6 +134,53 @@ public class VacacionesSaldoPeriodoDAO extends BaseDAO{
         return hashmap;
     }
 
+    /**
+    * Elimina los periodos existentes
+    * 
+    * @param _empresaId
+    * @param _runEmpleado
+    * @return 
+    */
+    public boolean deletePeriodos(String _empresaId, String _runEmpleado){
+        boolean isOk    = true;
+        int result      = 0;
+        PreparedStatement insert    = null;
+        
+        try{
+            String sql = "delete "
+                + "from vacaciones_saldo_periodo "
+                + "where empresa_id =? "
+                    + "and run_empleado = ? "
+                    + "and dias_acumulados_vba is null";
+
+            dbConn = dbLocator.getConnection(m_dbpoolName,
+                "[VacacionesSaldoPeriodoDAO.deletePeriodos]");
+            insert = dbConn.prepareStatement(sql);
+            insert.setString(1,  _empresaId);
+            insert.setString(2,  _runEmpleado);
+            
+            int filasAfectadas = insert.executeUpdate();
+            if (filasAfectadas > 0){
+                System.out.println(WEB_NAME+"[delete vacaciones_saldo_periodo]"
+                    +"Periodos eliminados OK!");
+            }
+            
+            insert.close();
+            dbLocator.freeConnection(dbConn);
+        }catch(SQLException|DatabaseException sqle){
+            System.err.println("delete vacaciones_saldo_periodo Error1: "+sqle.toString());
+            isOk = false;
+        }finally{
+            try {
+                if (insert != null) insert.close();
+                dbLocator.freeConnection(dbConn);
+            } catch (SQLException ex) {
+                System.err.println("Error: "+ex.toString());
+            }
+        }
+
+        return isOk;
+    }
         
     /**
     * 

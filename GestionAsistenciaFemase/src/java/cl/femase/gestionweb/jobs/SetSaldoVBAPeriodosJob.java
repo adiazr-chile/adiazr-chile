@@ -10,9 +10,9 @@ import cl.femase.gestionweb.business.CentroCostoBp;
 import cl.femase.gestionweb.business.DepartamentoBp;
 import cl.femase.gestionweb.business.EmpleadosBp;
 import cl.femase.gestionweb.common.CalculadoraPeriodo;
-import cl.femase.gestionweb.common.Constantes;
 import cl.femase.gestionweb.dao.CalculoVacacionesDAO;
 import cl.femase.gestionweb.dao.ProcesosDAO;
+import cl.femase.gestionweb.dao.VacacionesSaldoPeriodoDAO;
 import cl.femase.gestionweb.vo.CentroCostoVO;
 import cl.femase.gestionweb.vo.DepartamentoVO;
 import cl.femase.gestionweb.vo.EmpleadoVO;
@@ -55,7 +55,8 @@ public class SetSaldoVBAPeriodosJob extends BaseJobs implements Job {
         EmpleadosBp empleadosBp         = new EmpleadosBp(new PropertiesVO());
         //ProcesosBp procesosBp           = new ProcesosBp(new PropertiesVO());
         CalculoVacacionesDAO calculoDao = new CalculoVacacionesDAO();
-        CalculoVacacionesBp calculoVacacionesBp = new CalculoVacacionesBp(null);
+        CalculoVacacionesBp calculoVacacionesBp     = new CalculoVacacionesBp(null);
+        VacacionesSaldoPeriodoDAO saldoPeriodoDao   = new VacacionesSaldoPeriodoDAO(null);
         
         //UsuarioBp usuarioBp             = new UsuarioBp(new PropertiesVO());
         
@@ -147,6 +148,11 @@ public class SetSaldoVBAPeriodosJob extends BaseJobs implements Job {
                             // Calcular los períodos transcurridos
                             List<VacacionesSaldoPeriodoVO> periodos = 
                                 CalculadoraPeriodo.getPeriodosTranscurridos(fechaInicioContrato, fechaFinalDeseada);
+                            
+                            //.
+                            System.out.println(WEB_NAME + "[SetSaldoVBAPeriodosJob.execute]"
+                                + "Eliminar todos los periodos existentes antes de insertar los datos nuevos");
+                            boolean isOk = saldoPeriodoDao.deletePeriodos(empresaId, empleado.getRut());
                             
                             // Mostrar los períodos
                             List<SetVBAEmpleadoVO> empleadosSetVBA = new ArrayList<>();

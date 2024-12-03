@@ -519,6 +519,19 @@ public class EmpleadosBp  extends BaseBp{
     /**
     * 
     * @param _empresaId
+    * @param _username
+     * @param _adminEmpresa
+    * @return 
+    */
+    public List<EmpleadoVO> getEmpleadosByCencosUsuario(String _empresaId,
+            String _username, 
+            String _adminEmpresa){
+       return empleadosDao.getEmpleadosByCencosUsuario(_empresaId, _username, _adminEmpresa);
+    }
+    
+    /**
+    * 
+    * @param _empresaId
     * @param _deptoId
     * @param _cencoId
     * @param _cargo

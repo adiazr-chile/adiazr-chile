@@ -14,6 +14,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -180,31 +181,54 @@ public class CalculoVacacionesBp  extends BaseBp{
         
         LinkedHashMap<String, VacacionesSaldoPeriodoVO> periodos = periodosDao.getPeriodos(_empresaId, 
             _runEmpleado, -1);
-        int itemPosition = 1;
+        //int itemPosition = 1;
+        LocalDate currentDate = LocalDate.now();
+        int currentYear = currentDate.getYear();
+        
+        /**
+        *   LOS PERIODOS VIGENTES SON: 
+        *   El período correspondiente al año en curso y los dos períodos inmediatamente anteriores.
+        * 
+        */
+        
         
         for (Map.Entry<String, VacacionesSaldoPeriodoVO> entry : periodos.entrySet()) {
             String key = entry.getKey();
             VacacionesSaldoPeriodoVO periodo = entry.getValue();
             System.err.println(WEB_NAME+"[CalculoVacacionesBp."
                 + "setEstadoSaldosVacacionesPeriodos]"
-                + "itera periodo. "
-                + "posicion= " + itemPosition
-                + ", fecha inicio= " + periodo.getFechaInicioPeriodo() 
-                + ", fecha fin" + periodo.getFechaFinPeriodo());
-            if (itemPosition > 2) {
-                periodo.setEstadoId(Constantes.ESTADO_NO_VIGENTE);
-                System.err.println(WEB_NAME+"[CalculoVacacionesBp."
-                    + "setEstadoSaldosVacacionesPeriodos]"
-                    + "Set periodo No Vigente");
-                noVigentes.add(periodo);
-            }else{
+                + "itera periodo para determinar si esta vigente/no vigente. "
+                + "currentYear: " + currentYear
+                + ", fecha inicio periodo: " + periodo.getFechaInicioPeriodo() 
+                + ", fecha fin periodo: " + periodo.getFechaFinPeriodo());
+            if (periodo.esVigente(currentYear)) {
                 periodo.setEstadoId(Constantes.ESTADO_VIGENTE);
                 System.err.println(WEB_NAME+"[CalculoVacacionesBp."
                     + "setEstadoSaldosVacacionesPeriodos]"
-                    + "Set periodo Vigente");
+                    + "Set periodo VIGENTE");
                 vigentes.add(periodo);
+            } else {
+                periodo.setEstadoId(Constantes.ESTADO_NO_VIGENTE);
+                System.err.println(WEB_NAME+"[CalculoVacacionesBp."
+                    + "setEstadoSaldosVacacionesPeriodos]"
+                    + "Set periodo NO VIGENTE");
+                noVigentes.add(periodo);
             }
-            itemPosition++;
+                        
+////            if (itemPosition > 2) {
+////                periodo.setEstadoId(Constantes.ESTADO_NO_VIGENTE);
+////                System.err.println(WEB_NAME+"[CalculoVacacionesBp."
+////                    + "setEstadoSaldosVacacionesPeriodos]"
+////                    + "Set periodo No Vigente");
+////                noVigentes.add(periodo);
+////            }else{
+////                periodo.setEstadoId(Constantes.ESTADO_VIGENTE);
+////                System.err.println(WEB_NAME+"[CalculoVacacionesBp."
+////                    + "setEstadoSaldosVacacionesPeriodos]"
+////                    + "Set periodo Vigente");
+////                vigentes.add(periodo);
+////            }
+////            itemPosition++;
         }
         
         if (!vigentes.isEmpty()){

@@ -553,9 +553,13 @@
         $.datepicker.setDefaults($.datepicker.regional['es']);
     
         $(function() {
-        <%if (theUser.getIdPerfil() == Constantes.ID_PERFIL_ADMIN || theUser.getIdPerfil() == Constantes.ID_PERFIL_DIRECTOR){%>
-                $('#startDate').datepick({dateFormat: 'yyyy-mm-dd',minDate: -180});
-                $('#endDate').datepick({dateFormat: 'yyyy-mm-dd',minDate: -180});
+        <%if (theUser.getIdPerfil() == Constantes.ID_PERFIL_ADMIN 
+            || theUser.getIdPerfil() == Constantes.ID_PERFIL_DIRECTOR
+            || theUser.getIdPerfil() == Constantes.ID_PERFIL_DIRECTOR_TR){%>
+                //$('#startDate').datepick({dateFormat: 'yyyy-mm-dd',minDate: -180});
+                //$('#endDate').datepick({dateFormat: 'yyyy-mm-dd',minDate: -180});
+                $('#startDate').datepick({dateFormat: 'yyyy-mm-dd'});
+                $('#endDate').datepick({dateFormat: 'yyyy-mm-dd'});
             <%}else{%>
                 $('#startDate').datepick({dateFormat: 'yyyy-mm-dd',minDate: -90});
                 $('#endDate').datepick({dateFormat: 'yyyy-mm-dd',minDate: -90});

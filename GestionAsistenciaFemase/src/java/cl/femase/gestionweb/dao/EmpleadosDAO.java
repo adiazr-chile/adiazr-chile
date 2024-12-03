@@ -14,6 +14,7 @@ import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.EmpleadoVO;
 import cl.femase.gestionweb.vo.EmpresaVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
+import cl.femase.gestionweb.vo.UsuarioCentroCostoVO;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -268,7 +269,8 @@ public class EmpleadosDAO extends BaseDAO{
                 
                 //oct 2022
                 psupdate.setString(25,  _data.getContinuidadLaboral());
-                 if (_data.getContinuidadLaboral().compareTo("S") == 0){
+                 if (_data.getContinuidadLaboral().compareTo("S") == 0 
+                         && _data.getNuevaFechaIniContrato() != null ){
                     psupdate.setDate(26,  new java.sql.Date(_data.getNuevaFechaIniContrato().getTime()));
                 }else{
                     psupdate.setDate(26,  null);
@@ -553,6 +555,101 @@ public class EmpleadosDAO extends BaseDAO{
     }
    
     /**
+    *   Obtiene todos los empleados vigentes y que pertenecen a alguno
+    *   de los centros de costo definidos para el usuario
+    * 
+    * @param _empresaId
+    * @param _username
+    * @param _adminEmpresa
+    * @return 
+    */        
+    public List<EmpleadoVO> getEmpleadosByCencosUsuario(String _empresaId, 
+            String _username, 
+            String _adminEmpresa){
+        List<EmpleadoVO> lista = new ArrayList<>();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        EmpleadoVO data;
+        
+        try{
+            
+            String sql = "select"
+                    + " e.empresa_id, "
+                    + "e.empl_rut rut,"
+                    + "e.empl_nombres nombres, "
+                    + "e.empl_ape_paterno paterno, "
+                    + "e.empl_ape_materno materno,"
+                    + "e.depto_id, "
+                    + "d.depto_nombre,"
+                    + "cc.ccosto_id cenco_id, "
+                    + "cc.ccosto_nombre cenco_nombre "
+                + "from empleado e "
+                    + "inner join departamento d on (e.empresa_id = d.empresa_id and e.depto_id=d.depto_id) "
+                    + "inner join centro_costo cc on (e.cenco_id = cc.ccosto_id and e.depto_id=cc.depto_id) "
+                + "where e.cenco_id "
+                    + "in ( "
+                        + "select ccosto_id "
+                        + "from usuario_centrocosto uc "
+                        + "where uc.username = '" + _username + "' "
+                    + ") "
+                    + "and e.empl_estado = 1 "
+                + "order by e.empl_nombres";
+            if (_adminEmpresa.compareTo("S") == 0){
+                sql = "select "
+                    + "e.empresa_id, e.empl_rut rut,"
+                        + "e.empl_nombres nombres, "
+                        + "e.empl_ape_paterno paterno,"
+                        + "e.empl_ape_materno materno,"
+                        + "e.depto_id, d.depto_nombre,"
+                        + "cc.ccosto_id cenco_id, "
+                        + "cc.ccosto_nombre cenco_nombre "
+                        + "from empleado e "
+                        + "inner join departamento d on (e.empresa_id = d.empresa_id and e.depto_id = d.depto_id) "
+                        + "inner join centro_costo cc on (e.cenco_id = cc.ccosto_id and e.depto_id = cc.depto_id) "
+                        + "and e.empl_estado = 1 and e.empresa_id = '" + _empresaId + "' "
+                        + "order by e.empl_nombres";
+            }
+            
+            System.out.println(WEB_NAME 
+                + "EmpleadosDAO.getEmpleadosByCencosUsuario(). SQL: " + sql);        
+            dbConn = dbLocator.getConnection(m_dbpoolName,"[EmpleadoDAO.getEmpleadosByCencosUsuario]");
+            ps = dbConn.prepareStatement(sql);
+            rs = ps.executeQuery();
+
+            while (rs.next()){
+                data = new EmpleadoVO();
+                data.setEmpresaId(rs.getString("empresa_id"));
+                data.setRut(rs.getString("rut"));
+                data.setNombres(rs.getString("nombres"));
+                data.setApeMaterno(rs.getString("materno"));
+                data.setApePaterno(rs.getString("paterno"));
+                data.setDeptoId(rs.getString("depto_id"));
+                data.setDeptoNombre(rs.getString("depto_nombre"));
+                data.setCencoId(rs.getInt("cenco_id"));
+                data.setCencoNombre(rs.getString("cenco_nombre"));
+                
+                lista.add(data);
+            }
+
+            ps.close();
+            rs.close();
+            dbLocator.freeConnection(dbConn);
+        }catch(SQLException|DatabaseException sqle){
+            m_logger.error("Error: "+sqle.toString());
+        }finally{
+            try {
+                if (ps != null) ps.close();
+                if (rs != null) rs.close();
+                dbLocator.freeConnection(dbConn);
+            } catch (SQLException ex) {
+                System.err.println("Error: "+ex.toString());
+            }
+        }
+        
+        return lista;
+    }        
+    
+    /**
     * Retorna lista con los empleados  existentes
     * 
     * @param _empresaId
@@ -747,6 +844,7 @@ public class EmpleadosDAO extends BaseDAO{
                 if (data.getNuevaFechaIniContrato() != null){
                     data.setNuevaFechaIniContratoAsStr(sdf.format(data.getNuevaFechaIniContrato()));
                 }else data.setNuevaFechaIniContratoAsStr("");
+                
                 
                 lista.add(data);
             }
