@@ -267,7 +267,7 @@ order by detalle_ausencia.fecha_inicio asc]]>
 				<textElement textAlignment="Center">
 					<font size="15"/>
 				</textElement>
-				<text><![CDATA[Historial de Vacaciones]]></text>
+				<text><![CDATA[Informe de Vacaciones]]></text>
 			</staticText>
 			<textField pattern="d/M/yyyy">
 				<reportElement x="671" y="25" width="100" height="15" uuid="1236af98-a7ef-49c4-a172-2b1a171efc4c"/>

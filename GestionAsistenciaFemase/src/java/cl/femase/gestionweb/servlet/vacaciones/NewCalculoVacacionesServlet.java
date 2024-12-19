@@ -78,7 +78,7 @@ public class NewCalculoVacacionesServlet extends BaseServlet {
             if (rutEmpleado != null && rutEmpleado.compareTo("-1") != 0){
                 System.out.println(WEB_NAME+"[NewCalculoVacacionesServlet]"
                     + "Calcular saldo dias de vacaciones "
-                    + "para un solo empleado.");
+                    + "para un solo empleado. Invocar bp.setVBANew()");
                 
                 ResultCRUDVO fnExec = calculoVacacionesBp.setVBANew(paramEmpresa, paramDeptoId, intCencoId, rutEmpleado, resultVO);
                 //ResultCRUDVO fnExec = calculoVacacionesBp.setVBA_Empleado(paramEmpresa, rutEmpleado, resultVO);

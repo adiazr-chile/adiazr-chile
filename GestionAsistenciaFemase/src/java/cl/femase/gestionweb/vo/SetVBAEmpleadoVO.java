@@ -20,7 +20,17 @@ public class SetVBAEmpleadoVO implements Serializable{
     private String fecha_inicio_contrato;
     private String fecha_inicio_periodo;
     private String fecha_fin_periodo;
+    
+    private String es_periodo_en_curso;
 
+    public String isPeriodoEnCurso() {
+        return es_periodo_en_curso;
+    }
+
+    public void setEsPeriodoEnCurso(String es_periodo_en_curso) {
+        this.es_periodo_en_curso = es_periodo_en_curso;
+    }
+    
     public String getEmpresa_id() {
         return empresa_id;
     }

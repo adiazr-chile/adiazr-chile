@@ -260,7 +260,7 @@ public class CalculoVacacionesDAO extends BaseDAO{
             "select " + Constantes.fnSET_VBA_EMPLEADOS + "('" + _jsonB + "'"
             + "::JSONB) strjson";
 
-        System.out.println("[CalculoVacacionesDAO.setVBANew]Sql: " + sqlFunctionInvoke);
+        System.out.println("[CalculoVacacionesDAO.setVBANew]-->Sql: " + sqlFunctionInvoke);
         
         try{
             dbConn = dbLocator.getConnection(m_dbpoolName, "[CalculoVacacionesDAO.setVBANew]");

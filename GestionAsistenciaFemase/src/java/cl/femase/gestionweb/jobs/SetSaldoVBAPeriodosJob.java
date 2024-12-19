@@ -10,6 +10,7 @@ import cl.femase.gestionweb.business.CentroCostoBp;
 import cl.femase.gestionweb.business.DepartamentoBp;
 import cl.femase.gestionweb.business.EmpleadosBp;
 import cl.femase.gestionweb.common.CalculadoraPeriodo;
+import cl.femase.gestionweb.common.Utilidades;
 import cl.femase.gestionweb.dao.CalculoVacacionesDAO;
 import cl.femase.gestionweb.dao.ProcesosDAO;
 import cl.femase.gestionweb.dao.VacacionesSaldoPeriodoDAO;
@@ -152,7 +153,7 @@ public class SetSaldoVBAPeriodosJob extends BaseJobs implements Job {
                             //.
                             System.out.println(WEB_NAME + "[SetSaldoVBAPeriodosJob.execute]"
                                 + "Eliminar todos los periodos existentes antes de insertar los datos nuevos");
-                            boolean isOk = saldoPeriodoDao.deletePeriodos(empresaId, empleado.getRut());
+                            boolean isOk = saldoPeriodoDao.deletePeriodos(empresaId, empleado.getRut(), 1);
                             
                             // Mostrar los períodos
                             List<SetVBAEmpleadoVO> empleadosSetVBA = new ArrayList<>();
@@ -160,19 +161,23 @@ public class SetSaldoVBAPeriodosJob extends BaseJobs implements Job {
                                 VacacionesSaldoPeriodoVO periodo = periodos.get(k);
                                 String strFecInicioPeriodo = periodo.getFechaInicio().format(formatter);
                                 String strFecFinPeriodo = periodo.getFechaFin().format(formatter);
-                                
+                                boolean esPeriodoEnCurso = 
+                                    Utilidades.esPeriodoEnCurso(periodo.getFechaInicio(), 
+                                    periodo.getFechaFin(), 
+                                    currentLocalDate);
                                 System.out.println(WEB_NAME + "[SetSaldoVBAPeriodosJob.execute]"
                                     + "Periodo " + (k + 1) + ". Desde el " + strFecInicioPeriodo + " al " + strFecFinPeriodo);
                                 
 //                                System.out.println(WEB_NAME + "[SetSaldoVBAPeriodosJob.execute]"
 //                                    + "Bloque comentado");
                                 SetVBAEmpleadoVO empleadoInput = new SetVBAEmpleadoVO();
-
+                                String strPeriodoEnCurso = esPeriodoEnCurso ? "S" : "N";    
                                 empleadoInput.setEmpresa_id(empleado.getEmpresaid());
                                 empleadoInput.setRun_empleado(empleado.getRut());
                                 empleadoInput.setFecha_inicio_contrato(empleado.getFechaInicioContratoAsStr());
                                 empleadoInput.setFecha_inicio_periodo(strFecInicioPeriodo);
                                 empleadoInput.setFecha_fin_periodo(strFecFinPeriodo);
+                                empleadoInput.setEsPeriodoEnCurso(strPeriodoEnCurso);
                                 empleadosSetVBA.add(empleadoInput);
 
                                 System.out.println(WEB_NAME + "[SetSaldoVBAPeriodosJob.execute]"

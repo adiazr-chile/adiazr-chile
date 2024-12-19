@@ -14,6 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import org.apache.log4j.Logger;
 
@@ -133,15 +134,91 @@ public class VacacionesSaldoPeriodoDAO extends BaseDAO{
         }
         return hashmap;
     }
+    
+    /**
+    * Retorna lista con saldo de vacaciones vigentes por periodo para un empresa|empleado
+    * ordenados por periodo (del mas antiguo al mas reciente)
+    * 
+    * @param _empresaId
+    * @param _runEmpleado
+    * @param _rowNum
+    * 
+    * @return 
+    */
+    public VacacionesSaldoPeriodoVO getPeriodoByRownum(String _empresaId, 
+            String _runEmpleado, int _rowNum){
+        
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        VacacionesSaldoPeriodoVO periodo = null;
+        
+        try{
+            String sql = "SELECT * " +
+                "FROM ("
+                    + "select ROW_NUMBER() OVER (ORDER BY inicio_periodo) AS numero_fila,"
+                    + "vsp.empresa_id,vsp.run_empleado,"
+                    + "vsp.inicio_periodo,vsp.fin_periodo,"
+                    + "vsp.saldo_vba,vsp.estado_id,vsp.update_datetime,"
+                    + "vsp.dias_acumulados_vba,vsp.suma_dias_efectivos "
+                    + "from vacaciones_saldo_periodo vsp "
+                    + "where vsp.empresa_id ='" + _empresaId + "' "
+                    + "and vsp.run_empleado ='" + _runEmpleado + "' "
+                    + "order by vsp.inicio_periodo"
+                    + ") AS subquery " +
+                "WHERE numero_fila = " + _rowNum;
+           
+            System.out.println(WEB_NAME+"[VacacionesSaldoPeriodoDAO."
+                + "getPeriodoByRownum]sql: " + sql);
+            
+            dbConn = dbLocator.getConnection(m_dbpoolName,"[VacacionesSaldoPeriodoDAO.getPeriodoByRownum]");
+            ps = dbConn.prepareStatement(sql);
+            rs = ps.executeQuery();
+
+            while (rs.next()){
+                periodo = new VacacionesSaldoPeriodoVO(-1,null,null);
+                periodo.setEmpresaId(rs.getString("empresa_id"));
+                periodo.setRunEmpleado(rs.getString("run_empleado"));
+                periodo.setFechaInicioPeriodo(rs.getString("inicio_periodo"));
+                periodo.setFechaFinPeriodo(rs.getString("fin_periodo"));
+                periodo.setSaldoVBA(rs.getDouble("saldo_vba"));
+                periodo.setEstadoId(rs.getInt("estado_id"));
+                periodo.setUpdateDatetime(rs.getString("update_datetime"));
+                LocalDate inicioAsLocalDate = LocalDate.parse(periodo.getFechaInicioPeriodo());
+                LocalDate finAsLocalDate = LocalDate.parse(periodo.getFechaFinPeriodo());
+                
+                periodo.setFechaInicio(inicioAsLocalDate);
+                periodo.setFechaFin(finAsLocalDate);
+                
+           }
+
+            ps.close();
+            rs.close();
+            dbLocator.freeConnection(dbConn);
+        }catch(SQLException|DatabaseException sqle){
+            System.err.println(WEB_NAME+"[VacacionesSaldoPeriodoDAO."
+                + "getPeriodoByRownum]Error_1 Sql: " + sqle.toString());
+        }finally{
+            try {
+                if (ps != null) ps.close();
+                if (rs != null) rs.close();
+                dbLocator.freeConnection(dbConn);
+            } catch (SQLException ex) {
+                System.err.println(WEB_NAME+"[VacacionesSaldoPeriodoDAO."
+                    + "getPeriodoByRownum]Error_2: " + ex.toString());
+            }
+        }
+        return periodo;
+    }
 
     /**
     * Elimina los periodos existentes
     * 
     * @param _empresaId
     * @param _runEmpleado
+     * @param _estado
     * @return 
     */
-    public boolean deletePeriodos(String _empresaId, String _runEmpleado){
+    public boolean deletePeriodos(String _empresaId, String _runEmpleado, int _estado){
         boolean isOk    = true;
         int result      = 0;
         PreparedStatement insert    = null;
@@ -151,13 +228,15 @@ public class VacacionesSaldoPeriodoDAO extends BaseDAO{
                 + "from vacaciones_saldo_periodo "
                 + "where empresa_id =? "
                     + "and run_empleado = ? "
-                    + "and dias_acumulados_vba is null";
+                    + "and estado_id = ?";
+                    //+ "and dias_acumulados_vba is null";
 
             dbConn = dbLocator.getConnection(m_dbpoolName,
                 "[VacacionesSaldoPeriodoDAO.deletePeriodos]");
             insert = dbConn.prepareStatement(sql);
             insert.setString(1,  _empresaId);
             insert.setString(2,  _runEmpleado);
+            insert.setInt(3,  _estado);
             
             int filasAfectadas = insert.executeUpdate();
             if (filasAfectadas > 0){

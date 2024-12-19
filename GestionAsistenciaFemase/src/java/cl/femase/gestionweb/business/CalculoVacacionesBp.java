@@ -2,6 +2,7 @@ package cl.femase.gestionweb.business;
 
 import cl.femase.gestionweb.common.CalculadoraPeriodo;
 import cl.femase.gestionweb.common.Constantes;
+import cl.femase.gestionweb.common.Utilidades;
 import cl.femase.gestionweb.dao.EmpleadosDAO;
 import cl.femase.gestionweb.vo.EmpleadoVO;
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
@@ -18,6 +19,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -292,6 +294,7 @@ public class CalculoVacacionesBp  extends BaseBp{
         
         Calendar currentCalendar = Calendar.getInstance(new Locale("es","CL"));
         String strCurrentDate = dbformat.format(currentCalendar.getTime());
+        LocalDate currentLocalDate = LocalDate.now();
         
         EmpleadoVO filtro = new EmpleadoVO();
         filtro.setEmpleadoVigente(true);
@@ -312,21 +315,38 @@ public class CalculoVacacionesBp  extends BaseBp{
         for (EmpleadoVO empleado : empleadosList) {
             
             String fecIniContrato = dbformat.format(empleado.getFechaInicioContrato());
-            VacacionesSaldoPeriodoVO periodo = CalculadoraPeriodo.getPeriodoVacaciones(strCurrentDate, fecIniContrato);
-            String strFecInicioPeriodo = periodo.getFechaInicio().format(formatter);
-            String strFecFinPeriodo = periodo.getFechaFin().format(formatter);
-            SetVBAEmpleadoVO empleadoInput = new SetVBAEmpleadoVO();
-            
-            empleadoInput.setEmpresa_id(empleado.getEmpresa().getId());
-            empleadoInput.setRun_empleado(empleado.getRut());
-            empleadoInput.setFecha_inicio_contrato(fecIniContrato);
-            empleadoInput.setFecha_inicio_periodo(strFecInicioPeriodo);
-            empleadoInput.setFecha_fin_periodo(strFecFinPeriodo);
-            empleadosSetVBA.add(empleadoInput);
-            
-            System.out.println("[CalculoVacacionesBp.setVBANew]"
-                + "Seteando objeto final: " + empleadosSetVBA.toString());
-        }
+            VacacionesSaldoPeriodoVO periodoEnCurso = CalculadoraPeriodo.getPeriodoVacaciones(strCurrentDate, fecIniContrato);
+            /**
+                Obtener el periodo correspondiente al correlativo indicado (rownum).
+            */
+            VacacionesSaldoPeriodoVO periodoEnBd = 
+                periodosDao.getPeriodoByRownum(_empresaId, 
+                    _runEmpleado, 
+                    periodoEnCurso.getNumeroPeriodo() );
+            if (periodoEnBd != null){
+                String strFecInicioPeriodo = periodoEnBd.getFechaInicio().format(formatter);
+                String strFecFinPeriodo = periodoEnBd.getFechaFin().format(formatter);
+                boolean esPeriodoEnCurso = 
+                    Utilidades.esPeriodoEnCurso(periodoEnBd.getFechaInicio(), 
+                    periodoEnBd.getFechaFin(), 
+                    currentLocalDate);
+                SetVBAEmpleadoVO empleadoInput = new SetVBAEmpleadoVO();
+                String strPeriodoEnCurso = esPeriodoEnCurso ? "S" : "N";
+                empleadoInput.setEmpresa_id(empleado.getEmpresa().getId());
+                empleadoInput.setRun_empleado(empleado.getRut());
+                empleadoInput.setFecha_inicio_contrato(fecIniContrato);
+                empleadoInput.setFecha_inicio_periodo(strFecInicioPeriodo);
+                empleadoInput.setFecha_fin_periodo(strFecFinPeriodo);
+                empleadoInput.setEsPeriodoEnCurso(strPeriodoEnCurso);
+                empleadosSetVBA.add(empleadoInput);
+
+                System.out.println("[CalculoVacacionesBp.setVBANew]"
+                    + "Seteando objeto final para invocar a set_vba_empleados: " + empleadosSetVBA.toString());
+            }else{
+                System.out.println("[CalculoVacacionesBp.setVBANew]"
+                    + "No hay info del periodo en curso en la BD");
+            }
+        }//fin iteracion de empleados
         
         ResultCRUDVO modifiedInfo=new ResultCRUDVO();
         if (!empleadosSetVBA.isEmpty()){
@@ -342,7 +362,8 @@ public class CalculoVacacionesBp  extends BaseBp{
             **/
             modifiedInfo = calculoDao.setVBANew(jsonEmpleadosToSet);
         }else{
-            System.out.println(WEB_NAME+"[CalculoVacacionesBp.setVBANew]No se encontraron empleados...");
+            System.out.println(WEB_NAME+"[CalculoVacacionesBp.setVBANew]"
+                + "No se encontro periodo(s) para el(los) empleado(s)...");
         }
         
         String msgFinal = modifiedInfo.getMsg();

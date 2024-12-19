@@ -256,7 +256,7 @@
                             empleados.forEach(empleado => {
                                 const option = document.createElement('option');
                                 option.value = empleado.empresaId + '|' + empleado.cencoId + '|' + empleado.run;
-                                option.textContent = '[' + empleado.deptoNombre + '][' + empleado.cencoNombre + '] ' + empleado.nombreCompleto; // Nombre a mostrar en la lista
+                                option.textContent = empleado.nombreCompleto + ' [' + empleado.deptoNombre + '][' + empleado.cencoNombre + ']'; 
                                 selectElement.appendChild(option);
                             });
                             

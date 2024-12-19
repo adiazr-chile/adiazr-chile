@@ -77,6 +77,18 @@ public class Utilidades {
 //    static int intMonth = today.get(Calendar.MONTH)+1;
 //    static int intDay = today.get(Calendar.DATE);
     
+    /**
+    * 
+    * @param fechaInicio
+    * @param fechaFin
+    * @param fechaActual
+    * @return 
+    */
+    public static boolean esPeriodoEnCurso(LocalDate fechaInicio, LocalDate fechaFin, LocalDate fechaActual) {
+        return (fechaActual.isEqual(fechaInicio) || fechaActual.isAfter(fechaInicio)) &&
+               (fechaActual.isEqual(fechaFin) || fechaActual.isBefore(fechaFin));
+    }
+    
     public static JSONObject generateErrorMessage(String message, Exception e)
     {
         JSONObject error_message = new JSONObject();

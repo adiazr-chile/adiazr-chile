@@ -16,12 +16,14 @@ import java.util.List;
 * @author aledi
 */
 public class CalculadoraPeriodo {
+    public static String WEB_NAME = "[GestionFemaseWeb]";
+    
     static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             
     public static void main(String[] args) {
         // Verificar que se proporcionen dos argumentos de fecha
         if (args.length < 2) {
-            System.out.println("Debe proporcionar dos fechas en el formato YYYY-MM-DD.");
+            System.out.println(WEB_NAME + "[CalculadoraPeriodo.main]Debe proporcionar dos fechas en el formato YYYY-MM-DD.");
             return;
         }
 
@@ -52,7 +54,7 @@ public class CalculadoraPeriodo {
     */
     public static VacacionesSaldoPeriodoVO getPeriodoVacaciones(String _fechaActualStr, 
             String _fechaInicioStr){
-    
+        
         // Convertir las cadenas de fecha a objetos LocalDate
         LocalDate fechaInicioContrato = LocalDate.parse(_fechaInicioStr);
         LocalDate fechaActual = LocalDate.parse(_fechaActualStr);
@@ -61,11 +63,11 @@ public class CalculadoraPeriodo {
         VacacionesSaldoPeriodoVO periodo = determinarPeriodo(fechaInicioContrato, fechaActual);
 
         // Imprimir los resultados
-        System.out.println("Fecha actual: " + fechaActual);
-        System.out.println("Fecha Inicio Contrato: " + fechaInicioContrato);
-        System.out.println("El periodo correspondiente es: " + periodo.getNumeroPeriodo());
-        System.out.println("Inicio del periodo: " + periodo.getFechaInicio());
-        System.out.println("Fin del periodo: " + periodo.getFechaFin());
+        System.out.println(WEB_NAME + "[CalculadoraPeriodo.getPeriodoVacaciones]Fecha actual: " + fechaActual);
+        System.out.println(WEB_NAME + "[CalculadoraPeriodo.getPeriodoVacaciones]Fecha Inicio Contrato: " + fechaInicioContrato);
+        System.out.println(WEB_NAME + "[CalculadoraPeriodo.getPeriodoVacaciones]El periodo correspondiente es: " + periodo.getNumeroPeriodo());
+        System.out.println(WEB_NAME + "[CalculadoraPeriodo.getPeriodoVacaciones]Inicio del periodo: " + periodo.getFechaInicio());
+        System.out.println(WEB_NAME + "[CalculadoraPeriodo.getPeriodoVacaciones]Fin del periodo: " + periodo.getFechaFin());
         
         return periodo;
     } 
@@ -79,29 +81,25 @@ public class CalculadoraPeriodo {
     public static List<VacacionesSaldoPeriodoVO> getPeriodosTranscurridos(LocalDate _fechaInicioContrato, 
             LocalDate _fechaFinalDeseada) {
         List<VacacionesSaldoPeriodoVO> periodos = new ArrayList<>();
-        //DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
         LocalDate fechaInicioPeriodo = _fechaInicioContrato;
-        ////LocalDate fechaFinPeriodo = _fechaInicioContrato.plusYears(1).minusDays(1); // Primer periodo es de 1 año completo
         LocalDate fechaFinPeriodo = LocalDate.of(_fechaInicioContrato.getYear() + 1
             , _fechaInicioContrato.getMonth()
             , _fechaInicioContrato.getDayOfMonth());
         
         int numeroPeriodo = 1;
         while (fechaInicioPeriodo.isBefore(_fechaFinalDeseada)) {
-            // Ajustar la fecha de fin del periodo si es la última iteración
-////            if (fechaFinPeriodo.isAfter(_fechaFinalDeseada) || fechaFinPeriodo.isEqual(_fechaFinalDeseada)) {
-////                fechaFinPeriodo = _fechaFinalDeseada;
-////            }
             VacacionesSaldoPeriodoVO periodo = 
                 new VacacionesSaldoPeriodoVO(numeroPeriodo, fechaInicioPeriodo, fechaFinPeriodo);
+            System.out.println(WEB_NAME + "[CalculadoraPeriodo.getPeriodos]Add Periodo: "
+                + "Num periodo= " + numeroPeriodo
+                + ", fechaInicioPeriodo= " + fechaInicioPeriodo
+                + ", fechaFinPeriodo= " + fechaFinPeriodo);
             
             periodos.add(periodo); //fechaInicioPeriodo.format(formatter) + " al " + fechaFinPeriodo.format(formatter));
-
+            numeroPeriodo++;
             // Avanzar al siguiente periodo
             fechaInicioPeriodo = fechaFinPeriodo.plusDays(1);
             fechaFinPeriodo = LocalDate.of(fechaInicioPeriodo.getYear() + 1, fechaInicioPeriodo.getMonth(), fechaInicioPeriodo.getDayOfMonth());
-            ////fechaFinPeriodo = fechaInicioPeriodo.plusYears(1).minusDays(1);
         }
 
         return periodos;
