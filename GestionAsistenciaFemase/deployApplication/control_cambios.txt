@@ -3774,15 +3774,101 @@
 						#Texto que se debe incluir cuando una solicitud de vacaciones ha sido aprobada
 						txtAprobarSolicPA=No olvide firmar el reporte de permiso administrativo antes de hacer uso de éste.
 				
+				***************************************************************************
+				************** Versión 5.1.0 en QA (server3) el 14-10-2024 22hrs
+				***************************************************************************	
+			
+			5.0.16	19-10-2024
+				.- Corrige error al modificar empleado.
+			
+			***************************************************************************
+			************** Versión 5.0.16 en Produccion desde el 19-10-2024
+			***************************************************************************
+			
+			5.0.17	20-11-2024
+				.- En cálculo de asistencia: Se quita restricción de fechas
+				
+			***************************************************************************
+			************** Versión 5.0.17 en Produccion desde el 21-11-2024
+			***************************************************************************	
+				
+			5.0.17 ++ 23-11-2024	
+				.- Se modifica la funcion en BD "validafechaferiado"
+					ejecutar el respectivo .sql en producción.
 					
+				Provocaba error al calcular asistencia: No traía todas ls fechas. EN especial los feriados regionales.
+				Error específico: día 2024-06-07, feriado regional en Arica y Parinacota.
+				
+				YA EN PRODUCCION...
+				
+				***************************************************************************
+				************** Versión 5.0.17 en Produccion desde el 23-11-2024
+				***************************************************************************
 			
-			
-			5.1.0 28-05-2024	
-			
+			5.1.1 29-10-2024
+				(Versión con la implementación de vacaciones por períodos habilitada, instalar en server3)
+				
+				Modificación/corrección del sistema versión 5.1.0. Según observaciones entregadas por Felipe Galindo el 28-10-2024
+				.- 20241028-03: Job que setea períodos de vacaciones
+					MODIFICAR JOB QUE CALCULA E INSERTA LOS PERIODOS. LA FECHA FIN DEL PERIODO ES SIEMPRE EL MISMO DIA DEL AÑO SGTE.
+				.- 20241028-02: función "set_saldo_vacaciones_basicas_anuales_empleado_2_0"
+					Modificar la fórmula usada para calcular la variable “mesesAcumulados“.
+				.- 20241028-01: función "set_saldo_vacaciones_basicas_anuales_empleado_2_0"
+					Modificar la sentencia SQL donde se obtiene el número de meses entre la fecha_inicio_periodo y fecha_fin_periodo
+					Actualmente está devolviendo 11 meses, lo correcto es que devuelva 12 meses
+				.- 20241028-04: Nuevas columnas en la tabla 'vacaciones_saldo_periodo'
+					COLUMNAS NUEVAS: DIAS_ACUMULADOS_VBA y SUMA_DIAS_EFECTIVOS
+				.- 20241028-05: Seteo de períodos vigentes en la tabla 'vacaciones_saldo_periodo'
+					LOS PERIODOS VIGENTES SON: El período correspondiente al año en curso y los dos períodos inmediatamente anteriores.
+				.- 20241028-06: Confirmar en qué parte del Sistema se insertan registros en la tabla 'vacaciones_saldo_periodo'	
+					Al calcular vacaciones (desde la clase NewCalculoVacacionesServlet) y al ejecutar el proceso “SetSaldoVBAPeriodosJob“
+					Se invoca a la función ‘set_vba_empleados'    → 'set_saldo_vacaciones_basicas_anuales_empleado_2_0’
+				.- 20241028-07: Al setear inicio y fin de períodos.
+					Al calcular las fechas de inicio y fin del actual período para cada empleado.
+					Verificar que sea un año entre inicio y fin:
+					por ejemplo: 05-05-2024   y 05-05-2025
+					
+				.- 20241028-08: Nuevo Reporte de Vacaciones. Incluir sólo los períodos vigentes
+				
+				.- 20241028-09: Consulta de registros de la tabla 'vacaciones_saldo_periodo': Corregir filtro
+					Se deben buscar sólo los empleados vigentes del centro de costo asignado al usuario.
+					
+				.- 20241028-10: Cálculo de vacaciones. Corregir saldo mostrado en la columna 'Saldo VBA'
+					El saldo de VBA que se muestra en el módulo Cálculo Vacaciones debe corresponder a la suma de los saldos de los períodos de vacaciones vigentes.
+				
+				.- 20241218-01: Vista de vacaciones por periodos. Agregar nuevas columnas 'dias_acumulados_vba' y 'suma_dias_efectivos'
+				
+				
+				20241028-01: Modificar las funciones:
+					"set_vba_empleados"
+					"set_saldo_vacaciones_basicas_anuales_empleado_2_0"
+					Para Dummy y produccion
+					
+				Cambios en base de datos:
+					set_saldo_vacaciones_basicas_anuales_empleado_2_0_v5_1_1_DUMMY.sql
+					set_vba_empleados_5_1_1_DUMMY	
+					add_columnas_vacaciones_saldo_periodo_v5_1_1.sql
+					
+								
+				Cambios en reportes:
+					vacaciones_ult_periodos.jasper
+					informe_pa_current_date.jasper
+					pa_hasta_la_fecha.jasper
+					
+				
+				Importante: el cálculo de Vacaciones, sólo afecta el saldo del período en curso.
+				El proceso "SetSaldoVBAPeriodosJob" calcula o recalcula los saldos para todos los periodos existentes en base a la fecha de inicio de contrato.
+				
+			Restituir accesos:
+					Reporte Vacaciones	: /vacaciones/reporte_vacaciones.jsp
+					Reporte PA			: /permisos_administrativos/reporte_pa.jsp
 
-			
-				
-				
+
+			***************************************************************************
+			************** Versión 5.1.1 versión Dummy en el server_3 (21-12-2024)
+			***************************************************************************
+
+
 
 			Cambio en vistas de administracion/mantenedores:
 				Perfil		Módulo						Menú item									Url

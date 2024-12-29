@@ -72,7 +72,8 @@ public class VacacionesSaldoPeriodoDAO extends BaseDAO{
                     + "estado.estado_nombre,"
                     + "to_char(vsp.update_datetime, 'YYYY-MM-DD HH24:MI:SS') update_datetime, "
                     + "CONCAT(e.empl_nombres, ' ', e.empl_ape_paterno, ' ', e.empl_ape_materno) nombre, "
-                    + "d.depto_nombre, cc.ccosto_nombre cenco_nombre "
+                    + "d.depto_nombre, cc.ccosto_nombre cenco_nombre,"
+                    + "vsp.dias_acumulados_vba, vsp.suma_dias_efectivos "
                 + "from vacaciones_saldo_periodo vsp "
                     + "inner join estado on vsp.estado_id = estado.estado_id "
                     + "inner join empleado e on (vsp.empresa_id = e.empresa_id and vsp.run_empleado = e.empl_rut) "
@@ -114,6 +115,9 @@ public class VacacionesSaldoPeriodoDAO extends BaseDAO{
                 
                 periodo.setDeptoNombre(rs.getString("depto_nombre"));
                 periodo.setCencoNombre(rs.getString("cenco_nombre"));
+                //dias_acumulados_vba, vsp.suma_dias_efectivos
+                periodo.setDiasAcumuladosVba(rs.getDouble("dias_acumulados_vba"));
+                periodo.setSumaDiasEfectivos(rs.getDouble("suma_dias_efectivos"));
                 
                 hashmap.put(rowkey, periodo);
             }

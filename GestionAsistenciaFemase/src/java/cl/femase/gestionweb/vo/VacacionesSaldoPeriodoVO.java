@@ -31,6 +31,9 @@ public class VacacionesSaldoPeriodoVO implements Serializable{
     private String deptoNombre;
     private String cencoNombre;
     
+    private double diasAcumuladosVba;
+    private double sumaDiasEfectivos;
+    
     /**
     * 
     * @param numeroPeriodo
@@ -41,6 +44,22 @@ public class VacacionesSaldoPeriodoVO implements Serializable{
         this.numeroPeriodo = numeroPeriodo;
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
+    }
+
+    public double getDiasAcumuladosVba() {
+        return diasAcumuladosVba;
+    }
+
+    public void setDiasAcumuladosVba(double diasAcumuladosVba) {
+        this.diasAcumuladosVba = diasAcumuladosVba;
+    }
+
+    public double getSumaDiasEfectivos() {
+        return sumaDiasEfectivos;
+    }
+
+    public void setSumaDiasEfectivos(double sumaDiasEfectivos) {
+        this.sumaDiasEfectivos = sumaDiasEfectivos;
     }
 
     public void setFechaInicio(LocalDate fechaInicio) {

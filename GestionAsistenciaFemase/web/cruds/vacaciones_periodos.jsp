@@ -50,13 +50,15 @@
                 Inicio periodo      5
                 Fin periodo         6
                 Saldo VBA           7
+                Dias acumulados VBA 8
+                Suma dias efectivos 9
                 Estado Id (oculto)
-                Estado              8
-                Ult. actualizacion  9
+                Estado              10
+                Ult. actualizacion  11
         
     */
     //num columnas
-    String columnas = "0,1,2,3,4,5,6,7,8,9";
+    String columnas = "0,1,2,3,4,5,6,7,8,9,10,11";
 %>
 
 <!doctype html>
@@ -436,6 +438,8 @@
                 <th>Inicio periodo</th>
                 <th>Fin periodo</th>
                 <th>Saldo VBA</th>
+                <th>Dias acumulados VBA</th>
+                <th>Suma dias efectivos</th>
                 <th style="display: none;">Estado Id</th>
                 <th>Estado</th>
                 <th>Ult. actualizacion</th>
@@ -463,6 +467,8 @@
                 <td><%= periodo.getFechaInicioPeriodo()%></td>
                 <td><%= periodo.getFechaFinPeriodo()%></td>
                 <td><%= periodo.getSaldoVBA()%></td>
+                <td><%= periodo.getDiasAcumuladosVba()%></td>
+                <td><%= periodo.getSumaDiasEfectivos()%></td>
                 <td style="display: none;"><%= periodo.getEstadoId()%></td>
                 <td><%= Constantes.ESTADO_LABEL.get(periodo.getEstadoId())%></td>
                 <td><%= periodo.getUpdateDatetime()%></td>
