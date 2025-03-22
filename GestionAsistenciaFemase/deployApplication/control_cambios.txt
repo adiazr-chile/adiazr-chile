@@ -3805,6 +3805,62 @@
 				************** Versión 5.0.17 en Produccion desde el 23-11-2024
 				***************************************************************************
 			
+			5.0.18 10-02-2025
+				.- 20250106-01: Error de conteo en los días trabajados de Mayerlin Perdomo, se le muestran 22 días y al resto del personal 31, cual está correcto?. 
+					Yo creo que el correcto es 22 días, ya que 31 días tiene el mes, y no trabajan sábados y domingos.
+			
+				***************************************************************************
+				************** Versión 5.0.18 en Produccion desde el 10-02-2025
+				***************************************************************************
+			
+			5.0.19 13-02-2025	
+				.- 20250213-01: Asignción cíclica de turnos. Agregar duración de ciclos en Meses: 1, 3 y 6 meses.
+					Además, en la vista previa de la asignación cíclica se muestra la duración seleccionada.
+					
+				***************************************************************************
+				************** Versión 5.0.18 en Produccion desde el 14-02-2025
+				***************************************************************************
+			
+			5.0.20 23-02-2025
+				.- Corrige error en funcion que retorna marca de salida para empleado con turno rotativo nocturno.
+				Cuando exista más de una marca de salida, se debe retornar la marca más reciente.
+
+				Cambio en base de datos: funcion 'get_marca_by_tipo_and_fecha_hora_json'
+				
+				***************************************************************************
+				************** Versión 5.0.20. Funcion sql en Produccion desde el 23-02-2025
+				***************************************************************************	
+								
+			5.0.21 24-02-2025	
+				.- 20250224-01:  reporte asistencia indicar marca virtual.
+				Se modifica SQL utilizado al generar reporte de asistencia.
+				Para que cuando la marca tenga comentario de 'marca virtual' se muestre una letra 'V' en el reporte de asistencia.
+				
+				***************************************************************************
+				************** Versión 5.0.21. Funcion sql en Produccion desde el 28-02-2025
+				***************************************************************************
+				
+			5.0.22 06-03-2025	
+				.- 20250305-01: Seteo de saldo PA después de eliminar un registro PA
+				
+				***************************************************************************
+				************** Versión 5.0.22. Web en Produccion desde el 08-03-2025
+				***************************************************************************
+				
+			5.0.23 22-03-2025	
+				.- 20250313-01: Revisar cálculos de asistencia para empleados con turno rotativo nocturno
+				Se detecta que en el ReporteSemanal no se estaba calculando las hrs teóricas cuando era día feriado. Se comenta esto.
+				En la clase CalculoAsistenciaNew (dentro del método 'getHorasPresenciales'), ahora se invoca al método 'Utilidades'.'procesarMarcaciones': Este método se encarga de 
+				recibir una lista de trodas las marcas de un trabajador y retornar un par único de entrada y salida.
+			
+			
+			
+			
+			
+			
+			
+			
+			
 			5.1.1 29-10-2024
 				(Versión con la implementación de vacaciones por períodos habilitada, instalar en server3)
 				
@@ -3867,8 +3923,29 @@
 			***************************************************************************
 			************** Versión 5.1.1 versión Dummy en el server_3 (21-12-2024)
 			***************************************************************************
+			5.1.2 29-10-2024
+				.- En DEV: Se instalar Wildfly versión 34.0.1 Final
+				.- user admin.  alexander, clave=xander
+				
+				.- 20250106-01: Error en Job que calcula saldos de vacaciones por períodos
+					- al ejecutar el JOB, este setea las vacaciones por periodos, pero le va incrementando un dia a las fechas del rango. 
+						Respuesta: LOS PERIODOS NO SE PUEDEN SOLAPAR, POR ESO LOS DIAS SE VAN MOVIENDO EN UNO
+					- el estado de los periodos está incorrecto, dado que, deja vigente el actual y el anterior. 
+						Respuesta: POR DEFINICIÓN, LOS PERIODOS VIGENTES SON: EL PERIODO CORRESPONDIENTE AL AÑO EN CURSO Y LOS 2 PERÍODOS INMEDIATAMENTE ANTERIORES	
 
-
+					- Y el saldo para el periodo actual no lo calcula en base al CURRENT_DATE, sino que lo hace con el fecha fin periodo, 
+						y eso que el sexto parámetro está en “S”.
+						Respuesta: Se hizo correción de esto en el Sistema.
+						
+						
+					
+					
+						
+						
+						
+						
+						
+						
 
 			Cambio en vistas de administracion/mantenedores:
 				Perfil		Módulo						Menú item									Url

@@ -10,10 +10,12 @@ import cl.femase.gestionweb.common.Constantes;
 import cl.femase.gestionweb.common.DatabaseException;
 import cl.femase.gestionweb.common.Utilidades;
 import cl.femase.gestionweb.vo.DetalleAusenciaVO;
+import cl.femase.gestionweb.vo.FilasAfectadasJsonVO;
 import cl.femase.gestionweb.vo.InfoFeriadoVO;
 import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import cl.femase.gestionweb.vo.PermisoAdministrativoVO;
+import com.google.gson.Gson;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -85,7 +87,7 @@ public class PermisosAdministrativosDAO extends BaseDAO{
             diasUtilizadosSemestre = _data.getDiasUtilizadosSemestre2();
         }
         String msgError = "Error al actualizar "
-            + "resumen Permiso Administrativo, "
+            + "resumen Permiso Administrativo (nueva funcion), "
             + "EmpresaId: " + _data.getEmpresaId()
             + ", rutEmpleado: " + _data.getRunEmpleado()    
             + ", anio: " + _data.getAnio()
@@ -1117,6 +1119,91 @@ public class PermisosAdministrativosDAO extends BaseDAO{
             }
         }
         return count;
+    }
+    
+    /**
+    * 
+    * Para llamar a la función:
+    *   codempresa
+    *   rutempleado
+    *   anio_calc: Extraerlo de la fecha de inicio del PA
+    *   semestre: usar el mes de la misma fecha de inicio, que se encuentre entre el 1 al 6, y del 7 al 12 para 1er o 2do semestre respectivamente.
+    * 
+    * @param _empresaId 
+    * @param _runEmpleado 
+    * @param _anioCalculo 
+    * @param _semestre 
+    * @return 
+    */
+    public ResultCRUDVO setSaldoPermisoAdministrativo(String _empresaId, 
+            String _runEmpleado, 
+            int _anioCalculo, 
+            String _semestre){
+        ResultCRUDVO CRUDResult = new ResultCRUDVO();
+        String strJson = "";
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        int result = 0;
+        String msgError = "Error calling the function '" + Constantes.fnSET_SALDO_PERMISO_ADMINISTRATIVO + "'" 
+            + ". Empresa_id: " + _empresaId
+            + ", run empleado: " + _runEmpleado
+            + ", anio calculo: " + _anioCalculo
+            + ", semestre: " + _semestre;
+        String msgFinal = "Calling the function '" + Constantes.fnSET_SALDO_PERMISO_ADMINISTRATIVO + "'"
+            + ". Empresa_id [" + _empresaId + "]"
+            + ", run empleado [" + _runEmpleado + "]"
+            + ", anio calculo [" + _anioCalculo + "]"
+            + ", semestre [" + _semestre + "]";
+                        
+        CRUDResult.setMsg(msgFinal);
+        String sqlFunctionInvoke = "select " + Constantes.fnSET_SALDO_PERMISO_ADMINISTRATIVO + "('" + _empresaId + "',"
+            + "'" + _runEmpleado + "',"
+            + _anioCalculo + ","
+            + "'" + _semestre + "') "
+            + "strjson";
+
+        System.out.println("[PermisosAdministrativosDAO.setSaldoPermisoAdministrativo]Sql: " + sqlFunctionInvoke);
+        
+        try{
+            dbConn = dbLocator.getConnection(m_dbpoolName, "[PermisosAdministrativosDAO.setSaldoPermisoAdministrativo]");
+            ps = dbConn.prepareStatement(sqlFunctionInvoke);
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                strJson += rs.getString("strjson");
+            }
+            System.out.println("[PermisosAdministrativosDAO.setSaldoPermisoAdministrativo]"
+                + "salida funcion json: " + strJson);
+            
+            FilasAfectadasJsonVO filasAfectadadaObj = (FilasAfectadasJsonVO)new Gson().fromJson(strJson, FilasAfectadasJsonVO.class);
+            CRUDResult.setFilasAfectadasObj(filasAfectadadaObj);
+        }catch(SQLException sqle){
+            System.err.println("[PermisosAdministrativosDAO.setSaldoPermisoAdministrativo]"
+                + "Error_1: " + sqle.toString());
+            CRUDResult.setThereError(true);
+            CRUDResult.setCodError(result);
+            CRUDResult.setMsgError(msgError+" :"+sqle.toString());
+        }catch(DatabaseException dbex){
+            System.err.println("[PermisosAdministrativosDAO.setSaldoPermisoAdministrativo]"
+                + "Error_2: " + dbex.toString());
+            CRUDResult.setThereError(true);
+            CRUDResult.setCodError(result);
+            CRUDResult.setMsgError(msgError+" :"+dbex.toString());
+        }
+        finally{
+            try {
+                if (ps != null) {
+                    ps.close();
+                    rs.close();
+                }
+                dbLocator.freeConnection(dbConn);
+            } catch (SQLException ex) {
+                System.err.println("[PermisosAdministrativosDAO.setSaldoPermisoAdministrativo]"
+                + "Error_3:" + ex.toString());
+            }
+        }
+        
+        return CRUDResult;
     }
     
 //    public void openDbConnection(){

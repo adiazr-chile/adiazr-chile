@@ -332,6 +332,12 @@ public class CalculoVacacionesBp  extends BaseBp{
                     currentLocalDate);
                 SetVBAEmpleadoVO empleadoInput = new SetVBAEmpleadoVO();
                 String strPeriodoEnCurso = esPeriodoEnCurso ? "S" : "N";
+                
+                if (strPeriodoEnCurso.compareTo("S") == 0){
+                    LocalDate hoy = LocalDate.now(); // Obtener la fecha actual
+                    strFecFinPeriodo = hoy.toString();
+                }
+                
                 empleadoInput.setEmpresa_id(empleado.getEmpresa().getId());
                 empleadoInput.setRun_empleado(empleado.getRut());
                 empleadoInput.setFecha_inicio_contrato(fecIniContrato);

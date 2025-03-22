@@ -76,7 +76,14 @@ public class Constantes {
     */
     public static int ID_PERFIL_JEFE_TECNICO_NACIONAL = 12;
     
+    /**
+    *   id ausencia= 1
+    */
     public static int ID_AUSENCIA_VACACIONES        = 1;
+    
+    /**
+    *   id ausencia= 4
+    */
     public static int ID_AUSENCIA_PERMISO_ADMINISTRATIVO = 4;
     
     /**
@@ -200,6 +207,8 @@ public class Constantes {
     */
     public static String fnSET_VBA_EMPLEADO   = "set_saldo_vacaciones_basicas_anuales_empleado";
     
+    public static String fnSET_SALDO_PERMISO_ADMINISTRATIVO = "set_saldo_permiso_administrativo";
+    
     //new
     public static String fnSET_VBA_EMPLEADOS   = "set_vba_empleados";
     
@@ -241,10 +250,30 @@ public class Constantes {
         BOOLEAN_LABEL.put(false, "No");
     }
     
+    /**
+    * 
+    */
     public static Map<Integer, String> ESTADO_LABEL;
     static {
         ESTADO_LABEL = new HashMap<>();
         ESTADO_LABEL.put(1, "Vigente");
         ESTADO_LABEL.put(2, "No Vigente");
+    }
+    
+    /**
+    * 
+    */
+    public static Map<String, String> DURACION_TURNOS_ROTATIVOS;
+    static {
+        DURACION_TURNOS_ROTATIVOS = new HashMap<>();
+        DURACION_TURNOS_ROTATIVOS.put("1M", "1 mes");
+        DURACION_TURNOS_ROTATIVOS.put("3M", "3 meses");
+        DURACION_TURNOS_ROTATIVOS.put("6M", "6 meses");
+        DURACION_TURNOS_ROTATIVOS.put("1", "1 A&ntilde;o");
+        DURACION_TURNOS_ROTATIVOS.put("2", "2 A&ntilde;os");
+        DURACION_TURNOS_ROTATIVOS.put("3", "3 A&ntilde;os");
+        DURACION_TURNOS_ROTATIVOS.put("4", "4 A&ntilde;os");
+        DURACION_TURNOS_ROTATIVOS.put("5", "5 A&ntilde;os");
+        
     }
 }

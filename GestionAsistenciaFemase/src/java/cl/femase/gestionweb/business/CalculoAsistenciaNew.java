@@ -2271,6 +2271,8 @@ public class CalculoAsistenciaNew extends BaseBp{
                 _rutEmpleado,
                 _fecha,_fecha);
         
+        LinkedHashMap<String, MarcaVO> marcasOrdenadas = Utilidades.procesarMarcaciones(allMarcas);
+        
         // Obtain an Iterator for the entries Set
         //Iterator<MarcaVO> itMarcas = entrySet.iterator();
         MarcaVO marcaEntrada = null;
@@ -2279,7 +2281,7 @@ public class CalculoAsistenciaNew extends BaseBp{
         ArrayList<String> listaHorasPresenciales = new ArrayList<>();
         String hhmmPresencial = "";
         
-        Set entrySet    = allMarcas.entrySet();
+        Set entrySet    = marcasOrdenadas.entrySet();
         Iterator itMarcas     = entrySet.iterator();        
         while(itMarcas.hasNext()){
             Map.Entry item = (Map.Entry) itMarcas.next();

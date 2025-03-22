@@ -386,7 +386,7 @@ public class AsistenciaReport extends BaseServlet {
                 
                 if ((detalle.getHoraEntrada() != null && detalle.getHoraEntrada().compareTo("00:00:00") != 0 
                         && detalle.getHoraSalida() != null && detalle.getHoraSalida().compareTo("00:00:00") != 0)
-                        || (detalle.getObservacion()!=null && detalle.getObservacion().compareTo("Dia libre") == 0)
+                        || (detalle.getObservacion()!=null && detalle.getObservacion().compareTo("Libre") == 0)
                         || (strAuxHt != null) ){
                     countDiasTrabajados++;
                 }

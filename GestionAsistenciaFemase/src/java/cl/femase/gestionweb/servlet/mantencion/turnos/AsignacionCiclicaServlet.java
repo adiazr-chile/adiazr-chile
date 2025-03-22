@@ -195,7 +195,8 @@ public class AsignacionCiclicaServlet extends BaseServlet {
                     String paramNumCiclos   = request.getParameter("num_ciclos");
                     String paramDuracion    = request.getParameter("duracion");
                     int intDiasCiclo = Integer.parseInt(paramNumCiclos);
-                    int intDuracion = Integer.parseInt(paramDuracion);
+                    //int intDuracion = Integer.parseInt(paramDuracion);
+                    
                     Date fechaInicioAsDate  = null;
                     try {
                         fechaInicioAsDate   = m_dateformat.parse(paramFechaInicio);
@@ -270,7 +271,11 @@ public class AsignacionCiclicaServlet extends BaseServlet {
                     String fechaInicio = (String)session.getAttribute("fecha_inicio");
                     String strDuracion = (String)session.getAttribute("duracion");
                     int duracion = 0;
-                    if (strDuracion != null) duracion = Integer.parseInt(strDuracion);
+                    if (strDuracion.compareTo("1M") != 0 
+                        && strDuracion.compareTo("3M") != 0 
+                        && strDuracion.compareTo("6M") != 0){
+                            if (strDuracion != null) duracion = Integer.parseInt(strDuracion);
+                    }  
                     
                     String strNumCiclos = (String)session.getAttribute("num_ciclos");
                     int intDiasCiclo = 0;
@@ -310,6 +315,7 @@ public class AsignacionCiclicaServlet extends BaseServlet {
                             turnoRotativoBp, 
                             turnosDelCiclo,
                             start,
+                            strDuracion,
                             duracion,
                             intDiasCiclo);
                     
@@ -344,6 +350,7 @@ public class AsignacionCiclicaServlet extends BaseServlet {
                     
                     session.setAttribute("fecha_maxima", m_strMaxFecha);
                     session.setAttribute("asignacion_turnos|" + userConnected.getUsername(), asignacionTurnos);
+                    request.setAttribute("duracion", strDuracion);
                     
                     request.getRequestDispatcher("/mantencion/turnos/asignacion_ciclica_preview.jsp").forward(request, response);
             }else if (action.compareTo("guardar_asignacion_ciclo") == 0){
@@ -427,6 +434,7 @@ public class AsignacionCiclicaServlet extends BaseServlet {
     }
     
     /**
+     * 
      *  Iterar todos los d�as del ciclo, replicando los turnos.
      * 
      *       {
@@ -449,7 +457,8 @@ public class AsignacionCiclicaServlet extends BaseServlet {
             HttpServletRequest request,
             TurnoRotativoBp _turnoRotativoBp,
             ArrayList<AsignacionCiclicaTurnoVO> _asignacionCiclos, 
-            LocalDate _startDate, 
+            LocalDate _startDate,
+            String _paramDuracion,
             int _duracion, 
             int _numDiasCiclo){
         
@@ -457,6 +466,16 @@ public class AsignacionCiclicaServlet extends BaseServlet {
             new ArrayList<>();               
         //obtener ultimo dia de la iteracion, segun la duracion
         LocalDate ultimoDiaAsignacion = _startDate.plusYears(_duracion);
+        if (_paramDuracion.compareTo("1M") == 0 
+                || _paramDuracion.compareTo("3M") == 0 
+                || _paramDuracion.compareTo("6M") == 0){
+            long duracionMeses = -1L;
+            if (_paramDuracion.compareTo("1M") == 0) duracionMeses = 1;
+            else if (_paramDuracion.compareTo("3M") == 0) duracionMeses = 3;
+            else duracionMeses = 6;
+            
+            ultimoDiaAsignacion = _startDate.plusMonths(duracionMeses);
+        }
         
         java.util.Iterator<AsignacionCiclicaTurnoVO> itAsignacion = _asignacionCiclos.iterator();
         while(itAsignacion.hasNext()){

@@ -1,3 +1,4 @@
+<%@page import="cl.femase.gestionweb.common.Constantes"%>
 <%@ include file="/include/check_session.jsp" %>
 <%@page import="cl.femase.gestionweb.vo.UsuarioVO"%>
 <%@page import="cl.femase.gestionweb.vo.AsignacionCiclicaTurnoVO"%>
@@ -20,7 +21,8 @@
     UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
     List<AsignacionCiclicaTurnoVO> listaAsignacion 
         = (List<AsignacionCiclicaTurnoVO>)session.getAttribute("asignacion_turnos"+ "|" + userConnected.getUsername());
- 
+    String strDuracion = (String)request.getAttribute("duracion");
+    String labelDuracion = Constantes.DURACION_TURNOS_ROTATIVOS.get(strDuracion);
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -67,7 +69,7 @@
   <!--<p class="header h1">Vista previa de asignaci&oacute;n c&iacute;clica de turnos a empleados</p>-->
   <div class="panel-group">
    <div class="panel panel-primary">
-      <div class="panel-heading">Vista previa de asignaci&oacute;n c&iacute;clica de turnos a empleados</div>
+      <div class="panel-heading">Vista previa de asignaci&oacute;n c&iacute;clica de turnos a empleados (<%=labelDuracion%>)</div>
       <div class="panel-body">
         <%if (!listaAsignacion.isEmpty()){%>
          <table id="example" class="display" style="width:100%">

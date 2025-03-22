@@ -330,13 +330,16 @@
                 </span></td>
                 <td width="15%" align="right" valign="middle" class="h4">Duraci&oacute;n</td>
                 <td width="11%" valign="middle"><span class="col-md-4">
-                  <select id="duracion" name="duracion">
-                    <option value="1" selected>1 A&ntilde;o</option>
-                    <option value="2">2 A&ntilde;os</option>
-                    <option value="3">3 A&ntilde;os</option>
-                    <option value="4">4 A&ntilde;os</option>
-                    <option value="5">5 A&ntilde;os</option>
-                  </select>
+                    <select id="duracion" name="duracion">
+                        <option value="1M" selected>1 mes</option>
+                        <option value="3M">3 meses</option>
+                        <option value="6M">6 meses</option>
+                        <option value="1">1 A&ntilde;o</option>
+                        <option value="2">2 A&ntilde;os</option>
+                        <option value="3">3 A&ntilde;os</option>
+                        <option value="4">4 A&ntilde;os</option>
+                        <option value="5">5 A&ntilde;os</option>
+                    </select>
                 </span></td>
                 <td width="11%" valign="middle"><span class="col-md-4">
                   <input type="button" name="btn_guardar" id="btn_guardar" value="Definir Ciclo(s)" 

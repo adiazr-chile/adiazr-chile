@@ -8,6 +8,7 @@ package cl.femase.gestionweb.common;
 import cl.femase.gestionweb.vo.DetalleAusenciaVO;
 import cl.femase.gestionweb.vo.DiferenciaEntreFechasVO;
 import cl.femase.gestionweb.vo.DiferenciaHorasVO;
+import cl.femase.gestionweb.vo.MarcaVO;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -40,9 +41,11 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Locale;
+import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -76,6 +79,60 @@ public class Utilidades {
 //    static int intYear = today.get(Calendar.YEAR);
 //    static int intMonth = today.get(Calendar.MONTH)+1;
 //    static int intDay = today.get(Calendar.DATE);
+    
+    
+    /**
+    * Recibe todas las marcas de un rut y retorna una lista con un par unico de entrada y salida.
+    * La entrada mas antigua y la salida mas reciente.
+    * 
+    * @param marcaciones
+    * @return 
+    */
+    public static LinkedHashMap<String, MarcaVO> procesarMarcaciones(LinkedHashMap<String, MarcaVO> marcaciones) {
+        LinkedHashMap<String, MarcaVO> resultado = new LinkedHashMap<>();
+        LinkedHashMap<String, ArrayList<MarcaVO>> grupos = new LinkedHashMap<>();
+        
+        // 1. Agrupar por RUT
+        for (MarcaVO marca : marcaciones.values()) {
+            grupos.computeIfAbsent(marca.getRutEmpleado(), k -> new ArrayList<>()).add(marca);
+        }
+
+        // 2. Procesar cada grupo
+        for (Map.Entry<String, ArrayList<MarcaVO>> grupo : grupos.entrySet()) {
+            String rut = grupo.getKey();
+            ArrayList<MarcaVO> marcas = grupo.getValue();
+            
+            MarcaVO entrada = null;
+            MarcaVO salida = null;
+
+            // Buscar entrada más antigua
+            for (MarcaVO marca : marcas) {
+                if (marca.getTipoMarca()== 1) {
+                    entrada = marca;
+                    break; // Primera entrada encontrada
+                }
+            }
+
+            // Buscar salida más reciente
+            for (int i = marcas.size() - 1; i >= 0; i--) {
+                MarcaVO marca = marcas.get(i);
+                if (marca.getTipoMarca()== 2) {
+                    salida = marca;
+                    break; // Última salida encontrada
+                }
+            }
+
+            // Agregar al resultado con claves diferenciadas
+            if (entrada != null) {
+                resultado.put(rut + "-ENTRADA", entrada);
+            }
+            if (salida != null) {
+                resultado.put(rut + "-SALIDA", salida);
+            }
+        }
+        
+        return resultado;
+    }
     
     /**
     * 

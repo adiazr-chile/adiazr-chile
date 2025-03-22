@@ -11,6 +11,7 @@ import cl.femase.gestionweb.business.VacacionesBp;
 import cl.femase.gestionweb.common.ClientInfo;
 import cl.femase.gestionweb.common.Constantes;
 import cl.femase.gestionweb.common.Utilidades;
+import cl.femase.gestionweb.dao.PermisosAdministrativosDAO;
 import cl.femase.gestionweb.vo.AusenciaVO;
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
 import cl.femase.gestionweb.vo.ResultCRUDVO;
@@ -763,38 +764,80 @@ public class DetalleAusenciaController extends BaseServlet {
                                 + "Ausencias - Eliminar "
                                 + "detalle ausencia, correlativo: " + auxdata.getCorrelativo());
                                 
-                            DetalleAusenciaVO detalle = 
+                            DetalleAusenciaVO detalleAusencia = 
                                 detAusenciaBp.getDetalleAusenciaByCorrelativo(auxdata.getCorrelativo());
                             
-                            ResultCRUDVO doDelete = detAusenciaBp.delete(detalle, resultado);
+                            ResultCRUDVO doDelete = detAusenciaBp.delete(detalleAusencia, resultado);
                             listaObjetos.add(auxdata);
                             System.out.println(WEB_NAME+"[servlet."
                                 + "DetalleAusenciasController."
                                 + "processRequest]Delete vacacion. "
                                 + "doDelete.isThereError()? "+doDelete.isThereError()
-                                +", idAusencia: "+detalle.getIdAusencia());
-                            if (!doDelete.isThereError() 
-                                && detalle.getIdAusencia() == 1){//VACACIONES
+                                +", idAusencia: " + detalleAusencia.getIdAusencia());
+                            if (!doDelete.isThereError()) {
+                                if (detalleAusencia.getIdAusencia() == Constantes.ID_AUSENCIA_VACACIONES){//VACACIONES
                                     System.out.println(WEB_NAME+"[servlet."
                                         + "DetalleAusenciaController."
                                         + "processRequest]Delete vacacion."
                                         + "Recalcular saldo dias de vacaciones "
                                         + "para empleado. "
-                                        + "empresa_id: " + detalle.getEmpresaId()
-                                        +", rutEmpleado: " + detalle.getRutEmpleado());
-                                vacacionesBp.calculaDiasVacaciones(userConnected.getUsername(), 
-                                    detalle.getEmpresaId(), detalle.getRutEmpleado(), 
-                                    parametrosSistema);
-                                System.out.println(WEB_NAME+"[servlet."
-                                    + "DetalleAusenciaController."
-                                    + "processRequest]"
-                                    + "Actualizar saldos de vacaciones "
-                                    + "en tabla detalle_ausencia "
-                                    + "(usar nueva funcion setsaldodiasvacacionesasignadas). "
-                                    + "Run: "+ detalle.getRutEmpleado());
-                                //DetalleAusenciaBp detAusenciaBp = new DetalleAusenciaBp(appProperties);
-                                detAusenciaBp.actualizaSaldosVacaciones(detalle.getRutEmpleado());
-                                
+                                        + "empresa_id: " + detalleAusencia.getEmpresaId()
+                                        +", rutEmpleado: " + detalleAusencia.getRutEmpleado());
+                                    vacacionesBp.calculaDiasVacaciones(userConnected.getUsername(), 
+                                        detalleAusencia.getEmpresaId(), detalleAusencia.getRutEmpleado(), 
+                                        parametrosSistema);
+                                    System.out.println(WEB_NAME+"[servlet."
+                                        + "DetalleAusenciaController."
+                                        + "processRequest]"
+                                        + "Actualizar saldos de vacaciones "
+                                        + "en tabla detalle_ausencia "
+                                        + "(usar nueva funcion setsaldodiasvacacionesasignadas). "
+                                        + "Run: "+ detalleAusencia.getRutEmpleado());
+                                    //DetalleAusenciaBp detAusenciaBp = new DetalleAusenciaBp(appProperties);
+                                    detAusenciaBp.actualizaSaldosVacaciones(detalleAusencia.getRutEmpleado());
+                                }else if (detalleAusencia.getIdAusencia() == Constantes.ID_AUSENCIA_PERMISO_ADMINISTRATIVO){//PA
+                                    System.out.println(WEB_NAME+"[servlet."
+                                        + "DetalleAusenciaController."
+                                        + "processRequest]"
+                                        + "20250305-01: Seteo de saldo PA después de eliminar un registro PA. "
+                                        + "Delete ausencia PA."
+                                        + "Setear nuevo saldo de permiso administrativo (saldo_PA) "
+                                        + "para empleado. "
+                                        + "Invocar nueva funcion 'set_saldo_permiso_administrativo'"
+                                        + ". Empresa_id: " + detalleAusencia.getEmpresaId()
+                                        + ", rutEmpleado: " + detalleAusencia.getRutEmpleado()
+                                    );
+                                    
+                                    //invocar metodo que llame a la funcion en BD 'set_saldo_permiso_administrativo'
+                                    PermisosAdministrativosDAO permisosDao = new PermisosAdministrativosDAO(appProperties);
+                                    /**
+                                    *   codempresa
+                                    *   rutempleado
+                                    *   anio_calc: Extraerlo de la fecha de inicio del PA
+                                    *   semestre: usar el mes de la misma fecha de inicio, 
+                                    *       que se encuentre entre el 1 al 6, y del 7 al 12 para 1er o 2do semestre respectivamente.
+                                    */
+                                    SimpleDateFormat FECHA_FORMAT = 
+                                        new SimpleDateFormat("yyyy-MM-dd", new Locale("es","CL"));
+                                    String strFechaInicioPA = detalleAusencia.getFechaInicioAsStr();
+                                    Date fechaInicioPA  = null;
+                                    int semestrePA      = 0;
+                                    int anioPA          = 0;
+                                    try{    
+                                        fechaInicioPA   = FECHA_FORMAT.parse(strFechaInicioPA);
+                                        anioPA          = Integer.parseInt(Utilidades.getDatePartAsString(fechaInicioPA, "yyyy"));
+                                        semestrePA      = Utilidades.getSemestre(fechaInicioPA);
+                                        ResultCRUDVO resultadoPA = 
+                                            permisosDao.setSaldoPermisoAdministrativo(detalleAusencia.getEmpresaId(), 
+                                                detalleAusencia.getRutEmpleado(), 
+                                                anioPA, 
+                                                String.valueOf(semestrePA));
+                                    }catch(ParseException pex){
+                                        System.err.println(WEB_NAME+"[SolicitudPermisoAdministrativoController."
+                                            + "insertarPermisoAdministrativo]"
+                                            + "Error al parsear fecha inicio PA: " + pex.toString());
+                                    }
+                                }
                                
                             }
                             //Convert Java Object to Json

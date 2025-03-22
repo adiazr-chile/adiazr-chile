@@ -499,12 +499,28 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
                     listaHorasNoTrabajadas.add(strHrsNoTrabajadas);
                 }
                 
+                System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal."
+                    + "getParameters]fecha: " + detalle.getFechaEntradaMarca()
+                    + ", detalle.getHoraEntrada(): " + detalle.getHoraEntrada()
+                    + ", detalle.getHoraSalida(): " + detalle.getHoraSalida()    
+                    + ", observacion: " + detalle.getObservacion()
+                    + ", strAuxHt: " + strAuxHt);
+                
                 if ((detalle.getHoraEntrada() != null && detalle.getHoraEntrada().compareTo("00:00:00") != 0 
                         && detalle.getHoraSalida() != null && detalle.getHoraSalida().compareTo("00:00:00") != 0)
-                        || (detalle.getObservacion()!=null && detalle.getObservacion().compareTo("Dia libre") == 0)
+                        || (detalle.getObservacion()!=null && detalle.getObservacion().compareTo("Libre") == 0)
                         || (strAuxHt != null) ){
                     countDiasTrabajados++;
+                    System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal."
+                        + "getParameters]Sumar dias trabajados...");
+                }else{
+                    System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal."
+                        + "getParameters]"
+                        + "Fecha: " + detalle.getFechaEntradaMarca()    
+                        + ".  ---->NO SUMAR dias trabajados<----");
                 }
+                
+                
                 System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal."
                     + "getParameters]calcular hrs teoricas...");
                 DetalleAsistenciaVO auxDetail = 
@@ -1645,7 +1661,7 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
                 
             if ((detalle.getHoraEntrada() != null && detalle.getHoraEntrada().compareTo("00:00:00") != 0 
                     && detalle.getHoraSalida() != null && detalle.getHoraSalida().compareTo("00:00:00") != 0)
-                    || (detalle.getObservacion()!=null && detalle.getObservacion().compareTo("Dia libre") == 0)
+                    || (detalle.getObservacion()!=null && detalle.getObservacion().compareTo("Libre") == 0)
                     || (strAuxHorasTrabajadas != null) ){
                 countDiasTrabajados++;
             }
@@ -1742,7 +1758,7 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
         System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal."
             + "getHrsTeoricas]"
             + "Fecha: " + _detalle.getFechaEntradaMarca() 
-            + ", horaEntrada: " + _detalle.getHoraEntrada()
+           + ", horaEntrada: " + _detalle.getHoraEntrada()
             + ", horaSalida: " + _detalle.getHoraSalida()
             + ", toString: " + _detalle.toString());
         
@@ -1809,7 +1825,7 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
             String hhmmTurno = duracionTurno.getStrDiferenciaHorasMinutos();
             System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal."
                 + "getHrsTeoricas]hhmmTurno: " + hhmmTurno);
-            if (esFeriado) calcularHrsTeoricas = false;
+            //if (esFeriado) calcularHrsTeoricas = false;
         }else {
             System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal."
                 + "getHrsTeoricas]"
