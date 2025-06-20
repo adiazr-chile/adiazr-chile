@@ -1,0 +1,421 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="fiscaliza_rpt_asistencia" pageWidth="950" pageHeight="595" orientation="Landscape" whenNoDataType="NoDataSection" columnWidth="910" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="df0353c2-850e-4b88-950e-1f4637358834">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="DbFemase2025"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="347"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="648"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="451"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="539"/>
+	<parameter name="RUT_EMPLEADOR" class="java.lang.String"/>
+	<parameter name="RAZON_SOCIAL_EMPLEADOR" class="java.lang.String"/>
+	<parameter name="RUT_TRABAJADOR" class="java.lang.String"/>
+	<parameter name="NOMBRE_TRABAJADOR" class="java.lang.String"/>
+	<parameter name="CENCO" class="java.lang.String"/>
+	<parameter name="DESDE" class="java.lang.String"/>
+	<parameter name="HASTA" class="java.lang.String"/>
+	<parameter name="EMPRESA_ID" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[select 
+	da.fecha_marca_entrada::text fecha,
+	da.hora_entrada_teorica::text jo_entrada,
+	da.hora_salida_teorica::text jo_salida,
+	da.hora_entrada::text,
+	da.hora_salida::text ,
+	'NA' colacion,
+	'NA' marcacion_colacion_entrada,
+	'NA' marcacion_colacion_salida,
+	'NA' otras_marcaciones,
+	CASE
+	   WHEN LENGTH(da.hhmm_atraso) = 0 THEN '-'
+	   WHEN da.hhmm_atraso IS NULL THEN '-'
+	   ELSE da.hhmm_atraso
+	END AS hhmm_atraso,
+	CASE
+	   WHEN LENGTH(da.hhmm_salida_anticipada) = 0 THEN '-'
+	   WHEN da.hhmm_salida_anticipada IS NULL THEN '-'
+	   ELSE da.hhmm_salida_anticipada
+	END AS hhmm_salida_anticipada,
+	CASE
+	   WHEN LENGTH(da.hhmm_extras) = 0 THEN '-'
+	   WHEN da.hhmm_extras IS NULL THEN '-'
+	   ELSE da.hhmm_extras
+	END AS horas_extras,
+	'NA' as otras_marcaciones,
+	coalesce(da.observacion,'-') observacion,
+	CASE
+	   WHEN LENGTH(da.hrs_no_trabajadas) = 0 THEN '-'
+	   WHEN da.hrs_no_trabajadas IS NULL THEN '-'
+	   ELSE da.hrs_no_trabajadas
+	END AS hrs_no_trabajadas
+from detalle_asistencia da 
+where da.empresa_id =$P{EMPRESA_ID}
+and da.rut_empleado =$P{RUT_TRABAJADOR}
+and da.fecha_marca_entrada between $P{DESDE}::date and $P{HASTA}::date
+order by da.fecha_marca_entrada]]>
+	</queryString>
+	<field name="fecha" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="fecha"/>
+		<property name="com.jaspersoft.studio.field.label" value="fecha"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="detalle_asistencia"/>
+	</field>
+	<field name="jo_entrada" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="jo_entrada"/>
+		<property name="com.jaspersoft.studio.field.label" value="jo_entrada"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="detalle_asistencia"/>
+	</field>
+	<field name="jo_salida" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="jo_salida"/>
+		<property name="com.jaspersoft.studio.field.label" value="jo_salida"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="detalle_asistencia"/>
+	</field>
+	<field name="hora_entrada" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="hora_entrada"/>
+		<property name="com.jaspersoft.studio.field.label" value="hora_entrada"/>
+	</field>
+	<field name="hora_salida" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="hora_salida"/>
+		<property name="com.jaspersoft.studio.field.label" value="hora_salida"/>
+	</field>
+	<field name="colacion" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="colacion"/>
+		<property name="com.jaspersoft.studio.field.label" value="colacion"/>
+	</field>
+	<field name="marcacion_colacion_entrada" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="marcacion_colacion_entrada"/>
+		<property name="com.jaspersoft.studio.field.label" value="marcacion_colacion_entrada"/>
+	</field>
+	<field name="marcacion_colacion_salida" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="marcacion_colacion_salida"/>
+		<property name="com.jaspersoft.studio.field.label" value="marcacion_colacion_salida"/>
+	</field>
+	<field name="otras_marcaciones" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="otras_marcaciones"/>
+		<property name="com.jaspersoft.studio.field.label" value="otras_marcaciones"/>
+	</field>
+	<field name="hhmm_atraso" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="hhmm_atraso"/>
+		<property name="com.jaspersoft.studio.field.label" value="hhmm_atraso"/>
+	</field>
+	<field name="hhmm_salida_anticipada" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="hhmm_salida_anticipada"/>
+		<property name="com.jaspersoft.studio.field.label" value="hhmm_salida_anticipada"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="detalle_asistencia"/>
+	</field>
+	<field name="horas_extras" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="horas_extras"/>
+		<property name="com.jaspersoft.studio.field.label" value="horas_extras"/>
+	</field>
+	<field name="COLUMN_13" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="otras_marcaciones"/>
+		<property name="com.jaspersoft.studio.field.label" value="otras_marcaciones"/>
+	</field>
+	<field name="observacion" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="observacion"/>
+		<property name="com.jaspersoft.studio.field.label" value="observacion"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="detalle_asistencia"/>
+	</field>
+	<field name="hrs_no_trabajadas" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="hrs_no_trabajadas"/>
+		<property name="com.jaspersoft.studio.field.label" value="hrs_no_trabajadas"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="detalle_asistencia"/>
+	</field>
+	<background>
+		<band/>
+	</background>
+	<title>
+		<band height="76">
+			<frame>
+				<reportElement mode="Opaque" x="-20" y="-20" width="940" height="92" backcolor="#006699" uuid="2b9f6384-3069-4d3b-ba09-67674a8e1d86"/>
+				<staticText>
+					<reportElement x="10" y="10" width="296" height="30" forecolor="#D5D8E8" uuid="666d1ed7-29b0-46bd-82c4-3d521f0db327"/>
+					<textElement>
+						<font size="22" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Reporte de Jornada Diaria]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="6" y="45" width="74" height="16" forecolor="#FFFFFF" uuid="1c87439c-c1f9-4fe9-9f64-ad9e2083d8f2"/>
+					<textElement>
+						<font size="10"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{RUT_EMPLEADOR}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="84" y="44" width="184" height="18" forecolor="#FFFFFF" uuid="48c35490-4615-4a66-9968-6923c1901eb7"/>
+					<textFieldExpression><![CDATA[$P{RAZON_SOCIAL_EMPLEADOR}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="3" y="62" width="76" height="18" forecolor="#FFFFFF" uuid="8fc85fb4-cbd7-4bd6-a0b2-60901c14cd35"/>
+					<textFieldExpression><![CDATA[$P{RUT_TRABAJADOR}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="84" y="62" width="302" height="18" forecolor="#FFFFFF" uuid="d0663f0c-53dc-4e72-aec0-11239947b47f"/>
+					<textFieldExpression><![CDATA[$P{NOMBRE_TRABAJADOR}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="400" y="61" width="244" height="18" forecolor="#FFFFFF" uuid="8b349ac0-6402-42ef-bd2a-2c83972323e0">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textFieldExpression><![CDATA[$P{CENCO}]]></textFieldExpression>
+				</textField>
+				<textField pattern="MMMMM dd, yyyy">
+					<reportElement x="814" y="10" width="100" height="20" forecolor="#F0F79C" uuid="856a9530-010c-4496-8699-9e7cde8fcda8"/>
+					<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="731" y="10" width="80" height="20" forecolor="#FFFFFF" uuid="ea5a661d-3ec6-49e0-9f94-4171be870f1c"/>
+					<text><![CDATA[Fecha impresión: ]]></text>
+				</staticText>
+			</frame>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="13"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="37">
+			<line>
+				<reportElement x="-20" y="35" width="930" height="1" forecolor="#666666" uuid="01004622-64c9-4f01-b006-dc8f1ee04004">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</line>
+			<staticText>
+				<reportElement x="-14" y="0" width="54" height="21" uuid="d999f330-ca0e-45aa-8844-a42d06885960">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7eb65729-3bd0-42ff-b637-5ece240b9d1f"/>
+				</reportElement>
+				<text><![CDATA[Fecha]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="46" y="0" width="138" height="21" uuid="c0669f44-ba34-4004-9c0b-075f345671e7">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="2e83aafc-2b08-49da-92cf-e30182969bd1"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[J.O.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="194" y="0" width="174" height="21" uuid="d1293616-7ee2-4290-9d0f-13a8004ef60e">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="c0cad576-5c1f-49c3-bac3-ca8571131fc8"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Marcas J.O.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="803" y="4" width="110" height="21" uuid="320d87d7-7ee4-4718-8e82-31cc5750b8f0">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="67de9808-d13e-4afa-ab43-550e8910c62c"/>
+				</reportElement>
+				<text><![CDATA[Observaciones]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="374" y="1" width="54" height="21" uuid="ac413b91-953f-4149-82c4-73f2aa9cfd7e">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="c0cad576-5c1f-49c3-bac3-ca8571131fc8"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Colación]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="432" y="2" width="108" height="21" uuid="77b1b42a-125a-4bfc-a6cd-8650d3b49b9f">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="c0cad576-5c1f-49c3-bac3-ca8571131fc8"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Marcaciones Colación]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="683" y="3" width="54" height="28" uuid="bf6f5b2b-d392-47c4-8719-558793b21337">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="c0cad576-5c1f-49c3-bac3-ca8571131fc8"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Tiempo extra]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="741" y="4" width="58" height="28" uuid="8b8bb035-ca26-4471-a1c9-23098a7077d6">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="c0cad576-5c1f-49c3-bac3-ca8571131fc8"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Otras marcaciones]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="607" y="2" width="60" height="28" uuid="072244aa-2298-41ed-9fe7-e3e00699b75a">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="c0cad576-5c1f-49c3-bac3-ca8571131fc8"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Salida anticipada]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="544" y="2" width="60" height="28" uuid="62055c00-baa1-4054-876c-6288a03224c6">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="c0cad576-5c1f-49c3-bac3-ca8571131fc8"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Atraso]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="27">
+			<textField>
+				<reportElement x="-14" y="4" width="54" height="15" uuid="d76078f3-b50f-4b66-8e6b-45519ff9abf3">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7eb65729-3bd0-42ff-b637-5ece240b9d1f"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{fecha}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="46" y="4" width="54" height="15" uuid="cfa71229-fc65-4593-b387-16320a0bc384">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="96d8d8aa-ad52-4aea-afb9-5cefa84696db"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{jo_entrada}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="130" y="4" width="52" height="15" uuid="275ba411-99b7-4f0c-9472-01c37a186ceb">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="94b120d9-054e-45cc-aea3-401533620184"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{jo_salida}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="196" y="4" width="80" height="15" uuid="45baf720-a6f5-4f8f-ba20-1286115feb11">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="9662b335-66e1-4319-8e0e-279c7067db27"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{hora_entrada}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="281" y="4" width="86" height="15" uuid="e64a1bf9-02ca-4d77-81ea-4bcedefc6d1e">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="44f530b1-fafb-40a9-97c1-4864633404d6"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{hora_salida}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="376" y="4" width="44" height="15" uuid="28e45740-dcd6-43bc-b297-25b3da2b06fb">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="12a7502c-58b1-43fd-8e2a-ce3c118af84f"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{colacion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="433" y="4" width="46" height="15" uuid="fcc17317-ed11-4a1a-8d8f-72d8f72ec485">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="53519dd4-068f-43d9-a917-9e906e23879b"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{marcacion_colacion_entrada}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="489" y="4" width="52" height="15" uuid="922bfd3f-a0ea-4522-ad36-07a7849d556a">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="71e73eae-d4ed-4aab-84d6-2eeadd08d107"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{marcacion_colacion_salida}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="545" y="4" width="58" height="15" uuid="28da13c2-7c30-46e6-9da9-344addb824a1">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="33882cd9-fed4-47c4-8703-2e8620b92b6c"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{hhmm_atraso}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="608" y="4" width="60" height="15" uuid="42d1bc0e-f677-475f-9763-2a4ae5066512">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="36d202fe-6c0d-4316-8b37-6d10a76bebff"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{hhmm_salida_anticipada}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="672" y="4" width="64" height="15" uuid="b1b6ac30-5ab6-45d8-8077-1e7ff276a956">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="216f930f-8c0d-42e7-bf69-82f37e958e3c"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{horas_extras}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="742" y="4" width="56" height="15" uuid="6b2ac4d8-bee7-409d-8660-19e5d30fc575">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="3b202bcc-e636-4092-9dcf-29c24c1e63a1"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{otras_marcaciones}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="803" y="4" width="106" height="15" uuid="217982ea-6c0f-4149-870b-dc368f8bd11a">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="137fdf76-1409-42e0-a9f9-79d72f8c2cd7"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{observacion}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="105" y="3" width="20" height="21" uuid="84f90148-cb5f-424f-b334-fdb3e322a1ef">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="2e83aafc-2b08-49da-92cf-e30182969bd1"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[-]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<columnFooter>
+		<band/>
+	</columnFooter>
+	<pageFooter>
+		<band height="58">
+			<textField>
+				<reportElement mode="Opaque" x="0" y="4" width="515" height="13" backcolor="#E6E6E6" uuid="cb20eef0-7ab2-4e2a-83b5-664b372ab9c1"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement mode="Opaque" x="515" y="4" width="40" height="13" backcolor="#E6E6E6" uuid="6d89b081-f750-4ab8-bb98-034371c82a88"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement x="0" y="4" width="100" height="13" uuid="ecbf7dff-27b8-4f1a-9ef4-f6fbc61f9fee"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band/>
+	</summary>
+	<noData>
+		<band height="146">
+			<frame>
+				<reportElement mode="Opaque" x="-20" y="10" width="940" height="92" backcolor="#006699" uuid="bd9d725b-6f39-4430-bae7-9b16f423cf29"/>
+				<staticText>
+					<reportElement x="10" y="10" width="296" height="30" forecolor="#D5D8E8" uuid="cdd53cde-7aa4-4265-aa49-a86d8f96ea37"/>
+					<textElement>
+						<font size="22" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Reporte de Jornada Diaria]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="6" y="45" width="74" height="16" forecolor="#FFFFFF" uuid="d77b53c5-477a-4b3d-9f01-63279e10a320"/>
+					<textElement>
+						<font size="10"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{RUT_EMPLEADOR}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="84" y="44" width="184" height="18" forecolor="#FFFFFF" uuid="dd92820e-5d55-4705-99c2-4522bf63630a"/>
+					<textFieldExpression><![CDATA[$P{RAZON_SOCIAL_EMPLEADOR}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="3" y="62" width="76" height="18" forecolor="#FFFFFF" uuid="6502fe26-c374-46ad-b91e-12a37970db3f"/>
+					<textFieldExpression><![CDATA[$P{RUT_TRABAJADOR}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="84" y="62" width="152" height="18" forecolor="#FFFFFF" uuid="fb7c81be-1bfd-4984-a270-a3ddfe38763c"/>
+					<textFieldExpression><![CDATA[$P{NOMBRE_TRABAJADOR}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="250" y="61" width="244" height="18" forecolor="#FFFFFF" uuid="67f4bf24-4483-4bf8-92b1-ee844fa1451c">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textFieldExpression><![CDATA[$P{CENCO}]]></textFieldExpression>
+				</textField>
+				<textField pattern="MMMMM dd, yyyy">
+					<reportElement x="814" y="10" width="100" height="20" forecolor="#F0F79C" uuid="eb78cc6f-abb3-45ff-af73-c021a2cbbca0"/>
+					<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="731" y="10" width="80" height="20" forecolor="#FFFFFF" uuid="acfba01b-7f9c-4830-a8b4-e98204016f90"/>
+					<text><![CDATA[Fecha impresión: ]]></text>
+				</staticText>
+			</frame>
+			<staticText>
+				<reportElement x="10" y="108" width="590" height="20" uuid="f6f4f13e-b9cb-4694-9867-0aaecef900c7"/>
+				<textElement>
+					<font size="13"/>
+				</textElement>
+				<text><![CDATA[No se encontraron registros]]></text>
+			</staticText>
+		</band>
+	</noData>
+</jasperReport>

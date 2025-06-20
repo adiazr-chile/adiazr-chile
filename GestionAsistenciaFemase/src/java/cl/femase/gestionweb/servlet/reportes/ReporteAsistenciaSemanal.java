@@ -51,12 +51,12 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -1832,12 +1832,14 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
                 + "No tiene detalle turno definido");
         }
         
-        //if (esFeriado && !tieneDetalleTurnoCodDiaFeriado) calcularHrsTeoricas = false;
+        if (esFeriado && !tieneDetalleTurnoCodDiaFeriado) calcularHrsTeoricas = false;
         
+        //if (esFeriado) calcularHrsTeoricas = false;
         System.out.println(WEB_NAME+"[ReporteAsistenciaSemanal."
             + "getHrsTeoricas]"
             + "Fecha: " + _detalle.getFechaEntradaMarca() 
             + ", esFeriado?: " + esFeriado    
+            + ", tieneDetalleTurnoCodDiaFeriado?: " + tieneDetalleTurnoCodDiaFeriado
             + ", observacion: " + newDetail.getObservacion()
             + ", calcularHrsTeoricas: " + calcularHrsTeoricas);
 

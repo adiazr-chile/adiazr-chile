@@ -25,7 +25,16 @@ public class EmpresaVO implements Serializable{
     private String regionNombre;
     private int comunaId;
     private String comunaNombre;
+    private String notificationEmail;
 
+    public String getNotificationEmail() {
+        return notificationEmail;
+    }
+
+    public void setNotificationEmail(String notificationEmail) {
+        this.notificationEmail = notificationEmail;
+    }
+    
     public String getEstadoNombre() {
         return estadoNombre;
     }

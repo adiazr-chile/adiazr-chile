@@ -6,17 +6,20 @@
 package cl.femase.gestionweb.servlet;
 
 import cl.femase.gestionweb.business.MaintenanceEventsBp;
+import cl.femase.gestionweb.business.UsuarioBp;
 import cl.femase.gestionweb.common.GetPropertyValues;
+import cl.femase.gestionweb.vo.MaintenanceEventVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
+import cl.femase.gestionweb.vo.ResultCRUDVO;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 
 /**
@@ -130,6 +133,7 @@ public class LoadParams extends BaseServlet {
                 
         ServletContext application = this.getServletContext();
         MaintenanceEventsBp eventsBp    = new MaintenanceEventsBp(appProperties);
+        UsuarioBp usuariosBp = new UsuarioBp(appProperties);
                 
         String pathFiles  = m_properties.getKeyValue("pathExportedFiles");
         appProperties.setPathExportedFiles(pathFiles);
@@ -144,27 +148,47 @@ public class LoadParams extends BaseServlet {
         
         appProperties.setTxtAprobarSolicVacaciones(m_properties.getKeyValue("txtAprobarSolicVacaciones"));
         appProperties.setTxtAprobarSolicPA(m_properties.getKeyValue("txtAprobarSolicPA"));
+        appProperties.setSystemAlertCheckInterval(Integer.parseInt(m_properties.getKeyValue("SystemAlertCheckInterval")));
         
-        System.out.println(WEB_NAME+"[GestionFemase.LoadParams.init]Parametros del Sistema: "
+        appProperties.setDTmailServerDomain(m_properties.getKeyValue("DTmailServerDomain"));
+                
+        System.out.println(WEB_NAME+"[LoadParams.init]Parametros del Sistema: "
             + "reportesPath= " + appProperties.getReportesPath()
             + ",uploadsPath= " + appProperties.getUploadsPath()
             + ",imagesPath= " + appProperties.getImagesPath()
-            + ",vacaciones x periodos= " + appProperties.isVacacionesPeriodos());
+            + ",vacaciones x periodos= " + appProperties.isVacacionesPeriodos()
+            + ",systemAlertCheckInterval= " + appProperties.getSystemAlertCheckInterval());
         
-        //ServletContext application = this.getServletContext();
+        
+        /**
+        *   Dejar como usuarios NO VIGENTES a aquellos usuarios marcados como
+        *   usuario.is_temporary = true y la diferencia entre la fecha actual
+        *   y la fecha de creacion sea  mayor a 5 dias
+        * 
+        */
+        System.out.println(WEB_NAME+"[LoadParams.init]"
+            + " Dejar como usuarios NO VIGENTES a aquellos usuarios "
+            + "marcados como usuario.is_temporary = true "
+            + "y la diferencia entre la (fecha actual,fecha de creacion) sea  mayor a 5 dias");
+        MaintenanceEventVO resultado=new MaintenanceEventVO();
+        resultado.setUsername("system_adm");
+        resultado.setDatetime(new Date());
+        resultado.setUserIP("");
+        resultado.setType("USR");
+        resultado.setEmpresaIdSource("");
+        
+        ResultCRUDVO result = usuariosBp.disableTemporaryUsers(resultado);
+        System.out.println(WEB_NAME+"[LoadParams.init]"
+            + "Dejar como NO VIGENTES a usuarios con clave temporal, filas afectadas= " + result.getFilasAfectadas());
+        if (result.isThereError()){
+            System.out.println(WEB_NAME+"[LoadParams.init]"
+                + "Error al dejar como no vigentes a usuarios con clave Temporal: " + result.getMsg());
+        }
+        
         application.removeAttribute("appProperties");
         application.setAttribute("appProperties", appProperties);
 
         application.removeAttribute("exportFilesProperties");
-        
-          //Hora apertura y cierre de mercado
-//////        ClientHorarioMercadoWS horariobec=new ClientHorarioMercadoWS();
-//////        SimpleDateFormat horaformat=new SimpleDateFormat("HH:mm:ss");
-//////        
-//////        appProperties.setHoraAperturaMercado(horaformat.format(horariobec.getAperturaMercado()));
-//////        appProperties.setHoraCierreMercado(horaformat.format(horariobec.getCierreMercado()));
-         
-//        appProperties.setXlsTemplatesPath(m_properties.getKeyValue("XLStemplatesPath"));
         
         //ServletContext application = this.getServletContext();
         application.removeAttribute("appProperties");

@@ -60,7 +60,7 @@
             </div>
 
             <div id="footer">
-                  Versi&oacute;n 1.6.1. Designed by <a href="http://www.femase.cl">FEMASE</a>&copy; 2017-2018</div>
+                  Versi&oacute;n 1.6.1. Dise&ntilde;ado por <a href="http://www.femase.cl">FEMASE</a>&copy; 2017-2018</div>
         </div>
 
     </body>

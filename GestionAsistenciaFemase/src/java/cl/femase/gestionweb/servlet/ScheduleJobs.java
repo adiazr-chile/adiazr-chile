@@ -7,13 +7,12 @@ package cl.femase.gestionweb.servlet;
 
 import cl.femase.gestionweb.business.ProcesosBp;
 import cl.femase.gestionweb.vo.PropertiesVO;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest; 
+import jakarta.servlet.http.HttpServletRequest; 
         
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.*;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
 
 
 /**

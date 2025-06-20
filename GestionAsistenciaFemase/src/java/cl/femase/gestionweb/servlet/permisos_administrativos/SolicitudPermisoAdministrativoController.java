@@ -30,9 +30,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -45,9 +45,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.StringTokenizer;
-import javax.servlet.ServletContext;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 
 @WebServlet(name = "SolicitudPermisoAdministrativoController", urlPatterns = {"/servlet/SolicitudPermisoAdministrativoController"})
@@ -1091,7 +1091,7 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
         System.out.println(WEB_NAME+"[SolicitudPermisoAdministrativoController."
             + "notificaEventoSolicitud]"
             + "Email por defecto: " + mailTo);
-        //String notaObservacion = _request.getParameter("notaObservacion");
+        //String notaaObservacion = _request.getParameter("notaObservacion");
         String cadenaNombres    = "";
         boolean hayJefeNacional = true;
         boolean hayJefeDirecto  = true;

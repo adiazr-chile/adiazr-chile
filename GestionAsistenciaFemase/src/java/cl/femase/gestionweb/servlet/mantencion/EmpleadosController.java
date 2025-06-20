@@ -18,16 +18,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
-import java.io.File;
-import java.io.UnsupportedEncodingException;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -35,13 +34,10 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.StringTokenizer;
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpSession;
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpSession;
+
 import org.apache.log4j.Logger;
 
 public class EmpleadosController extends BaseServlet {
@@ -110,9 +106,8 @@ public class EmpleadosController extends BaseServlet {
         //lo primero...guardar foto
         /**Obtengo los valores desde el formulario*/
         System.out.println(WEB_NAME+"[EmpleadosController.processRequest] "
-            + "Empleados - Obteniendo datos desde "
-            + "formulario y guardando foto...");
-        auxdata = guardarFotoEmpleado(request, auxdata.getRut(),appProperties);
+            + "Empleados - Obteniendo datos desde formulario (sin multipart)");
+        auxdata = getInfoEmpleadoFromRequest(request);
         System.out.println(WEB_NAME+"[EmpleadosController.processRequest]"
             + "full object: "+auxdata.toString());
         
@@ -581,7 +576,7 @@ public class EmpleadosController extends BaseServlet {
         /*-------------*/
         try{
             
-            boolean isMultipart = ServletFileUpload.isMultipartContent(_request);
+            boolean isMultipart = false;//ServletFileUpload.isMultipartContent(_request);
 //            ServletFileUpload upload = new ServletFileUpload();
 //            String paramValue="";
 //            byte[] str;
@@ -792,235 +787,371 @@ public class EmpleadosController extends BaseServlet {
 ////        return paramValue;
 ////    }
     
-    
     /**
     * 
-    * Permite subir un archivo al servidor
     */
-    private EmpleadoVO guardarFotoEmpleado(HttpServletRequest _request, 
-            String _rutEmpleado, PropertiesVO _appProperties){
-        boolean isMultipart = ServletFileUpload.isMultipartContent(_request);
-//        String name = "";
-        EmpleadoVO auxdata=new EmpleadoVO();
+    private EmpleadoVO getInfoEmpleadoFromRequest(HttpServletRequest _request) {
+        EmpleadoVO infoempleado = new EmpleadoVO();
         SimpleDateFormat fechaFormat = new SimpleDateFormat("dd-MM-yyyy");
-        
-        if(isMultipart){
-            try{
-                String pathUploadedFiles = _appProperties.getImagesPath();
-                List<FileItem> items = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(_request);
-                for (FileItem item : items) {
-                    String fieldName = item.getFieldName();
-                    if (item.isFormField()) {
-                        String fieldValue = item.getString("UTF-8"); // <-- HERE
-                        if (fieldValue != null) fieldValue = fieldValue.trim();
-                        System.out.println(WEB_NAME+"[EmpleadosController.guardarFotoEmpleado]"
-                            + "fieldName: " + fieldName
-                            +", fieldValue: " + fieldValue);
-                        switch (item.getFieldName()) {
-                            case "action":
-                                auxdata.setAction(fieldValue);
-                                break;
-                            case "action2":
-                                auxdata.setAction2(fieldValue);
-                                break;
-                            case "rut":
-                                auxdata.setRut(fieldValue);
-                                break;
-                            case "nombres":
-                                auxdata.setNombres(fieldValue);
-                                break;
-                            case "apePaterno":
-                                auxdata.setApePaterno(fieldValue);
-                                break;
-                            case "apeMaterno":
-                                auxdata.setApeMaterno(fieldValue);
-                                break;
-                            case "fechaNacimientoAsStr":
-                                {
-                                    Date auxDate = null;
-                                    try{
-                                        auxDate = fechaFormat.parse(fieldValue);
-                                    }catch(ParseException pex){
-                                        System.err.println("[EmpleadosController.guardarFotoEmpleado]"
-                                                + "error al parsear fecha nacimiento: "+pex.toString());
-                                    }   auxdata.setFechaNacimiento(auxDate);
-                                    break;
-                                }
-                            case "direccion":
-                                auxdata.setDireccion(fieldValue);
-                                break;
-                            case "email":
-                                auxdata.setEmail(fieldValue);
-                                break;
-                            case "email_personal":
-                                auxdata.setEmailPersonal(fieldValue);
-                                break;    
-                            case "fechaInicioContratoAsStr":
-                                {
-                                    Date auxDate = null;
-                                    try{
-                                        auxDate = fechaFormat.parse(fieldValue);
-                                    }catch(ParseException pex){
-                                        System.err.println("[EmpleadosController.guardarFotoEmpleado]"
-                                                + "error al parsear fecha inicio contrato: "+pex.toString());
-                                    }   auxdata.setFechaInicioContrato(auxDate);
-                                    break;
-                                }
-                            case "estado":
-                                try{
-                                    auxdata.setEstado(Integer.parseInt(fieldValue));
-                                }catch(NumberFormatException nfe){}
-                                break;
-                            case "foto":
-                                auxdata.setPathFoto(fieldValue);
-                                break;
-                            case "sexo":
-                                auxdata.setSexo(fieldValue);
-                                break;
-                            case "fono_fijo":
-                                auxdata.setFonoFijo(fieldValue);
-                                break;
-                            case "fono_movil":
-                                auxdata.setFonoMovil(fieldValue);
-                                break;
-                            case "comunaId":
-                                try{
-                                    auxdata.setComunaId(Integer.parseInt(fieldValue));
-                                }catch(NumberFormatException nfe){}
-                                break;
-                            case "empresaId":
-                                EmpresaVO auxempresa=new EmpresaVO();
-                                auxempresa.setId(fieldValue);
-                                auxdata.setEmpresa(auxempresa);
-                                break;   
-                            case "deptoId":
-                                DepartamentoVO auxdepto=new DepartamentoVO();
-                                auxdepto.setId(fieldValue);
-                                auxdata.setDepartamento(auxdepto);
-                                break;    
-                            case "cencoId":
-                                CentroCostoVO auxcenco=new CentroCostoVO();
-                                try{
-                                    auxcenco.setId(Integer.parseInt(fieldValue));
-                                    auxdata.setCentroCosto(auxcenco);
-                                }catch(NumberFormatException nfe){}
-                                break;
-                            case "idTurno":
-                                auxdata.setIdTurno(Integer.parseInt(fieldValue));
-                                break;
-                            case "idCargo":
-                                auxdata.setIdCargo(Integer.parseInt(fieldValue));
-                                break;    
-                            case "autorizaAusencia":
-                                boolean autoriza=false;
-                                if (fieldValue.compareTo("S")==0)
-                                    autoriza=true;
-                                auxdata.setAutorizaAusencia(autoriza);
-                                break;    
-                            case "cambiarFoto":
-                                boolean cambiaFoto=false;
-                                if (fieldValue.compareTo("S")==0)
-                                    cambiaFoto=true;
-                                auxdata.setCambiarFoto(cambiaFoto);
-                                break;
-                            case "fechaTerminoContratoAsStr":
-                                {
-                                    Date auxDate;
-                                    Calendar c1 = GregorianCalendar.getInstance();
-                                    c1.set(3000, 11, 31);
-                                    auxDate = c1.getTime();//fecha por defecto 31-12-3000
-                                    try{
-                                        auxDate = fechaFormat.parse(fieldValue);
-                                        auxdata.setFechaTerminoContrato(auxDate);
-                                    }catch(ParseException pex){
-                                        System.err.println("[EmpleadosController."
-                                            + "guardarFotoEmpleado]"
-                                            + "error al parsear fecha "
-                                            + "termino contrato: " + pex.toString()+", setear fecha 31-12-3000");
-                                        auxdata.setFechaTerminoContrato(auxDate);
-                                    }   
-                                    break;
-                                }
-                            case "articulo22":
-                                boolean articulo22=false;
-                                if (fieldValue.compareTo("S")==0)
-                                    articulo22=true;
-                                auxdata.setArticulo22(articulo22);
-                                break;
-                            case "cod_interno":
-                                auxdata.setCodInterno(fieldValue);
-                                break;
-                            case "cod_interno_adicional":
-                                auxdata.setCodInternoCaracterAdicional(fieldValue);
-                                break;
-                            case "claveMarcacion":
-                                auxdata.setClaveMarcacion(fieldValue);
-                                break;    
-                            case "contratoIndefinido":
-                                boolean contratoIndefinido=true;
-                                if (fieldValue.compareTo("N")==0)
-                                    contratoIndefinido=false;
-                                auxdata.setContratoIndefinido(contratoIndefinido);
-                                break;
-                            case "modificar":
-                                boolean modificarEDC=false;
-                                if (fieldValue.compareTo("Si")==0)
-                                    modificarEDC = true;
-                                auxdata.setModificarEmpresaDeptoCenco(modificarEDC);
-                                break;
-                            case "fechaDesvinculacionAsStr":
-                            {
-                                Date auxDate = null;
-                                try{
-                                    auxDate = fechaFormat.parse(fieldValue);
-                                    auxdata.setFechaDesvinculacion(auxDate);
-                                }catch(ParseException pex){
-                                    System.err.println("[EmpleadosController.guardarFotoEmpleado]"
-                                            + "error al parsear fecha desvinculacion: " + pex.toString());
-                                }   
-                                break;
-                            }
-                            case "continuidadLaboral":
-                                auxdata.setContinuidadLaboral(fieldValue);
-                                break;
-                            case "nuevaFechaIniContratoAsStr":
-                            {
-                                Date auxDate = null;
-                                try{
-                                    auxDate = fechaFormat.parse(fieldValue);
-                                    auxdata.setNuevaFechaIniContrato(auxDate);
-                                }catch(ParseException pex){
-                                    System.err.println("[EmpleadosController.guardarFotoEmpleado]"
-                                        + "error al parsear Nueva fecha inicio contrato: " + pex.toString());
-                                }   
-                                break;
-                            }    
-                        }        
-                        //fin procesar campos normales    
-                    }else{
-                        System.out.println(WEB_NAME+"[EmpleadosController.guardarFotoEmpleado]procesar campo file."
-                            + "Guardar foto como archivo (upload)");
-                        String fileName = item.getName();
-                        long sizeInBytes = item.getSize();
-                        File uploadedFile = new File(pathUploadedFiles + File.separator + fileName);
-                        item.write(uploadedFile);
-                        System.out.println(WEB_NAME+"[EmpleadosController.guardarFotoEmpleado]File Size: " + sizeInBytes + " bytes");
-                        System.out.println(WEB_NAME+"[EmpleadosController.guardarFotoEmpleado]File Path: " + uploadedFile.getPath());
-                        System.out.println(WEB_NAME+"[EmpleadosController.guardarFotoEmpleado]fileName: " + fileName);
-                        auxdata.setPathFoto(fileName);
-                    }
-                }
-            }catch(FileUploadException fuex){
-                System.err.println("[EmpleadosController.guardarFotoEmpleado]Error al leer parametros multipart: " + fuex.toString());
-            }catch(UnsupportedEncodingException uex){
-                System.err.println("[EmpleadosController.guardarFotoEmpleado]Error en encode: " + uex.toString());
-            }catch(Exception ex){
-                System.err.println("[EmpleadosController.guardarFotoEmpleado]Error al guardar upload archivo: " + ex.toString());
-            }    
-            
+
+        // Procesar campos normales del formulario
+        infoempleado.setAction(Utilidades.trimOrNull(_request.getParameter("action")));
+        infoempleado.setAction2(Utilidades.trimOrNull(_request.getParameter("action2")));
+        infoempleado.setRut(Utilidades.trimOrNull(_request.getParameter("rut")));
+        infoempleado.setNombres(Utilidades.trimOrNull(_request.getParameter("nombres")));
+        infoempleado.setApePaterno(Utilidades.trimOrNull(_request.getParameter("apePaterno")));
+        infoempleado.setApeMaterno(Utilidades.trimOrNull(_request.getParameter("apeMaterno")));
+        infoempleado.setDireccion(Utilidades.trimOrNull(_request.getParameter("direccion")));
+        infoempleado.setEmail(Utilidades.trimOrNull(_request.getParameter("email")));
+        infoempleado.setEmailPersonal(Utilidades.trimOrNull(_request.getParameter("email_personal")));
+        infoempleado.setSexo(Utilidades.trimOrNull(_request.getParameter("sexo")));
+        infoempleado.setFonoFijo(Utilidades.trimOrNull(_request.getParameter("fono_fijo")));
+        infoempleado.setFonoMovil(Utilidades.trimOrNull(_request.getParameter("fono_movil")));
+        infoempleado.setContinuidadLaboral(Utilidades.trimOrNull(_request.getParameter("continuidadLaboral")));
+        infoempleado.setCodInterno(Utilidades.trimOrNull(_request.getParameter("cod_interno")));
+        infoempleado.setCodInternoCaracterAdicional(Utilidades.trimOrNull(_request.getParameter("cod_interno_adicional")));
+        infoempleado.setClaveMarcacion(Utilidades.trimOrNull(_request.getParameter("claveMarcacion")));
+        infoempleado.setPathFoto(Utilidades.trimOrNull(_request.getParameter("foto")));
+
+        // Procesar campos numéricos y fechas
+        try {
+            String fechaNacimiento = _request.getParameter("fechaNacimientoAsStr");
+            if (fechaNacimiento != null && !fechaNacimiento.isEmpty())
+                infoempleado.setFechaNacimiento(fechaFormat.parse(fechaNacimiento));
+        } catch (ParseException ex) {
+            System.err.println("[EmpleadosController.guardarFotoEmpleado] error al parsear fecha nacimiento: " + ex);
         }
-    
-        return auxdata;
+
+        try {
+            String fechaInicioContrato = _request.getParameter("fechaInicioContratoAsStr");
+            if (fechaInicioContrato != null && !fechaInicioContrato.isEmpty())
+                infoempleado.setFechaInicioContrato(fechaFormat.parse(fechaInicioContrato));
+        } catch (ParseException ex) {
+            System.err.println("[EmpleadosController.guardarFotoEmpleado] error al parsear fecha inicio contrato: " + ex);
+        }
+
+        try {
+            String fechaTerminoContrato = _request.getParameter("fechaTerminoContratoAsStr");
+            Date auxDate = null;
+            if (fechaTerminoContrato != null && !fechaTerminoContrato.isEmpty()) {
+                auxDate = fechaFormat.parse(fechaTerminoContrato);
+            } else {
+                Calendar c1 = GregorianCalendar.getInstance();
+                c1.set(3000, 11, 31);
+                auxDate = c1.getTime(); // fecha por defecto 31-12-3000
+            }
+            infoempleado.setFechaTerminoContrato(auxDate);
+        } catch (ParseException ex) {
+            System.err.println("[EmpleadosController.guardarFotoEmpleado] error al parsear fecha termino contrato: " + ex);
+        }
+
+        try {
+            String fechaDesvinculacion = _request.getParameter("fechaDesvinculacionAsStr");
+            if (fechaDesvinculacion != null && !fechaDesvinculacion.isEmpty())
+                infoempleado.setFechaDesvinculacion(fechaFormat.parse(fechaDesvinculacion));
+        } catch (ParseException ex) {
+            System.err.println("[EmpleadosController.guardarFotoEmpleado] error al parsear fecha desvinculacion: " + ex);
+        }
+
+        try {
+            String nuevaFechaIniContrato = _request.getParameter("nuevaFechaIniContratoAsStr");
+            if (nuevaFechaIniContrato != null && !nuevaFechaIniContrato.isEmpty())
+                infoempleado.setNuevaFechaIniContrato(fechaFormat.parse(nuevaFechaIniContrato));
+        } catch (ParseException ex) {
+            System.err.println("[EmpleadosController.guardarFotoEmpleado] error al parsear Nueva fecha inicio contrato: " + ex);
+        }
+
+        // Campos numéricos
+        try {
+            String estado = _request.getParameter("estado");
+            if (estado != null && !estado.isEmpty())
+                infoempleado.setEstado(Integer.parseInt(estado));
+        } catch (NumberFormatException nfe) {}
+
+        try {
+            String comunaId = _request.getParameter("comunaId");
+            if (comunaId != null && !comunaId.isEmpty())
+                infoempleado.setComunaId(Integer.parseInt(comunaId));
+        } catch (NumberFormatException nfe) {}
+
+        try {
+            String cencoId = _request.getParameter("cencoId");
+            if (cencoId != null && !cencoId.isEmpty()) {
+                CentroCostoVO auxcenco = new CentroCostoVO();
+                auxcenco.setId(Integer.parseInt(cencoId));
+                infoempleado.setCentroCosto(auxcenco);
+            }
+        } catch (NumberFormatException nfe) {}
+
+        try {
+            String idTurno = _request.getParameter("idTurno");
+            if (idTurno != null && !idTurno.isEmpty())
+                infoempleado.setIdTurno(Integer.parseInt(idTurno));
+        } catch (NumberFormatException nfe) {}
+
+        try {
+            String idCargo = _request.getParameter("idCargo");
+            if (idCargo != null && !idCargo.isEmpty())
+                infoempleado.setIdCargo(Integer.parseInt(idCargo));
+        } catch (NumberFormatException nfe) {}
+
+        // Campos booleanos
+        infoempleado.setAutorizaAusencia("S".equals(_request.getParameter("autorizaAusencia")));
+        infoempleado.setCambiarFoto("S".equals(_request.getParameter("cambiarFoto")));
+        infoempleado.setArticulo22("S".equals(_request.getParameter("articulo22")));
+        infoempleado.setContratoIndefinido(!"N".equals(_request.getParameter("contratoIndefinido")));
+        infoempleado.setModificarEmpresaDeptoCenco("Si".equals(_request.getParameter("modificar")));
+
+        // Objetos relacionados
+        String empresaId = _request.getParameter("empresaId");
+        if (empresaId != null && !empresaId.isEmpty()) {
+            EmpresaVO auxempresa = new EmpresaVO();
+            auxempresa.setId(empresaId);
+            infoempleado.setEmpresa(auxempresa);
+        }
+
+        String deptoId = _request.getParameter("deptoId");
+        if (deptoId != null && !deptoId.isEmpty()) {
+            DepartamentoVO auxdepto = new DepartamentoVO();
+            auxdepto.setId(deptoId);
+            infoempleado.setDepartamento(auxdepto);
+        }
+
+        // Devuelve el objeto ya cargado
+        return infoempleado;
     }
+
+
+
+    
+//////    /**
+//////    * 
+//////    * Permite subir un archivo al servidor
+//////    */
+//////    private EmpleadoVO guardarFotoEmpleado(HttpServletRequest _request, 
+//////            String _rutEmpleado, PropertiesVO _appProperties){
+//////        boolean isMultipart = ServletFileUpload.isMultipartContent(_request);
+////////        String name = "";
+//////        EmpleadoVO auxdata=new EmpleadoVO();
+//////        SimpleDateFormat fechaFormat = new SimpleDateFormat("dd-MM-yyyy");
+//////        
+//////        if(isMultipart){
+//////            try{
+//////                String pathUploadedFiles = _appProperties.getImagesPath();
+//////                List<FileItem> items = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(_request);
+//////                for (FileItem item : items) {
+//////                    String fieldName = item.getFieldName();
+//////                    if (item.isFormField()) {
+//////                        String fieldValue = item.getString("UTF-8"); // <-- HERE
+//////                        if (fieldValue != null) fieldValue = fieldValue.trim();
+//////                        System.out.println(WEB_NAME+"[EmpleadosController.guardarFotoEmpleado]"
+//////                            + "fieldName: " + fieldName
+//////                            +", fieldValue: " + fieldValue);
+//////                        switch (item.getFieldName()) {
+//////                            case "action":
+//////                                auxdata.setAction(fieldValue);
+//////                                break;
+//////                            case "action2":
+//////                                auxdata.setAction2(fieldValue);
+//////                                break;
+//////                            case "rut":
+//////                                auxdata.setRut(fieldValue);
+//////                                break;
+//////                            case "nombres":
+//////                                auxdata.setNombres(fieldValue);
+//////                                break;
+//////                            case "apePaterno":
+//////                                auxdata.setApePaterno(fieldValue);
+//////                                break;
+//////                            case "apeMaterno":
+//////                                auxdata.setApeMaterno(fieldValue);
+//////                                break;
+//////                            case "fechaNacimientoAsStr":
+//////                                {
+//////                                    Date auxDate = null;
+//////                                    try{
+//////                                        auxDate = fechaFormat.parse(fieldValue);
+//////                                    }catch(ParseException pex){
+//////                                        System.err.println("[EmpleadosController.guardarFotoEmpleado]"
+//////                                                + "error al parsear fecha nacimiento: "+pex.toString());
+//////                                    }   auxdata.setFechaNacimiento(auxDate);
+//////                                    break;
+//////                                }
+//////                            case "direccion":
+//////                                auxdata.setDireccion(fieldValue);
+//////                                break;
+//////                            case "email":
+//////                                auxdata.setEmail(fieldValue);
+//////                                break;
+//////                            case "email_personal":
+//////                                auxdata.setEmailPersonal(fieldValue);
+//////                                break;    
+//////                            case "fechaInicioContratoAsStr":
+//////                                {
+//////                                    Date auxDate = null;
+//////                                    try{
+//////                                        auxDate = fechaFormat.parse(fieldValue);
+//////                                    }catch(ParseException pex){
+//////                                        System.err.println("[EmpleadosController.guardarFotoEmpleado]"
+//////                                                + "error al parsear fecha inicio contrato: "+pex.toString());
+//////                                    }   auxdata.setFechaInicioContrato(auxDate);
+//////                                    break;
+//////                                }
+//////                            case "estado":
+//////                                try{
+//////                                    auxdata.setEstado(Integer.parseInt(fieldValue));
+//////                                }catch(NumberFormatException nfe){}
+//////                                break;
+//////                            case "foto":
+//////                                auxdata.setPathFoto(fieldValue);
+//////                                break;
+//////                            case "sexo":
+//////                                auxdata.setSexo(fieldValue);
+//////                                break;
+//////                            case "fono_fijo":
+//////                                auxdata.setFonoFijo(fieldValue);
+//////                                break;
+//////                            case "fono_movil":
+//////                                auxdata.setFonoMovil(fieldValue);
+//////                                break;
+//////                            case "comunaId":
+//////                                try{
+//////                                    auxdata.setComunaId(Integer.parseInt(fieldValue));
+//////                                }catch(NumberFormatException nfe){}
+//////                                break;
+//////                            case "empresaId":
+//////                                EmpresaVO auxempresa=new EmpresaVO();
+//////                                auxempresa.setId(fieldValue);
+//////                                auxdata.setEmpresa(auxempresa);
+//////                                break;   
+//////                            case "deptoId":
+//////                                DepartamentoVO auxdepto=new DepartamentoVO();
+//////                                auxdepto.setId(fieldValue);
+//////                                auxdata.setDepartamento(auxdepto);
+//////                                break;    
+//////                            case "cencoId":
+//////                                CentroCostoVO auxcenco=new CentroCostoVO();
+//////                                try{
+//////                                    auxcenco.setId(Integer.parseInt(fieldValue));
+//////                                    auxdata.setCentroCosto(auxcenco);
+//////                                }catch(NumberFormatException nfe){}
+//////                                break;
+//////                            case "idTurno":
+//////                                auxdata.setIdTurno(Integer.parseInt(fieldValue));
+//////                                break;
+//////                            case "idCargo":
+//////                                auxdata.setIdCargo(Integer.parseInt(fieldValue));
+//////                                break;    
+//////                            case "autorizaAusencia":
+//////                                boolean autoriza=false;
+//////                                if (fieldValue.compareTo("S")==0)
+//////                                    autoriza=true;
+//////                                auxdata.setAutorizaAusencia(autoriza);
+//////                                break;    
+//////                            case "cambiarFoto":
+//////                                boolean cambiaFoto=false;
+//////                                if (fieldValue.compareTo("S")==0)
+//////                                    cambiaFoto=true;
+//////                                auxdata.setCambiarFoto(cambiaFoto);
+//////                                break;
+//////                            case "fechaTerminoContratoAsStr":
+//////                                {
+//////                                    Date auxDate;
+//////                                    Calendar c1 = GregorianCalendar.getInstance();
+//////                                    c1.set(3000, 11, 31);
+//////                                    auxDate = c1.getTime();//fecha por defecto 31-12-3000
+//////                                    try{
+//////                                        auxDate = fechaFormat.parse(fieldValue);
+//////                                        auxdata.setFechaTerminoContrato(auxDate);
+//////                                    }catch(ParseException pex){
+//////                                        System.err.println("[EmpleadosController."
+//////                                            + "guardarFotoEmpleado]"
+//////                                            + "error al parsear fecha "
+//////                                            + "termino contrato: " + pex.toString()+", setear fecha 31-12-3000");
+//////                                        auxdata.setFechaTerminoContrato(auxDate);
+//////                                    }   
+//////                                    break;
+//////                                }
+//////                            case "articulo22":
+//////                                boolean articulo22=false;
+//////                                if (fieldValue.compareTo("S")==0)
+//////                                    articulo22=true;
+//////                                auxdata.setArticulo22(articulo22);
+//////                                break;
+//////                            case "cod_interno":
+//////                                auxdata.setCodInterno(fieldValue);
+//////                                break;
+//////                            case "cod_interno_adicional":
+//////                                auxdata.setCodInternoCaracterAdicional(fieldValue);
+//////                                break;
+//////                            case "claveMarcacion":
+//////                                auxdata.setClaveMarcacion(fieldValue);
+//////                                break;    
+//////                            case "contratoIndefinido":
+//////                                boolean contratoIndefinido=true;
+//////                                if (fieldValue.compareTo("N")==0)
+//////                                    contratoIndefinido=false;
+//////                                auxdata.setContratoIndefinido(contratoIndefinido);
+//////                                break;
+//////                            case "modificar":
+//////                                boolean modificarEDC=false;
+//////                                if (fieldValue.compareTo("Si")==0)
+//////                                    modificarEDC = true;
+//////                                auxdata.setModificarEmpresaDeptoCenco(modificarEDC);
+//////                                break;
+//////                            case "fechaDesvinculacionAsStr":
+//////                            {
+//////                                Date auxDate = null;
+//////                                try{
+//////                                    auxDate = fechaFormat.parse(fieldValue);
+//////                                    auxdata.setFechaDesvinculacion(auxDate);
+//////                                }catch(ParseException pex){
+//////                                    System.err.println("[EmpleadosController.guardarFotoEmpleado]"
+//////                                            + "error al parsear fecha desvinculacion: " + pex.toString());
+//////                                }   
+//////                                break;
+//////                            }
+//////                            case "continuidadLaboral":
+//////                                auxdata.setContinuidadLaboral(fieldValue);
+//////                                break;
+//////                            case "nuevaFechaIniContratoAsStr":
+//////                            {
+//////                                Date auxDate = null;
+//////                                try{
+//////                                    auxDate = fechaFormat.parse(fieldValue);
+//////                                    auxdata.setNuevaFechaIniContrato(auxDate);
+//////                                }catch(ParseException pex){
+//////                                    System.err.println("[EmpleadosController.guardarFotoEmpleado]"
+//////                                        + "error al parsear Nueva fecha inicio contrato: " + pex.toString());
+//////                                }   
+//////                                break;
+//////                            }    
+//////                        }        
+//////                        //fin procesar campos normales    
+//////                    }else{
+//////                        System.out.println(WEB_NAME+"[EmpleadosController.guardarFotoEmpleado]procesar campo file."
+//////                            + "Guardar foto como archivo (upload)");
+//////                        String fileName = item.getName();
+//////                        long sizeInBytes = item.getSize();
+//////                        File uploadedFile = new File(pathUploadedFiles + File.separator + fileName);
+//////                        item.write(uploadedFile);
+//////                        System.out.println(WEB_NAME+"[EmpleadosController.guardarFotoEmpleado]File Size: " + sizeInBytes + " bytes");
+//////                        System.out.println(WEB_NAME+"[EmpleadosController.guardarFotoEmpleado]File Path: " + uploadedFile.getPath());
+//////                        System.out.println(WEB_NAME+"[EmpleadosController.guardarFotoEmpleado]fileName: " + fileName);
+//////                        auxdata.setPathFoto(fileName);
+//////                    }
+//////                }
+//////            }catch(FileUploadException fuex){
+//////                System.err.println("[EmpleadosController.guardarFotoEmpleado]Error al leer parametros multipart: " + fuex.toString());
+//////            }catch(UnsupportedEncodingException uex){
+//////                System.err.println("[EmpleadosController.guardarFotoEmpleado]Error en encode: " + uex.toString());
+//////            }catch(Exception ex){
+//////                System.err.println("[EmpleadosController.guardarFotoEmpleado]Error al guardar upload archivo: " + ex.toString());
+//////            }    
+//////            
+//////        }
+//////    
+//////        return auxdata;
+//////    }
     
 }

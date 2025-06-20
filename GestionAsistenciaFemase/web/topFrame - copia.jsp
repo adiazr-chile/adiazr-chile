@@ -69,7 +69,7 @@ body {
     <td width="18%" align="center"><h1>
             <img src="images/<%=logoEmpresa%>" alt="" /></h1></td>
     <td width="43%" align="center">&nbsp;</td>
-    <td width="39%" ><img src="images/logo_femase_2020.png">v<%=version%>. By FEMASE&copy; <%=appAnios%>
+    <td width="39%" ><img src="images/logo_femase_2020.png">v<%=version%>. Dise&ntilde;ado por FEMASE&copy; <%=appAnios%>
       </td>
 </tr>
 </table>

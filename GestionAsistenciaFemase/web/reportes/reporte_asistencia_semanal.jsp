@@ -96,7 +96,7 @@
                     var select = $('#rut');
                     select.find('option').remove();
                     var newoption = "";
-                    newoption += "<option value='todos'>Todos</option>";
+                    //newoption += "<option value='todos'>Todos</option>";
                     for (i=0; i<response.length; i++) {
                         var auxNombre = '['+response[i].rut+'] '+response[i].nombres + 
                             ' ' + response[i].apePaterno + ' '+response[i].apeMaterno;
@@ -105,6 +105,7 @@
                     $('#rut').html(newoption);
                  });
                  
+                 /*
                 sourceSelected = 'cargar_turnos_by_cenco';
                 $.get('<%=request.getContextPath()%>/JsonListServlet', {
                     empresaID : empresaSelected,deptoID : deptoSelected,cencoID : cencoSelected,source: sourceSelected
@@ -120,6 +121,7 @@
                         }
                         $('#turno').html(newoption);
                 });
+                 */
             });
              
         });
@@ -279,11 +281,14 @@
             <!-- fin div rut empleado -->
             <!-- inicio div turno -->
             <div id="content5" align="left">
-            	<div id="col1"><label>Turno</label></div>
-                <div id="col2">            
-                    <select id="turno" name="turno" style="width:350px;" required>
-                        <option value="-1" selected>Cualquiera</option>
-                    </select>
+            	<div id="col1">&nbsp; <!--<label>Turno</label>--></div>
+                <div id="col2">  
+                    <input type="hidden" id="turno" name="turno" value="-1">
+                    <!--
+                        <select id="turno" name="turno" style="width:350px;" required>
+                            <option value="-1" selected>Cualquiera</option>
+                        </select>
+                    -->
                 </div>
             </div> 
             <!-- fin div turno -->

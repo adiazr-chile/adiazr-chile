@@ -105,7 +105,7 @@
 
                     <div class="text-center p-t-46 p-b-20">
                             <span class="txt2">
-                                Versi&oacute;n 2.6.3 Designed by <a href="http://www.femase.cl">FEMASE</a>&copy; 2017-2019
+                                Versi&oacute;n 2.6.3 Dise&ntilde;ado por <a href="http://www.femase.cl">FEMASE</a>&copy; 2017-2019
                             </span>
                     </div>
 

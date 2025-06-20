@@ -10,6 +10,8 @@ import cl.femase.gestionweb.vo.DiferenciaEntreFechasVO;
 import cl.femase.gestionweb.vo.DiferenciaHorasVO;
 import cl.femase.gestionweb.vo.MarcaVO;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -46,9 +48,12 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Random;
 import java.util.StringTokenizer;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.validator.UrlValidator;
 import org.joda.time.DateTime;
@@ -80,6 +85,56 @@ public class Utilidades {
 //    static int intMonth = today.get(Calendar.MONTH)+1;
 //    static int intDay = today.get(Calendar.DATE);
     
+    
+    public static String getUsername(String input) {
+        if (input.length() > 12) {
+            String truncado = input.substring(0, 9);
+            int cifraAleatoria = new Random().nextInt(900) + 100; // Genera número entre 100 y 999
+            return truncado + cifraAleatoria;
+        }
+        return input;
+    }
+    
+    // Utilidad para evitar NPE y trims
+    public static String trimOrNull(String value) {
+        return value == null ? null : value.trim();
+    }
+    
+    /**
+     * Comprime varios archivos en un único archivo ZIP.
+     * @param archivosPaths Lista con rutas completas de los archivos a comprimir.
+     * @param rutaZipSalida Ruta completa donde se guardará el archivo ZIP generado.
+     * @throws IOException Si ocurre un error de lectura/escritura.
+     */
+    public static void comprimirArchivos(ArrayList<String> archivosPaths, 
+            String rutaZipSalida) throws IOException {
+        byte[] buffer = new byte[4096];
+
+        try (FileOutputStream fos = new FileOutputStream(rutaZipSalida);
+             ZipOutputStream zos = new ZipOutputStream(fos)) {
+
+            for (String archivoPath : archivosPaths) {
+                File archivo = new File(archivoPath);
+                if (!archivo.exists() || !archivo.isFile()) {
+                    System.out.println("Archivo no encontrado o no es un archivo válido: " + archivoPath);
+                    continue; // O lanzar excepción si prefieres
+                }
+
+                try (FileInputStream fis = new FileInputStream(archivo)) {
+                    // El nombre dentro del ZIP será solo el nombre del archivo, sin ruta
+                    ZipEntry zipEntry = new ZipEntry(archivo.getName());
+                    zos.putNextEntry(zipEntry);
+
+                    int len;
+                    while ((len = fis.read(buffer)) > 0) {
+                        zos.write(buffer, 0, len);
+                    }
+
+                    zos.closeEntry();
+                }
+            }
+        }
+    }
     
     /**
     * Recibe todas las marcas de un rut y retorna una lista con un par unico de entrada y salida.

@@ -65,6 +65,16 @@ public class UsuarioVO implements Serializable {
     private String apPaternoEncode;
     private String apMaternoEncode;
 
+    private boolean isTemporary;
+
+    public boolean isIsTemporary() {
+        return isTemporary;
+    }
+
+    public void setIsTemporary(boolean isTemporary) {
+        this.isTemporary = isTemporary;
+    }
+    
     public String getRunEmpleado() {
         return runEmpleado;
     }

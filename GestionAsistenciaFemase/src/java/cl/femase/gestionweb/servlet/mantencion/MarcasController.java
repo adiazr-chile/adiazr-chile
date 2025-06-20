@@ -19,16 +19,16 @@ import cl.femase.gestionweb.vo.PropertiesVO;
 import cl.femase.gestionweb.vo.UsuarioVO;
 import java.io.IOException;
 import java.util.StringTokenizer;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 
 public class MarcasController extends BaseServlet {
@@ -83,6 +83,9 @@ public class MarcasController extends BaseServlet {
         }
     }
 
+    /**
+    * 
+    */
     @Override
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -230,24 +233,44 @@ public class MarcasController extends BaseServlet {
             
             if (action.compareTo("list") == 0){
                 //probar con empleado con turno rotativo...
+                String paramHashcode=request.getParameter("param_hashcode");
+                String paramRunEmpleado = request.getParameter("rutEmpleado");
+                String paramStartDate = request.getParameter("startDate");
+                String paramEndDate = request.getParameter("endDate");
                 System.out.println(WEB_NAME+"[MarcasController]"
                     + "mostrando marcas."+
                         "CencoId= " +cencoId
-                        +", rutEmpleado= " +request.getParameter("rutEmpleado")
+                        +", rutEmpleado= " +paramRunEmpleado
                         +", dispositivoId= " +request.getParameter("dispositivoId")
-                        +", startDate= " +request.getParameter("startDate")
-                        +", endDate= " +request.getParameter("endDate"));
+                        +", startDate= " +paramStartDate
+                        +", endDate= " +paramEndDate);
                 try{
                     int objectsCount = 0;
-                    if (listar && (request.getParameter("rutEmpleado")!=null 
-                            && request.getParameter("rutEmpleado").compareTo("-1") != 0)){
+//                    if (listar && (request.getParameter("rutEmpleado")!=null && request.getParameter("rutEmpleado").compareTo("-1") != 0) ){
+                    
+                    if (listar && (
+                            (paramRunEmpleado != null && paramRunEmpleado.compareTo("-1") != 0)
+                              || (paramHashcode != null && paramHashcode.compareTo("") != 0 ) 
+                            ) 
+                        ){    
+                                                
+                        if ( (paramRunEmpleado == null || paramRunEmpleado.compareTo("-1") == 0) && (paramHashcode != null && paramHashcode.compareTo("") != 0)){
+                            System.out.println(WEB_NAME+"[MarcasController]Buscar info del empleado a partir del hashcode de la marca.");
+                            MarcaVO marca       = auxnegocio.getMarcaByHashcode(paramHashcode, false);
+                            empresaId           = marca.getEmpresaCod();
+                            paramRunEmpleado    = marca.getRutEmpleado();
+                            paramStartDate      = marca.getFecha();
+                            paramEndDate        = marca.getFecha();
+                        }
+                        
                         request.setAttribute("empresa", empresaId);
-                        request.setAttribute("rut_empleado", request.getParameter("rutEmpleado"));
+                        request.setAttribute("rut_empleado", paramRunEmpleado);
                         
                         int idTurnoRotativo = turnoBp.getTurnoRotativo(empresaId);
                         EmpleadoVO infoEmpleado = 
                             empleadosBp.getEmpleado(empresaId, 
-                                request.getParameter("rutEmpleado"));
+                                paramRunEmpleado);
+                        
                         boolean tieneTurnoRotativo=false;
                         if (idTurnoRotativo == infoEmpleado.getIdTurno()){
                             System.out.println(WEB_NAME+"[MarcasController.mostrarMarcas]"
@@ -258,12 +281,13 @@ public class MarcasController extends BaseServlet {
                         }
         
                         hashMarcas = auxnegocio.getHashMarcas(empresaId,
-                            deptoId,
-                            Integer.parseInt(cencoId),
-                            request.getParameter("rutEmpleado"), 
+                            infoEmpleado.getDeptoId(),
+                            infoEmpleado.getCencoId(),
+                            paramRunEmpleado, 
                             request.getParameter("dispositivoId"), 
-                            request.getParameter("startDate"), 
-                            request.getParameter("endDate"),
+                            paramStartDate, 
+                            paramEndDate,
+                            paramHashcode,
                             tieneTurnoRotativo,
                             infoEmpleado.getRegionId(),
                             infoEmpleado.getComunaId(),
@@ -273,26 +297,27 @@ public class MarcasController extends BaseServlet {
 
                         //Get Total Record Count for Pagination
                         objectsCount = auxnegocio.getMarcasCount(empresaId,
-                            deptoId,
-                            Integer.parseInt(cencoId),
-                            request.getParameter("rutEmpleado"), 
+                            infoEmpleado.getDeptoId(),
+                            infoEmpleado.getCencoId(),
+                            paramRunEmpleado, 
                             request.getParameter("dispositivoId"), 
-                            request.getParameter("startDate"), 
-                            request.getParameter("endDate"));
+                            paramStartDate, 
+                            paramEndDate,
+                            paramHashcode);
                         
                         //agregar evento al log.
-                        resultado.setRutEmpleado(request.getParameter("rutEmpleado"));
+                        resultado.setRutEmpleado(paramRunEmpleado);
                         resultado.setEmpresaId(empresaId);
                         resultado.setDeptoId(deptoId);
                         resultado.setCencoId(Integer.parseInt(cencoId));
                         resultado.setDescription("Consulta marcas. "
-                            + " Rut empleado: " + request.getParameter("rutEmpleado")    
-                            + ", desde: " + request.getParameter("startDate")
-                            + ", hasta: " + request.getParameter("endDate")
+                            + " Rut empleado: " + paramRunEmpleado    
+                            + ", desde: " + paramStartDate
+                            + ", hasta: " + paramEndDate
                             + ", dispositivo: " + request.getParameter("dispositivoId"));
                         eventosBp.addEvent(resultado);
                     
-                    }
+                    }else System.err.println("No ");
                     //Convert Java Object to Json
 //                    JsonElement element = gson.toJsonTree(hashMarcas,
 //                        new TypeToken<LinkedHashMap<String, MarcaVO>>() {}.getType());
@@ -667,8 +692,15 @@ public class MarcasController extends BaseServlet {
             +"<br>Tipo Marca: " + tiposMarcas.get(_marcaCreada.getTipoMarca())+" manual"
             +"<br>Fecha/Hora Marca: " + _marcaCreada.getFechaHora()
             +"<br>Codigo Hash: " + _marcaCreada.getHashcode()
-            +"<br>Usuario que crea el registro: " + _userConnected.getUsername();
-                
+            +"<br>Usuario que crea el registro: " + _userConnected.getUsername()
+            +"<br>---"
+            +"<br>Sistema excepcional de jornada: NO APLICA"
+            +"<br>Resolución Exenta: NO APLICA"
+            +"<br>Geolocalización: NO APLICA"
+            +"<br>Empresa Transitoria o Subcontratada: NO APLICA"
+            +"<br>Nombre: NO APLICA"
+            +"<br>RUT: NO APLICA";
+             
         MaintenanceEventVO resultado=new MaintenanceEventVO();
         resultado.setUsername(_userConnected.getUsername());
         resultado.setDatetime(new Date());
@@ -749,8 +781,14 @@ public class MarcasController extends BaseServlet {
             +"<br>Fecha/Hora Marca (modificada): " + _marcaModificada.getFechaHora()
             +"<br>Codigo Hash (original): " + _marcaOriginal.getHashcode()
             +"<br>Codigo Hash (modificado): " + _marcaModificada.getHashcode()    
-            +"<br>Usuario que modifica el registro: " + _userConnected.getUsername();
-        
+            +"<br>Usuario que modifica el registro: " + _userConnected.getUsername()
+            +"<br>---"
+            +"<br>Sistema excepcional de jornada: NO APLICA"
+            +"<br>Resolución Exenta: NO APLICA"
+            +"<br>Geolocalización: NO APLICA"
+            +"<br>Empresa Transitoria o Subcontratada: NO APLICA"
+            +"<br>Nombre: NO APLICA"
+            +"<br>RUT: NO APLICA";
         MaintenanceEventVO resultado=new MaintenanceEventVO();
         resultado.setUsername(_userConnected.getUsername());
         resultado.setDatetime(new Date());

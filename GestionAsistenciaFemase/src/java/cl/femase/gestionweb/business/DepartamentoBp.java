@@ -106,10 +106,10 @@ public class DepartamentoBp  extends BaseBp{
         return insValues;
     }
     
-    public int getDepartamentosCount(String _empresaId, 
-            String _nombre){
-        return deptosDao.getDepartamentosCount(_empresaId, 
-            _nombre);
-    }
+//    public int getDepartamentosCount(String _empresaId, 
+//            String _nombre){
+//        return deptosDao.getDepartamentosCount(_empresaId, 
+//            _nombre);
+//    }
 
 }

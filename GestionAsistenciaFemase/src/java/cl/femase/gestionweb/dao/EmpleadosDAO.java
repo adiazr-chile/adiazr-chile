@@ -10,9 +10,11 @@ import cl.femase.gestionweb.common.DatabaseException;
 import cl.femase.gestionweb.common.Utilidades;
 import cl.femase.gestionweb.vo.CentroCostoVO;
 import cl.femase.gestionweb.vo.DepartamentoVO;
+import cl.femase.gestionweb.vo.EmpleadoConsultaFiscalizadorVO;
 import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.EmpleadoVO;
 import cl.femase.gestionweb.vo.EmpresaVO;
+import cl.femase.gestionweb.vo.FiltroBusquedaEmpleadosVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import cl.femase.gestionweb.vo.UsuarioCentroCostoVO;
 import java.sql.PreparedStatement;
@@ -1421,6 +1423,111 @@ public class EmpleadosDAO extends BaseDAO{
         
         return lista;
     }
+    
+    /**
+    * 
+    * @param _filtroVO
+    * @return 
+    */
+    public List<EmpleadoConsultaFiscalizadorVO> getEmpleadosFiscalizacion(FiltroBusquedaEmpleadosVO _filtroVO){
+        List<EmpleadoConsultaFiscalizadorVO> listaEmpleados = new ArrayList<>();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        EmpleadoConsultaFiscalizadorVO data;
+        try{
+            String sql = "select "
+                    + "ve.empresa_id,"
+                    + "ve.empresa_nombre,"
+                    + "ve.rut,"
+                    + "ve.nombre || ' ' || ve.materno nombre_completo,"
+                    + "ve.fecha_inicio_contrato,"
+                    + "ve.depto_id,"
+                    + "ve.depto_nombre,"
+                    + "ve.cenco_id,"
+                    + "ve.ccosto_nombre cenco_nombre,"
+                    + "ve.empl_estado estado_value,"
+                    + "CASE "
+                    + "WHEN ve.empl_estado=1 THEN 'Vigente' "
+                    + "WHEN ve.empl_estado=2 THEN 'No vigente' "
+                    + "ELSE 'Vigente' "
+                    + "END AS estado_label,"
+                    + "ve.empl_id_turno turno_id,"
+                    + "ve.nombre_turno,"
+                    + "ve.empl_id_cargo cargo_id,"
+                    + "ve.cargo_nombre,"
+                    + "ve.cod_interno "
+                + "from view_empleado ve "
+                + "where "
+                    + "ve.empresa_id = '" + _filtroVO.getEmpresaId() + "'";
+            
+            if (_filtroVO.getRunEmpleado() != null && _filtroVO.getRunEmpleado().compareTo("") != 0){
+                sql += " and ve.rut like '" + _filtroVO.getRunEmpleado() + "%' ";
+            }
+            
+            if (_filtroVO.getNombre() != null && _filtroVO.getNombre().compareTo("") != 0){
+                sql += " and upper(ve.nombre) like '%" + _filtroVO.getNombre().toUpperCase() + "%' ";
+            }
+            
+            if (_filtroVO.getCencoId() != -1){
+                sql += " and ve.cenco_id = " + _filtroVO.getCencoId() + "";
+            }
+            
+            if (_filtroVO.getTurnoId() != -1){
+                sql += " and ve.empl_id_turno = " + _filtroVO.getTurnoId() + "";
+            }
+            
+            if (_filtroVO.getCargoId() != -1){
+                sql += " and ve.empl_id_cargo = " + _filtroVO.getCargoId() + "";
+            }
+            
+            sql += " order by ve.nombre";
+            
+            System.out.println(WEB_NAME+"[EmpleadosDAO.getEmpleadosFiscalizacion]SQL: " + sql);
+            
+            dbConn = dbLocator.getConnection(m_dbpoolName,"[EmpleadosDAO.getEmpleadosFiscalizacion]");
+            ps = dbConn.prepareStatement(sql);
+            rs = ps.executeQuery();
+
+            while (rs.next()){
+                data = new EmpleadoConsultaFiscalizadorVO();
+              
+                data.setEmpresaId(rs.getString("empresa_id"));
+                data.setEmpresaNombre(rs.getString("empresa_nombre"));
+                data.setRun(rs.getString("rut"));
+                data.setNombre(rs.getString("nombre_completo"));
+                data.setFechaInicioContrato(rs.getString("fecha_inicio_contrato"));
+                data.setDeptoId(rs.getString("depto_id"));
+                data.setDeptoNombre(rs.getString("depto_nombre"));
+                data.setCencoId(rs.getInt("cenco_id"));
+                data.setCencoNombre(rs.getString("cenco_nombre"));
+                data.setEstadoValue(rs.getInt("estado_value"));
+                data.setEstadoLabel(rs.getString("estado_label"));
+                data.setIdTurno(rs.getInt("turno_id"));
+                data.setNombreTurno(rs.getString("nombre_turno"));
+                data.setIdCargo(rs.getInt("cargo_id"));
+                data.setNombreCargo(rs.getString("cargo_nombre"));
+                data.setCodInterno(rs.getString("cod_interno"));
+                
+                listaEmpleados.add(data);
+            }
+            
+        }catch(SQLException|DatabaseException sqle){
+            m_logger.error("Error: "+sqle.toString());
+        }finally{
+            try {
+                if (ps != null) ps.close();
+                if (rs != null) rs.close();
+                dbLocator.freeConnection(dbConn);
+            } catch (SQLException ex) {
+                System.err.println("[EmpleadosDAO.getEmpleadosFiscalizacion]"
+                    + "Error: " + ex.toString());
+            }
+        }
+        
+        return listaEmpleados;
+        
+    } 
+
     
     /**
     * Retorna lista con los empleados  existentes
@@ -3117,22 +3224,23 @@ public class EmpleadosDAO extends BaseDAO{
         
         try{
             String sql = "SELECT "
-                + "rut,"
-                + "nombre nombreCompleto,"
-                + "empresa_id, "
-                + "cenco_id,"
-                + "ccosto_nombre,"
-                + "empl_id_turno turno_id, "
-                + "nombre_turno turno_nombre,"
-                + "cod_interno,"
-                + "nombre,"
-                + "empleado.materno,"
-                + "cargo.cargo_nombre,"
-                + "empleado.depto_id,"
-                + "empresa_nombre,"
-                + "depto_nombre,"
-                + "ccosto_nombre,"
-                + "to_char(fecha_inicio_contrato,'dd/MM/yyyy') fechainicontrato "
+                    + "rut,"
+                    + "nombre nombreCompleto,"
+                    + "empresa_id, "
+                    + "cenco_id,"
+                    + "ccosto_nombre,"
+                    + "empl_id_turno turno_id, "
+                    + "trim(nombre_turno) turno_nombre,"
+                    + "cod_interno,"
+                    + "nombre,"
+                    + "empleado.materno,"
+                    + "trim(cargo.cargo_nombre) cargo_nombre,"
+                    + "empleado.depto_id,"
+                    + "empresa_nombre,"
+                    + "empleado.empresa_rut,"
+                    + "depto_nombre,"
+                    + "ccosto_nombre,"
+                    + "to_char(fecha_inicio_contrato,'dd/MM/yyyy') fechainicontrato "
                 + "FROM view_empleado empleado "
                 + "inner join cargo on (empleado.empl_id_cargo = cargo.cargo_id) "
                 + "WHERE "
@@ -3154,6 +3262,7 @@ public class EmpleadosDAO extends BaseDAO{
                 infoEmpleado.setRut(rs.getString("rut"));
                 infoEmpleado.setNombres(rs.getString("nombreCompleto"));
                 infoEmpleado.setEmpresaId(rs.getString("empresa_id"));
+                infoEmpleado.setEmpresaRut(rs.getString("empresa_rut"));
                 infoEmpleado.setCencoId(rs.getInt("cenco_id"));
                 infoEmpleado.setCencoNombre(rs.getString("ccosto_nombre"));
                 

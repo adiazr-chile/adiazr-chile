@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Selección de Empleados</title>
+  <!-- Materialize CSS y Google Icons -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" />
+  <link rel="stylesheet" href="https://cdn.datatables.net/v/bs4/dt-1.13.4/datatables.min.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <style>
+    .table-container { margin-top: 30px; }
+    .input-field { margin-bottom: 10px; }
+    /* Compactar filas de la tabla */
+    #tablaEmpleados td, #tablaEmpleados th {
+      padding-top: 4px !important;
+      padding-bottom: 4px !important;
+      padding-left: 8px !important;
+      padding-right: 8px !important;
+      font-size: 0.95em;
+    }
+    #tablaEmpleados tr {
+      min-height: 24px !important;
+    }
+    #tablaEmpleados .filled-in + span {
+      height: 16px;
+      width: 16px;
+      top: 2px;
+      left: 2px;
+    }
+	
+	h5.mi-titulo-personalizado {
+		color: #3649d5;
+		font-weight: 450;
+		font-size: 1.8rem;
+		text-transform: uppercase;
+		letter-spacing: 1px;
+	  }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h5 class="mi-titulo-personalizado">Reportes&nbsp;/&nbsp;Fiscalizaci&oacute;n/&nbsp;Selección empleados</h5>
+    <!-- Formulario de búsqueda optimizado con grid -->
+    <form id="searchForm">
+  <div class="row">
+    <div class="input-field col s12 m6 l3">
+      <input id="nombre" type="text" />
+      <label for="nombre">Nombre empleado</label>
+    </div>
+    <div class="input-field col s12 m6 l3">
+      <input id="rut" type="text" />
+      <label for="rut">RUT empleado</label>
+    </div>
+    <div class="input-field col s12 m6 l3">
+      <select id="departamento">
+        <option value="" disabled selected>Seleccione departamento</option>
+        <option value="V Region">V Region</option>
+        <option value="Metropolitana">Metropolitana</option>
+        <option value="VIII Region">VIII Region</option>
+      </select>
+      <label>Departamento</label>
+    </div>
+    <div class="input-field col s12 m6 l3">
+      <select id="turno">
+        <option value="" disabled selected>Seleccione turno</option>
+        <option value="Mañana">Mañana</option>
+        <option value="Tarde">Tarde</option>
+        <option value="Noche">Noche</option>
+      </select>
+      <label>Turno</label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="input-field col s12 m6 l3">
+      <input type="text" class="datepicker" id="fechaInicio" placeholder="Fecha inicio" autocomplete="off" />
+      <label for="fechaInicio" class="active">Fecha inicio</label>
+    </div>
+    <div class="input-field col s12 m6 l3">
+      <input type="text" class="datepicker" id="fechaFin" placeholder="Fecha fin" autocomplete="off" />
+      <label for="fechaFin" class="active">Fecha fin</label>
+    </div>
+    <div class="input-field col s12 m6 l3">
+      <select id="periodo">
+        <option value="" disabled selected>Seleccione período</option>
+        <option value="semana">Última semana</option>
+        <option value="quincena">Última quincena</option>
+        <option value="mes">Mes anterior</option>
+        <option value="anio">Año anterior</option>
+      </select>
+      <label>Período</label>
+    </div>
+    <div class="input-field col s12 m6 l3">
+      <select id="tipoReporte" required>
+        <option value="" disabled selected>Seleccione tipo de reporte</option>
+        <option value="resumen">Asistencia</option>
+        <option value="detallado">Jornada diaria</option>
+        <option value="estadistico">Días domingo y/o días festivos</option>
+		<option value="estadistico">Modificaciones y/o alteraciones de turnos</option>
+		<option value="estadistico">Diario</option>
+		<option value="estadistico">Incidentes técnicos</option>
+		
+      </select>
+      <label>Tipo de reporte</label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="input-field col s12 right-align">
+      <button class="btn waves-effect waves-light" type="submit">
+        Buscar <i class="material-icons right">search</i>
+      </button>
+    </div>
+  </div>
+</form>
+
+
+    <!-- Tabla de resultados -->
+    <div class="table-container">
+      <table class="striped highlight responsive-table" id="tablaEmpleados" style="width:100%">
+        <thead>
+          <tr>
+            <th>RUT</th>
+            <th>Nombre</th>
+            <th>Centro de costo</th>
+            <th>Estado</th>
+            <th>Turno</th>
+            <th>Cargo</th>
+            <th>Seleccionar</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>12.345.678-9</td>
+            <td>Juan Lopez</td>
+            <td>Residencia Valparaiso</td>
+            <td>Activo</td>
+            <td>Mañana</td>
+            <td>Enfermero</td>
+            <td>
+              <label>
+                <input type="checkbox" class="filled-in" name="empleadosSeleccionados" value="12.345.678-9" />
+                <span></span>
+              </label>
+            </td>
+          </tr>
+          <tr>
+            <td>98.765.432-1</td>
+            <td>Maria Perez</td>
+            <td>Centro Santiago</td>
+            <td>Activo</td>
+            <td>Tarde</td>
+            <td>Administrativo</td>
+            <td>
+              <label>
+                <input type="checkbox" class="filled-in" name="empleadosSeleccionados" value="98.765.432-1" />
+                <span></span>
+              </label>
+            </td>
+          </tr>
+          <tr>
+            <td>11.223.344-5</td>
+            <td>Carlos Diaz</td>
+            <td>Hospital Concepcion</td>
+            <td>Inactivo</td>
+            <td>Noche</td>
+            <td>Técnico</td>
+            <td>
+              <label>
+                <input type="checkbox" class="filled-in" name="empleadosSeleccionados" value="11.223.344-5" />
+                <span></span>
+              </label>
+            </td>
+          </tr>
+          <tr>
+            <td>22.334.455-6</td>
+            <td>Ana Torres</td>
+            <td>Residencia Valparaiso</td>
+            <td>Activo</td>
+            <td>Mañana</td>
+            <td>Auxiliar</td>
+            <td>
+              <label>
+                <input type="checkbox" class="filled-in" name="empleadosSeleccionados" value="22.334.455-6" />
+                <span></span>
+              </label>
+            </td>
+          </tr>
+          <tr>
+            <td>33.445.566-7</td>
+            <td>Pedro Ramirez</td>
+            <td>Centro Santiago</td>
+            <td>Activo</td>
+            <td>Tarde</td>
+            <td>Supervisor</td>
+            <td>
+              <label>
+                <input type="checkbox" class="filled-in" name="empleadosSeleccionados" value="33.445.566-7" />
+                <span></span>
+              </label>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Botón de envío -->
+    <div class="right-align" style="margin-top: 20px;">
+      <button class="btn waves-effect waves-light" id="enviarSeleccion" type="button">
+        Enviar seleccionados <i class="material-icons right">send</i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <script src="https://cdn.datatables.net/v/bs4/dt-1.13.4/datatables.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      $('select').formSelect();
+      $('.datepicker').datepicker({
+        format: 'yyyy-mm-dd',
+        maxDate: new Date(),
+        minDate: new Date(new Date().setFullYear(new Date().getFullYear() - 5)),
+        yearRange: 5,
+      });
+
+      $('#tablaEmpleados').DataTable({
+        paging: true,
+        pageLength: 5,
+        lengthChange: false,
+        ordering: true,
+        order: [[1, 'asc']],
+        language: {
+			"decimal": "",
+			"emptyTable": "No hay información",
+			"info": "Mostrando _START_ a _END_ de _TOTAL_ entradas",
+			"infoEmpty": "Mostrando 0 a 0 de 0 entradas",
+			"infoFiltered": "(filtrado de _MAX_ entradas totales)",
+			"lengthMenu": "Mostrar _MENU_ entradas",
+			"loadingRecords": "Cargando...",
+			"processing": "Procesando...",
+			"search": "Buscar:",
+			"zeroRecords": "No se encontraron resultados",
+			"paginate": {
+			  "first": "Primero",
+			  "last": "Último",
+			  "next": "Siguiente",
+			  "previous": "Anterior"
+			}
+		  },
+        columnDefs: [
+          { orderable: false, targets: 6 },
+        ],
+        responsive: true,
+      });
+
+      $('#enviarSeleccion').click(function () {
+        const seleccionados = [];
+        $('#tablaEmpleados tbody input[name="empleadosSeleccionados"]:checked').each(function () {
+          seleccionados.push($(this).val());
+        });
+
+        if (seleccionados.length === 0) {
+          M.toast({ html: 'Por favor, seleccione al menos un empleado.' });
+          return;
+        }
+
+        const tipoReporte = $('#tipoReporte').val();
+        if (!tipoReporte) {
+          M.toast({ html: 'Por favor, seleccione un tipo de reporte.' });
+          return;
+        }
+
+        const data = {
+          empleados: seleccionados,
+          reporte: tipoReporte,
+        };
+
+        console.log('Datos a enviar:', data);
+
+        M.toast({ html: 'Solicitud de reporte enviada correctamente.' });
+      });
+
+      $('#searchForm').submit(function (e) {
+        e.preventDefault();
+        M.toast({ html: 'Funcionalidad de búsqueda no implementada en este ejemplo.' });
+      });
+    });
+  </script>
+</body>
+</html>

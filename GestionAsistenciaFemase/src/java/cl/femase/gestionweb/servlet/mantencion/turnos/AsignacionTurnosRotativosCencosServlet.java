@@ -13,9 +13,9 @@ import cl.femase.gestionweb.vo.UsuarioVO;
 
 import java.io.IOException;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -29,9 +29,9 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.StringTokenizer;
-import javax.servlet.ServletContext;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 
 
@@ -89,7 +89,7 @@ public class AsignacionTurnosRotativosCencosServlet extends BaseServlet {
     * @param request
     * @param response
     * 
-    * @throws javax.servlet.ServletException
+    * @throws jakarta.servlet.ServletException
     * @throws java.io.IOException
     */
     @Override

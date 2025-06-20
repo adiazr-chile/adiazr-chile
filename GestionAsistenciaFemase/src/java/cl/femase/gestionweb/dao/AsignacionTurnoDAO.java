@@ -7,6 +7,8 @@ package cl.femase.gestionweb.dao;
 
 import cl.femase.gestionweb.common.DatabaseException;
 import cl.femase.gestionweb.vo.AsignacionTurnoVO;
+import cl.femase.gestionweb.vo.ModificacionAlteracionTurnoVO;
+import cl.femase.gestionweb.vo.ModificacionTurnoVO;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -301,6 +303,157 @@ public class AsignacionTurnoDAO extends BaseDAO{
         }
         
         return data;
+    }
+    
+    /**
+    * 
+    * @param _empresaId
+    * @param _runEmpleado
+    * @return 
+    */
+    public ModificacionAlteracionTurnoVO getModificacionTurno_Anterior(String _empresaId, 
+            String _runEmpleado){
+        
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        ModificacionAlteracionTurnoVO asignacion = null;
+        
+        try{
+            String sql = "select "
+                + "ta.id_turno,"
+                + "ta.fecha_asignacion::date,"
+                + "trim(turno.nombre_turno),"
+                + "ta.username "
+                + "from turno_asignacion ta "
+                + "inner JOIN turno "
+                    + "ON (ta.empresa_id = turno.empresa_id and ta.id_turno = turno.id_turno) "
+                    + "where ta.empresa_id='" + _empresaId + "' "
+                    + "and ta.fecha_hasta is not null "
+                    + "and ta.rut_empleado='" + _runEmpleado + "' "
+                    + "order by ta.fecha_desde desc limit 1";
+            
+            System.out.println(WEB_NAME+"[AsignacionTurnoDAO.getModificacionTurno_Anterior]sql: "+sql);
+            dbConn = dbLocator.getConnection(m_dbpoolName,"[AsignacionTurnoDAO.getModificacionTurno_Anterior]");
+            ps = dbConn.prepareStatement(sql);
+            
+            rs = ps.executeQuery();
+
+            if (rs.next()){
+                asignacion = new ModificacionAlteracionTurnoVO();
+               
+                asignacion.setIdTurnoAnterior(rs.getInt(1));
+                asignacion.setFechaAsignacionTurnoAnterior(rs.getString(2));
+                asignacion.setNombreTurnoAnterior(rs.getString(3));
+                asignacion.setQuienAsignaTurnoAnterior(rs.getString(4));
+            }
+
+            ps.close();
+            rs.close();
+            dbLocator.freeConnection(dbConn);
+        }catch(SQLException|DatabaseException sqle){
+            m_logger.error("Error: "+sqle.toString());
+        }finally{
+            try {
+                if (ps != null) ps.close();
+                if (rs != null) rs.close();
+                dbLocator.freeConnection(dbConn);
+            } catch (SQLException ex) {
+                System.err.println("Error: "+ex.toString());
+            }
+        }
+        
+        return asignacion;
+    }
+    
+    /**
+    * 
+    * @param _empresaId
+    * @param _runEmpleado
+    * @return 
+    */
+    public ModificacionAlteracionTurnoVO getModificacionTurno_Nuevo(String _empresaId, 
+            String _runEmpleado){
+        
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        ModificacionAlteracionTurnoVO asignacion = null;
+        
+        try{
+            String sql = "select "
+                + "ta.id_turno,"
+                + "ta.fecha_asignacion::date,"
+                + "trim(turno.nombre_turno),"
+                + "ta.username "
+                + "from turno_asignacion ta "
+                + "inner JOIN turno "
+                    + "ON (ta.empresa_id = turno.empresa_id and ta.id_turno = turno.id_turno) "
+                    + "where ta.empresa_id='" + _empresaId + "' "
+                    + "and ta.fecha_hasta is null "
+                    + "and ta.rut_empleado='" + _runEmpleado + "' "
+                    + "order by ta.fecha_desde desc limit 1";
+            
+            System.out.println(WEB_NAME+"[AsignacionTurnoDAO.getModificacionTurno_Nuevo]sql: "+sql);
+            dbConn = dbLocator.getConnection(m_dbpoolName,"[AsignacionTurnoDAO.getModificacionTurno_Nuevo]");
+            ps = dbConn.prepareStatement(sql);
+            rs = ps.executeQuery();
+            if (rs.next()){
+                asignacion = new ModificacionAlteracionTurnoVO();
+                asignacion.setIdTurnoNuevo(rs.getInt(1));
+                asignacion.setFechaAsignacionTurnoNuevo(rs.getString(2));
+                asignacion.setNombreTurnoNuevo(rs.getString(3));
+                asignacion.setQuienAsignaTurnoNuevo(rs.getString(4));
+            }
+
+            ps.close();
+            rs.close();
+            dbLocator.freeConnection(dbConn);
+        }catch(SQLException|DatabaseException sqle){
+            m_logger.error("Error: "+sqle.toString());
+        }finally{
+            try {
+                if (ps != null) ps.close();
+                if (rs != null) rs.close();
+                dbLocator.freeConnection(dbConn);
+            } catch (SQLException ex) {
+                System.err.println("Error: "+ex.toString());
+            }
+        }
+        
+        return asignacion;
+    }
+    
+    /**
+    * Retorna una lista con un solo registro
+    * donde se indica el turno actual y el turno anterior
+    * 
+    * @param _empresaId
+    * @param _runEmpleado
+    * 
+    * @return 
+    */
+    public ArrayList<ModificacionAlteracionTurnoVO> getModificacionAlteracionTurno(String _empresaId, 
+            String _runEmpleado){
+       
+        ArrayList<ModificacionAlteracionTurnoVO> lista = new ArrayList<>();
+        
+        ModificacionAlteracionTurnoVO turnoAnterior = getModificacionTurno_Anterior(_empresaId, _runEmpleado);
+        ModificacionAlteracionTurnoVO turnoNuevo    = getModificacionTurno_Nuevo(_empresaId, _runEmpleado);
+        
+        ModificacionAlteracionTurnoVO modifAlteracionTurno = new ModificacionAlteracionTurnoVO();
+        
+        modifAlteracionTurno.setIdTurnoAnterior(turnoAnterior.getIdTurnoAnterior());
+        modifAlteracionTurno.setFechaAsignacionTurnoAnterior(turnoAnterior.getFechaAsignacionTurnoAnterior());
+        modifAlteracionTurno.setNombreTurnoAnterior(turnoAnterior.getNombreTurnoAnterior());
+        modifAlteracionTurno.setQuienAsignaTurnoAnterior(turnoAnterior.getQuienAsignaTurnoAnterior());
+                
+        modifAlteracionTurno.setIdTurnoNuevo(turnoNuevo.getIdTurnoNuevo());
+        modifAlteracionTurno.setFechaAsignacionTurnoNuevo(turnoNuevo.getFechaAsignacionTurnoNuevo());
+        modifAlteracionTurno.setNombreTurnoNuevo(turnoNuevo.getNombreTurnoNuevo());
+        modifAlteracionTurno.setQuienAsignaTurnoNuevo(turnoNuevo.getQuienAsignaTurnoNuevo());
+                
+        lista.add(modifAlteracionTurno);
+        
+        return lista;
     }
     
     /**

@@ -51,11 +51,11 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 import org.json.JSONObject;
 
@@ -312,7 +312,8 @@ public class UserAuth extends BaseServlet {
                     "usr_nombres"));
                 //Cargar cencos a los cuales tiene acceso el usuario
                 List<UsuarioCentroCostoVO> cencosEmpleado = new ArrayList<>();
-                if (userOk.getIdPerfil() != Constantes.ID_PERFIL_SUPER_ADMIN){//solo el perfil usuario empleado
+                if (userOk.getIdPerfil() != Constantes.ID_PERFIL_SUPER_ADMIN 
+                        && userOk.getIdPerfil() != Constantes.ID_PERFIL_FISCALIZADOR){//solo el perfil usuario empleado
                     System.out.println(WEB_NAME+"UserAuth]Usuario Normal. "
                         + "Cargar todos los centros de costo de "
                         + "la empresa del usuario conectado: "

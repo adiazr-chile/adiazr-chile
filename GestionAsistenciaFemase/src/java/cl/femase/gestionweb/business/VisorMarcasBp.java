@@ -77,6 +77,7 @@ public class VisorMarcasBp  extends BaseBp{
      * @param _rutEmpleado
      * @param _startDate
      * @param _endDate
+     * @param _hashcode
      * @param _regionIdEmpleado
      * @param _comunaIdEmpleado
      * @param _infoCenco
@@ -87,6 +88,7 @@ public class VisorMarcasBp  extends BaseBp{
             String _rutEmpleado,
             String _startDate,
             String _endDate,
+            String _hashcode,
             int _regionIdEmpleado, 
             int _comunaIdEmpleado, 
             CentroCostoVO _infoCenco){
@@ -99,6 +101,7 @@ public class VisorMarcasBp  extends BaseBp{
                 _rutEmpleado, 
                 _startDate, 
                 _endDate, 
+                _hashcode,
                 _regionIdEmpleado, 
                 _comunaIdEmpleado, 
                 _infoCenco);
@@ -299,6 +302,7 @@ public class VisorMarcasBp  extends BaseBp{
      * @param _rutEmpleado
      * @param _startDate
      * @param _endDate
+     * @param _hashcode
      * @param _regionIdEmpleado
      * @param _comunaIdEmpleado
      * @param _infoCenco
@@ -309,6 +313,7 @@ public class VisorMarcasBp  extends BaseBp{
             String _rutEmpleado,
             String _startDate,
             String _endDate,
+            String _hashcode,
             int _regionIdEmpleado, 
             int _comunaIdEmpleado, 
             CentroCostoVO _infoCenco){
@@ -321,6 +326,7 @@ public class VisorMarcasBp  extends BaseBp{
                 _rutEmpleado, 
                 _startDate, 
                 _endDate, 
+                _hashcode,
                 _regionIdEmpleado, 
                 _comunaIdEmpleado, 
                 _infoCenco);
@@ -536,22 +542,24 @@ public class VisorMarcasBp  extends BaseBp{
     * @param _rutEmpleado
     * @param _startDate
     * @param _endDate
-     * @param _regionIdEmpleado
-     * @param _comunaIdEmpleado
-     * @param _infoCenco
+    * @param _hashcode
+    * @param _regionIdEmpleado
+    * @param _comunaIdEmpleado
+    * @param _infoCenco
     * @return 
     */
     public LinkedHashMap<String, InfoMarcaVO> getHashMarcasTurnoRotativo(String _empresaId,
             String _rutEmpleado, 
             String _startDate, 
             String _endDate,
+            String _hashcode,
             int _regionIdEmpleado, 
             int _comunaIdEmpleado,
             CentroCostoVO _infoCenco){
         
         LinkedHashMap<String, InfoMarcaVO> hashMarcas =
             marcasDao.getHashMarcasTurnoRotativo(_empresaId, _rutEmpleado,
-                _startDate, _endDate, _regionIdEmpleado, _comunaIdEmpleado, _infoCenco);
+                _startDate, _endDate, _hashcode, _regionIdEmpleado, _comunaIdEmpleado, _infoCenco);
         
         return hashMarcas;
     }
@@ -562,6 +570,7 @@ public class VisorMarcasBp  extends BaseBp{
     * @param _rutEmpleado
     * @param _startDate
     * @param _endDate
+     * @param _hashcode
      * @param _regionIdEmpleado
      * @param _comunaIdEmpleado
      * @param _infoCenco
@@ -571,13 +580,14 @@ public class VisorMarcasBp  extends BaseBp{
             String _rutEmpleado, 
             String _startDate, 
             String _endDate,
+            String _hashcode,
             int _regionIdEmpleado, 
             int _comunaIdEmpleado, 
             CentroCostoVO _infoCenco){
         
         LinkedHashMap<String, InfoMarcaVO> hashMarcas =
             marcasDao.getHashMarcasTurnoNormal(_empresaId, _rutEmpleado, 
-                _startDate, _endDate, 
+                _startDate, _endDate, _hashcode,
                 _regionIdEmpleado, _comunaIdEmpleado,
                 _infoCenco);
 

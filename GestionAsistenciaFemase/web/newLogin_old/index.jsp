@@ -42,7 +42,7 @@
              
       </form><!-- form -->
         <div>
-          <h6>Versi&oacute;n <%=version%> Designed by <a href="http://www.femase.cl">FEMASE</a>&copy; <%=appAnios%>
+          <h6>Versi&oacute;n <%=version%> Dise&ntilde;ado por <a href="http://www.femase.cl">FEMASE</a>&copy; <%=appAnios%>
           </h6>
         </div>
   </section><!-- content -->

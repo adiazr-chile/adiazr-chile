@@ -872,6 +872,8 @@ public class MarcasDAO extends BaseDAO{
         return data;
     }
     
+    
+    
     /**
     * 
     * @param _empresaId
@@ -1004,6 +1006,118 @@ public class MarcasDAO extends BaseDAO{
         }
         
         return marcas;
+    }
+    
+    /**
+    * 
+    * 
+    * @param _hashcode
+    * @param _historico
+    * @return 
+    */
+    public MarcaVO getMarcaByHashcode(String _hashcode, boolean _historico){
+        
+        MarcaVO data=null;
+        
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        String tabla =  "marca";
+        if (_historico) tabla = "marca_historica";
+        
+        try{
+            String sql = "SELECT "
+                + "cod_dispositivo,"
+                + "empresa_cod,"
+                + "rut_empleado,"
+                + "fecha_hora,"
+                + "to_char(fecha_hora, 'TMday dd/MM/yyyy HH24:mi:ss') fecha_hora_str,"
+                + "to_char(fecha_hora, 'HH24:mi:ss') solohora_str,"
+                + "coalesce(to_char(fecha_hora, 'HH24'),'VACIO') solohora,"
+                + "to_char(fecha_hora, 'yyyy-MM-dd HH24:MI:00') fecha_hora_fmt," 
+                + "to_char(fecha_hora, 'MI') solomins,"
+                + "to_char(fecha_hora, 'SS') solosecs,"
+                + "to_char(fecha_hora, 'yyyy-MM-dd') solofecha," 
+                + "cod_tipo_marca," 
+                + "tipo_marca.nombre_tipo,"
+                + "fecha_hora_actualizacion,"
+                //+ "to_char(fecha_hora_actualizacion, 'TMday dd/MM/yyyy HH24:mi:ss') fecha_actualizacion,"
+                + "CASE WHEN (id ='null' or id is null) THEN '' ELSE id END as id,"
+                + "hashcode,"
+                + "empleado.empresa_id,"
+                + "empleado.depto_id,"
+                + "empleado.cenco_id,"
+                + "marca.comentario,"
+                + "marca.correlativo,"
+                + "CASE "
+                    + "WHEN (DATE_PART('second', fecha_hora_actualizacion - fecha_hora) > 10) "
+                    + "	THEN to_char(fecha_hora_actualizacion, 'TMday dd/MM/yyyy HH24:mi:ss') "
+                    + "	ELSE null END AS fecha_actualizacion,"
+                    + "tipo_marca_manual.code,"
+                    + "tipo_marca_manual.display_name "     
+                + "FROM " + tabla + " as marca "
+                    + " inner join empleado on (empleado.empl_rut = marca.rut_empleado) " +
+                    " inner join tipo_marca on marca.cod_tipo_marca = tipo_marca.cod_tipo "
+                    + "left outer join tipo_marca_manual on (marca.cod_tpo_marca_manual = tipo_marca_manual.code) "
+                + " where marca.hashcode = '" + _hashcode + "'" ;
+            
+            if (dbConn==null || (dbConn!=null && dbConn.isClosed())) 
+                dbConn = dbLocator.getConnection(m_dbpoolName,"[MarcasDAO.getMarcaByHashcode]");
+            System.out.println(WEB_NAME+"[MarcasDAO.getMarcaByHashcode]sql: " + sql);
+            ps = dbConn.prepareStatement(sql);
+            rs = ps.executeQuery();
+
+            if (rs.next()){
+                data = new MarcaVO();
+                
+                data.setCodDispositivo(rs.getString("cod_dispositivo"));
+                data.setEmpresaCod(rs.getString("empresa_cod"));
+                data.setRutEmpleado(rs.getString("rut_empleado"));
+                data.setRutKey(data.getRutEmpleado());
+                data.setCencoId(rs.getInt("cod_tipo_marca"));
+                data.setFechaHora(rs.getString("fecha_hora"));
+                data.setSoloHora(rs.getString("solohora_str"));
+                
+                data.setFechaHoraStr(rs.getString("fecha_hora_str"));
+                data.setFechaHoraKey(data.getFechaHora());
+                data.setFechaHoraCalculos(rs.getString("fecha_hora_fmt"));
+                data.setHora(rs.getString("solohora"));
+                data.setFecha(rs.getString("solofecha"));
+                data.setMinutos(rs.getString("solomins"));
+                data.setSegundos(rs.getString("solosecs"));
+                data.setTipoMarca(rs.getInt("cod_tipo_marca"));
+                data.setId(rs.getString("id"));
+                data.setHashcode(rs.getString("hashcode"));
+                data.setComentario(rs.getString("comentario"));
+                data.setFechaHoraActualizacion(rs.getString("fecha_actualizacion"));
+                data.setCodTipoMarcaManual(rs.getInt("code"));
+                data.setNombreTipoMarcaManual(rs.getString("display_name"));
+                data.setCorrelativo(rs.getInt("correlativo"));
+                
+                data.setRowKey(data.getEmpresaCod()
+                    + "|" + data.getRutEmpleado()
+                    + "|" + data.getFechaHora()
+                    + "|" + data.getTipoMarca());
+                
+            }
+
+            ps.close();
+            rs.close();
+            //dbLocator.freeConnection(dbConn);
+        }catch(SQLException|DatabaseException sqle){
+            System.err.println("[MarcasDAO.getMarcaByHashcode]"
+                + "Error: " + sqle.toString());
+        }finally{
+            try {
+                if (ps != null) ps.close();
+                if (rs != null) rs.close();
+                //dbLocator.freeConnection(dbConn);
+            } catch (SQLException ex) {
+                System.err.println("[MarcasDAO.getMarcaByHashcode]"
+                    + "Error: " + ex.toString());
+            }
+        }
+        
+        return data;
     }
     
 //    /**
@@ -2217,6 +2331,7 @@ public class MarcasDAO extends BaseDAO{
     * @param _dispositivoId
     * @param _startDate
     * @param _endDate
+     * @param _hashcode
     * @return 
     */
    public int getMarcasCount(String _empresaId,
@@ -2225,7 +2340,8 @@ public class MarcasDAO extends BaseDAO{
             String _rutEmpleado, 
             String _dispositivoId,
             String _startDate, 
-            String _endDate){
+            String _endDate, 
+            String _hashcode){
         int count=0;
         Statement statement = null;
         ResultSet rs = null;
@@ -2254,6 +2370,10 @@ public class MarcasDAO extends BaseDAO{
             
             if (_dispositivoId != null && _dispositivoId.compareTo("-1") != 0){        
                 sql += " and marca.cod_dispositivo = '" + _dispositivoId + "'";
+            }
+            
+            if (_hashcode != null && _hashcode.compareTo("") != 0){        
+                sql += " and marca.hashcode = '" + _hashcode + "'";
             }
             
             if (_startDate != null && _startDate.compareTo("") != 0){
@@ -2439,6 +2559,7 @@ public class MarcasDAO extends BaseDAO{
     * @param _rutEmpleado
     * @param _startDate
     * @param _endDate
+     * @param _hashcode
     * @param _regionIdEmpleado
     * @param _comunaIdEmpleado
     * @param _infoCenco
@@ -2449,6 +2570,7 @@ public class MarcasDAO extends BaseDAO{
             String _rutEmpleado,
             String _startDate, 
             String _endDate,
+            String _hashcode,
             int _regionIdEmpleado, 
             int _comunaIdEmpleado,
             CentroCostoVO _infoCenco){
@@ -2504,9 +2626,15 @@ public class MarcasDAO extends BaseDAO{
                         + "calendario_feriados.cal_region_id feriado_region_id, calendario_feriados.cal_comuna_id feriado_comuna_id,"
                         + "empleado.region_id empleado_region_id, empleado.comuna_id empleado_comuna_id "
                     + " from generate_series( '" + _startDate + "'::timestamp, '" + _endDate + "'::timestamp, '1 day'::interval) as fecha_it "
-                        + " left outer join marca on (fecha_it::date = marca.fecha_hora::date "
-                            + "and marca.empresa_cod = '" + _empresaId + "' and marca.rut_empleado='" + _rutEmpleado + "') "
-                    + "	left outer join view_empleado empleado on (empleado.rut = '" + _rutEmpleado + "' "
+                        + " left outer join marca "
+                                + " on (fecha_it::date = marca.fecha_hora::date "
+                                   + " and marca.empresa_cod = '" + _empresaId + "' "
+                                   + " and marca.rut_empleado='" + _rutEmpleado + "'";
+                    if (_hashcode!=null && _hashcode.compareTo("") != 0){
+                        sql += " and marca.hashcode = '" + _hashcode + "' ";
+                    }
+                    sql += ") "
+                        + "	left outer join view_empleado empleado on (empleado.rut = '" + _rutEmpleado + "' "
                             + "and empleado.empresa_id = '" + _empresaId + "') " 
                         + "left outer join turno_rotativo_asignacion "
                             + "on (turno_rotativo_asignacion.empresa_id='" + _empresaId + "' "
@@ -2547,15 +2675,15 @@ public class MarcasDAO extends BaseDAO{
                 int regionIdEmpleado = rs.getInt("empleado_region_id");
                 int comunaIdEmpleado = rs.getInt("empleado_comuna_id");
                 String labelCalendario = rs.getString("label_calendario");
-                System.out.println(WEB_NAME+"[MarcasDAO.getHashMarcasTurnoNormal]"
-                    + "fecha= " + fecha
-                    + ", regionIdFeriado= " + regionIdFeriado
-                    + ", comunaIdFeriado= " + comunaIdFeriado
-                    + ", cenco.region= " + _infoCenco.getRegionId()
-                    + ", cenco.comuna= " + _infoCenco.getComunaId()
-                    + ", regionIdEmpleado= " + regionIdEmpleado
-                    + ", comunaIdEmpleado= " + comunaIdEmpleado
-                    + ", labelCalendario= " + labelCalendario);
+//                System.out.println(WEB_NAME+"[MarcasDAO.getHashMarcasTurnoNormal]"
+//                    + "fecha= " + fecha
+//                    + ", regionIdFeriado= " + regionIdFeriado
+//                    + ", comunaIdFeriado= " + comunaIdFeriado
+//                    + ", cenco.region= " + _infoCenco.getRegionId()
+//                    + ", cenco.comuna= " + _infoCenco.getComunaId()
+//                    + ", regionIdEmpleado= " + regionIdEmpleado
+//                    + ", comunaIdEmpleado= " + comunaIdEmpleado
+//                    + ", labelCalendario= " + labelCalendario);
                 //if (regionIdFeriado == 0 && comunaIdFeriado == 0) feriadoNacional = true;
                 if (regionIdFeriado > 0 && regionIdFeriado != _infoCenco.getRegionId()){
                     labelCalendario = null;
@@ -2649,6 +2777,7 @@ public class MarcasDAO extends BaseDAO{
     * @param _rutEmpleado
     * @param _startDate
     * @param _endDate
+     * @param _hashcode
      * @param _regionIdEmpleado
      * @param _comunaIdEmpleado
      * @param _infoCenco
@@ -2658,6 +2787,7 @@ public class MarcasDAO extends BaseDAO{
             String _rutEmpleado,
             String _startDate, 
             String _endDate,
+            String _hashcode,
             int _regionIdEmpleado, 
             int _comunaIdEmpleado,
             CentroCostoVO _infoCenco){
@@ -2712,9 +2842,16 @@ public class MarcasDAO extends BaseDAO{
                     + "detalle_ausencia.hora_fin, "
                     + "calendario_feriados.cal_region_id feriado_region_id, calendario_feriados.cal_comuna_id feriado_comuna_id,"
                     + "empleado.region_id empleado_region_id, empleado.comuna_id empleado_comuna_id "
-                + "from generate_series( '" + _startDate + "'::timestamp, '" + _endDate + "'::timestamp, '1 day'::interval) as fecha_it "
+                + " from generate_series( '" + _startDate + "'::timestamp, '" + _endDate + "'::timestamp, '1 day'::interval) as fecha_it "
                     + "	left outer join marca on (fecha_it::date = marca.fecha_hora::date "
-                            + "and marca.empresa_cod = '" + _empresaId + "' and marca.rut_empleado='" + _rutEmpleado + "') "
+                            + " and marca.empresa_cod = '" + _empresaId + "' "
+                            + "and marca.rut_empleado='" + _rutEmpleado + "' ";
+                            
+                    if (_hashcode != null && _hashcode.compareTo("") != 0){
+                        sql += " and marca.hashcode='" + _hashcode + "' ";
+                    }        
+            
+                    sql += ") "
                     + "	left outer join view_empleado empleado on (empleado.rut = '" + _rutEmpleado + "' "
                             + "and empleado.empresa_id = '" + _empresaId + "') "
                     + "left outer join detalle_turno on ( "

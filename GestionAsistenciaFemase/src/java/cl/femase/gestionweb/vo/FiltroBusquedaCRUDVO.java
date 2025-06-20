@@ -14,22 +14,20 @@ import java.io.Serializable;
 public class FiltroBusquedaCRUDVO implements Serializable{
     private static final long serialVersionUID = 7895472374799776220L;
    
+    private String runEmpleado;
     private String nombre;
     private String empresaId;
     private String departamentoId;
     private String descripcion;
     private String nombreCenco;
-    
     private int estado      = 1;
     private int regionId    = 1;
     private int cencoId     = -1;
     private int turnoId     = -1;
-    private String runEmpleado;
-
     private String tipo;
     private String justificaHrs; 
     private String pagadaPorEmpleador;
-
+    
     public String getTipo() {
         return tipo;
     }

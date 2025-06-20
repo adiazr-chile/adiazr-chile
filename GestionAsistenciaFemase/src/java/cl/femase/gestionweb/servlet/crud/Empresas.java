@@ -12,14 +12,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import java.util.Date;
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 
 public class Empresas extends BaseServlet {
@@ -54,7 +54,7 @@ public class Empresas extends BaseServlet {
     * 
      * @param request
      * @param response
-     * @throws javax.servlet.ServletException
+     * @throws jakarta.servlet.ServletException
      * @throws java.io.IOException
     */
     @Override
@@ -134,7 +134,11 @@ public class Empresas extends BaseServlet {
             if(request.getParameter("comunaId") != null){
                 registro.setComunaId(Integer.parseInt(request.getParameter("comunaId")));
             }
-                       
+             
+            if(request.getParameter("notificationEmail") != null){
+                registro.setNotificationEmail(request.getParameter("notificationEmail"));
+            }
+            
             if (action.compareTo("list") == 0) {
                 System.out.println(WEB_NAME + CRUD_SERVLET_NAME + "CRUD - " + CRUD_TABLE_NAME
                     + ". Mostrar registros");

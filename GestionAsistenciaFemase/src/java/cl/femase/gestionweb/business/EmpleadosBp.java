@@ -12,10 +12,12 @@ import cl.femase.gestionweb.dao.UsersDAO;
 import cl.femase.gestionweb.vo.CargoVO;
 import cl.femase.gestionweb.vo.CentroCostoVO;
 import cl.femase.gestionweb.vo.DepartamentoVO;
+import cl.femase.gestionweb.vo.EmpleadoConsultaFiscalizadorVO;
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
 import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.EmpleadoVO;
 import cl.femase.gestionweb.vo.EmpresaVO;
+import cl.femase.gestionweb.vo.FiltroBusquedaEmpleadosVO;
 import cl.femase.gestionweb.vo.ParametroVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import cl.femase.gestionweb.vo.ResultadoCargaCsvVO;
@@ -33,7 +35,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  *
@@ -686,6 +688,15 @@ public class EmpleadosBp  extends BaseBp{
 
         return lista;
     }
+    
+    /**
+    * 
+    * @param _filtroVO
+    * @return 
+    */
+    public List<EmpleadoConsultaFiscalizadorVO> getEmpleadosFiscalizacion(FiltroBusquedaEmpleadosVO _filtroVO){
+        return empleadosDao.getEmpleadosFiscalizacion(_filtroVO);
+    } 
 
     /**
     * 

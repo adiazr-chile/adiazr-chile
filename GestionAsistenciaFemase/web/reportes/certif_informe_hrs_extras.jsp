@@ -70,6 +70,7 @@
                         $('#rutEmpleado').html(newoption);
                  });
 		
+                /*
                 sourceSelected = 'cargar_turnos_by_cenco';
                 $.get('<%=request.getContextPath()%>/JsonListServlet', {
                     empresaID : empresaSelected,deptoID : deptoSelected,cencoID : cencoSelected,source: sourceSelected
@@ -85,6 +86,7 @@
                         }
                         $('#turno').html(newoption);
                 });
+                 */
              });
              
             $('#dialog1').hide();
@@ -253,7 +255,15 @@
             <!-- inicio div empleado -->
             <div id="content4" align="left">    
                 <div id="col1"><label>Empleado</label></div>
-                <div id="col1"><label><input type="button" name="Button" value="Seleccionar todos" onclick="selectAll(document.getElementById('rutEmpleado'),true)" /></label></div>
+                <div id="col1">&nbsp;
+                    <!--
+                    <label>
+                        <input type="button" name="Button" 
+                            value="Seleccionar todos" 
+                            onclick="selectAll(document.getElementById('rutEmpleado'),true)" />
+                    </label>
+                    -->
+                </div>
                 <div id="col2">    
                 	<select name="rutEmpleado" size="10" id="rutEmpleado" multiple>
                         <option value='-1' selected>Seleccione Empleado</option>
@@ -263,11 +273,14 @@
             <!-- fin div rut empleado -->
             <!-- inicio div turno -->
             <div id="content5" align="left">
-            	<div id="col1"><label>Turno (normal)</label></div>
-                <div id="col2">            
+            	<div id="col1">&nbsp;<!-- <label>Turno (normal)</label>--></div>
+                <div id="col2">
+                    <input type="hidden" id="turno" name="turno" value="-1">
+                    <!--  
                     <select id="turno" name="turno" style="width:350px;" required>
                         <option value="-1" selected>Cualquiera</option>
                     </select>
+                    -->
                 </div>
             </div> 
             <!-- fin div turno -->

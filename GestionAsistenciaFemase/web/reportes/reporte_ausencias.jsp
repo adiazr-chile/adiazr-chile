@@ -93,7 +93,7 @@
                         var select = $('#rut');
                         select.find('option').remove();
                         var newoption = "";
-                        newoption += "<option value='todos'>Todos</option>";
+                        //newoption += "<option value='todos'>Todos</option>";
                         for (i=0; i<response.length; i++) {
                             var auxNombre = '['+response[i].rut+'] '+response[i].nombres + 
                                 ' ' + response[i].apePaterno + ' '+response[i].apeMaterno;

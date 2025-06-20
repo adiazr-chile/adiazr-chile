@@ -156,18 +156,56 @@ public class UsersDAO extends BaseDAO{
                     + "Error: "+ex.toString());
             }
         }
-//        catch(DatabaseException dbe){
-//            m_logger.error("update usuario Error: "+dbe.toString());
-//            System.err.println("[update]usuario. "
-//                + "Error2 al actualizar usuario: "+dbe.toString());
-//            objresultado.setThereError(true);
-//            objresultado.setCodError(result);
-//            objresultado.setMsgError(msgError+" :"+dbe.toString());
-//        }
-//        finally{
-//            
-////             dbLocator.freeConnection(dbConn);
-//        }
+
+        return objresultado;
+    }
+    
+    /**
+    * Actualiza un usuario
+    * @return 
+    */
+    public ResultCRUDVO disableTemporaryUsers(){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
+        PreparedStatement psupdate = null;
+        int result=0;
+        String msgError = "Error al actualizar "
+            + "usuarios con clave temporal";
+        
+        try{
+            String msgFinal = "[Dejar como No Vigentes a usuarios con clave temporal]";
+            
+            System.out.println(msgFinal);
+            objresultado.setMsg(msgFinal);
+            
+            String sql = "update usuario "
+                + "set estado_id = " + Constantes.ESTADO_NO_VIGENTE 
+                + " where is_temporary "
+                + "and EXTRACT(DAY FROM (NOW() - create_datetime)) > 5";
+            dbConn = dbLocator.getConnection(m_dbpoolName,"[UsersDAO.disableTemporaryUsers]");
+            
+            psupdate = dbConn.prepareStatement(sql);
+                        
+            int affectedRows = psupdate.executeUpdate();
+            objresultado.setFilasAfectadas(affectedRows);
+            psupdate.close();
+            dbLocator.freeConnection(dbConn);
+        }catch(SQLException|DatabaseException sqle){
+            m_logger.error("update usuario Error: "+sqle.toString());
+            System.err.println("[UsersDAO.disableTemporaryUsers]"
+                + "Error al actualizar usuarios con clave temporal: " + sqle.toString());
+            objresultado.setThereError(true);
+            objresultado.setCodError(result);
+            objresultado.setMsgError(msgError+" :"+sqle.toString());
+        }
+        finally{
+            try {
+                if (psupdate!= null) psupdate.close();
+                 dbLocator.freeConnection(dbConn);
+            } catch (SQLException ex) {
+                System.err.println("[UsersDAO.disableTemporaryUsers]"
+                    + "Error: "+ex.toString());
+            }
+        }
 
         return objresultado;
     }
@@ -506,6 +544,84 @@ public class UsersDAO extends BaseDAO{
         return objresultado;
     }
     
+    /**
+     * Agrega un nuevo usuario temporal
+     * @param _data
+     * @return 
+     */
+    public ResultCRUDVO insertTemporaryUser(UsuarioVO _data){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
+        int result=0;
+        String msgError = "Error al insertar "
+            + "usuario temporal, "
+            + "username: "+_data.getUsername()
+            + ", email: "+_data.getEmail()
+            + ", empresaId: "+_data.getEmpresaId()
+            + ", run: "+_data.getRunEmpleado();
+        
+       String msgFinal = " Inserta usuario temporal:"
+            + "username [" + _data.getUsername() + "]" 
+            + ", email [" + _data.getEmail() + "]"
+            + ", empresaId [" + _data.getEmpresaId() + "]"
+            + ", run [" + _data.getRunEmpleado() + "]";
+        objresultado.setMsg(msgFinal);
+        PreparedStatement insert    = null;
+        
+        try{
+            String sql = "INSERT INTO usuario( "
+                + " usr_username, "
+                + "usr_password, "
+                + "estado_id, "
+                + "usr_perfil_id, "
+                + "usr_email, "
+                + "empresa_id,"
+                + "is_temporary,"
+                + "create_datetime, usr_nombres, usr_ape_paterno, usr_ape_materno) "
+                + " VALUES (?, ?, ?, ?, ?, ?, ?, current_timestamp, '', '', '')";
+    
+            dbConn = dbLocator.getConnection(m_dbpoolName,"[UsersDAO.insertTemporaryUser]");
+            insert = dbConn.prepareStatement(sql);
+            insert.setString(1, _data.getUsername());
+            insert.setString(2, _data.getPassword());
+            insert.setInt(3, _data.getEstado());
+            insert.setInt(4, _data.getIdPerfil());
+            insert.setString(5, _data.getEmail());
+            insert.setString(6, _data.getEmpresaId());
+            insert.setBoolean(7, _data.isIsTemporary());
+            
+            int filasAfectadas = insert.executeUpdate();
+            m_logger.debug("[insert usuario temporal]"
+                + "filasAfectadas: "+filasAfectadas);
+            if (filasAfectadas == 1){
+                m_logger.debug("[insert usuario temporal]"
+                    + ", username:" +_data.getUsername()
+                    + ", empresaId:" +_data.getEmpresaId()    
+                    + ", nombre:" +_data.getNombres()
+                    + ", email:" +_data.getEmail()
+                    + ", perfil:" +_data.getIdPerfil()
+                    +" insertado OK!");
+            }
+            
+            insert.close();
+             dbLocator.freeConnection(dbConn);
+        }catch(SQLException|DatabaseException sqle){
+            m_logger.error("Insert usuario temporal Error: "+sqle.toString());
+            objresultado.setThereError(true);
+            objresultado.setCodError(result);
+            objresultado.setMsgError(msgError+" :"+sqle.toString());
+        }finally{
+            try {
+                if (insert!= null) insert.close();
+                 dbLocator.freeConnection(dbConn);
+            } catch (SQLException ex) {
+                System.err.println(WEB_NAME + "Error: "+ex.toString());
+            }
+        }
+        
+        return objresultado;
+    }
+    
+    
 ////    /**
 ////     * Elimina un usuario (deja el usuario en estado No Vigente)
 ////     * @param _data
@@ -694,11 +810,11 @@ public class UsersDAO extends BaseDAO{
     }
     
     /**
-     * Retorna usuario existente
-     * 
-     * @param _username
-     * @return 
-     */
+    * Retorna usuario existente
+    * 
+    * @param _username
+    * @return 
+    */
     public UsuarioVO getUsuario(String _username){
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -766,6 +882,43 @@ public class UsersDAO extends BaseDAO{
             }
         }
         return data;
+    }
+    
+    /*
+    * Retorna si existe el correo especificado
+    * 
+    * @param _username
+    * @return 
+    */
+    public boolean existeEmail(String _email){
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        boolean existe = false;
+        try{
+            String sql = "select u.usr_username "
+                + "from usuario u "
+                + "where u.usr_email = ?";
+            dbConn = dbLocator.getConnection(m_dbpoolName,"[UsersDAO.existeEmail]");
+            ps = dbConn.prepareStatement(sql);
+            ps.setString(1, _email); 
+            rs = ps.executeQuery();
+            existe = rs.next();
+            ps.close();
+            rs.close();
+            dbConn.close();
+            dbLocator.freeConnection(dbConn);
+        }catch(SQLException|DatabaseException sqle){
+            m_logger.error("existeEmail Error: "+sqle.toString());
+        }finally{
+            try {
+                if (ps != null) ps.close();
+                dbConn.close();
+                dbLocator.freeConnection(dbConn);
+            } catch (SQLException ex) {
+                System.err.println("Error existeEmail: " + ex.toString());
+            }
+        }
+        return existe;
     }
     
     /**

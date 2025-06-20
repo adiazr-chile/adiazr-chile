@@ -10,14 +10,12 @@ import cl.femase.gestionweb.common.DatabaseException;
 import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.DepartamentoVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
-import cl.femase.gestionweb.vo.UsuarioCentroCostoVO;
 import cl.femase.gestionweb.vo.UsuarioVO;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import org.apache.log4j.Logger;
 

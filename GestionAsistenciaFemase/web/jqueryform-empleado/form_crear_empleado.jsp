@@ -1,3 +1,4 @@
+<%@page import="cl.femase.gestionweb.common.Constantes"%>
 <%@page import="cl.femase.gestionweb.vo.UsuarioVO"%>
 <%@page import="cl.femase.gestionweb.vo.ProveedorCorreoVO"%>
 <%@page import="cl.femase.gestionweb.vo.CargoVO"%>
@@ -15,11 +16,15 @@
 
 
 <%
-    UsuarioVO theUser	= (UsuarioVO)session.getAttribute("usuarioObj");
+    UsuarioVO userInSession = (UsuarioVO)session.getAttribute("usuarioObj");
     List<EmpresaVO> empresas = (List<EmpresaVO>)session.getAttribute("empresas");
     List<ProveedorCorreoVO> proveedoresCorreo   = (List<ProveedorCorreoVO>)session.getAttribute("proveedores_correo");
     List<ComunaVO> comunas   = (List<ComunaVO>)session.getAttribute("comunas");  
     List<CargoVO> cargos   = (List<CargoVO>)session.getAttribute("cargos");
+    boolean userIsAdmin = false;
+    if (userInSession!=null && userInSession.getIdPerfil()==Constantes.ID_PERFIL_ADMIN){
+        userIsAdmin = true;
+    }
     
 %>
 <!DOCTYPE html>
@@ -326,7 +331,6 @@ div.thumbnail .glyphicon-ok-circle{
       id="jqueryform-d81043" 
       action='<%=request.getContextPath()%>/EmpleadosController' 
       method='post' 
-      enctype='multipart/form-data' 
       novalidate autocomplete="on" onSubmit="return validaForm()">
         <input type="hidden" name="method" value="validateForm">
         <input type="hidden" id="serverValidationFields" name="serverValidationFields" value="">
@@ -500,7 +504,7 @@ div.thumbnail .glyphicon-ok-circle{
     </div>
 </div>
 <!-- Fin email personal -->
-
+<!--
 <div class="form-group foto" data-fid="foto">
   <label class="control-label" for="foto">Fotograf&iacute;a</label>
 
@@ -508,7 +512,7 @@ div.thumbnail .glyphicon-ok-circle{
     data-rule-required="false" data-msg-required="Requerido"     data-browseLabel="Seleccione Archivo" data-showUpload="false" data-showZoom="false"/>
   
 </div>
-
+-->
 
 
 
@@ -732,20 +736,23 @@ div.thumbnail .glyphicon-ok-circle{
             <option  value="N" selected="">No</option>
         </select>
     </div>
-  
-    <div class="form-group claveMarcacion" data-fid="claveMarcacion">
-        <label class="control-label" for="claveMarcacion">Clave marcacion</label>
-        <input type="text" 
-               class="form-control" 
-               id="claveMarcacion" 
-               name="claveMarcacion" 
-               value="" 
-               maxlength="15"  
-               placeholder="Ingrese clave marcacion" 
-        data-rule-required="false" data-msg-required="Requerido" 
-        data-rule-maxlength="15" 
-        data-msg-maxlength="No debe exceder de {0} caracteres"   />
-    </div>
+    <%if (userIsAdmin){%>
+        <div class="form-group claveMarcacion" data-fid="claveMarcacion">
+            <label class="control-label" for="claveMarcacion">Clave marcacion</label>
+            <input type="text" 
+                   class="form-control" 
+                   id="claveMarcacion" 
+                   name="claveMarcacion" 
+                   value="" 
+                   maxlength="15"  
+                   placeholder="Ingrese clave marcacion" 
+            data-rule-required="false" data-msg-required="Requerido" 
+            data-rule-maxlength="15" 
+            data-msg-maxlength="No debe exceder de {0} caracteres"   />
+        </div>
+    <%}else{%>
+        <input type="hidden" id="claveMarcacion" name="claveMarcacion" value="">
+    <%}%>
 </div>
 
 <div class="form-group submit f0 " data-fid="f0" style="position: relative;">

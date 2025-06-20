@@ -85,11 +85,15 @@ public class UsuarioBp  extends BaseBp{
         return userDao.getUsuario(_username);
     }
     
+    /**
+    * 
+    * @param _userToUpdate
+    * @param _eventdata
+    * @return 
+    */
     public ResultCRUDVO update(UsuarioVO _userToUpdate, 
             MaintenanceEventVO _eventdata){
         boolean existeEmail = false;
-//        boolean existeEmail = userDao.existeEmail(_userToUpdate.getUsername(), 
-//            _userToUpdate.getEmail(), _userToUpdate.getEmpresaId());
         ResultCRUDVO updValues = new ResultCRUDVO();
         if (existeEmail){
             updValues.setThereError(true);
@@ -103,24 +107,48 @@ public class UsuarioBp  extends BaseBp{
             updValues = userDao.update(_userToUpdate);
         }
         
-        //if (!updValues.isThereError()){
-            String msgFinal = updValues.getMsg();
-            updValues.setMsg(msgFinal);
-            _eventdata.setDescription(msgFinal);
-            _eventdata.setEmpresaId(_userToUpdate.getEmpresaId());
-            
-            //insertar evento 
-            eventsDao.addEvent(_eventdata); 
-        //}
+        String msgFinal = updValues.getMsg();
+        updValues.setMsg(msgFinal);
+        _eventdata.setDescription(msgFinal);
+        _eventdata.setEmpresaId(_userToUpdate.getEmpresaId());
+
+        eventsDao.addEvent(_eventdata); 
         
         return updValues;
     }
     
+    /**
+    * 
+    * @param _eventdata
+    * @return 
+    */
+    public ResultCRUDVO disableTemporaryUsers(MaintenanceEventVO _eventdata){
+        
+        ResultCRUDVO updValues = userDao.disableTemporaryUsers();
+        String msgFinal = updValues.getMsg();
+        updValues.setMsg(msgFinal);
+        _eventdata.setDescription(msgFinal);
+        _eventdata.setEmpresaId("emp01");
+        
+        eventsDao.addEvent(_eventdata); 
+        
+        return updValues;
+    }
+    
+    
+    //Disable temporary users
+    
+    
+    /**
+    * 
+    * @param _userToInsert
+    * @param _eventdata
+    * @return 
+    */
     public ResultCRUDVO insert(UsuarioVO _userToInsert, 
             MaintenanceEventVO _eventdata){
+
         boolean existeEmail = false;
-//        boolean existeEmail = userDao.existeEmail(_userToInsert.getUsername(), 
-//            _userToInsert.getEmail(), _userToInsert.getEmpresaId());
         ResultCRUDVO insValues = new ResultCRUDVO();
         
         System.out.println(WEB_NAME+"[UsuarioBp.insert]Insertar usuario, inicio...");
@@ -154,40 +182,61 @@ public class UsuarioBp  extends BaseBp{
             //insertar evento 
             eventsDao.addEvent(_eventdata); 
             
-            //isertar accesos por defecto: cambiar clave y cerrar sesion
-//            ModuloAccesoPerfilVO acceso=new ModuloAccesoPerfilVO();
-//            acceso.setModuloId(3);
-//            acceso.setAccesoId(14);
-//            acceso.setTipoAcceso(2);
-//            acceso.setOrdenDespliegue(2);
-//            acceso.setPerfilId(_userToInsert.getIdPerfil());
-//            
-            //acceso Cerrar Sesion
-//            accesosPerfilDao.insert(acceso);
-            
-            //acceso Cambiar clave
-//            acceso.setAccesoId(15);
-//            acceso.setOrdenDespliegue(1);
-//            accesosPerfilDao.insert(acceso);
         }
         
         return insValues;
     }
     
-////    public ResultCRUDVO delete(UsuarioVO _relationToDelete, 
-////            MaintenanceEventVO _eventdata){
-////        ResultCRUDVO insValues = userDao.delete(_relationToDelete);
-////        
-////        //if (!updValues.isThereError()){
-////            String msgFinal = insValues.getMsg();
-////            insValues.setMsg(msgFinal);
-////            _eventdata.setDescription(msgFinal);
-////            //insertar evento 
-////            eventsDao.addEvent(_eventdata); 
-////        //}
-////        
-////        return insValues;
-////    }
+    /**
+    * 
+    * @param _userToInsert
+    * @param _eventdata
+    * @return 
+    */
+    public ResultCRUDVO insertTemporaryUser(UsuarioVO _userToInsert, 
+            MaintenanceEventVO _eventdata){
+
+        boolean existeEmail = false;
+        ResultCRUDVO insValues = new ResultCRUDVO();
+        
+        System.out.println(WEB_NAME+"[UsuarioBp.insertTemporaryUser]Insertar usuario temporal, inicio...");
+        String msgFinal = insValues.getMsg();
+        if (existeEmail){
+            insValues.setThereError(true);
+            insValues.setCodError(99);
+            insValues.setMsgError("El email " + _userToInsert.getEmail()
+                +" ya existe en el Sistema.");
+            insValues.setMsg("Error al crear usuario temporal '" + _userToInsert.getUsername()
+                + "'. El email " + _userToInsert.getEmail()
+                +" ya existe en el Sistema.");
+            System.out.println(WEB_NAME+"[UsuarioBp.insertTemporaryUser]"
+                + "Error: " + insValues.getMsg());
+            msgFinal = insValues.getMsg();
+            insValues.setMsg(msgFinal);
+            _eventdata.setDescription(msgFinal);
+            //insertar evento 
+            eventsDao.addEvent(_eventdata); 
+        }else{
+            System.out.println(WEB_NAME+"[UsuarioBp.insertTemporaryUser]"
+                + "Insertar usuario temporal, realizar insert.");
+            insValues = userDao.insertTemporaryUser(_userToInsert);
+            msgFinal = insValues.getMsg();
+        }
+        
+        if (!insValues.isThereError()){
+            insValues.setMsg(msgFinal);
+            _eventdata.setDescription(msgFinal);
+            System.out.println(WEB_NAME+"[UsuarioBp.insertTemporaryUser]"
+                + "Insertar evento de insercion de usuario temporal. "
+                + "Descripcion: "+msgFinal);
+            //insertar evento 
+            eventsDao.addEvent(_eventdata); 
+            
+        }
+        
+        return insValues;
+    }
+    
     
     public int getUsuariosCount(String _username,
             String _nombre,
@@ -234,6 +283,15 @@ public class UsuarioBp  extends BaseBp{
     
     public void saveListCencos(ArrayList<UsuarioCentroCostoVO> _centroscosto) throws SQLException {
         userDao.saveListCencos(_centroscosto);
+    }
+    
+    /**
+    * 
+    * @param _email
+    * @return 
+    */
+    public boolean existeEmail(String _email){
+        return userDao.existeEmail(_email);
     }
     
     public void openDbConnection(){

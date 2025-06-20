@@ -44,6 +44,26 @@ public class PropertiesVO {
     private String txtAprobarSolicVacaciones;
     private String txtAprobarSolicPA;
 
+    private int systemAlertCheckInterval=30;
+    
+    private String DTmailServerDomain;
+
+    public String getDTmailServerDomain() {
+        return DTmailServerDomain;
+    }
+
+    public void setDTmailServerDomain(String DTmailServerDomain) {
+        this.DTmailServerDomain = DTmailServerDomain;
+    }
+    
+    public int getSystemAlertCheckInterval() {
+        return systemAlertCheckInterval;
+    }
+
+    public void setSystemAlertCheckInterval(int systemAlertCheckInterval) {
+        this.systemAlertCheckInterval = systemAlertCheckInterval;
+    }
+    
     public String getTxtAprobarSolicVacaciones() {
         return txtAprobarSolicVacaciones;
     }

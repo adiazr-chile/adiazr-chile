@@ -1175,7 +1175,26 @@ public class PermisosAdministrativosDAO extends BaseDAO{
             System.out.println("[PermisosAdministrativosDAO.setSaldoPermisoAdministrativo]"
                 + "salida funcion json: " + strJson);
             
-            FilasAfectadasJsonVO filasAfectadadaObj = (FilasAfectadasJsonVO)new Gson().fromJson(strJson, FilasAfectadasJsonVO.class);
+            //FilasAfectadasJsonVO filasAfectadadaObj = (FilasAfectadasJsonVO)new Gson().fromJson(strJson, FilasAfectadasJsonVO.class);
+            FilasAfectadasJsonVO filasAfectadadaObj = new FilasAfectadasJsonVO();
+            
+            /**
+             * "functionName":"set_saldo_permiso_administrativo",
+                "affectedTables":"permiso_administrativo",
+                "affectedColumns":"dias_disponibles_semestre1;dias_utilizados_semestre1",
+                "empresaId":"emp01",
+                "runEmpleado":"13254734-3",
+                "affectedRows":1,
+                "resultado":"OK"}
+             */
+            filasAfectadadaObj.setFunctionName("set_saldo_permiso_administrativo");
+            filasAfectadadaObj.setAffectedTables("permiso_administrativo");
+            filasAfectadadaObj.setAffectedColumns("dias_disponibles_semestre1;dias_utilizados_semestre1");
+            filasAfectadadaObj.setEmpresaId(_empresaId);
+            filasAfectadadaObj.setRunEmpleado(_runEmpleado);
+            filasAfectadadaObj.setAffectedRows(1);
+            filasAfectadadaObj.setResultado("OK");
+            
             CRUDResult.setFilasAfectadasObj(filasAfectadadaObj);
         }catch(SQLException sqle){
             System.err.println("[PermisosAdministrativosDAO.setSaldoPermisoAdministrativo]"

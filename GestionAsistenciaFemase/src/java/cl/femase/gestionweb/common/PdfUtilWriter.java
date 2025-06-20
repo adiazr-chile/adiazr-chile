@@ -46,7 +46,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpSession;
 
 public class PdfUtilWriter {
     public static String WEB_NAME = "[GestionFemaseWeb]";

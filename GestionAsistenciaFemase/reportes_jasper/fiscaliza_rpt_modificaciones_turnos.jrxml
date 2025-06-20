@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="fiscaliza_rpt_asistencia" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="NoDataSection" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="df0353c2-850e-4b88-950e-1f4637358834">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="DbFemase2025"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="347"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="648"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="RUT_EMPLEADOR" class="java.lang.String"/>
+	<parameter name="RAZON_SOCIAL_EMPLEADOR" class="java.lang.String"/>
+	<parameter name="RUT_TRABAJADOR" class="java.lang.String"/>
+	<parameter name="NOMBRE_TRABAJADOR" class="java.lang.String"/>
+	<parameter name="CENCO" class="java.lang.String"/>
+	<parameter name="DESDE" class="java.lang.String"/>
+	<parameter name="HASTA" class="java.lang.String"/>
+	<parameter name="EMPRESA_ID" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT
+   ta1.id_turno AS id_turno_ant,
+  TO_CHAR(ta1.fecha_asignacion, 'YYYY-MM-DD') AS fecha_asignacion_turno_ant,
+  trim(t1.nombre_turno) AS nombre_turno_ant,
+  ta1.username AS usuario_asigna_turno_ant,
+  ta2.id_turno AS id_turno_new,
+  TO_CHAR(ta2.fecha_asignacion, 'YYYY-MM-DD') AS fecha_asignacion_turno_new,
+  trim(t2.nombre_turno) AS nombre_turno_new,
+  ta2.username AS usuario_asigna_turno_new
+FROM
+  (
+    SELECT *
+    FROM turno_asignacion
+    WHERE empresa_id = $P{EMPRESA_ID}
+      AND fecha_hasta IS NOT NULL
+      AND rut_empleado = $P{RUT_TRABAJADOR}
+    ORDER BY fecha_desde DESC
+    LIMIT 1
+  ) ta1
+  INNER JOIN turno t1 ON ta1.empresa_id = t1.empresa_id AND ta1.id_turno = t1.id_turno
+CROSS JOIN
+  (
+    SELECT *
+    FROM turno_asignacion
+    WHERE empresa_id = $P{EMPRESA_ID}
+      AND fecha_hasta IS NULL
+      AND rut_empleado = $P{RUT_TRABAJADOR}
+    ORDER BY fecha_desde DESC
+    LIMIT 1
+  ) ta2
+  INNER JOIN turno t2 ON ta2.empresa_id = t2.empresa_id AND ta2.id_turno = t2.id_turno;]]>
+	</queryString>
+	<field name="id_turno_ant" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="id_turno_ant"/>
+		<property name="com.jaspersoft.studio.field.label" value="id_turno_ant"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="turno_asignacion"/>
+	</field>
+	<field name="fecha_asignacion_turno_ant" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="fecha_asignacion_turno_ant"/>
+		<property name="com.jaspersoft.studio.field.label" value="fecha_asignacion_turno_ant"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="turno_asignacion"/>
+	</field>
+	<field name="nombre_turno_ant" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="nombre_turno_ant"/>
+		<property name="com.jaspersoft.studio.field.label" value="nombre_turno_ant"/>
+	</field>
+	<field name="usuario_asigna_turno_ant" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="usuario_asigna_turno_ant"/>
+		<property name="com.jaspersoft.studio.field.label" value="usuario_asigna_turno_ant"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="turno_asignacion"/>
+	</field>
+	<field name="id_turno_new" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="id_turno_new"/>
+		<property name="com.jaspersoft.studio.field.label" value="id_turno_new"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="turno_asignacion"/>
+	</field>
+	<field name="fecha_asignacion_turno_new" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="fecha_asignacion_turno_new"/>
+		<property name="com.jaspersoft.studio.field.label" value="fecha_asignacion_turno_new"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="turno_asignacion"/>
+	</field>
+	<field name="nombre_turno_new" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="nombre_turno_new"/>
+		<property name="com.jaspersoft.studio.field.label" value="nombre_turno_new"/>
+	</field>
+	<field name="usuario_asigna_turno_new" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="usuario_asigna_turno_new"/>
+		<property name="com.jaspersoft.studio.field.label" value="usuario_asigna_turno_new"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="turno_asignacion"/>
+	</field>
+	<background>
+		<band/>
+	</background>
+	<title>
+		<band height="90">
+			<frame>
+				<reportElement mode="Opaque" x="-20" y="-20" width="842" height="110" backcolor="#819DB5" uuid="2b9f6384-3069-4d3b-ba09-67674a8e1d86"/>
+				<staticText>
+					<reportElement x="6" y="2" width="398" height="38" forecolor="#D3D3E8" uuid="666d1ed7-29b0-46bd-82c4-3d521f0db327"/>
+					<textElement>
+						<font size="15" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Reporte de modificaciones y/o alteraciones de turnos]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="14" y="45" width="74" height="16" forecolor="#FFFFFF" uuid="1c87439c-c1f9-4fe9-9f64-ad9e2083d8f2"/>
+					<textElement>
+						<font size="10"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{RUT_EMPLEADOR}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="94" y="44" width="256" height="18" forecolor="#FFFFFF" uuid="48c35490-4615-4a66-9968-6923c1901eb7"/>
+					<textFieldExpression><![CDATA[$P{RAZON_SOCIAL_EMPLEADOR}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="13" y="62" width="76" height="18" forecolor="#FFFFFF" uuid="8fc85fb4-cbd7-4bd6-a0b2-60901c14cd35"/>
+					<textFieldExpression><![CDATA[$P{RUT_TRABAJADOR}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="94" y="62" width="296" height="18" forecolor="#FFFFFF" uuid="d0663f0c-53dc-4e72-aec0-11239947b47f"/>
+					<textFieldExpression><![CDATA[$P{NOMBRE_TRABAJADOR}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="14" y="82" width="296" height="18" forecolor="#FFFFFF" uuid="8b349ac0-6402-42ef-bd2a-2c83972323e0">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textFieldExpression><![CDATA[$P{CENCO}]]></textFieldExpression>
+				</textField>
+				<textField pattern="MMMMM dd, yyyy">
+					<reportElement x="684" y="10" width="100" height="20" forecolor="#F0F79C" uuid="8052020d-bf70-47c6-a128-f41a77d2b25b"/>
+					<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="600" y="10" width="80" height="20" forecolor="#FFFFFF" uuid="61936f78-1294-4c2f-8d43-cc9bec2480ae"/>
+					<text><![CDATA[Fecha impresión: ]]></text>
+				</staticText>
+			</frame>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="13"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="28">
+			<line>
+				<reportElement x="-20" y="27" width="839" height="1" forecolor="#666666" uuid="01004622-64c9-4f01-b006-dc8f1ee04004"/>
+			</line>
+			<staticText>
+				<reportElement x="-11" y="-12" width="80" height="34" uuid="d999f330-ca0e-45aa-8844-a42d06885960">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7eb65729-3bd0-42ff-b637-5ece240b9d1f"/>
+				</reportElement>
+				<text><![CDATA[Fecha asignación turno ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="79" y="-12" width="154" height="34" uuid="63516ca8-c0e6-4e4f-a1f0-a2c76be669bf">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7eb65729-3bd0-42ff-b637-5ece240b9d1f"/>
+				</reportElement>
+				<text><![CDATA[Turno asignado]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="234" y="-12" width="83" height="34" uuid="2842de1d-77ec-433a-8c63-9f839635b71d">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7eb65729-3bd0-42ff-b637-5ece240b9d1f"/>
+				</reportElement>
+				<text><![CDATA[Extensión de turno]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="330" y="-12" width="100" height="34" uuid="50dd2756-a19a-4bb3-ac13-fefb488faa57">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7eb65729-3bd0-42ff-b637-5ece240b9d1f"/>
+				</reportElement>
+				<text><![CDATA[Fecha asignación de turno nuevo ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="434" y="-12" width="115" height="34" uuid="92efbc1e-db2f-4048-a3eb-11669a150fa4">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7eb65729-3bd0-42ff-b637-5ece240b9d1f"/>
+				</reportElement>
+				<text><![CDATA[Turno nuevo ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="553" y="-12" width="78" height="34" uuid="810e5009-7065-4fbd-b5f7-ce30b3fc903b">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7eb65729-3bd0-42ff-b637-5ece240b9d1f"/>
+				</reportElement>
+				<text><![CDATA[Extensión de turno]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="643" y="-12" width="86" height="34" uuid="baf40f61-bfb6-4c1d-ba50-59ab108442f5">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7eb65729-3bd0-42ff-b637-5ece240b9d1f"/>
+				</reportElement>
+				<text><![CDATA[Quien asigna el turno]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="733" y="-12" width="76" height="34" uuid="57dd68ad-fe11-45e5-a38e-a4fbbbdd0fb9">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7eb65729-3bd0-42ff-b637-5ece240b9d1f"/>
+				</reportElement>
+				<text><![CDATA[Observaciones]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="46">
+			<textField>
+				<reportElement x="-11" y="4" width="71" height="30" uuid="160dafdc-911a-4216-8ca8-a0d88d4c215f">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="1cd2af80-6d41-436c-bbc6-75611e7310b4"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{fecha_asignacion_turno_ant}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="75" y="5" width="158" height="30" uuid="2564f571-c818-4da9-803d-5b7ac96b90c4">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="0d4d28ec-e73a-41cd-81d2-83e8cac60d1a"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{nombre_turno_ant}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="330" y="3" width="82" height="30" uuid="2c72068d-8c5b-4787-b682-71d997f49981">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7030aae8-afea-44ad-aa5c-bbb977e9d0a7"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{fecha_asignacion_turno_new}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="435" y="3" width="113" height="30" uuid="347f9519-91cc-42a9-8f0c-38cb1ad3b130">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="d2a974a3-c40d-44a5-ab9f-7dc1158c5509"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{nombre_turno_new}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="643" y="4" width="85" height="30" uuid="2a553075-701d-4a3c-9751-aa948dd80146">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="73d0df09-43d8-4cee-8343-87c051a92660"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{usuario_asigna_turno_new}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band/>
+	</columnFooter>
+	<pageFooter>
+		<band height="79">
+			<textField>
+				<reportElement mode="Opaque" x="0" y="6" width="515" height="20" backcolor="#E6E6E6" uuid="cb20eef0-7ab2-4e2a-83b5-664b372ab9c1"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement mode="Opaque" x="515" y="7" width="40" height="13" backcolor="#E6E6E6" uuid="6d89b081-f750-4ab8-bb98-034371c82a88"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="88" y="6" width="100" height="20" forecolor="#6C6E5A" uuid="9f8453b7-3f79-42ee-85a6-91e27fa16206"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="3" y="6" width="80" height="20" forecolor="#0D0C0C" uuid="e68d8810-8b09-471c-acd9-41b2f6d4fe1c"/>
+				<text><![CDATA[Fecha impresión: ]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+	<summary>
+		<band/>
+	</summary>
+	<noData>
+		<band height="79">
+			<staticText>
+				<reportElement x="10" y="40" width="100" height="20" uuid="2e94a901-ee4e-451a-92f4-10deb2edc43b"/>
+				<text><![CDATA[No hay registros disponibles]]></text>
+			</staticText>
+		</band>
+	</noData>
+</jasperReport>

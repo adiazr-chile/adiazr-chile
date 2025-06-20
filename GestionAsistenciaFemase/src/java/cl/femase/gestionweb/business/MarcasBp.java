@@ -113,6 +113,17 @@ public class MarcasBp  extends BaseBp{
                 _fechaHora, _tipoMarca, _historico);
     }
     
+    /**
+    * 
+    * @param _hashcode
+    * @param _historico
+    * @return 
+    */
+    public MarcaVO getMarcaByHashcode(String _hashcode, boolean _historico){
+    
+        return marcasDao.getMarcaByHashcode(_hashcode, _historico);
+    }
+    
     public MarcaVO getMarcaByTipo(String _empresaId,
             String _rutEmpleado, String _startDate, 
             String _endDate,int _tipoMarca,String _fechaHoraEntrada){
@@ -230,6 +241,7 @@ public class MarcasBp  extends BaseBp{
     * @param _dispositivoId
     * @param _startDate
     * @param _endDate
+     * @param _hashcode
     * @param _turnoRotativo
      * @param _regionIdEmpleado
      * @param _comunaIdEmpleado
@@ -245,6 +257,7 @@ public class MarcasBp  extends BaseBp{
             String _dispositivoId,
             String _startDate, 
             String _endDate,
+            String _hashcode,
             boolean _turnoRotativo,
             int _regionIdEmpleado, 
             int _comunaIdEmpleado,
@@ -285,10 +298,10 @@ public class MarcasBp  extends BaseBp{
         LinkedHashMap<String, InfoMarcaVO> fechasMarcas;
         if (_turnoRotativo){
             fechasMarcas = 
-                visorMarcasBp.setMarcasTurnoRotativo(_empresaId, _rutEmpleado , _startDate, _endDate, _regionIdEmpleado, _comunaIdEmpleado, infoCenco);
+                visorMarcasBp.setMarcasTurnoRotativo(_empresaId, _rutEmpleado , _startDate, _endDate, _hashcode, _regionIdEmpleado, _comunaIdEmpleado, infoCenco);
         }else{
             fechasMarcas = 
-                visorMarcasBp.setMarcasTurnoNormal(_empresaId, _rutEmpleado , _startDate, _endDate, _regionIdEmpleado, _comunaIdEmpleado, infoCenco);
+                visorMarcasBp.setMarcasTurnoNormal(_empresaId, _rutEmpleado , _startDate, _endDate, _hashcode, _regionIdEmpleado, _comunaIdEmpleado, infoCenco);
         }
         
         fechasMarcas.forEach((key,value) -> {
@@ -396,12 +409,13 @@ public class MarcasBp  extends BaseBp{
             String _rutEmpleado, 
             String _dispositivoId,
             String _startDate, 
-            String _endDate){
+            String _endDate, 
+            String _hashcode){
         
         return marcasDao.getMarcasCount(_empresaId, _deptoId, 
             _cencoId, _rutEmpleado, 
             _dispositivoId, _startDate, 
-            _endDate);
+            _endDate, _hashcode);
     }
     
     public int getMarcasHistCount(String _empresaId,

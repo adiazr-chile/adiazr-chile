@@ -275,6 +275,10 @@
                 <option value="-1">--------</option>
             </se0lect>
             -->    
+            <label>C&oacute;digo Hash
+                <input name="param_hashcode" type="text" id="param_hashcode" value="">
+            </label>
+            
             <label>Centro Costo
                 <select name="cencoId" id="cencoId" onChange="setCenco(this.value)">
                     <option value="-1" selected>----------</option>
@@ -855,6 +859,7 @@
                 rutEmpleado: $('#rut').val(),
                 startDate: $('#startDate').val(),
                 endDate: $('#endDate').val(),
+                param_hashcode: $('#param_hashcode').val(),
                 dispositivoId: $('#dispositivo').val()
             });
         });

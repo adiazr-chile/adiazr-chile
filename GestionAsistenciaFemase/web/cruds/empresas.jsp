@@ -20,7 +20,7 @@
     if (filtroNombre == null) filtroNombre = "";
     
     //num columnas
-    String columnas = "0,1,2,3,4,5,6,7";
+    String columnas = "0,1,2,3,4,5,6,7,8";
 %>
 
 <!doctype html>
@@ -171,7 +171,8 @@
                 document.getElementById("direccion").value = '';
                 document.getElementById("estadoId").value = '1';
                 document.getElementById("comunaId").value = '278';
-                                
+                document.getElementById("notificationEmail").value = '';
+                
                 var botonEliminar = document.getElementById("deleteButton");
                 botonEliminar.disabled = true;
                 var nombreBuscar = document.searchForm.filtroNombre;
@@ -184,6 +185,7 @@
                 document.getElementById("direccion").readOnly = false;
                 document.getElementById("estadoId").readOnly = false;
                 document.getElementById("comunaId").readOnly = false;
+                document.getElementById("notificationEmail").readOnly = false;
                 
                 document.getElementById("saveButton").disabled = false;
                 document.getElementById("deleteButton").disabled = true;
@@ -203,8 +205,10 @@
             var direccion  = currentRow.find("td:eq(3)").text(); // get current row 3rd TD
             var comunaId  = currentRow.find("td:eq(4)").text();
             var estadoId  = currentRow.find("td:eq(6)").text();
+            var notificationEmail  = currentRow.find("td:eq(8)").text();
+            
             document.getElementById("action").value='update';
-            setValuesToEdit(id, nombre, rut, direccion, comunaId, estadoId);
+            setValuesToEdit(id, nombre, rut, direccion, comunaId, estadoId, notificationEmail);
              
              $("#editModalForm").modal("show");
         });
@@ -220,28 +224,17 @@
             var direccion  = currentRow.find("td:eq(3)").text(); // get current row 3rd TD
             var comunaId  = currentRow.find("td:eq(4)").text();
             var estadoId  = currentRow.find("td:eq(6)").text();
+            var notificationEmail  = currentRow.find("td:eq(8)").text();
              
              document.getElementById("action").value='delete';
              ////document.getElementById("labelForm").value='Eliminar Registro';
-             setValuesToEdit(id, nombre, rut, direccion, comunaId, estadoId);
+             setValuesToEdit(id, nombre, rut, direccion, comunaId, estadoId, notificationEmail);
         });
         
         //set params de busqueda previa
         document.getElementById("filtroNombre").value='<%=filtroNombre%>';
          
-        /*
-        $("#datepicker").datepicker({ 
-            autoclose: true, 
-            todayHighlight: true,
-            language: "es"
-        }).datepicker('update', new Date());
-                                    
-         $("#fechaInicioContrato").datepicker({ 
-             autoclose: true, 
-             todayHighlight: true,
-             language: "es"
-         }).datepicker('update', new Date());
-         */
+       
          
          
     } );
@@ -249,7 +242,7 @@
     /**
     * 
     * */
-    function setValuesToEdit(id, nombre, rut, direccion, comunaId, estadoId){
+    function setValuesToEdit(id, nombre, rut, direccion, comunaId, estadoId, notificationEmail){
         //campos de busqueda
         var nombreBuscar = document.searchForm.filtroNombre;
 	document.editNewForm.filtroNombre.value = nombreBuscar.value;
@@ -262,6 +255,7 @@
         var inputDireccion = document.getElementById("direccion");
         var inputComunaId = document.getElementById("comunaId");
         var inputEstadoId = document.getElementById("estadoId");
+        var inputNotificationEmail = document.getElementById("notificationEmail");
         
         //botones
         var botonGuardar 	= document.getElementById("saveButton");
@@ -275,6 +269,7 @@
         inputDireccion.value = direccion;
         inputComunaId.value = comunaId;
         inputEstadoId.value = estadoId;
+        inputNotificationEmail.value = notificationEmail;
         
         inputID.readOnly = true;
         inputNombre.readOnly = false;
@@ -282,6 +277,7 @@
         inputDireccion.readOnly = false;
         inputComunaId.readOnly = false;
         inputEstadoId.readOnly = false;
+        inputNotificationEmail.readOnly = false;
         
         //botones
         botonGuardar.disabled = false;
@@ -295,6 +291,7 @@
             inputDireccion.readOnly = true;
             inputComunaId.readOnly = true;
             inputEstadoId.readOnly = true;
+            inputNotificationEmail.readOnly = true;
         
             botonGuardar.disabled = true;
             botonEliminar.disabled = false;
@@ -438,6 +435,7 @@
             <th>Comuna Nombre</th>
             <th>Estado Id</th>
             <th>Estado Nombre</th>
+            <th>Email notificacion</th>
                 <%if (!list.isEmpty()){%>
                     <th style="text-align:center;width:100px;">Nuevo registro 
                         <button type="button" class="btn btn-success btn-xs dt-add">
@@ -464,6 +462,7 @@
                 <td><%= registro.getComunaNombre()%></td>
                 <td><%= registro.getEstadoId()%></td>
                 <td><%= registro.getEstadoNombre()%></td>
+                <td><%= registro.getNotificationEmail()%></td>
                 <td>
                     <button class="btnSelect btn btn-primary btn-xs" style="margin-right:16px;">
                         <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
@@ -541,6 +540,10 @@
                         <option value="2">No Vigente</option>
                     </select>
             </div>
+             
+            <div class="col">
+                Email<input type="text" name="notificationEmail" id="notificationEmail" placeholder="Ingrese email de notificacion">
+            </div>            
             
         </div>
         <!-- fin fila -->

@@ -74,7 +74,7 @@ public class EmpresaDAO extends BaseDAO{
                 + "comuna.comuna_nombre,"
                 + "comuna.region_id,"
                 + "region.region_nombre,"
-                + "region.short_name region_shortname "
+                + "region.short_name region_shortname,coalesce(empresa.notification_email,'') notification_email "
                 + " from empresa "
                     + " left outer join comuna on (empresa.comuna_id=comuna.comuna_id) "
                     + " inner join region on (comuna.region_id = region.region_id) "
@@ -107,6 +107,8 @@ public class EmpresaDAO extends BaseDAO{
                 
                 data.setComunaId(rs.getInt("comuna_id"));
                 data.setComunaNombre(rs.getString("comuna_nombre"));
+                
+                data.setNotificationEmail(rs.getString("notification_email"));
                 
                 lista.add(data);
             }
@@ -141,19 +143,20 @@ public class EmpresaDAO extends BaseDAO{
         
         try{
             String sql = "SELECT "
-                + "empresa_id,"
-                + "empresa_nombre,"
-                + "empresa_rut,"
-                + "empresa_direccion,"
-                + "empresa_estado,"
-                + "empresa.comuna_id,"
-                + "comuna.comuna_nombre,"
-                + "comuna.region_id,"
-                + "region.region_nombre,"
-                + "region.short_name region_shortname "
+                    + "empresa_id,"
+                    + "empresa_nombre,"
+                    + "empresa_rut,"
+                    + "empresa_direccion,"
+                    + "empresa_estado,"
+                    + "empresa.comuna_id,"
+                    + "comuna.comuna_nombre,"
+                    + "comuna.region_id,"
+                    + "region.region_nombre,"
+                    + "region.short_name region_shortname,"
+                    + "coalesce(empresa.notification_email,'') notification_email "
                 + "from empresa "
-                + " left outer join comuna on (empresa.comuna_id=comuna.comuna_id) "
-                + " inner join region on (comuna.region_id = region.region_id)";
+                    + " left outer join comuna on (empresa.comuna_id=comuna.comuna_id) "
+                    + " inner join region on (comuna.region_id = region.region_id)";
             sql+= " where empresa_id='" + _empresaId + "' ";
                        
             dbConn = dbLocator.getConnection(m_dbpoolName,"[EmpresaDAO.getEmpresaByKey]");
@@ -173,6 +176,8 @@ public class EmpresaDAO extends BaseDAO{
                 
                 empresa.setComunaId(rs.getInt("comuna_id"));
                 empresa.setComunaNombre(rs.getString("comuna_nombre"));
+                
+                empresa.setNotificationEmail(rs.getString("notification_email"));
                 
             }
 
@@ -226,25 +231,19 @@ public class EmpresaDAO extends BaseDAO{
             }
                 
             String sql ="SELECT "
-                + "distinct(depto.empresa_id) empresa_id,"
-                + "empresa.empresa_nombre, "
-                + "empresa.empresa_rut,"
-                + "empresa.empresa_direccion,"
-                + "empresa.comuna_id, "
-                + "empresa.empresa_estado "
-                + "FROM "
-                + " centro_costo cenco,"
-                + "departamento depto,"
-                + "empresa "
+                    + "distinct(depto.empresa_id) empresa_id,"
+                    + "empresa.empresa_nombre, "
+                    + "empresa.empresa_rut,"
+                    + "empresa.empresa_direccion,"
+                    + "empresa.comuna_id, "
+                    + "empresa.empresa_estado,"
+                    + "coalesce(empresa.notification_email,'') notification_email "
+                + "FROM centro_costo cenco,departamento depto,"
+                    + "empresa "
                 + "WHERE "
-                + "cenco.depto_id = depto.depto_id AND "
-                + "depto.empresa_id = empresa.empresa_id ";
-                
-//            if (_usuario.getIdPerfil() != Constantes.ID_PERFIL_SUPER_ADMIN 
-//                    && _usuario.getAdminEmpresa().compareTo("S") == 0){
-//                sql += " AND depto.empresa_id  = '" + _usuario.getEmpresaId() + "'";
-//            }
-             
+                    + "cenco.depto_id = depto.depto_id AND "
+                    + "depto.empresa_id = empresa.empresa_id ";
+              
             if (_usuario.getIdPerfil() != Constantes.ID_PERFIL_SUPER_ADMIN){
                 sql += " AND depto.empresa_id  = '" + _usuario.getEmpresaId() + "'";
             }
@@ -272,6 +271,7 @@ public class EmpresaDAO extends BaseDAO{
                 data.setDireccion(rs.getString("empresa_direccion"));
                 data.setComunaId(rs.getInt("comuna_id"));
                 data.setEstadoId(rs.getInt("empresa_estado"));
+                data.setNotificationEmail(rs.getString("notification_email"));
                 
                 System.out.println(WEB_NAME+"[EmpresasDAO.getEmpresas]"
                     + "add empresa_id: " + data.getId()
@@ -351,7 +351,8 @@ public class EmpresaDAO extends BaseDAO{
             + ", nombre: "+_data.getNombre()
             + ", rut: "+_data.getRut()
             + ", direccion: "+_data.getDireccion()
-            + ", comunaId: "+_data.getRegionId();
+            + ", comunaId: "+_data.getRegionId()
+            + ", notification email: "+_data.getNotificationEmail();
         
         try{
             String msgFinal = " Actualiza empresa:"
@@ -359,17 +360,19 @@ public class EmpresaDAO extends BaseDAO{
                 + ", nombre [" + _data.getNombre() + "]"
                 + ", rut [" + _data.getRut()+ "]"    
                 + ", direccion [" + _data.getDireccion() + "]"
-                + ", comunaId [" + _data.getComunaId() + "]";
+                + ", comunaId [" + _data.getComunaId() + "]"
+                + ", notificationEmail [" + _data.getNotificationEmail() + "]";
             
             System.out.println(msgFinal);
             objresultado.setMsg(msgFinal);
             
             String sql = "UPDATE empresa "
                 + "SET empresa_nombre = ?, "
-                + "empresa_rut = ?, "
-                + "empresa_direccion = ?,"
-                + "comuna_id = ?, "
-                + "empresa_estado = ? "
+                    + "empresa_rut = ?, "
+                    + "empresa_direccion = ?,"
+                    + "comuna_id = ?, "
+                    + "empresa_estado = ?,"
+                    + "notification_email = ? "
                 + " WHERE empresa_id = ?";
             
             dbConn = dbLocator.getConnection(m_dbpoolName,"[EmpresaDAO.update]");
@@ -379,7 +382,8 @@ public class EmpresaDAO extends BaseDAO{
             psupdate.setString(3,  _data.getDireccion());
             psupdate.setInt(4,  _data.getComunaId());
             psupdate.setInt(5,  _data.getEstadoId());
-            psupdate.setString(6,  _data.getId());
+            psupdate.setString(6,  _data.getNotificationEmail());
+            psupdate.setString(7,  _data.getId());
             
             int rowAffected = psupdate.executeUpdate();
             if (rowAffected == 1){
@@ -388,7 +392,8 @@ public class EmpresaDAO extends BaseDAO{
                     + ", rut:" +_data.getRut()    
                     + ", nombre:" +_data.getNombre()
                     + ", direccion:" +_data.getDireccion()
-                    + ", comunaId:" +_data.getComunaId()    
+                    + ", comunaId:" +_data.getComunaId() 
+                    + ", notification Email:" +_data.getNotificationEmail()     
                     +" actualizada OK!");
             }
 
@@ -425,14 +430,16 @@ public class EmpresaDAO extends BaseDAO{
             + ", rut: "+_data.getRut()    
             + ", nombre: "+_data.getNombre()
             + ", direccion: "+_data.getDireccion()
-            + ", comunaId: "+_data.getComunaId();
+            + ", comunaId: "+_data.getComunaId()
+            + ", notification Email: "+_data.getNotificationEmail();
         
        String msgFinal = " Inserta empresa:"
             + "id [" + _data.getId() + "]"
             + " rut [" + _data.getRut() + "]"   
             + " nombre [" + _data.getNombre() + "]"
             + " direccion [" + _data.getDireccion() + "]"
-            + " comunaId [" + _data.getComunaId() + "]";
+            + " comunaId [" + _data.getComunaId() + "]"
+            + " notificationEmail [" + _data.getNotificationEmail() + "]";
             
         objresultado.setMsg(msgFinal);
         PreparedStatement insert    = null;
@@ -441,8 +448,8 @@ public class EmpresaDAO extends BaseDAO{
             String sql = "INSERT INTO empresa("
                 + " empresa_id, empresa_nombre, "
                 + "empresa_rut, empresa_direccion, "
-                + "comuna_id, empresa_estado) "
-                + " VALUES (?, ?, ?, ?, ?, ?)";
+                + "comuna_id, empresa_estado, notification_email) "
+                + " VALUES (?, ?, ?, ?, ?, ?, ?)";
 
             dbConn = dbLocator.getConnection(m_dbpoolName,"[EmpresaDAO.insert]");
             insert = dbConn.prepareStatement(sql);
@@ -452,15 +459,17 @@ public class EmpresaDAO extends BaseDAO{
             insert.setString(4,  _data.getDireccion());
             insert.setInt(5,  _data.getComunaId());
             insert.setInt(6,  _data.getEstadoId());
+            insert.setString(7,  _data.getNotificationEmail());
             
             int filasAfectadas = insert.executeUpdate();
             if (filasAfectadas == 1){
                 System.out.println(WEB_NAME+"[insert empresa]"
-                    + ", nombre:" +_data.getNombre()
-                    + ", id:" +_data.getId()
-                    + ", rut:" +_data.getRut()
-                    + ", direccion:" +_data.getDireccion()
-                    + ", comunaId:" +_data.getRegionId()
+                    + ", nombre:" + _data.getNombre()
+                    + ", id:" + _data.getId()
+                    + ", rut:" + _data.getRut()
+                    + ", direccion:" + _data.getDireccion()
+                    + ", comunaId:" + _data.getRegionId()
+                    + ", notification_email:" + _data.getNotificationEmail()    
                     +" insertada OK!");
             }
             

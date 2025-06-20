@@ -5,6 +5,7 @@
 */
 package cl.femase.gestionweb.common;
 
+import cl.femase.gestionweb.vo.ReportTypeVO;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -274,6 +275,23 @@ public class Constantes {
         DURACION_TURNOS_ROTATIVOS.put("3", "3 A&ntilde;os");
         DURACION_TURNOS_ROTATIVOS.put("4", "4 A&ntilde;os");
         DURACION_TURNOS_ROTATIVOS.put("5", "5 A&ntilde;os");
+        
+    }
+    
+    /**
+    * 
+    */
+    public static Map<String, ReportTypeVO> REPORT_TYPE;
+    static {
+        
+        REPORT_TYPE = new HashMap<>();
+        REPORT_TYPE.put("asistencia", new ReportTypeVO("fiscaliza_rpt_asistencia.jasper", "fiscaliza_asistencia"));
+        REPORT_TYPE.put("jornada_diaria", new ReportTypeVO("fiscaliza_rpt_jornada_diaria.jasper", "fiscaliza_jornada"));
+        REPORT_TYPE.put("domingos_festivos", new ReportTypeVO("fiscaliza_rpt_domingos_festivos.jasper", "domingos_festivos"));
+        REPORT_TYPE.put("modificaciones_turnos", new ReportTypeVO("fiscaliza_rpt_modificaciones_turnos.jasper", "modificaciones_turnos"));
+        REPORT_TYPE.put("diario", new ReportTypeVO("fiscaliza_rpt_diario.jasper", "diario"));
+        REPORT_TYPE.put("incidentes_tecnicos", new ReportTypeVO("fiscaliza_rpt_incidentes_tecnicos.jasper", "incidentes_tecnicos"));
+        
         
     }
 }

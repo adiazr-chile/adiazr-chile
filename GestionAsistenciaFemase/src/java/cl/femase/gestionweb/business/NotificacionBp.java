@@ -31,6 +31,12 @@ public class NotificacionBp  extends BaseBp{
         notificacionService = new cl.femase.gestionweb.dao.NotificacionDAO(this.props);
     }
             
+    /**
+    * 
+    * @param _objToInsert
+    * @param _eventdata
+    * @return 
+    */
     public ResultCRUDVO insert(NotificacionVO _objToInsert, 
             MaintenanceEventVO _eventdata){
         

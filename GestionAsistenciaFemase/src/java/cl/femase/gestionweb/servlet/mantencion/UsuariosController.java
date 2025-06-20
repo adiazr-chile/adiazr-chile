@@ -1,8 +1,12 @@
 package cl.femase.gestionweb.servlet.mantencion;
 
+import cl.femase.gestionweb.business.EmpleadosBp;
+import cl.femase.gestionweb.business.NotificacionBp;
 import cl.femase.gestionweb.servlet.BaseServlet;
 import cl.femase.gestionweb.business.UsuarioBp;
+import cl.femase.gestionweb.vo.EmpleadoVO;
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
+import cl.femase.gestionweb.vo.NotificacionVO;
 import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import cl.femase.gestionweb.vo.UsuarioVO;
@@ -10,17 +14,20 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 
 public class UsuariosController extends BaseServlet {
@@ -54,7 +61,7 @@ public class UsuariosController extends BaseServlet {
     * 
     * @param request
     * @param response
-    * @throws javax.servlet.ServletException
+    * @throws jakarta.servlet.ServletException
     * @throws java.io.IOException
     */
     @Override
@@ -78,7 +85,7 @@ public class UsuariosController extends BaseServlet {
     * 
     * @param request
     * @param response
-    * @throws javax.servlet.ServletException
+    * @throws jakarta.servlet.ServletException
     * @throws java.io.IOException
     */
     @Override
@@ -226,6 +233,9 @@ public class UsuariosController extends BaseServlet {
                         session.setAttribute("type","changepass");
                         session.setAttribute("mensaje",
                             "Cambio de clave realizado exitosamente...");
+                        
+                        notificaCambioClave(userConnected, request);
+                        
                         request.getRequestDispatcher("/mensaje.jsp").forward(request, response);//frameset
                         
                     }catch(IOException | ServletException ex){
@@ -235,37 +245,63 @@ public class UsuariosController extends BaseServlet {
                     }
             }
             
-            /*else if (action.compareTo("create") == 0) {
-                        System.out.println(WEB_NAME+"[UsuariosControllet]Insertar usuario...");
-                        ResultCRUDVO doCreate = auxnegocio.insert(userdata, resultado);					
-                        listaObjetos.add(userdata);
-
-                        //Convert Java Object to Json
-                        String json=gson.toJson(userdata);					
-                        //Return Json in the format required by jTable plugin
-                        String listData="{\"Result\":\"OK\",\"Record\":"+json+"}";											
-                        response.getWriter().print(listData);
-            */
-            /*else if (action.compareTo("update") == 0) {  
-                    System.out.println(WEB_NAME+"[UsuariosControllet]Actualizar un usuario...");
-                    try{
-                        ResultCRUDVO doUpdate = 
-                            auxnegocio.update(userdata, resultado);
-                        listaObjetos.add(userdata);
-
-                        //Convert Java Object to Json
-                        String json=gson.toJson(userdata);					
-                        //Return Json in the format required by jTable plugin
-                        String listData="{\"Result\":\"OK\",\"Record\":"+json+"}";											
-                        response.getWriter().print(listData);
-                        
-                    }catch(Exception ex){
-                        String error="{\"Result\":\"ERROR\",\"Message\":"+ex.getStackTrace().toString()+"}";
-                        response.getWriter().print(error);
-                    }
-            }else */
             
       }
     }
     
+    /**
+    * 
+    */
+    private void notificaCambioClave(UsuarioVO _userConnected, 
+            HttpServletRequest _request){
+    
+        String fromLabel = "Gestion asistencia";
+        String fromMail = m_properties.getKeyValue("mailFrom");
+        String asuntoMail   = "Sistema de Gestion-Contraseña modificada con éxito";
+        String mailTo = _userConnected.getEmail();
+        LocalDate currentDate = LocalDate.now();
+        LocalTime currentTime = LocalTime.now();
+         // Crear un formateador de hora
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+        String horaFormateada = currentTime.format(formatter);
+        System.out.println("[UsuariosController.notificaCambioClave]"
+            + "horaFormateada: " + horaFormateada);
+        String mailBody = "Estimado/a " + _userConnected.getNombreCompleto() + ","  
+            +"<br>Le informamos que su contraseña para la cuenta " + _userConnected.getUsername() 
+            + " se ha cambiado correctamente el " + currentDate + " a las " + horaFormateada +". "
+            +"<br>Si no ha realizado este cambio, póngase en contacto con nosotros inmediatamente.";
+
+        EmpleadosBp empleadobp = new EmpleadosBp();
+        EmpleadoVO empleado = 
+            empleadobp.getEmpleado(_userConnected.getEmpresaId(), 
+            _userConnected.getRunEmpleado());
+        
+        MaintenanceEventVO resultado=new MaintenanceEventVO();
+        resultado.setUsername(_userConnected.getUsername());
+        resultado.setDatetime(new Date());
+        resultado.setUserIP(_request.getRemoteAddr());
+        resultado.setType("NOT");
+        resultado.setEmpresaIdSource(_userConnected.getEmpresaId());
+        if (empleado != null){
+            resultado.setEmpresaId(empleado.getEmpresaId());
+            resultado.setDeptoId(empleado.getDeptoId());
+            resultado.setCencoId(empleado.getCencoId());
+            resultado.setRutEmpleado(empleado.getRut());
+        }
+        NotificacionBp notificacionBp=new NotificacionBp(null);
+        NotificacionVO notificacion = new NotificacionVO();
+        notificacion.setEmpresaId(_userConnected.getEmpresaId());
+        if (empleado != null){
+            notificacion.setCencoId(empleado.getCencoId());
+            notificacion.setRutEmpleado(empleado.getRut());
+        }
+        notificacion.setMailFrom(fromMail);
+        notificacion.setMailTo(mailTo);
+        notificacion.setMailSubject(asuntoMail);
+        notificacion.setMailBody(mailBody);
+        notificacion.setUsername(_userConnected.getUsername());
+        notificacion.setComentario("Contraseña modificada con éxito");
+        notificacionBp.insert(notificacion, resultado);
+   
+    }
 }
