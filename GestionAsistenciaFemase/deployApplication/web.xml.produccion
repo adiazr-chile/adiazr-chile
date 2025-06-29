@@ -63,6 +63,26 @@
         <servlet-name>EmpleadosCaducadosController</servlet-name>
         <servlet-class>cl.femase.gestionweb.servlet.mantencion.EmpleadosCaducadosController</servlet-class>
     </servlet>
+	
+	<servlet>
+        <servlet-name>SystemAlertServlet</servlet-name>
+        <servlet-class>cl.femase.gestionweb.servlet.SystemAlertServlet</servlet-class>
+    </servlet>
+	
+	<servlet>
+        <servlet-name>RequestAccessCodeServlet</servlet-name>
+        <servlet-class>cl.femase.gestionweb.servlet.RequestAccessCodeServlet</servlet-class>
+    </servlet>
+	
+	<servlet>
+        <servlet-name>NotificarEmpleadorServlet</servlet-name>
+        <servlet-class>cl.femase.gestionweb.servlet.NotificarEmpleadorServlet</servlet-class>
+    </servlet>
+		
+	<servlet>
+        <servlet-name>BuscarEmpleadosServlet</servlet-name>
+        <servlet-class>cl.femase.gestionweb.servlet.fiscalizacion.EmpleadosBuscar</servlet-class>
+    </servlet>
     <!--
         <servlet>
             <servlet-name>BaseServlet</servlet-name>
@@ -150,7 +170,10 @@
         <servlet-class>cl.femase.gestionweb.servlet.crud.VacacionesSaldosPeriodos</servlet-class>
     </servlet>
 	
-	
+	<servlet>
+		<servlet-name>AlertasSistemaCRUD</servlet-name>
+        <servlet-class>cl.femase.gestionweb.servlet.crud.AlertasSistema</servlet-class>
+    </servlet>
 	
 	<!-- Fin CRUDS -->
 	
@@ -234,6 +257,8 @@
         <servlet-name>ReporteDetalleAusencias</servlet-name>
         <servlet-class>cl.femase.gestionweb.servlet.reportes.ReporteDetalleAusencias</servlet-class>
     </servlet>
+	
+	<!--
     <servlet>
         <servlet-name>UploadEmpleadosServlet</servlet-name>
         <servlet-class>cl.femase.gestionweb.servlet.cargamasiva.UploadEmpleadosServlet</servlet-class>
@@ -258,12 +283,11 @@
         <servlet-name>UploadDiasVacacionesServlet</servlet-name>
         <servlet-class>cl.femase.gestionweb.servlet.cargamasiva.UploadDiasVacacionesServlet</servlet-class>
     </servlet>
-	
 	<servlet>
         <servlet-name>UploadVacacionesServlet</servlet-name>
         <servlet-class>cl.femase.gestionweb.servlet.cargamasiva.UploadVacacionesServlet</servlet-class>
     </servlet>
-	
+	-->
     <servlet>
         <servlet-name>EmpresasController</servlet-name>
         <servlet-class>cl.femase.gestionweb.servlet.mantencion.EmpresasController</servlet-class>
@@ -449,6 +473,25 @@
     <!-- ************************************ -->
     <!-- mapping de servlets -->
     <!-- ************************************ -->
+	<servlet-mapping>
+        <servlet-name>SystemAlertServlet</servlet-name>
+        <url-pattern>/SystemAlertServlet</url-pattern>
+    </servlet-mapping>
+	<servlet-mapping>
+        <servlet-name>RequestAccessCodeServlet</servlet-name>
+        <url-pattern>/RequestAccessCodeServlet</url-pattern>
+    </servlet-mapping>
+	
+	<servlet-mapping>
+        <servlet-name>NotificarEmpleadorServlet</servlet-name>
+        <url-pattern>/fiscaliza/NotificarEmpleadorServlet</url-pattern>
+    </servlet-mapping>
+	
+	<servlet-mapping>
+        <servlet-name>BuscarEmpleadosServlet</servlet-name>
+        <url-pattern>/fiscaliza/BuscarEmpleadosServlet</url-pattern>
+    </servlet-mapping>
+	
     <servlet-mapping>
         <servlet-name>UserAuth</servlet-name>
         <url-pattern>/UserAuth</url-pattern>
@@ -590,6 +633,11 @@
         <url-pattern>/VacacionesSaldosPeriodosCRUD</url-pattern>
     </servlet-mapping>
 	
+	<servlet-mapping>
+        <servlet-name>AlertasSistemaCRUD</servlet-name>
+        <url-pattern>/AlertasSistemaCRUD</url-pattern>
+    </servlet-mapping>
+	
 	<!-- Fin CRUDS -->
 	
 	
@@ -665,6 +713,8 @@
         <servlet-name>TiempoExtraController</servlet-name>
         <url-pattern>/TiempoExtraController</url-pattern>
     </servlet-mapping>
+	
+	<!--
     <servlet-mapping>
         <servlet-name>UploadEmpleadosServlet</servlet-name>
         <url-pattern>/UploadEmpleadosServlet</url-pattern>
@@ -693,7 +743,7 @@
         <servlet-name>UploadVacacionesServlet</servlet-name>
         <url-pattern>/UploadVacacionesServlet</url-pattern>
     </servlet-mapping>
-	
+	-->
 	
     <servlet-mapping>
         <servlet-name>EmpresasController</servlet-name>

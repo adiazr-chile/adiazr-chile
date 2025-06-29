@@ -3853,12 +3853,173 @@
 				En la clase CalculoAsistenciaNew (dentro del método 'getHorasPresenciales'), ahora se invoca al método 'Utilidades'.'procesarMarcaciones': Este método se encarga de 
 				recibir una lista de trodas las marcas de un trabajador y retornar un par único de entrada y salida.
 			
+			***************************************************************************
+				************** Versión 5.0.23. Web en Produccion desde el 22-03-2025
+				***************************************************************************
+						
+			5.1.0 24-03-2025
+				.- Requerimiento necesarios para el proceso de Certificación de la Dirección del Trabajo
+					* 2025-03-23: Artículo 7, letra F: Cambio de clave: Después de cambiar la clave, se debe enviar correo al usuario indicando la nueva clave y fecha-hora de la modificación.
+						Después de modificar la clave, se inserta un registro en la tabla 'Notificacion, indicando el cambio de clave exitoso.
+						(verificar que la aplicación de Ramón esté enviando correos con estas notificaciones)
+						
+					* 20250323: Articulo 17, letra E: Agregar nuevo módulo de 'Notificaciones' que permita informar con anticipación los trabajos de mantenimiento del Sistema.
+						Nuevo acceso disponible sólo para usuarios con el perfil de 'Administrador'. Es decir, las notificaciones se definen a nivel de empresa.
+						17.1	Cambio en la base de datos. Crear tabla:
+							CREATE TABLE alertas_sistema (
+								id_alerta SERIAL PRIMARY KEY,
+								empresa_id VARCHAR(12) NOT NULL,
+								titulo VARCHAR(255) NOT NULL,
+								mensaje TEXT NOT NULL,
+								tipo VARCHAR(50) CHECK (tipo IN ('mantenimiento', 'aviso', 'importante')),
+								fecha_envio TIMESTAMPTZ,
+								estado VARCHAR(20) CHECK (estado IN ('pendiente', 'enviado', 'cancelado')),
+								prioridad VARCHAR(10) CHECK (prioridad IN ('alta', 'media', 'baja')),
+								url_accion VARCHAR(255),
+								icono VARCHAR(255),
+								creado_por VARCHAR(255) NOT NULL,
+								modificado_por VARCHAR(255) NOT NULL,
+								created_at TIMESTAMPTZ DEFAULT NOW(),
+								updated_at TIMESTAMPTZ DEFAULT NOW()
+							);
+
+							-- admingestionweb.alertas_sistema_id_alerta_seq definition
+							-- DROP SEQUENCE admingestionweb.alertas_sistema_id_alerta_seq;
+							CREATE SEQUENCE admingestionweb.alertas_sistema_id_alerta_seq
+								INCREMENT BY 1
+								MINVALUE 1
+								MAXVALUE 2147483647
+								START 1
+								CACHE 1
+								NO CYCLE;
+
+							17.2	Crear nuevo acceso: Con usuario 'superadmin'. Módulo 'Configuración Sistema', item "Admin Accesos"
+							Nuevo registro:
+								.- label: "crud_alertas_sistema"
+								.- nombre: "Admin Alertas Sistema"
+								.- url: "/AlertasSistemaCRUD?action=list"
+								
+							17.3	Asignar el nuevo acceso "Admin Alertas Sistema" al perfil de usuario 'Administrador': 
+										Con usuario 'superadmin'. Módulo 'Usuarios', item "Adm Accesos Perfil"
+										Seleccionar	--> Perfil de usuario= "Administrador"
+													--> Módulo Sistema= "Configuracion Sistema"
+													--> Seleccionar el acceso "Admin Alertas Sistema"
+													--> Guardar
+													--> Conectarse al Sistema como Administrador y verificar el nuevo item dentro del módulo "Configuracion Sistema"
+								Insertar registro:
+								Cambio en base de datos:
+									INSERT INTO admingestionweb.mantencion_tipo_evento(tipo_evento, nombre)
+									VALUES('SYSALERT', 'Admin Alertas Sistema');
+								
+							.- Cambio de configuracion: Agregar a "config_base.properties" las siguientes líneas:
+									#Para definir cada cuantos minutos se verifica si hay nuevas alertas de Sistema. Por defecto es una hora=60 minutos
+									SystemAlertCheckInterval=60
+										
+								Archivos de deployment modificados:
+									gestionfemase.template
+									build.xml
+									web.xml.produccion
+									web.xml.dummy
+					
+						.- Articulo 14: Verificar que el Sistema registre las modificaciones de marcas. Y cómo se visualizan: reporte u otra forma.
+							Se evidencia que las marcas modificadas se pueden visualizar en el módulo "Marcas asistencia" - "Marcas-Eventos"
+							
+						.- 20250323: Articulo 23: Acceso para usuarios de la Dirección del Trabajo. Implementar módulo de creación de usuarios para funcionarios de la Dirección del Trabajo (DT)
+								.- Para enviar correos: se usa la tabla 'notificacion'.
+								.- Se rediseña página de Inicio de sesión al Sistema.
+				
+				
+							Cambio en base de datos:
+								Agregar nueva columna a la tabla usuario: que indique si se trata de clave_temporal (para usuarios de la DT)
+								Nueva columna 'usuario.temporal_user' char(1) {'S':Si, 'N': No}
+									
+								ALTER TABLE admingestionweb.usuario ADD is_temporary boolean NULL;
+								COMMENT ON COLUMN admingestionweb.usuario.is_temporary IS 'Indica si es un usuario temporal o no';
+								ALTER TABLE admingestionweb.usuario ALTER COLUMN is_temporary SET DEFAULT false;
+						
+						Cambio de configuracion: Agregar a "config_base.properties" las siguientes líneas:
+							#Dominio de las cuentas de correo de los usuarios de la Direccion del Trabajo
+							DTmailServerDomain=dt.gob.cl
+						
+				***************************************************************************
+				************** Versión 5.1.0. Web en Produccion desde el 19-04-2025. Sprint 1 de requerimientos para la certificación del Sistema
+				***************************************************************************
+						
+						
+			5.1.02	19-04-2025 / 21-05-2025
 			
+				.- Version con Open JDK 22.--> instalar Wildfly 36 y open JDK 22 en el servidor de producción.
+						modificacion mayor: reemplazar javax.serlet por jakarta.servlet
+				
+				.- Por ahora, se debe deshabilitar el módulo completo de cargas masivas con CSV y Multipart--> si es necesario, se debe migrar para usar 'commons-fileupload2-jakarta-servlet6-2.0.0-M4'
 			
+				.- Art 8 Certificacion: Admin marcas: nuevo filtro para buscar por marcas por hashcode
 			
-			
-			
-			
+				.- 20250323: Articulo 24: Acceso como Fiscalizador
+					Nuevo módulo 'Notificar empleador': Cuando un usuario Fiscalizador ingrese al Sistema podrá acceder a este nuevo módulo para
+					enviar un correo al Empleador, indicando el inicio de un proceso de revisión de información por parte de un funcionario de la Dirección del Trabajo.
+					
+					* Cambio en base de datos:
+						ALTER TABLE empresa ADD COLUMN notification_email VARCHAR(70);
+											
+					** Cambio en la configuración del Sistema: 
+						**	Nuevo módulo: Desde 'Configuración Sistema' --> 'Admin Módulos Sistema':
+								Nombre: Fiscalizacion
+								Orden: 10
+								Icon Id: fas fa-paperclip
+								Título: Fiscalizacion
+								Subtítulo: Fiscalizacion
+
+						***	Nueva acción: : Desde 'Configuración Sistema' --> 'Admin Accesos':
+							Nombre: notif_empleador
+							Label: Notificar Empleador
+							Url: fiscalizador/notificar_empleador.jsp
+							
+						****	Adm Accesos Perfil: Asignar nuevo acceso 'Notificar Empleador' al perfil de usuario 'Fiscalizador'
+						
+					.- Se usará la tabla 'notificacion' para enviar correo al empleador.		
+
+					.- Usando un usuario Superadmin:
+						.- Nuevo Acceso a Reportes para el Fiscalizador:
+							***	Nueva acción: : Desde 'Configuración Sistema' --> 'Admin Accesos':
+								Nombre: report_fiscaliza
+								Label: Reportes (Fiscaliza/Art 27)
+								Url: fiscalizador/main_reportes.jsp
+
+					****	Usuarios - Adm Accesos Perfil: Asignar nuevo acceso 'Reportes (Fiscaliza/Art 27)' al perfil de usuario 'Fiscalizador'
+								
+						Archivos de deployment modificados:
+							gestionfemase.template
+							build.xml
+							web.xml.produccion
+							web.xml.dummy
+						
+					.- Art. 17.F: Reportes para el usuario con Perfil ‘Fiscalizador’
+	
+						
+					.- Reportes que se deben implementar: Estos links deben quedar dentro del nuevo acceso 'Reportes (Fiscaliza/Art 27)' 
+						Reporte de asistencia,
+						Reporte de jornada diaria,
+						Reporte de días domingo y/o días festivos
+						Reporte de modificaciones y/o alteraciones de turnos
+						
+						adicionales:
+						Reporte diario
+						Reporte de incidentes técnicos
+							
+				
+					.- Reportes: 
+						.- En todos los reportes se deshabilita la opción 'todos' para el filtro Empleado/trabajador
+						.- También: Deshabilitar el filtro 'Turno', reemplazado en combo por un campo oculto con el valor 'cualquiera':
+					
+					
+					
+					
+				***************************************************************************
+				************** Versión 5.1.01 parcial. en Produccion desde el 11-05-2025. 
+				***************************************************************************
+				
+		
 			
 			
 			5.1.1 29-10-2024

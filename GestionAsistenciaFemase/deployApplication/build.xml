@@ -89,7 +89,11 @@
 		
 		<replace file="gestionfemase.temp" token="_TXT_SV" value="${txtAprobarSolicVacaciones}" />
 		<replace file="gestionfemase.temp" token="_TXT_PA" value="${txtAprobarSolicPA}" />
-		
+		<replace file="gestionfemase.temp" token="_CHECKINTERVAL" value="${SystemAlertCheckInterval}" />
+		<replace file="gestionfemase.temp" token="_DOMINIO_DT_MAILSERVER" value="${DTmailServerDomain}" />
+		                                                                           
+		<echo message="-------------------_DOMINIO_DT_MAILSERVER: ${DTmailServerDomain} ----------------" />		
+			
 		<echo message="Version del Sistema: ${version}, anio de lanzamiento: ${launchYear}" />
 		<replace file="gestionfemase.temp" token="_VERSION" value="${version}" />
 		<replace file="gestionfemase.temp" token="_STARTYEAR" value="${launchYear}" />
@@ -172,6 +176,10 @@
 		
 		<replace file="gestionfemase.temp" token="_TXT_SV" value="${txtAprobarSolicVacaciones}" />
 		<replace file="gestionfemase.temp" token="_TXT_PA" value="${txtAprobarSolicPA}" />
+		<replace file="gestionfemase.temp" token="_CHECKINTERVAL" value="${SystemAlertCheckInterval}" />
+		<replace file="gestionfemase.temp" token="_DOMINIO_DT_MAILSERVER" value="${DTmailServerDomain}" />
+		                                                                           
+		<echo message="-------------------_DOMINIO_DT_MAILSERVER: ${DTmailServerDomain} ----------------" />		
 		
 		<echo message="Version del Sistema: ${version}, anio de lanzamiento: ${launchYear}" />
 		<replace file="gestionfemase.temp" token="_VERSION" value="${version}" />
@@ -217,7 +225,7 @@
 			<fileset dir="${reportes}">
 				<include name="*.*"/>
 			</fileset>
-		</copy>
+			</copy>
 		<copy todir="${installPath}/freemarker_templates">
 			<fileset dir="${freemarker_templates}">
 				<include name="*.*"/>
@@ -282,3 +290,4 @@
 	
 </project>
 
+	

@@ -48,3 +48,9 @@ txtAprobarSolicVacaciones=_TXT_SV
 
 #Texto que se debe incluir cuando una solicitud de vacaciones ha sido aprobada
 txtAprobarSolicPA=_TXT_PA
+
+#Para definir cada cuantos minutos se verifica si hay nuevas alertas de Sistema. 
+SystemAlertCheckInterval=_CHECKINTERVAL
+
+#Dominio de las cuentas de correo de los usuarios de la Direccion del Trabajo
+DTmailServerDomain=_DOMINIO_DT_MAILSERVER
