@@ -18,7 +18,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.apache.log4j.Logger;
 
 /**
@@ -1951,12 +1953,12 @@ public class DetalleAusenciaDAO extends BaseDAO{
     }
     
     /**
-     * Retorna lista con detalle ausencias
-     * 
-     * @param _usuario
-     * @param _rowLimit
-     * @return 
-     */
+    * Retorna lista con detalle ausencias
+    * 
+    * @param _usuario
+    * @param _rowLimit
+    * @return 
+    */
     public List<DetalleAusenciaVO> getUltimasAusencias(UsuarioVO _usuario, 
             int _rowLimit){
         
@@ -2065,6 +2067,91 @@ public class DetalleAusenciaDAO extends BaseDAO{
             }
         }
         return lista;
+    }
+
+    /**
+    * Retorna lista con detalle ausencias
+    * 
+    * @param _empresaId
+     * @param _cencosUsuario
+    * @return 
+    */
+    public LinkedHashMap<Integer, DetalleAusenciaVO> getAusenciasHoy(String _empresaId, 
+        List<UsuarioCentroCostoVO> _cencosUsuario){
+        LinkedHashMap<Integer, DetalleAusenciaVO> hashAusencias = 
+            new LinkedHashMap<>();
+        
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        DetalleAusenciaVO inasistencia;
+        try{
+            String ccostoIds = _cencosUsuario.stream()
+                .map(UsuarioCentroCostoVO::getCcostoId)
+                .map(String::valueOf) // por si ccostoId no es String
+                .collect(Collectors.joining(","));
+            String sql = "SELECT "
+                    + "da.correlativo,"
+                    + "to_char(da.fecha_inicio, 'yyyy-MM-dd') fecha_inicio_str,"
+                    + "to_char(da.fecha_fin, 'yyyy-MM-dd') fecha_fin_str,"
+                    + "da.rut_empleado,"
+                    + "upper(empleado.empl_nombres || ' ' "
+                    + "|| empleado.empl_ape_paterno || ' ' "
+                    + "|| empleado.empl_ape_materno) nombre,"
+                    + "da.ausencia_id,"
+                    + "ausencia.ausencia_nombre,"
+                    + "empleado.cenco_id cenco_id, "
+                    + "cc.ccosto_nombre cenco_nombre "
+                + "FROM detalle_ausencia da "
+                    + " left outer join ausencia on da.ausencia_id = ausencia.ausencia_id "
+                    + " inner join empleado on da.rut_empleado = empleado.empl_rut "
+                    + " inner join centro_costo cc on (empleado.cenco_id = cc.ccosto_id) ";
+                   
+                if (!_cencosUsuario.isEmpty()){
+                    sql += " and empleado.cenco_id in (" + ccostoIds + ") ";
+                }
+                    
+                if (_empresaId != null && _empresaId.compareTo("-1") != 0){    
+                    sql += " and empleado.empresa_id = '" + _empresaId + "' ";
+                }
+                sql += " WHERE current_date BETWEEN da.fecha_inicio AND da.fecha_fin "
+                + "order by da.fecha_inicio desc";
+                    
+            System.out.println("[DetalleAusenciaDAO.getAusenciasHoy]Sql: " + sql); 
+            dbConn = dbLocator.getConnection(m_dbpoolName,
+                "[DetalleAusenciaDAO.getAusenciasHoy]");
+            ps = dbConn.prepareStatement(sql);
+            rs = ps.executeQuery();
+
+            while (rs.next()){
+                inasistencia = new DetalleAusenciaVO();
+                
+                inasistencia.setCorrelativo(rs.getInt("correlativo"));
+                inasistencia.setFechaInicioAsStr(rs.getString("fecha_inicio_str"));
+                inasistencia.setFechaFinAsStr(rs.getString("fecha_fin_str"));
+                inasistencia.setRutEmpleado(rs.getString("rut_empleado"));
+                inasistencia.setNombreEmpleado(rs.getString("nombre"));
+                inasistencia.setIdAusencia(rs.getInt("ausencia_id"));
+                inasistencia.setNombreAusencia(rs.getString("ausencia_nombre"));
+                inasistencia.setCencoNombre(rs.getString("cenco_nombre"));
+                hashAusencias.put(inasistencia.getCorrelativo(),inasistencia);
+            }
+
+            ps.close();
+            rs.close();
+            dbLocator.freeConnection(dbConn);
+        }catch(SQLException|DatabaseException sqle){
+            m_logger.error("Error: "+sqle.toString());
+        }finally{
+            try {
+                if (ps != null) ps.close();
+                if (rs != null) rs.close();
+                dbLocator.freeConnection(dbConn);
+            } catch (SQLException ex) {
+                System.err.println("[DetalleAusenciaDAO.getAusenciasHoy]"
+                    + "Error: " + ex.toString());
+            }
+        }
+        return hashAusencias;
     }
     
     /**

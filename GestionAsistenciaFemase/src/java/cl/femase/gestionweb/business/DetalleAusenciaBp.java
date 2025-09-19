@@ -10,14 +10,16 @@ import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.DetalleAusenciaVO;
 import cl.femase.gestionweb.vo.EmpleadoVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
+import cl.femase.gestionweb.vo.UsuarioCentroCostoVO;
 import cl.femase.gestionweb.vo.UsuarioVO;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
- *
- * @author Alexander
- */
+*
+* @author Alexander
+*/
 public class DetalleAusenciaBp  extends BaseBp{
 
     public PropertiesVO props;
@@ -193,7 +195,24 @@ public class DetalleAusenciaBp  extends BaseBp{
 
         return lista;
     }
+  
+    /**
+    * 
+    * @param _empresaId
+    * @param _cencosUsuario
+    * @return 
+    */
+    public LinkedHashMap<Integer, DetalleAusenciaVO> getAusenciasHoy(String _empresaId, 
+        List<UsuarioCentroCostoVO> _cencosUsuario){
+            return detAusenciaDao.getAusenciasHoy(_empresaId, _cencosUsuario);
+    }
     
+    /**
+    * 
+    * @param _rutEmpleado
+    * @param _fecha
+    * @return 
+    */
     public ArrayList<DetalleAusenciaVO> getAusencias(
             String _rutEmpleado,
             String _fecha){

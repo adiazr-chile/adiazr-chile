@@ -56,7 +56,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.validator.UrlValidator;
-import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.Interval;
 import org.joda.time.Period;
@@ -85,6 +84,35 @@ public class Utilidades {
 //    static int intMonth = today.get(Calendar.MONTH)+1;
 //    static int intDay = today.get(Calendar.DATE);
     
+    /**
+    * 
+    * @return 
+    */
+    public static Map<String, String> getPeriodosFuturos() {
+        LocalDate hoy = LocalDate.now();
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        Map<String, String> periodos = new HashMap<>();
+        periodos.put("semana", hoy.plusWeeks(1).format(fmt));
+        periodos.put("quincena", hoy.plusDays(15).format(fmt));
+        periodos.put("mes", hoy.plusMonths(1).format(fmt));
+        periodos.put("anio", hoy.plusYears(1).format(fmt));
+
+        return periodos;
+    }
+    
+    public static Map<String, String> getPeriodos() {
+        LocalDate hoy = LocalDate.now();
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        Map<String, String> periodos = new HashMap<>();
+        periodos.put("semana", hoy.minusWeeks(1).format(fmt));
+        periodos.put("quincena", hoy.minusDays(15).format(fmt));
+        periodos.put("mes", hoy.minusMonths(1).format(fmt));
+        periodos.put("anio", hoy.minusYears(1).format(fmt));
+
+        return periodos;
+    }
     
     public static String getUsername(String input) {
         if (input.length() > 12) {

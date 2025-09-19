@@ -31,7 +31,7 @@
     <meta name="description" content="Sistema de Gestion FEMASE-RRHH-Control Asistencia">
     <meta name="author" content="Adiazr">
 
-    <title>Detalle Asistencia</title>
+    <title>Detalle Asistencia - Autorizacion Horas extras</title>
  
     <link href="../Jquery-JTable/Content/normalize.css" rel="stylesheet" type="text/css" />
     <link href='<%=request.getContextPath()%>/css-varios/googleapis.css' rel='stylesheet' type='text/css'>
@@ -255,7 +255,7 @@
 <body>
     <div class="site-container">
         <div class="main-header" style="position: relative">
-            <h1>Resultado c&aacute;lculos de asistencia</h1>
+            <h1>Resultado c&aacute;lculos de asistencia - Autorizacion Horas extras</h1>
             <h2>Filtros de b&uacute;squeda</h2>
         </div>
 <div class="content-container">
@@ -357,7 +357,7 @@
                             }     
                         });
                     });
-                },
+                }
             },
             fields: {
                 rowKey: {
@@ -472,14 +472,14 @@
                     sorting: false,
                     input: function (data) {
                         if (data.record) {
-                            return '<input type="text" name="heTope" style="width:200px" value="' + data.record.horaMinsExtras + '" readonly />';
+                            return '<input type="text" name="heTope" style="width:200px" value="' + data.record.hrsPresenciales + '" readonly />';
                         }else{
                             return '<input type="text" name="heTope" style="width:200px" value="" />';
                         }
                     }
                 },
                 autorizaHrsExtras: {
-                    title: 'ï¿½Autoriza Hrs. Extras?',
+                    title: '¿Autoriza Hrs. Extras?',
                     width: '6%',
                     type: 'radiobutton',
                     options: { 'S': 'Si', 'N': 'No' },
@@ -505,7 +505,7 @@
                 hextrasHH:{
                     title: 'Horas (autorizadas)',
                     options: function(data){
-                        return '<%=request.getContextPath()%>/LoadItems?type=horasTope&hhmm='+data.record.horaMinsExtras
+                        return '<%=request.getContextPath()%>/LoadItems?type=horasTope&hhmm='+data.record.hrsPresenciales;
                     },
                     list: false,        
                     width: '25%',

@@ -673,6 +673,44 @@ public class DetalleAsistenciaDAO extends BaseDAO{
         return existeRegistro;
     }
     
+    public boolean existeCalculo(
+            String _empresaId,
+            String _runEmpleado,
+            String _startDate, String _endDate){
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        boolean existeRegistro=false;
+        
+        try{
+            String sql ="SELECT fecha_hora_calculo "
+                + "FROM detalle_asistencia "
+                + "where empresa_id = '" + _empresaId + "' "
+                    + "and rut_empleado = '"+_runEmpleado+"' "
+                    + "and fecha_marca_entrada between '" + _startDate + "' "
+                    + "and '" + _endDate + "'";
+            dbConn = dbLocator.getConnection(m_dbpoolName,"[DetalleAsistenciaDAO.getDetalles]");
+            ps = dbConn.prepareStatement(sql);
+            rs = ps.executeQuery();
+            existeRegistro = rs.next();
+            
+            ps.close();
+            rs.close();
+            dbLocator.freeConnection(dbConn);
+        }catch(SQLException|DatabaseException sqle){
+            m_logger.error("Error: "+sqle.toString());
+        }finally{
+            try {
+                if (ps != null) ps.close();
+                if (rs != null) rs.close();
+                dbLocator.freeConnection(dbConn);
+            } catch (SQLException ex) {
+                System.err.println("Error: "+ex.toString());
+            }
+        }
+         
+        return existeRegistro;
+    }
+    
     /**
     *
     * @param _rutEmpleado

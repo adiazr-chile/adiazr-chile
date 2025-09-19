@@ -446,7 +446,7 @@ public class DetalleAsistenciaController extends BaseServlet {
                     String horasExtras = request.getParameter("hextrasHH");
                     String minutosExtras    = request.getParameter("hextrasMins");
                     String horaMinsExtrasTope   = request.getParameter("heTope");
-                    
+                    //kkk
                     int intMins = 0;
                     if (minutosExtras != null) intMins = Integer.parseInt(minutosExtras);
                     if (intMins < 10) minutosExtras = "0" + intMins;

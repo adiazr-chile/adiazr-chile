@@ -251,7 +251,7 @@ public class TurnosDAO extends BaseDAO{
         try{
             String sql ="SELECT "
                 + "id_turno, "
-                + "nombre_turno,"
+                + "trim(nombre_turno) nombre_turno,"
                 + "empresa_id, "
                 + "estado_turno, "
                 + "fecha_creacion,"
@@ -336,7 +336,7 @@ public class TurnosDAO extends BaseDAO{
         try{
             String sql = "SELECT "
                     + "turno.id_turno,"
-                    + "turno.nombre_turno,"
+                    + "trim(turno.nombre_turno) nombre_turno,"
                     + "turno.empresa_id,"
                     + "turno.holgura,"
                     + "turno.estado_turno,"
@@ -486,7 +486,7 @@ public class TurnosDAO extends BaseDAO{
         try{
             String sql = "SELECT "
                     + "turno.id_turno,"
-                    + "turno.nombre_turno,"
+                    + "trim(turno.nombre_turno) nombre_turno,"
                     + "turno.empresa_id,"
                     + "turno.holgura, "
                     + "turno.estado_turno, "
@@ -680,7 +680,7 @@ public class TurnosDAO extends BaseDAO{
         try{
             String sql ="SELECT "
                 + "id_turno, "
-                + "nombre_turno,"
+                + "trim(nombre_turno) nombre_turno,"
                 + "empresa_id, "
                 + "estado_turno, "
                 + "fecha_creacion,"
@@ -821,7 +821,7 @@ public class TurnosDAO extends BaseDAO{
         try{
             String sql ="SELECT "
                 + "id_turno, "
-                + "nombre_turno,"
+                + "trim(nombre_turno) nombre_turno,"
                 + "empresa_id, "
                 + "estado_turno, "
                 + "fecha_creacion,"

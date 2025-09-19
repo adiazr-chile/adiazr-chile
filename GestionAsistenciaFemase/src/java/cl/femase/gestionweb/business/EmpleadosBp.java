@@ -50,7 +50,7 @@ public class EmpleadosBp  extends BaseBp{
     private final cl.femase.gestionweb.business.AsignacionTurnoBp asignacionTurnoBp;
     private final cl.femase.gestionweb.dao.PermisosAdministrativosDAO permisosAdminDao;
     private final cl.femase.gestionweb.dao.ParametroDAO daoParams;
-    
+    private final cl.femase.gestionweb.dao.DetalleAsistenciaDAO asistenciaDao;
     /**
     * 
      * @param props
@@ -62,6 +62,7 @@ public class EmpleadosBp  extends BaseBp{
         asignacionTurnoBp   = new AsignacionTurnoBp(this.props);
         permisosAdminDao    = new cl.femase.gestionweb.dao.PermisosAdministrativosDAO(this.props);
         daoParams           = new cl.femase.gestionweb.dao.ParametroDAO(this.props);
+        asistenciaDao       = new cl.femase.gestionweb.dao.DetalleAsistenciaDAO(this.props);
     }
 
     public EmpleadosBp() {
@@ -70,6 +71,7 @@ public class EmpleadosBp  extends BaseBp{
         asignacionTurnoBp   = new AsignacionTurnoBp(this.props);
         permisosAdminDao    = new cl.femase.gestionweb.dao.PermisosAdministrativosDAO(this.props);
         daoParams           = new cl.femase.gestionweb.dao.ParametroDAO(this.props);
+        asistenciaDao       = new cl.femase.gestionweb.dao.DetalleAsistenciaDAO(this.props);
     }
     
     public List<EmpleadoVO> getEmpleadosByTurno(String _empresaId, 
@@ -695,7 +697,22 @@ public class EmpleadosBp  extends BaseBp{
     * @return 
     */
     public List<EmpleadoConsultaFiscalizadorVO> getEmpleadosFiscalizacion(FiltroBusquedaEmpleadosVO _filtroVO){
-        return empleadosDao.getEmpleadosFiscalizacion(_filtroVO);
+        List<EmpleadoConsultaFiscalizadorVO> empleadosBase = empleadosDao.getEmpleadosFiscalizacion(_filtroVO);
+        List<EmpleadoConsultaFiscalizadorVO> empleadosFinal = new ArrayList<>();
+        //asistenciaDao
+        empleadosBase.forEach(empleado -> {
+            boolean existeAsistencia = asistenciaDao.existeCalculo(empleado.getEmpresaId(), 
+                empleado.getRun(), 
+                _filtroVO.getDesde(), 
+                _filtroVO.getHasta());
+            String tieneAsistencia = "N";
+            if (existeAsistencia) tieneAsistencia = "S";
+            empleado.setTieneAsistencia(tieneAsistencia);
+
+            empleadosFinal.add(empleado);
+        });
+        
+        return empleadosFinal;
     } 
 
     /**

@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard Alternativo Asistencia (con Chart.js)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f5f7fa;
+      color: #222;
+      margin: 0;
+      padding: 0;
+    }
+    .dashboard {
+      max-width: 1100px;
+      margin: 40px auto;
+      padding: 24px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+    }
+    .cards {
+      display: flex;
+      gap: 22px;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+    }
+    .card {
+      flex: 1 1 220px;
+      min-width: 180px;
+      background: #2157C7;
+      color: #fff;
+      padding: 28px 0;
+      text-align: center;
+      border-radius: 8px;
+      font-size: 1.17rem;
+      box-shadow: 0 3px 6px rgba(32,63,144,0.10);
+      position: relative;
+      margin-bottom: 8px;
+    }
+    .card.atrasos { background:#f5892c; }
+    .card.sinmarcar { background:#e53935; }
+    .card.ausencias { background:#028a79; }
+    .card .number {
+      font-size: 2.3em;
+      font-weight: bold;
+      margin-bottom: 6px;
+      margin-top: 8px;
+      letter-spacing: 1px;
+    }
+    .main-section {
+      display: flex;
+      gap: 35px;
+      flex-wrap: wrap;
+    }
+    .pie-chart-container {
+      flex: 1.2 1 250px;
+      min-width: 240px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: start;
+    }
+    .pie-legend {
+      font-size: 1rem;
+      margin-top: 10px;
+    }
+    .pie-legend span {
+      display: inline-block;
+      width: 15px;
+      height: 15px;
+      margin-right: 8px;
+      border-radius: 2px;
+      vertical-align: middle;
+    }
+    .tables-section {
+      flex: 2 1 390px;
+      min-width: 330px;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+    table {
+      background: #fff;
+      width: 100%;
+      border-collapse: collapse;
+      border-radius: 8px;
+      box-shadow: 0 1px 4px rgba(40,40,40,0.06);
+      overflow: hidden;
+      font-size: 1rem;
+      margin-top: 8px;
+    }
+    th, td {
+      padding: 11px 13px;
+      text-align: left;
+    }
+    thead {
+      background: #2157C7;
+      color: #fff;
+    }
+    tr:nth-child(even) td {
+      background: #f3f6fa;
+    }
+    .table-title {
+      font-weight: bold;
+      font-size: 1.09rem;
+      margin-bottom: 2px;
+      margin-top: 8px;
+    }
+    @media (max-width: 1100px) {
+      .main-section {
+        flex-direction: column;
+        gap: 22px;
+      }
+    }
+  </style>
+  <!-- Incluye Chart.js desde CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="dashboard">
+    <!-- Fila de tarjetas resumen -->
+    <div class="cards">
+      <div class="card">
+        <div>Usuarios conectados hoy</div>
+        <div class="number">23</div>
+      </div>
+      <div class="card ausencias">
+        <div>Total de ausencias</div>
+        <div class="number">25</div>
+      </div>
+      <div class="card atrasos">
+        <div>Empleados con atrasos</div>
+        <div class="number">3</div>
+      </div>
+      <div class="card sinmarcar">
+        <div>Sin marcar asistencia</div>
+        <div class="number">2</div>
+      </div>
+    </div>
+    <div class="main-section">
+      <!-- Pie chart ausencias -->
+      <div class="pie-chart-container">
+        <canvas id="ausenciasPie" width="180" height="180"></canvas>
+        <div class="pie-legend" id="pie-legend"></div>
+      </div>
+      <!-- Sección de tablas -->
+      <div class="tables-section">
+        <div>
+          <div class="table-title">Conexiones recientes</div>
+          <table>
+            <thead>
+              <tr>
+                <th>Usuario</th>
+                <th>Departamento</th>
+                <th>Hora Conexión</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>carla.perez</td>
+                <td>Recursos Humanos</td>
+                <td>08:05</td>
+              </tr>
+              <tr>
+                <td>juan.rivera</td>
+                <td>TI</td>
+                <td>08:15</td>
+              </tr>
+              <tr>
+                <td>sofia.garcia</td>
+                <td>Finanzas</td>
+                <td>08:17</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div>
+          <div class="table-title">Empleados con atrasos</div>
+          <table>
+            <thead>
+              <tr>
+                <th>Usuario</th>
+                <th>Departamento</th>
+                <th>Hora de llegada</th>
+                <th>Minutos de atraso</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Llena dinámicamente desde el backend -->
+              <tr>
+                <td>ejemplo.nombre</td>
+                <td>Departamento</td>
+                <td>09:10</td>
+                <td>20</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div>
+          <div class="table-title">Sin marcar asistencia</div>
+          <table>
+            <thead>
+              <tr>
+                <th>Usuario</th>
+                <th>Departamento</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Llena dinámicamente desde el backend -->
+              <tr>
+                <td>ejemplo.otracaso</td>
+                <td>Operaciones</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Reemplaza estos datos por los que recibas de tu backend
+    const dataPie = {
+      labels: ['Vacaciones', 'Licencia médica', 'Permiso'],
+      datasets: [{
+        data: [10, 5, 10],
+        backgroundColor: [
+          '#00c776', // Vacaciones
+          '#ffb200', // Licencia médica
+          '#2176ff'  // Permiso
+        ]
+      }]
+    };
+
+    const configPie = {
+      type: 'pie',
+      data: dataPie,
+      options: {
+        responsive: false,
+        plugins: {
+          legend: {
+            display: false, // Ocultamos, usamos la nuestra personalizada
+          }
+        }
+      }
+    };
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const pieChart = new Chart(document.getElementById('ausenciasPie'), configPie);
+
+      // Leyenda personalizada
+      function renderPieLegend() {
+        const legend = document.getElementById('pie-legend');
+        legend.innerHTML = '';
+        dataPie.labels.forEach((label, i) => {
+          legend.innerHTML += `<div>
+            <span style="display:inline-block;width:15px;height:15px;margin-right:8px;background:${dataPie.datasets[0].backgroundColor[i]};border-radius:2px;"></span>
+            ${label} (${dataPie.datasets[0].data[i]})
+          </div>`;
+        });
+      }
+      renderPieLegend();
+    });
+  </script>
+</body>
+</html>

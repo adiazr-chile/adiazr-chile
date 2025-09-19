@@ -14,6 +14,7 @@ import cl.femase.gestionweb.vo.ModuloSistemaVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import cl.femase.gestionweb.vo.UsuarioCentroCostoVO;
 import cl.femase.gestionweb.vo.UsuarioVO;
+import cl.femase.gestionweb.vo.UsuariosByPerfilVO;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -808,6 +809,7 @@ public class UsersDAO extends BaseDAO{
         }
         return lista;
     }
+    
     
     /**
     * Retorna usuario existente

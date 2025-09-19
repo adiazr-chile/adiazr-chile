@@ -24,7 +24,16 @@ public class FiltroBusquedaEmpleadosVO implements Serializable{
     private String hasta;
     private String tipoReporte;
     private String formatoSalida;
+    private String periodoPredefinido;
 
+    public String getPeriodoPredefinido() {
+        return periodoPredefinido;
+    }
+
+    public void setPeriodoPredefinido(String periodoPredefinido) {
+        this.periodoPredefinido = periodoPredefinido;
+    }
+    
     public String getRunEmpleado() {
         return runEmpleado;
     }
@@ -103,6 +112,11 @@ public class FiltroBusquedaEmpleadosVO implements Serializable{
 
     public void setFormatoSalida(String formatoSalida) {
         this.formatoSalida = formatoSalida;
+    }
+
+    @Override
+    public String toString() {
+        return "FiltroBusquedaEmpleadosVO{" + "runEmpleado=" + runEmpleado + ", nombre=" + nombre + ", empresaId=" + empresaId + ", cencoId=" + cencoId + ", turnoId=" + turnoId + ", cargoId=" + cargoId + ", desde=" + desde + ", hasta=" + hasta + ", tipoReporte=" + tipoReporte + ", formatoSalida=" + formatoSalida + ", periodoPredefinido=" + periodoPredefinido + '}';
     }
     
     

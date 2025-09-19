@@ -10,6 +10,7 @@ import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.PerfilUsuarioVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import cl.femase.gestionweb.vo.UsuarioVO;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -21,21 +22,29 @@ public class PerfilUsuarioBp  extends BaseBp{
     public PropertiesVO props;
     /** para guardar los eventos de mantencion de informacion*/
     private final cl.femase.gestionweb.dao.MaintenanceEventsDAO eventsService;
-    private final cl.femase.gestionweb.dao.PerfilUsuarioDAO perfilesService;
+    private final cl.femase.gestionweb.dao.PerfilUsuarioDAO perfilesDao;
     
     public PerfilUsuarioBp(PropertiesVO props) {
         this.props = props;
         eventsService = new cl.femase.gestionweb.dao.MaintenanceEventsDAO(this.props);
-        perfilesService = new cl.femase.gestionweb.dao.PerfilUsuarioDAO(this.props);
+        perfilesDao = new cl.femase.gestionweb.dao.PerfilUsuarioDAO(this.props);
     }
 
+    /**
+    * 
+    * @return 
+    */
+    public HashMap<Integer, String> getPerfilesVigentes(){
+        return perfilesDao.getPerfilesVigentes();
+    }
+    
     public List<PerfilUsuarioVO> getPerfiles(String _nombre,
             int _jtStartIndex, 
             int _jtPageSize, 
             String _jtSorting){
         
         List<PerfilUsuarioVO> lista = 
-            perfilesService.getPerfiles(_nombre, _jtStartIndex, 
+            perfilesDao.getPerfiles(_nombre, _jtStartIndex, 
                 _jtPageSize, _jtSorting);
 
         return lista;
@@ -49,14 +58,14 @@ public class PerfilUsuarioBp  extends BaseBp{
     public List<PerfilUsuarioVO> getPerfilesByUsuario(UsuarioVO _usuario){
         
         List<PerfilUsuarioVO> lista = 
-            perfilesService.getPerfilesByUsuario(_usuario);
+            perfilesDao.getPerfilesByUsuario(_usuario);
 
         return lista;
     }
     
     public ResultCRUDVO update(PerfilUsuarioVO _perfilToUpdate, 
             MaintenanceEventVO _eventdata){
-        ResultCRUDVO updValues = perfilesService.update(_perfilToUpdate);
+        ResultCRUDVO updValues = perfilesDao.update(_perfilToUpdate);
         
         //if (!updValues.isThereError()){
             String msgFinal = updValues.getMsg();
@@ -71,7 +80,7 @@ public class PerfilUsuarioBp  extends BaseBp{
     
 //    public ResultCRUDVO delete(PerfilUsuarioVO _accesoToDelete, 
 //            MaintenanceEventVO _eventdata){
-//        ResultCRUDVO updValues = perfilesService.delete(_accesoToDelete);
+//        ResultCRUDVO updValues = perfilesDao.delete(_accesoToDelete);
 //        
 //        //if (!updValues.isThereError()){
 //            String msgFinal = updValues.getMsg();
@@ -87,7 +96,7 @@ public class PerfilUsuarioBp  extends BaseBp{
     public ResultCRUDVO insert(PerfilUsuarioVO _perfilToInsert, 
             MaintenanceEventVO _eventdata){
         
-        ResultCRUDVO insValues = perfilesService.insert(_perfilToInsert);
+        ResultCRUDVO insValues = perfilesDao.insert(_perfilToInsert);
         
         //if (!updValues.isThereError()){
             String msgFinal = insValues.getMsg();
@@ -118,7 +127,7 @@ public class PerfilUsuarioBp  extends BaseBp{
     */
     
     public int getPerfilesCount(String _nombre){
-        return perfilesService.getPerfilesCount(_nombre);
+        return perfilesDao.getPerfilesCount(_nombre);
     }
 
 }

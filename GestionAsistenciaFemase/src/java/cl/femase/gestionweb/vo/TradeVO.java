@@ -503,46 +503,46 @@ public class TradeVO implements Serializable{
     }
    
 
-    public String getFormattedMaturityDate() {
-        String result=null;
-        try{
-            String field0 = "0";
-            String field1 = "0";
-            if (this.mercado.compareTo("1")==0 && this.maturity_date != null){
-                //IRF Para mercado=1 (IRF) maturity_date = anios y meses
-                StringTokenizer tokenMat=new StringTokenizer(this.maturity_date," ");
-                field0 = tokenMat.nextToken();
-                field1 = tokenMat.nextToken();
-            }else if (this.mercado.compareTo("2")==0  && this.maturity_date != null){
-                //IIF Para mercado=2 (IIF) maturity_date = numero de dias
-                StringTokenizer tokenMat=new StringTokenizer(this.maturity_date," ");
-                field0 = tokenMat.nextToken();
-                field1= "0";
-            }
-
-//            String field0 = this.maturity_date.substring(0,1);
-//            String field1 = this.maturity_date.substring(2);
-
-            //field0=field0.trim();
-            //field1=field1.trim();
-            int value0 = (new Integer(field0)).intValue();
-            int value1 = (new Integer(field1)).intValue();
-            // Es necesario averiguar el tipo del instrumento.
-            // Es imposible hacerlo a este nivel de la capa wrapper.
-            // Aqui se utiliza el truco sucio.
-            DecimalFormat formatter = new DecimalFormat();
-            formatter.applyPattern("000");
-            result = formatter.format(value0);
-            formatter.applyPattern("00");
-            result = result + formatter.format(value1);
-            formatter.applyPattern("00000");
-            result = result + formatter.format(value0);
-        }catch(NumberFormatException nfe){
-            System.err.println("[getFormattedMaturityDate]Error: " + nfe.toString());
-            nfe.printStackTrace();
-        }
-        return result;
-  }
+//    public String getFormattedMaturityDate() {
+//        String result=null;
+//        try{
+//            String field0 = "0";
+//            String field1 = "0";
+//            if (this.mercado.compareTo("1")==0 && this.maturity_date != null){
+//                //IRF Para mercado=1 (IRF) maturity_date = anios y meses
+//                StringTokenizer tokenMat=new StringTokenizer(this.maturity_date," ");
+//                field0 = tokenMat.nextToken();
+//                field1 = tokenMat.nextToken();
+//            }else if (this.mercado.compareTo("2")==0  && this.maturity_date != null){
+//                //IIF Para mercado=2 (IIF) maturity_date = numero de dias
+//                StringTokenizer tokenMat=new StringTokenizer(this.maturity_date," ");
+//                field0 = tokenMat.nextToken();
+//                field1= "0";
+//            }
+//
+////            String field0 = this.maturity_date.substring(0,1);
+////            String field1 = this.maturity_date.substring(2);
+//
+//            //field0=field0.trim();
+//            //field1=field1.trim();
+//            int value0 = (new Integer(field0)).intValue();
+//            int value1 = (new Integer(field1)).intValue();
+//            // Es necesario averiguar el tipo del instrumento.
+//            // Es imposible hacerlo a este nivel de la capa wrapper.
+//            // Aqui se utiliza el truco sucio.
+//            DecimalFormat formatter = new DecimalFormat();
+//            formatter.applyPattern("000");
+//            result = formatter.format(value0);
+//            formatter.applyPattern("00");
+//            result = result + formatter.format(value1);
+//            formatter.applyPattern("00000");
+//            result = result + formatter.format(value0);
+//        }catch(NumberFormatException nfe){
+//            System.err.println("[getFormattedMaturityDate]Error: " + nfe.toString());
+//            nfe.printStackTrace();
+//        }
+//        return result;
+//  }
 
     public String getMaturity_date() {
         return maturity_date;

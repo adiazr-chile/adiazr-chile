@@ -20,8 +20,64 @@ import jakarta.servlet.http.HttpSession;
 
 public class SystemAlertServlet extends HttpServlet {
     
+    /**
+    * 
+    * @param request
+    * @param response
+    * @throws jakarta.servlet.ServletException
+    * @throws java.io.IOException
+    */
     @Override
-    protected void doGet(HttpServletRequest _req, HttpServletResponse _resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession(true);
+        if (session!=null) session.removeAttribute("mensaje");else session = request.getSession();
+        UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
+
+        if (userConnected != null){
+            doRequest(request, response);
+        }else{
+            session.setAttribute("mensaje", "Sesion de usuario "+request.getParameter("username")
+                + " no valida");
+            System.err.println("[SystemAlertServlet.doGet]"
+                + "Sesion de usuario "+request.getParameter("username")
+                +" no valida");
+            request.getRequestDispatcher("/mensaje.jsp").forward(request, response);
+        }
+    }
+
+    /**
+    * 
+    * @param request
+    * @param response
+    * @throws jakarta.servlet.ServletException
+    * @throws java.io.IOException
+    */
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession(true);
+        if (session!=null) session.removeAttribute("mensaje");else session = request.getSession();
+        UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
+
+        if (userConnected != null){
+            doRequest(request, response);
+        }else{
+            session.setAttribute("mensaje", "Sesion de usuario "+request.getParameter("username")
+                + " no valida");
+            System.err.println("[SystemAlertServlet.doPost]"
+                + "Sesion de usuario "+request.getParameter("username")
+                +" no valida");
+            request.getRequestDispatcher("/mensaje.jsp").forward(request, response);
+        }
+    }
+        
+    /**
+    * 
+    * @param _req
+    * @param _resp
+    * @throws jakarta.servlet.ServletException
+    * @throws java.io.IOException
+    */
+    protected void doRequest(HttpServletRequest _req, HttpServletResponse _resp) throws ServletException, IOException {
         
         HttpSession session = _req.getSession(true);
         ServletContext application = this.getServletContext();

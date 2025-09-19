@@ -47,7 +47,7 @@ public class UsuarioVO implements Serializable {
     private String cencoNombre;
     private String fechaCreacion;
     private String fechaActualizacion;
-    
+    private String clientIP;
     private List<String> listaDeptosUsuario;
             
     /**
@@ -66,6 +66,33 @@ public class UsuarioVO implements Serializable {
     private String apMaternoEncode;
 
     private boolean isTemporary;
+
+    private String operatingSystem;
+    private String browserName;
+
+    public String getOperatingSystem() {
+        return operatingSystem;
+    }
+
+    public void setOperatingSystem(String operatingSystem) {
+        this.operatingSystem = operatingSystem;
+    }
+
+    public String getBrowserName() {
+        return browserName;
+    }
+
+    public void setBrowserName(String browserName) {
+        this.browserName = browserName;
+    }
+    
+    public String getClientIP() {
+        return clientIP;
+    }
+
+    public void setClientIP(String clientIP) {
+        this.clientIP = clientIP;
+    }
 
     public boolean isIsTemporary() {
         return isTemporary;

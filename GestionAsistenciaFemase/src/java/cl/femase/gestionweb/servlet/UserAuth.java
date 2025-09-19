@@ -56,6 +56,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import org.apache.log4j.Logger;
 import org.json.JSONObject;
 
@@ -170,8 +172,18 @@ public class UserAuth extends BaseServlet {
                 resultado.setDescription("Login exitoso");
                 eventosBp.addEvent(resultado);
                                 
+                LocalDateTime fechaHora = LocalDateTime.now();
+                DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+                String comoString = fechaHora.format(formato);
+
+                userOk.setFechaHoraUltimaConexion(comoString);
+                userOk.setClientIP(request.getRemoteAddr());
+                userOk.setOperatingSystem(clientInfo.getClientOS(request));
+                userOk.setBrowserName(clientInfo.getClientBrowser(request));
+                
                 session.setAttribute("modulosSistema", userBp.getModulosSistemaByPerfilUsuario(userOk.getIdPerfil()));
                 session.setAttribute("usuarioObj", userOk);
+                
                 session.setAttribute("user"+request.getParameter("username"), userOk.getUsername());
                 System.out.println(WEB_NAME+"UserAuth]Usuario conectado, "
                     + "username: " + userOk.getUsername()

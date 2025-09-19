@@ -16,6 +16,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import org.apache.log4j.Logger;
 
@@ -221,6 +222,45 @@ public class PerfilUsuarioDAO extends BaseDAO{
         
         return lista;
     }
+    
+    /**
+    * Retorna lista con los perfiles de usuario existentes
+    * 
+    * @return 
+    */
+    public HashMap<Integer, String> getPerfilesVigentes(){
+        HashMap<Integer, String> hashPerfiles 
+            = new HashMap<Integer, String>();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try{
+            String sql = "SELECT "
+                + "perfil.perfil_id,"
+                + "perfil.perfil_nombre "
+                + "FROM "
+                + " perfil_usuario perfil "
+                + "WHERE "
+                + " perfil.estado_id = 1 "
+                + "order by perfil.perfil_nombre";
+            
+            dbConn = dbLocator.getConnection(m_dbpoolName,"[PerfilUsuarioDAO.getPerfilesVigentes]");
+            ps = dbConn.prepareStatement(sql);
+            rs = ps.executeQuery();
+
+            while (rs.next()){
+                hashPerfiles.put(rs.getInt("perfil_id"),
+                    rs.getString("perfil_nombre"));
+            }
+            ps.close();
+            rs.close();
+            dbLocator.freeConnection(dbConn);
+        }catch(SQLException|DatabaseException sqle){
+            m_logger.error("Error: "+sqle.toString());
+        }
+        
+        return hashPerfiles;
+    }
+    
     
     /**
     * Retorna lista con los perfiles de usuario existentes, 

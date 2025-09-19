@@ -3,6 +3,7 @@ package cl.femase.gestionweb.servlet.fiscalizacion;
 import cl.femase.gestionweb.servlet.BaseServlet;
 import cl.femase.gestionweb.business.EmpleadosBp;
 import cl.femase.gestionweb.common.Constantes;
+import cl.femase.gestionweb.common.Utilidades;
 import cl.femase.gestionweb.vo.EmpleadoConsultaFiscalizadorVO;
 import cl.femase.gestionweb.vo.EmpleadoVO;
 import cl.femase.gestionweb.vo.FiltroBusquedaEmpleadosVO;
@@ -29,6 +30,8 @@ import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpSession;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import org.apache.log4j.Logger;
 
 public class EmpleadosBuscar extends BaseServlet {
@@ -114,34 +117,53 @@ public class EmpleadosBuscar extends BaseServlet {
 //            resultado.setEmpresaIdSource(userConnected.getEmpresaId());
                    
             /** filtros de busqueda de empleados*/
-            String nombre           = request.getParameter("nombre");
+            String tipoReporte      = request.getParameter("tipo_reporte");
+            String modoBusqueda     = request.getParameter("modoBusqueda");
+            //busqueda individual
             String run              = request.getParameter("run");
-            String desde            = request.getParameter("desde");
-            String hasta            = request.getParameter("hasta");
-            String periodo          = request.getParameter("periodo");
+            String nombre           = request.getParameter("nombre");
             
-            //combos
+            //busqueda grupal
             String centroCostoId    = request.getParameter("centroCostoId");
             String turnoId          = request.getParameter("turnoId");
             String cargoId          = request.getParameter("cargoId");
-            String tipoReporte      = request.getParameter("tipoReporte");
-            String formatoSalida    = request.getParameter("formatoSalida");
+
+            String tipoFecha            = request.getParameter("tipoFecha");            
+
+            String desde            = request.getParameter("fecha_inicio");
+            String hasta            = request.getParameter("fecha_fin");
+            String periodoPredefinido          = request.getParameter("periodoPredefinido");
+            String formatoSalida    = request.getParameter("formato_salida");
             
             if (turnoId == null) turnoId = "-1";
             if (cargoId == null) cargoId = "-1";
             if (tipoReporte == null) tipoReporte = "-1";
             
+            if (tipoFecha != null && tipoFecha.compareTo("periodo") == 0){
+                DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                LocalDate hoy = LocalDate.now();
+                
+                Map<String, String> periodos = Utilidades.getPeriodos();
+                String fechaHastaPeriodo = hoy.format(fmt);
+                String fechaDesdePeriodo = periodos.get(periodoPredefinido);
+                desde = fechaDesdePeriodo;
+                hasta = fechaHastaPeriodo;
+            }
+            
             System.out.println(WEB_NAME + SERVLET_NAME + " - " + TABLE_NAME
                 + ". Parametros de busqueda recibidos: "
                 + "Nombre: " + nombre
                 + " , Run: " + run
+                + " , tipoFecha: " + tipoFecha
                 + " , desde: " + desde
                 + " , hasta: " + hasta
                 + " , centroCostoId: " + centroCostoId
                 + " , turnoId: " + turnoId
                 + " , cargoId: " + cargoId
                 + " , tipoReporte: " + tipoReporte
-                + " , formatoSalida: " + formatoSalida);
+                + " , formatoSalida: " + formatoSalida
+                + " , modoBusqueda: " + modoBusqueda
+                );
             
             String empresaid=userConnected.getEmpresaId();
             String deptoid=null;
@@ -171,62 +193,45 @@ public class EmpleadosBuscar extends BaseServlet {
             filtroVO.setDesde(desde);
             filtroVO.setHasta(hasta);
             filtroVO.setFormatoSalida(formatoSalida);
-
+            filtroVO.setPeriodoPredefinido(periodoPredefinido);
+                      
             //Set filtros de busqueda seleccionados
             request.removeAttribute("fiscaliza_filtro");
             request.setAttribute("fiscaliza_filtro", filtroVO);
            
             if (action.compareTo("list") == 0) {
                 System.out.println(WEB_NAME + SERVLET_NAME + " - " + TABLE_NAME
-                    + ". Mostrar registros");
-                session.removeAttribute(ATTRIBUTTE_LIST_NAME);
+                    + ". Buscar registros");
+                request.removeAttribute(ATTRIBUTTE_LIST_NAME);
                 forwardToPage(request, response, session, empleadosBp, filtroVO);   
             }else if (action.compareTo("launchReport") == 0) {
-                
-//                String reportType   = request.getParameter("tipo_reporte");
-//                String startDate    = request.getParameter("fecha_inicio");
-//                String endDate      = request.getParameter("fecha_fin");
-//                String outputFormat      = request.getParameter("formato_salida");
-                
-                BufferedReader reader = request.getReader();
-                StringBuilder sb = new StringBuilder();
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    sb.append(line);
-                }
-                String jsonString = sb.toString();
-                
-                JsonObject jsonObject = JsonParser.parseString(jsonString).getAsJsonObject();
-
-                // Obtener campos individuales
-                System.out.println("Fecha inicio: " + jsonObject.get("fecha_inicio").getAsString());
-                System.out.println("Fecha fin: " + jsonObject.get("fecha_fin").getAsString());
-                System.out.println("Tipo de reporte: " + jsonObject.get("tipo_reporte").getAsString());
-                System.out.println("Formato de salida: " + jsonObject.get("formato_salida").getAsString());
-
-                String startDate   = jsonObject.get("fecha_inicio").getAsString();
-                String endDate    = jsonObject.get("fecha_fin").getAsString();
-                String reportType      = jsonObject.get("tipo_reporte").getAsString();
-                String outputFormat = jsonObject.get("formato_salida").getAsString();
-                
-                ArrayList<String> runSeleccionados = new ArrayList<>();
-                // Obtener arreglo de empleados (checkboxes)
-                // Para arrays, obtener JsonArray y luego iterar o convertir a lista
-                var empleadosJsonArray = jsonObject.getAsJsonArray("empleados");
-                System.out.print("Empleados: ");
-                for (var elem : empleadosJsonArray) {
-                    //System.out.print(elem.getAsString() + " ");
-                    runSeleccionados.add(elem.getAsString());
-                }
-
-                //String[] runSeleccionados = request.getParameterValues("empleadosSeleccionados");
+                String reportType   = request.getParameter("tipoReporte");
+                String startDate    = request.getParameter("fecha_inicio");
+                String endDate      = request.getParameter("fecha_fin");
+                String outputFormat      = request.getParameter("formato_salida");
                 
                 System.out.println(WEB_NAME + SERVLET_NAME + " - " + TABLE_NAME
-                    + ". Generar reporte. "
-                    + "tipo: " + reportType
-                    + ", desde: " + startDate
-                    + ", hasta: " + endDate
-                    + ", outputFormat: " + outputFormat);
+                    + ". Generar el reporte con los empleados seleccionados...");
+                // Obtener campos individuales
+                System.out.println(WEB_NAME + SERVLET_NAME + " - " + TABLE_NAME + "Fecha inicio: " + startDate);
+                System.out.println(WEB_NAME + SERVLET_NAME + " - " + TABLE_NAME + "Fecha fin: " + endDate);
+                System.out.println(WEB_NAME + SERVLET_NAME + " - " + TABLE_NAME + "Tipo de reporte: " + reportType);
+                System.out.println(WEB_NAME + SERVLET_NAME + " - " + TABLE_NAME + "Formato de salida: " + outputFormat);
+
+                ArrayList<String> runSeleccionados = new ArrayList<>();
+                // Obtener arreglo de empleados (checkboxes)
+                String[] seleccion = request.getParameterValues("seleccion_registro[]");
+                
+                if (seleccion != null) {
+                    for (String registro : seleccion) {
+                        System.out.println(WEB_NAME + SERVLET_NAME + " - " + TABLE_NAME + registro);
+                        runSeleccionados.add(registro);
+                    }
+                } else {
+                    // No se seleccionó nada
+                    System.out.println("No hay registros seleccionados");
+                }
+
                 String zipFileGenerated = 
                     generaReportes(empleadosBp, appProperties, reportType, outputFormat, empresaid, startDate, endDate, runSeleccionados);
                 System.out.println(WEB_NAME + SERVLET_NAME + " - " + TABLE_NAME
@@ -317,17 +322,10 @@ public class EmpleadosBuscar extends BaseServlet {
     
         try {
             List<EmpleadoConsultaFiscalizadorVO> listaObjetos = new ArrayList<>();
-            //if (_filtroBusqueda.getCencoId() == -1){
-            //    System.out.println("--------->Eliminar lista de empleados de la sesion<---------");
-            //    _session.removeAttribute(ATTRIBUTTE_LIST_NAME);
-            //    listaObjetos = null;
-            //}else{
-                listaObjetos = _empleadoBp.getEmpleadosFiscalizacion(_filtroBusqueda);
-                
-            //}
+            listaObjetos = _empleadoBp.getEmpleadosFiscalizacion(_filtroBusqueda);
             System.out.println(WEB_NAME + SERVLET_NAME + "-" + TABLE_NAME + " - "
                 + "empleados.encontrados.size(): " + listaObjetos.size());
-            _session.setAttribute(ATTRIBUTTE_LIST_NAME, listaObjetos);
+            _request.setAttribute(ATTRIBUTTE_LIST_NAME, listaObjetos);
             RequestDispatcher vista = _request.getRequestDispatcher(FORWARD_PAGE);
             vista.forward(_request, _response);
         } catch (ServletException ex) {

@@ -31,6 +31,15 @@ public class EmpleadoConsultaFiscalizadorVO implements Serializable{
     private String nombreCargo;
     private String nombreTurno;
     private String codInterno;
+    private String tieneAsistencia;
+
+    public String getTieneAsistencia() {
+        return tieneAsistencia;
+    }
+
+    public void setTieneAsistencia(String tieneAsistencia) {
+        this.tieneAsistencia = tieneAsistencia;
+    }
 
     public int getEstadoValue() {
         return estadoValue;
