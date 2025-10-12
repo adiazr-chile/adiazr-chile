@@ -161,13 +161,13 @@ public class PermisosAdministrativosReport extends BaseServlet {
         EmpresaBp empresaBp         = new EmpresaBp(appProperties);
         SimpleDateFormat sdfyyyy_MM_dd = new SimpleDateFormat("yyyy-MM-dd");
         Date currentDate = new Date();
-        int semestreActual = Utilidades.getSemestre(currentDate);
+        //int semestreActual = Utilidades.getSemestre(currentDate);
                     
         System.out.println(WEB_NAME+"[servlet.reportes."
             + "PermisosAdministrativosReport.getParameters]Inicio...");
         String empresaParam = _request.getParameter("empresa");
         int anioParam = Integer.parseInt(_request.getParameter("paramAnio"));
-        
+        int semestreParam = Integer.parseInt(_request.getParameter("paramSemestre"));
         HashMap parameters = new HashMap();
                 
         System.out.println(WEB_NAME+"[servlet.reportes."
@@ -191,9 +191,12 @@ public class PermisosAdministrativosReport extends BaseServlet {
         PermisoAdministrativoVO saldoPA = new PermisoAdministrativoVO();
         if (!infoPA.isEmpty()){
             saldoPA = infoPA.get(0);
-            diasDisponibles = saldoPA.getDiasDisponiblesSemestre1();
-            diasUtilizados  = saldoPA.getDiasUtilizadosSemestre1();
-            if (semestreActual == 2){
+            
+            if (semestreParam == 1)
+            {
+                diasDisponibles = saldoPA.getDiasDisponiblesSemestre1();
+                diasUtilizados  = saldoPA.getDiasUtilizadosSemestre1();
+            }else {
                 diasDisponibles = saldoPA.getDiasDisponiblesSemestre2();
                 diasUtilizados  = saldoPA.getDiasUtilizadosSemestre2();
             }
@@ -238,7 +241,7 @@ public class PermisosAdministrativosReport extends BaseServlet {
         parameters.put("fecha_ingreso", infoEmpleado.getFechaInicioContratoAsStr());
         //parameters.put("startDate", startDateParam);
         parameters.put("anio", anioParam);
-            
+        parameters.put("semestre", semestreParam);
         System.out.println(WEB_NAME+"[servlet.reportes."
             + "PermisosAdministrativosReport.getParameters]Fin.");
         

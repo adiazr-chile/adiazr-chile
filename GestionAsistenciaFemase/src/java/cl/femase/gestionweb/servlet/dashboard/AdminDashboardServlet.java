@@ -5,8 +5,10 @@
 package cl.femase.gestionweb.servlet.dashboard;
 
 import cl.femase.gestionweb.business.DetalleAusenciaBp;
+import cl.femase.gestionweb.dao.DashboardDAO;
 import cl.femase.gestionweb.vo.AgrupadoAusenciaVO;
 import cl.femase.gestionweb.vo.DetalleAusenciaVO;
+import cl.femase.gestionweb.vo.EmpleadoVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import cl.femase.gestionweb.vo.UsuarioCentroCostoVO;
 import cl.femase.gestionweb.vo.UsuarioVO;
@@ -79,6 +81,31 @@ public class AdminDashboardServlet extends HttpServlet {
             List<AgrupadoAusenciaVO> summaryAusencias = contarAusencias(ausenciasHoy);
             _request.setAttribute("empleados_ausencias", ausenciasHoy);
             _request.setAttribute("summary_ausencias", summaryAusencias);
+            
+            /**
+            * Empleados sin marcas:
+            * 	Turno normal:
+            * 	- Estan vigentes
+            *   - Tienen turno para la fecha actual.
+            * 	- No tiene ausencias.
+            *   - No tiene marcas
+            **/
+            DashboardDAO dashboardDao = new DashboardDAO();
+            ArrayList<EmpleadoVO> empleadosSinMarcas = 
+                dashboardDao.getEmpleadosSinMarcasTurnoNormal(_usuarioConectado.getEmpresaId(), 
+                    _usuarioConectado.getCencos());
+            System.out.println("[AdminDashBoardServlet]processRequest."
+                + "empleadosSinMarcas.size: " + empleadosSinMarcas.size());
+            _request.setAttribute("empleados_sin_marcas", empleadosSinMarcas);
+            
+            //empleados con turno rotativo y que no tienen turno asignado para la fecha actual
+            ArrayList<EmpleadoVO> empleadosSinTurnoRotativoAlaFecha = 
+                dashboardDao.getEmpleadosConTurnoRotativoSinTurnoAsignado(_usuarioConectado.getEmpresaId(), 
+                    _usuarioConectado.getCencos());
+            System.out.println("[AdminDashBoardServlet]processRequest."
+                + "empleadosSinTurnoRotativoAlaFecha.size: " + empleadosSinTurnoRotativoAlaFecha.size());
+            _request.setAttribute("empleados_sin_turno_rotativo_asignado", empleadosSinTurnoRotativoAlaFecha);
+            
             RequestDispatcher vista = _request.getRequestDispatcher("dashboard/admin_dashboard_01.jsp");
             vista.forward(_request, _response);
         }

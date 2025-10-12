@@ -98,7 +98,8 @@ public class UserAuth extends BaseServlet {
                 empresaId);
             
             //sesion del usuario
-            HttpSession session = request.getSession();
+            request.getSession().invalidate();
+            HttpSession session = request.getSession(true);
             boolean loginOk = true;
             
             Calendar thecal=Calendar.getInstance();

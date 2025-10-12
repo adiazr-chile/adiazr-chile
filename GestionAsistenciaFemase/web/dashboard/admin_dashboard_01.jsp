@@ -1,3 +1,5 @@
+<%@page import="cl.femase.gestionweb.vo.EmpleadoVO"%>
+<%@page import="java.util.ArrayList"%>
 <%@page import="cl.femase.gestionweb.vo.AgrupadoAusenciaVO"%>
 <%@page import="cl.femase.gestionweb.vo.DetalleAusenciaVO"%>
 <%@page import="java.util.LinkedHashMap"%>
@@ -18,6 +20,18 @@
 
     List<AgrupadoAusenciaVO> summaryAusencias = 
         (List<AgrupadoAusenciaVO>)request.getAttribute("summary_ausencias");
+    
+    ArrayList<EmpleadoVO> empleadosSinMarcas = 
+        (ArrayList<EmpleadoVO>)request.getAttribute("empleados_sin_marcas");
+    int numEmpleadosSinMarcas = 0;
+    if (!empleadosSinMarcas.isEmpty()) numEmpleadosSinMarcas = empleadosSinMarcas.size();
+    System.out.println("[Dashboard_jsp]numEmpleadosSinMarcas= " + numEmpleadosSinMarcas);    
+   
+    ArrayList<EmpleadoVO> empleadosTRSinTurnoAsignado = 
+        (ArrayList<EmpleadoVO>)request.getAttribute("empleados_sin_turno_rotativo_asignado");
+    int numEmpleadosTRSinTurno = 0;
+    if (!empleadosTRSinTurnoAsignado.isEmpty()) numEmpleadosTRSinTurno = empleadosTRSinTurnoAsignado.size();
+    System.out.println("[Dashboard_jsp]numEmpleadosTRSinTurnoAsignado= " + numEmpleadosTRSinTurno);
     
     int sumUsuarios = 0;    
     for (UsuariosByPerfilVO item : summary) {
@@ -92,7 +106,7 @@
       z-index: 2;
     }
     .card-dashboard.ausencias { background: linear-gradient(135deg,#028a79 80%,#0b4035 100%);}
-    .card-dashboard.atrasos { background: linear-gradient(135deg,#ff9800 80%,#a35a00 100%);}
+    .card-dashboard.sinturno { background: linear-gradient(135deg,#ff9800 80%,#a35a00 100%);}
     .card-dashboard.sinmarcar { background: linear-gradient(135deg,#e53935 80%,#741813 100%);}
     .card-dashboard .number {
       font-size: 1.6em;
@@ -151,6 +165,16 @@
       .main-section { flex-direction: column; gap: 24px;}
       .pie-chart-container { align-items: flex-start; min-width: 170px;}
     }
+    
+    @keyframes girarSpinner {
+        0% { transform: rotate(0deg);}
+        100% { transform: rotate(360deg);}
+    }
+    
+    table td,
+    table th {
+      font-size: 11px !important;
+    }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
@@ -165,6 +189,28 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 </head>
 <body>
+        <div id="spinner-cargando" style="
+            position: fixed;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(255,255,255,0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        ">
+        <div style="
+          border: 10px solid #ccc;
+          border-top: 10px solid #2a77d4;
+          border-radius: 50%;
+          width: 60px;
+          height: 60px;
+          animation: girarSpinner 1s linear infinite;
+          ">
+        </div>
+    </div>
+
+    
   <div class="dashboard">
       <div style="text-align:right; margin-bottom:10px;">
 	  <button class="btn btn-outline-primary" onclick="location.reload();">
@@ -182,13 +228,13 @@
         <div>Total de ausencias</div>
         <div class="number"><%=sumAusencias%></div>
       </div>
-      <div class="card-dashboard atrasos" tabindex="0" onclick="goToTable('tablaAtrasos')">
-        <div>Empleados con atrasos</div>
-        <div class="number">3</div>
+      <div class="card-dashboard sinturno" tabindex="0" onclick="goToTable('tablaSinTurno')">
+        <div>Empleados sin Turno</div>
+        <div class="number"><%=numEmpleadosTRSinTurno%></div>
       </div>
       <div class="card-dashboard sinmarcar" tabindex="0" onclick="goToTable('tablaSinMarcar')">
         <div>Sin marcar asistencia</div>
-        <div class="number">2</div>
+        <div class="number"><%=numEmpleadosSinMarcas%></div>
       </div>
     </div>
     <div class="main-section">
@@ -248,24 +294,39 @@
           </table>
         </div>
         <div>
-          <span id="tablaAtrasos"></span>
-          <div class="table-title">Empleados con atrasos</div>
+          <span id="tablaSinTurno"></span>
+          <div class="table-title">Empleados turno rotativo (sin turno asignado hoy)</div>
           <table class="table table-striped table-bordered display compact" style="width:100%">
             <thead>
               <tr>
-                <th>Usuario</th>
-                <th>Departamento</th>
-                <th>Hora de llegada</th>
-                <th>Minutos de atraso</th>
+                <th>Centro de costo</th>
+                <th>Run empleado</th>
+                <th>Nombre</th>
+                <th>Cargo</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>ejemplo.nombre</td>
-                <td>Departamento</td>
-                <td>09:10</td>
-                <td>20</td>
-              </tr>
+                <%
+                    String cencoNombre2  = "";
+                    String rutEmpleado2  = "";
+                    String nombreCargo2  = "";
+                    String nombreEmpleado2   = "";
+                    
+                    for (EmpleadoVO empleado : empleadosTRSinTurnoAsignado) {
+                        cencoNombre2 = empleado.getCencoNombre();
+                        rutEmpleado2 = empleado.getRut();
+                        nombreCargo2 = empleado.getNombreCargo();
+                        nombreEmpleado2 = empleado.getNombres() 
+                            + " " + empleado.getApePaterno()
+                            + " " + empleado.getApeMaterno();
+                       %>
+                            <tr>
+                                <td><%=cencoNombre2%></td>
+                                <td><%=rutEmpleado2%></td>
+                                <td><%=nombreEmpleado2%></td>
+                                <td><%=nombreCargo2%></td>
+                            </tr>
+                        <%}%>
             </tbody>
           </table>
         </div>
@@ -275,15 +336,41 @@
           <table class="table table-striped table-bordered display compact" style="width:100%">
             <thead>
               <tr>
-                <th>Usuario</th>
-                <th>Departamento</th>
+                <th>Centro de costo</th>
+                <th>Run empleado</th>
+                <th>Nombre</th>
+                <th>Cargo</th>
+                <th>Turno</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>ejemplo.otracaso</td>
-                <td>Operaciones</td>
-              </tr>
+               
+                <%
+                    String cencoNombre1  = "";
+                    String rutEmpleado  = "";
+                    String nombreTurno  = "";
+                    String nombreCargo  = "";
+                    String nombreEmpleado   = "";
+                    
+                    for (EmpleadoVO empleado : empleadosSinMarcas) {
+                        cencoNombre1 = empleado.getCencoNombre();
+                        rutEmpleado = empleado.getRut();
+                        nombreTurno = empleado.getNombreTurno();
+                        nombreCargo = empleado.getNombreCargo();
+                        nombreEmpleado = empleado.getNombres() 
+                            + " " + empleado.getApePaterno()
+                            + " " + empleado.getApeMaterno();
+                       %>
+                            <tr>
+                                <td><%=cencoNombre1%></td>
+                                <td><%=rutEmpleado%></td>
+                                <td><%=nombreEmpleado%></td>
+                                <td><%=nombreCargo%></td>
+                                <td><%=nombreTurno%></td>
+                            </tr>
+                    <%}%>
+                
+              
             </tbody>
           </table>
         </div>
@@ -416,6 +503,12 @@
     function refrescar() {
         location.reload();
     }
+    
+   
+    window.addEventListener('load', function() {
+      document.getElementById('spinner-cargando').style.display = 'none';
+    });
+    
   </script>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
 </body>

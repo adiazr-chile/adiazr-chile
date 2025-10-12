@@ -71,13 +71,13 @@
         <img src="images/logo_femase_01.png" alt="Logo Institucional" style="width: 100%; max-width: 200px; margin: 20px auto;">
         
         <h4>Iniciar Sesión</h4>
-        <form id="loginForm" method="post" action="<%=request.getContextPath()%>/UserAuth">
+        <form id="loginForm" method="post" action="<%=request.getContextPath()%>/UserAuth" autocomplete="nope">
           <div class="input-field">
-            <input id="username" name="username" type="text" required>
+            <input id="username" name="username" type="text" required autocomplete="nope">
             <label for="username">Nombre de Usuario</label>
           </div>
           <div class="input-field">
-            <input id="password" name="password" type="password" required>
+            <input id="password" name="password" type="password" required autocomplete="nope">
             <label for="password">Contraseña</label>
           </div>
           <div class="button-row">
