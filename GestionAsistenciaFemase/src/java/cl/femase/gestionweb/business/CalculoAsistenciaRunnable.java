@@ -5,6 +5,7 @@
  */
 package cl.femase.gestionweb.business;
 
+import static cl.femase.gestionweb.business.BaseBp.WEB_NAME;
 import cl.femase.gestionweb.common.Constantes;
 import cl.femase.gestionweb.common.Utilidades;
 import cl.femase.gestionweb.dao.LogErrorDAO;
@@ -20,6 +21,7 @@ import cl.femase.gestionweb.vo.MarcaJsonVO;
 import cl.femase.gestionweb.vo.MarcaVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import cl.femase.gestionweb.vo.TurnoVO;
+import cl.femase.gestionweb.vo.UsuarioVO;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -33,6 +35,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -45,6 +48,7 @@ import org.json.JSONObject;
  */
 public class CalculoAsistenciaRunnable extends BaseBp implements Runnable{
     
+    private static UsuarioVO usuarioEnSesion;
     private EmpleadoVO empleado;
     private CalculoAsistenciaNew calculadorAsistencia;
     public static LinkedHashMap<String, ArrayList<DetalleAsistenciaVO>> listaCalculosEmpleado = 
@@ -56,7 +60,7 @@ public class CalculoAsistenciaRunnable extends BaseBp implements Runnable{
     private static final DetalleTurnosBp m_detalleTurnoBp = new DetalleTurnosBp(new PropertiesVO());
     private static final DetalleAusenciaBp m_detalleAusenciaBp = new DetalleAusenciaBp(new PropertiesVO());
     private static final TurnoRotativoBp m_turnoRotativoBp=new TurnoRotativoBp(new PropertiesVO()); 
-    
+    private static cl.femase.gestionweb.dao.DetalleAsistenciaDAO detalleAsistenciaDao;
     //hash a utilizar
     private static String[] m_fechasCalculo;
     private static HashMap<String,Integer> m_hashTiposHE;
@@ -104,9 +108,14 @@ public class CalculoAsistenciaRunnable extends BaseBp implements Runnable{
     private static String m_endDate;
     private static String m_empresaId;
     
-    public CalculoAsistenciaRunnable(EmpleadoVO empleado, CalculoAsistenciaNew calculadorAsistencia) {
+    public CalculoAsistenciaRunnable(EmpleadoVO empleado, 
+            CalculoAsistenciaNew calculadorAsistencia,
+            UsuarioVO _usuario) {
+        
         this.empleado = empleado;
         this.calculadorAsistencia = calculadorAsistencia;
+        this.detalleAsistenciaDao = new cl.femase.gestionweb.dao.DetalleAsistenciaDAO(null);
+        this.usuarioEnSesion = _usuario;
     }
     
     /**
@@ -166,7 +175,7 @@ public class CalculoAsistenciaRunnable extends BaseBp implements Runnable{
         ExecutorService executor = Executors.newFixedThreadPool(_listaEmpleados.size());
         for (EmpleadoVO empleado: _listaEmpleados) {
             if (empleado != null){
-                CalculoAsistenciaNew calculador1 = new CalculoAsistenciaNew("hebra_"+i);
+                CalculoAsistenciaNew calculador1 = new CalculoAsistenciaNew("hebra_"+i, usuarioEnSesion);
                 //set hash con todos los datos a usar
                 calculador1.m_fechasCalculo = m_fechasCalculo;    
                 calculador1.m_listaDetalleTurnos = m_listaDetalleTurnos;
@@ -190,7 +199,7 @@ public class CalculoAsistenciaRunnable extends BaseBp implements Runnable{
                     m_endDate);
                 calculador1.m_fechasCalendarioFeriados = m_fechasCalendarioFeriados;
                 
-                Runnable proceso = new CalculoAsistenciaRunnable(empleado, calculador1);
+                Runnable proceso = new CalculoAsistenciaRunnable(empleado, calculador1, usuarioEnSesion);
                 System.out.println(WEB_NAME+"[GestionFemase.CalculoAsistenciaRunnable."
                     + "setHebras]add hebra para rut--> "+empleado.getRut());
                 executor.execute(proceso);
@@ -209,7 +218,7 @@ public class CalculoAsistenciaRunnable extends BaseBp implements Runnable{
         System.out.println(WEB_NAME+"[GestionFemase.CalculoAsistenciaRunnable."
             + "Ha finalizado la ejecucion de las Hebras...");
         
-        DetalleAsistenciaBp calculoBp = new DetalleAsistenciaBp(new PropertiesVO()); 
+        DetalleAsistenciaBp calculoBp = new DetalleAsistenciaBp(new PropertiesVO(), usuarioEnSesion); 
         ArrayList<DetalleAsistenciaToInsertVO> listaAsistencia = 
             new ArrayList<>();
         //if (!resultado.isThereError()){
@@ -280,12 +289,54 @@ public class CalculoAsistenciaRunnable extends BaseBp implements Runnable{
                         + "a actualizar detalle asistencia= "+listaAsistencia.size());
                     //Abrir conexion a BD
                     calculoBp.openDbConnection();
-                    calculoBp.deleteList(listaAsistencia);
-                    calculoBp.saveList(listaAsistencia);
+                    System.out.println(WEB_NAME+"[GestionFemase.CalculoAsistenciaRunnable]setHebras. "
+                        + "Rescatar detalle de horas extras autorizadas previamente "
+                        + "(antes de eliminar registros e insertar nuevos valores)...");
+                    ArrayList<DetalleAsistenciaVO> dataHrsExtras = 
+                        detalleAsistenciaDao.getDetallesHorasExtras(_listaEmpleados, m_startDate, m_endDate);
+                    System.out.println(WEB_NAME+"[GestionFemase.CalculoAsistenciaRunnable]setHebras. "
+                        + "Num registros con data de Horas Extras= " + dataHrsExtras.size());
+                    
+                    //if (!dataHrsExtras.isEmpty())    
+                    //{
+                        System.out.println(WEB_NAME+"[GestionFemase.CalculoAsistenciaRunnable]setHebras. "
+                            + "Eliminar datos de calculos de asistencia existentes...");
+                        calculoBp.deleteList(listaAsistencia);
+
+                        System.out.println(WEB_NAME+"[GestionFemase.CalculoAsistenciaRunnable]setHebras. "
+                            + "Guardar nuevos datos de calculos de asistencia ...");
+                        calculoBp.saveList(listaAsistencia);
+                        
+                        if (!dataHrsExtras.isEmpty()){
+                            System.out.println(WEB_NAME+"[GestionFemase.CalculoAsistenciaBp]calculaAsistencia. "
+                                + "Modifica data de hrs extras autorizadas previamente");
+                            for (int j = 0; j < dataHrsExtras.size(); j++) {
+                                DetalleAsistenciaVO detalle = dataHrsExtras.get(j);
+                                System.out.println(WEB_NAME+"[GestionFemase.CalculoAsistenciaRunnable]setHebras. "
+                                    + "Set data horas extras, "
+                                    + "rut: " + detalle.getRut()
+                                    + ", fecha entrada marca: " + detalle.getFechaEntradaMarca()
+                                    + ", Hora Mins Extras: " + detalle.getHoraMinsExtras()
+                                    + ", Autoriza Hrs Extras: " + detalle.getAutorizaHrsExtras()
+                                    + ", Horas MinsExtras Autorizadas: " + detalle.getHorasMinsExtrasAutorizadas());
+
+                                calculoBp.updateDataHorasExtras(detalle.getRut(),
+                                    detalle.getFechaEntradaMarca(), 
+                                    detalle.getHoraMinsExtras(), 
+                                    detalle.getAutorizaHrsExtras(), 
+                                    detalle.getHorasMinsExtrasAutorizadas());
+
+                            }
+                        }
+                    //}
                     //calculoBp.setMarcasProcesadas(listaAsistencia);
                      //cerrar conexion a BD
                     calculoBp.closeDbConnection();
+                }else{
+                    System.out.println(WEB_NAME+"[GestionFemase.CalculoAsistenciaRunnable]setHebras. "
+                        + "No hay data de Horas Extras...");
                 }
+                
                 System.out.println(WEB_NAME+"[GestionFemase.CalculoAsistenciaRunnable.setHebras]."
                     + "Fin guardar calculos en BD");
             //}
@@ -679,7 +730,9 @@ public class CalculoAsistenciaRunnable extends BaseBp implements Runnable{
                 String exclabel = ex.toString();
                 JSONObject jsonObj = Utilidades.generateErrorMessage(clase, ex);
                 LogErrorDAO logDao  = new LogErrorDAO();
+                
                 LogErrorVO log      = new LogErrorVO();
+                log.setUserName(usuarioEnSesion.getUsername());
                 log.setModulo(Constantes.LOG_MODULO_ASISTENCIA);
                 log.setEvento(Constantes.LOG_EVENTO_CALCULO_ASISTENCIA);
                 log.setLabel(exclabel);

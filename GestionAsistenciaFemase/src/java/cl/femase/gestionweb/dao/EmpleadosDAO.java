@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.apache.log4j.Logger;
 
 /**
@@ -81,6 +82,71 @@ public class EmpleadosDAO extends BaseDAO{
 //        }
     }
 
+    /**
+    * 
+     * @param _empresaId
+     * @param _cencosUsuario
+    * @param term   
+    * @return 
+    * @throws java.sql.SQLException
+    */
+    public List<EmpleadoVO> buscarEmpleadosPorFiltro(String _empresaId, 
+            List<UsuarioCentroCostoVO> _cencosUsuario, 
+            String term) throws SQLException {
+        List<EmpleadoVO> empleados = new ArrayList<>();
+        try {
+            String ccostoIds = _cencosUsuario.stream()
+                .map(UsuarioCentroCostoVO::getCcostoId)
+                .map(String::valueOf) // por si ccostoId no es String
+                .collect(Collectors.joining(","));
+            
+            dbConn = dbLocator.getConnection(m_dbpoolName,
+                "[EmpleadosDAO.getEmpleado]");
+            String sql = "SELECT ve.rut, ve.nombre, "
+                    + "ve.ccosto_nombre cencoNombre,"
+                    + "ve.cargo_nombre "
+                + "FROM view_empleado ve "
+                + "WHERE (UPPER(ve.nombre) LIKE ? OR UPPER(ve.rut) LIKE ?) "
+                    + "and ve.empl_estado = 1 "
+                    + "and ve.empresa_id = ?";    
+            
+            if (!_cencosUsuario.isEmpty()){
+                sql += " and ve.cenco_id in (" + ccostoIds + ") ";
+            }
+            
+            sql += "ORDER BY ve.nombre";
+            try (PreparedStatement ps = dbConn.prepareStatement(sql)) {
+                String likeTerm = term.toUpperCase() + "%";
+                ps.setString(1, likeTerm);
+                ps.setString(2, likeTerm);
+                ps.setString(3, _empresaId);
+                
+                try (ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        EmpleadoVO e = new EmpleadoVO();
+                        e.setRut(rs.getString("rut"));
+                        e.setNombreYpaterno(rs.getString("nombre"));
+                        e.setCencoNombre(rs.getString("cencoNombre"));
+                        e.setNombreCargo(rs.getString("cargo_nombre"));
+                        
+                        empleados.add(e);
+                    }
+                }
+            }
+        }catch(DatabaseException dbex){
+            
+        }  
+        finally {
+            if (dbConn != null) try {
+                dbLocator.freeConnection(dbConn); 
+            } catch (Exception ignore) {
+            }
+        }
+        return empleados;
+    }
+
+
+    
     /**
      * Actualiza un empleado
      * @param _data
@@ -1987,8 +2053,9 @@ public class EmpleadosDAO extends BaseDAO{
         try{
             String sql = "SELECT "
                 + "empleado.empl_rut AS rut,"
-                + "coalesce(empleado.empl_nombres, '') || ' ' || "
-                + "coalesce(empleado.empl_ape_paterno, '') nombre,"
+                + "coalesce(empleado.empl_nombres, '') nombres,"
+                + "empleado.empl_ape_paterno as paterno,"
+                + "empleado.empl_ape_materno as materno,"
                 + "empleado.empl_id_cargo,"
                 + "empleado.empl_email,"
                 + "empleado.empl_id_turno, "
@@ -1996,7 +2063,6 @@ public class EmpleadosDAO extends BaseDAO{
                 + "empresa.empresa_nombre,"
                 + "empresa.empresa_direccion,"
                 + "empresa.empresa_rut,"
-                + "empleado.empl_ape_materno AS materno,"
                 + "empleado.depto_id,"
                 + "departamento.depto_nombre,"
                 + "empleado.cenco_id,"
@@ -2054,8 +2120,10 @@ public class EmpleadosDAO extends BaseDAO{
                
                 data.setRut(rs.getString("rut"));
                 data.setCodInterno(rs.getString("cod_interno"));
-                data.setNombres(rs.getString("nombre"));
+                data.setNombres(rs.getString("nombres"));
+                data.setApePaterno(rs.getString("paterno"));
                 data.setApeMaterno(rs.getString("materno"));
+                
                 data.setEmail(rs.getString("empl_email"));
                 data.setEmpresaNombre(rs.getString("empresa_nombre"));
                 data.setEmpresaDireccion(rs.getString("empresa_direccion"));

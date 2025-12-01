@@ -69,7 +69,27 @@ public class DetalleAsistenciaVO implements Serializable{
     private String comentarioMarcaSalida;
     private String horaMinsSalidaAnticipada;
     private int minutosColacion;
+    private String cencoNombre;
+    private String cargoNombre;
 
+    public String getCargoNombre() {
+        return cargoNombre;
+    }
+
+    public void setCargoNombre(String cargoNombre) {
+        this.cargoNombre = cargoNombre;
+    }
+    
+    public String getCencoNombre() {
+        return cencoNombre;
+    }
+
+    public void setCencoNombre(String cencoNombre) {
+        this.cencoNombre = cencoNombre;
+    }
+
+    
+    
     public int getMinutosColacion() {
         return minutosColacion;
     }

@@ -69,7 +69,7 @@ import org.apache.pdfbox.pdmodel.PDPage;
  */
 public class AsistenciaReport extends BaseServlet {
 
-    DetalleAsistenciaBp m_detAsistenciaBp   = new DetalleAsistenciaBp(null);
+    
     EmpleadosBp m_empleadosBp               = new EmpleadosBp(null);
     DatabaseLocator m_dbLocator;
     String m_dbpoolName;
@@ -313,9 +313,12 @@ public class AsistenciaReport extends BaseServlet {
     private HashMap getParameters(HttpServletRequest _request, 
             EmpleadoVO _objEmpleado,
             List<DetalleAsistenciaVO> _registros){
-        
+        HttpSession session     = _request.getSession(true);
         ServletContext application  = this.getServletContext();
         PropertiesVO appProperties  = (PropertiesVO)application.getAttribute("appProperties");
+        UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
+        
+        DetalleAsistenciaBp detAsistenciaBp   = new DetalleAsistenciaBp(null, userConnected);
         
         //String rutParam = _request.getParameter("rut");
         String startDateParam = _request.getParameter("startDate");
@@ -348,7 +351,7 @@ public class AsistenciaReport extends BaseServlet {
         if (_registros == null){
             System.out.println(WEB_NAME+"[AsistenciaReport."
                 + "getParameters]Consultar detalles_asistencia a la BD...");
-            registros = m_detAsistenciaBp.getDetalles(_objEmpleado.getRut(), 
+            registros = detAsistenciaBp.getDetalles(_objEmpleado.getRut(), 
                     startDateParam, endDateParam);
         }
         
@@ -599,11 +602,17 @@ public class AsistenciaReport extends BaseServlet {
             getTotalesAsistenciaEmpresa(HttpServletRequest _request, 
                 UsuarioVO _userConnected){
     
+        HttpSession session     = _request.getSession(true);
+        ServletContext application  = this.getServletContext();
+        PropertiesVO appProperties  = (PropertiesVO)application.getAttribute("appProperties");
+        UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");        
+                
         LinkedHashMap<String, AsistenciaTotalesVO>  totalesAsistencia = new LinkedHashMap<>();
     
         DepartamentoBp deptosBp = new DepartamentoBp(new PropertiesVO());
         CentroCostoBp cencosBp  = new CentroCostoBp(new PropertiesVO());
         EmpleadosBp empleadosBp = new EmpleadosBp(new PropertiesVO());
+        DetalleAsistenciaBp detAsistenciaBp   = new DetalleAsistenciaBp(null, userConnected);
         
         List<EmpleadoVO> listaEmpleados          = new ArrayList<>();
         String empresaId = _request.getParameter("empresa"); 
@@ -677,7 +686,7 @@ public class AsistenciaReport extends BaseServlet {
                             + "Obteniendo detalle asistencia "
                             + "para todos los empleados vigentes y sin articulo22...");
                         LinkedHashMap<String,List<DetalleAsistenciaVO>> detalles 
-                            = m_detAsistenciaBp.getDetallesInforme(listaEmpleados, 
+                            = detAsistenciaBp.getDetallesInforme(listaEmpleados, 
                                     startDateParam, 
                                     endDateParam, -1);
 
@@ -874,6 +883,8 @@ public class AsistenciaReport extends BaseServlet {
         ServletContext application  = this.getServletContext();
         PropertiesVO appProperties  = (PropertiesVO)application.getAttribute("appProperties");
         UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
+        DetalleAsistenciaBp detAsistenciaBp   = new DetalleAsistenciaBp(null, userConnected);
+        
         String empresaId        = request.getParameter("empresa");
         String deptoId          = request.getParameter("depto");
         String strCencoId       = request.getParameter("cenco");
@@ -928,7 +939,7 @@ public class AsistenciaReport extends BaseServlet {
             System.out.println(WEB_NAME+"[AsistenciaReport.doPost]"
                 + "Obteniendo detalle asistencia para todos los empleados seleccionados...");
             LinkedHashMap<String,List<DetalleAsistenciaVO>> detalles 
-                = m_detAsistenciaBp.getDetallesInforme(listaEmpleados, startDateParam, endDateParam,-1);
+                = detAsistenciaBp.getDetallesInforme(listaEmpleados, startDateParam, endDateParam,-1);
                     
             for (EmpleadoVO empleado : listaEmpleados) {
                 System.out.println(WEB_NAME+"[AsistenciaReport.doPost]"

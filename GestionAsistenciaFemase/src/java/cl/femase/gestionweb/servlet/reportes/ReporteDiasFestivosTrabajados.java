@@ -325,7 +325,7 @@ public class ReporteDiasFestivosTrabajados extends BaseServlet {
             CentroCostoBp cencoBp   = new CentroCostoBp(appProperties);
             TurnosBp turnoBp        = new TurnosBp(appProperties);
             TurnoRotativoBp turnoRotBp = new TurnoRotativoBp(appProperties);
-            DetalleAsistenciaBp detalleAsistenciaBp = new DetalleAsistenciaBp(appProperties);
+            DetalleAsistenciaBp detalleAsistenciaBp = new DetalleAsistenciaBp(appProperties, userConnected);
             
             List<EmpleadoVO> empleadosList = new ArrayList<>();
             empleadosList.add(_empleado);
@@ -492,7 +492,7 @@ public class ReporteDiasFestivosTrabajados extends BaseServlet {
             List<EmpleadoVO> empleadosList = new ArrayList<>();
             empleadosList.add(_empleado);
             
-            DetalleAsistenciaBp detalleAsistenciaBp = new DetalleAsistenciaBp(appProperties);
+            DetalleAsistenciaBp detalleAsistenciaBp = new DetalleAsistenciaBp(appProperties, userConnected);
             LinkedHashMap<String,List<DetalleAsistenciaVO>> listaDetalles = 
                 detalleAsistenciaBp.getDetallesInforme(empleadosList, 
                     _startDate, _endDate, _idTurno);
@@ -658,7 +658,7 @@ public class ReporteDiasFestivosTrabajados extends BaseServlet {
             TurnosBp turnoBp        = new TurnosBp(appProperties);
             TurnoRotativoBp turnoRotBp = new TurnoRotativoBp(appProperties);
                         
-            DetalleAsistenciaBp detalleAsistenciaBp = new DetalleAsistenciaBp(appProperties);
+            DetalleAsistenciaBp detalleAsistenciaBp = new DetalleAsistenciaBp(appProperties, userConnected);
             List<EmpleadoVO> empleadosList = new ArrayList<>();
             empleadosList.add(_empleado);
             LinkedHashMap<String,List<DetalleAsistenciaVO>> listaDetalles = 
@@ -815,7 +815,7 @@ public class ReporteDiasFestivosTrabajados extends BaseServlet {
             TurnosBp turnoBp        = new TurnosBp(appProperties);
             TurnoRotativoBp turnoRotBp = new TurnoRotativoBp(appProperties);
                         
-            DetalleAsistenciaBp detalleAsistenciaBp = new DetalleAsistenciaBp(appProperties);
+            DetalleAsistenciaBp detalleAsistenciaBp = new DetalleAsistenciaBp(appProperties, userConnected);
             List<EmpleadoVO> empleadosList = new ArrayList<>();
             empleadosList.add(_empleado);
             LinkedHashMap<String,List<DetalleAsistenciaVO>> listaDetalles = 

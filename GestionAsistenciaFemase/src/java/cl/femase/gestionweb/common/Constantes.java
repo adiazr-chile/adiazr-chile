@@ -77,6 +77,11 @@ public class Constantes {
     */
     public static int ID_PERFIL_JEFE_TECNICO_NACIONAL = 12;
     
+    /** 
+    * perfil id = 14
+    */
+    public static int ID_PERFIL_CONTROL_INTERNO = 14;
+    
     /**
     *   id ausencia= 1
     */
@@ -188,6 +193,12 @@ public class Constantes {
     * Id parametro indica el numero maximo de dias de permiso administrativo para un semestre
     */
     public static final String ID_PARAMETRO_MAXIMO_SEMESTRAL_DIAS_PA = "max_dias_pa_semestre";
+    
+    /**
+    * Id parametro Flag que indica si se debe validar saldo al solicitar vacaciones
+    */
+    public static final String FLG_VAC_SALDO = "FLG_VAC_SALDO";
+    
     
     /**
     * Id parametro indica el numero maximo de dias de permiso examen salud preventiva

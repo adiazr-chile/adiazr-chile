@@ -101,7 +101,7 @@ public class DetalleAsistenciaHistController extends BaseServlet {
         
         TurnosBp turnosBp = new TurnosBp(appProperties);
         DetalleTurnosBp detalleTurnoBp = new DetalleTurnosBp(appProperties);
-        DetalleAsistenciaBp detalleAsistenciaBp = new DetalleAsistenciaBp(appProperties);
+        DetalleAsistenciaBp detalleAsistenciaBp = new DetalleAsistenciaBp(appProperties,userConnected);
         CalendarioFeriadoBp feriadosBp = new CalendarioFeriadoBp(appProperties);
         TiempoExtraBp tiempoExtraBp = new TiempoExtraBp(appProperties);
         //DetalleAsistenciaBp calculoBp = new DetalleAsistenciaBp(appProperties);
@@ -194,7 +194,7 @@ public class DetalleAsistenciaHistController extends BaseServlet {
 
             if (request.getParameter("action").compareTo("calcular") == 0){
                 ResultCRUDVO resultadoCalculo = new ResultCRUDVO();
-                CalculoAsistenciaBp calculoBp=new CalculoAsistenciaBp(appProperties);
+                CalculoAsistenciaBp calculoBp=new CalculoAsistenciaBp(appProperties, userConnected);
                 if (filtroEmpresa.compareTo("-1") != 0 
                         && filtroDepto.compareTo("-1") != 0
                         && filtroCenco != -1){

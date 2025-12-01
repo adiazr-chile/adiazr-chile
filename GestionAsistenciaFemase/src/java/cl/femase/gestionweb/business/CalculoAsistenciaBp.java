@@ -23,6 +23,7 @@ import cl.femase.gestionweb.vo.EstadoVO;
 import cl.femase.gestionweb.vo.InfoFeriadoVO;
 import cl.femase.gestionweb.vo.LogErrorVO;
 import cl.femase.gestionweb.vo.ResultCRUDVO;
+import cl.femase.gestionweb.vo.UsuarioVO;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -58,12 +59,13 @@ import org.json.JSONObject;
  */
 public class CalculoAsistenciaBp  extends BaseBp{
 
+    public UsuarioVO usuarioEnSesion;
     public PropertiesVO props;
     private String IT_FECHA = "";
     private final HashMap<String, MarcaVO> m_marcasProcesadas = new HashMap<>();
     
-    /** para guardar los eventos de mantencion de informacion*/
-    private final cl.femase.gestionweb.dao.DetalleAsistenciaDAO calculoAsistenciaService;
+    
+    private final cl.femase.gestionweb.dao.DetalleAsistenciaDAO detalleAsistenciaDao;
     
     private final cl.femase.gestionweb.dao.EstadoEjecucionCalculoAsistenciaDAO estadoEjecucionDao;
     
@@ -127,10 +129,11 @@ public class CalculoAsistenciaBp  extends BaseBp{
 //    private final LinkedHashMap<String, DetalleTurnoVO> m_listaDetallesTurnosRotativosLibres = 
 //        new LinkedHashMap<>();
     
-    public CalculoAsistenciaBp(PropertiesVO props) {
+    public CalculoAsistenciaBp(PropertiesVO props, UsuarioVO _usuario) {
         this.props = props;
+        this.usuarioEnSesion = _usuario;
         
-        calculoAsistenciaService = new cl.femase.gestionweb.dao.DetalleAsistenciaDAO(this.props);
+        detalleAsistenciaDao = new cl.femase.gestionweb.dao.DetalleAsistenciaDAO(this.props);
         estadoEjecucionDao = new cl.femase.gestionweb.dao.EstadoEjecucionCalculoAsistenciaDAO(this.props);
     }
 
@@ -532,7 +535,7 @@ public class CalculoAsistenciaBp  extends BaseBp{
         ArrayList<DetalleAsistenciaToInsertVO> listaAsistencia = 
             new ArrayList<>();
         
-        DetalleAsistenciaBp calculoBp       = new DetalleAsistenciaBp(new PropertiesVO()); 
+        DetalleAsistenciaBp calculoBp       = new DetalleAsistenciaBp(new PropertiesVO(), usuarioEnSesion); 
         CalendarioFeriadoBp bpFeriados    = new CalendarioFeriadoBp(new PropertiesVO());
         List<EmpleadoVO> listaEmpleadosConMarcas = new ArrayList<>();
         List<EmpleadoVO> listaEmpleados          = new ArrayList<>();
@@ -653,6 +656,7 @@ public class CalculoAsistenciaBp  extends BaseBp{
                     JSONObject jsonObj = Utilidades.generateErrorMessage(clase, ex);
                     LogErrorDAO logDao  = new LogErrorDAO();
                     LogErrorVO log      = new LogErrorVO();
+                    log.setUserName(usuarioEnSesion.getUsername());
                     log.setModulo(Constantes.LOG_MODULO_ASISTENCIA);
                     log.setEvento(Constantes.LOG_EVENTO_CALCULO_ASISTENCIA);
                     log.setLabel(exclabel);
@@ -725,9 +729,43 @@ public class CalculoAsistenciaBp  extends BaseBp{
                         + "a actualizar detalle asistencia= "+listaAsistencia.size());
                     //Abrir conexion a BD
                     calculoBp.openDbConnection();
-                    calculoBp.deleteList(listaAsistencia);
-                    calculoBp.saveList(listaAsistencia);
-                    //calculoBp.setMarcasProcesadas(listaAsistencia);
+                    
+                    System.out.println(WEB_NAME+"[GestionFemase.CalculoAsistenciaBp]calculaAsistencia. "
+                        + "Rescatar detalle de horas extras autorizadas previamente "
+                        + "(antes de eliminar registros e insertar nuevos valores)...");
+                    ArrayList<DetalleAsistenciaVO> dataHrsExtras = 
+                        detalleAsistenciaDao.getDetallesHorasExtras(listaEmpleados, _startDate, _endDate);
+                    
+                        System.out.println(WEB_NAME+"[GestionFemase.CalculoAsistenciaBp]calculaAsistencia. "
+                            + "Eliminar datos de calculos de asistencia existentes...");
+                        calculoBp.deleteList(listaAsistencia);
+
+                        System.out.println(WEB_NAME+"[GestionFemase.CalculoAsistenciaBp]calculaAsistencia. "
+                            + "Guardar nuevos datos de calculos de asistencia ...");
+                        calculoBp.saveList(listaAsistencia);
+                        
+                        if (!dataHrsExtras.isEmpty()){
+                            System.out.println(WEB_NAME+"[GestionFemase.CalculoAsistenciaBp]calculaAsistencia. "
+                                + "Modifica data de hrs extras autorizadas previamente");
+                            for (int j = 0; j < dataHrsExtras.size(); j++) {
+                                DetalleAsistenciaVO detalle = dataHrsExtras.get(j);
+                                System.out.println(WEB_NAME+"[GestionFemase.CalculoAsistenciaRunnable]setHebras. "
+                                    + "Set data horas extras, "
+                                    + "rut: " + detalle.getRut()
+                                    + ", fecha entrada marca: " + detalle.getFechaEntradaMarca()
+                                    + ", Hora Mins Extras: " + detalle.getHoraMinsExtras()
+                                    + ", Autoriza Hrs Extras: " + detalle.getAutorizaHrsExtras()
+                                    + ", Horas MinsExtras Autorizadas: " + detalle.getHorasMinsExtrasAutorizadas());
+
+                                calculoBp.updateDataHorasExtras(detalle.getRut(),
+                                    detalle.getFechaEntradaMarca(), 
+                                    detalle.getHoraMinsExtras(), 
+                                    detalle.getAutorizaHrsExtras(), 
+                                    detalle.getHorasMinsExtrasAutorizadas());
+
+                            }
+                        }
+                    
                     //cerrar conexion a BD
                     calculoBp.closeDbConnection();
                 }

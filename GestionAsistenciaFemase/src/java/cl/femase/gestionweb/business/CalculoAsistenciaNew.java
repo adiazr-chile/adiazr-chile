@@ -20,6 +20,7 @@ import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.MarcaJsonVO;
 import cl.femase.gestionweb.vo.MarcaVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
+import cl.femase.gestionweb.vo.UsuarioVO;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
@@ -42,6 +43,7 @@ import org.json.JSONObject;
  */
 public class CalculoAsistenciaNew extends BaseBp{
     
+    private UsuarioVO usuarioEnSesion;
     private final String nombreHebra;
     private String IT_FECHA = "";
     private final HashMap<String, MarcaVO> m_marcasProcesadas = new HashMap<>();
@@ -85,8 +87,14 @@ public class CalculoAsistenciaNew extends BaseBp{
     public LinkedHashMap<String, InfoFeriadoVO> m_fechasCalendarioFeriados = 
         new LinkedHashMap<>();
     
-    public CalculoAsistenciaNew(String _nombreHebra) {
-        this.nombreHebra = _nombreHebra;
+    /**
+    * 
+    * @param _nombreHebra
+    * @param _usuario
+    */
+    public CalculoAsistenciaNew(String _nombreHebra, UsuarioVO _usuario) {
+        this.nombreHebra        = _nombreHebra;
+        this.usuarioEnSesion    = _usuario;
     }
         
     /**
@@ -260,7 +268,11 @@ public class CalculoAsistenciaNew extends BaseBp{
             String exclabel = ex.toString();
             JSONObject jsonObj = Utilidades.generateErrorMessage(clase, ex);
             LogErrorDAO logDao  = new LogErrorDAO();
+            
             LogErrorVO log      = new LogErrorVO();
+            
+            log.setUserName("");
+            log.setIp("");
             log.setModulo(Constantes.LOG_MODULO_ASISTENCIA);
             log.setEvento(Constantes.LOG_EVENTO_CALCULO_ASISTENCIA);
             log.setLabel(exclabel);
@@ -876,26 +888,33 @@ public class CalculoAsistenciaNew extends BaseBp{
                                     while (ausenciasIterator.hasNext()) {
                                         DetalleAusenciaJsonVO ausencia = ausenciasIterator.next();
                                         //auxMsgAusencias += ausencia.getNombreAusencia();
-                                        if (ausencia.getPermitehora().compareTo("S")==0){
-                                            auxMsgAusencias += ausencia.getNombreausencia()
-                                                +":" + ausencia.getHorainiciofullasstr().substring(0, ausencia.getHorainiciofullasstr().length()-3) 
-                                                +"-" + ausencia.getHorafinfullasstr().substring(0, ausencia.getHorafinfullasstr().length()-3)+" hrs, ";
-                                            System.out.println(WEB_NAME+"[GestionFemase."
-                                                + "CalculoAsistenciaNew]"
-                                                + "procesaAsistencia. "
-                                                + "Ausencia x horas, msgAusencias: " + auxMsgAusencias);
-                                            //restar hrs con fecha
-                                            DiferenciaHorasVO difAusencia = Utilidades.getTimeDifference(_fechasCalculo[i] + " " + ausencia.getHorainiciofullasstr() +":00", 
-                                                _fechasCalculo[i] + " " + ausencia.getHorafinfullasstr()+":00");
-                                            if (ausencia.getTipoausencia() == 1){
-                                                if (ausencia.getJustificahoras().compareTo("S") == 0){
-                                                    listaHrsAusencias.add(difAusencia.getStrDiferenciaHorasMinutos());
-                                                }
-                                                if (ausencia.getPagadaporempleador().compareTo("S") == 0){
-                                                    listaHrsAusenciasPagadasPorEmpleador.add(difAusencia.getStrDiferenciaHorasMinutos());
+                                        if (ausencia.getPermitehora().compareTo("S") == 0 ){
+                                            
+                                            if (ausencia.getHorainiciofullasstr() != null 
+                                                    && ausencia.getHorafinfullasstr() != null){
+                                                //aca controlar error para que continue con el siguiente registro...
+                                                auxMsgAusencias += ausencia.getNombreausencia()
+                                                    +":" + ausencia.getHorainiciofullasstr().substring(0, ausencia.getHorainiciofullasstr().length()-3) 
+                                                    +"-" + ausencia.getHorafinfullasstr().substring(0, ausencia.getHorafinfullasstr().length()-3)+" hrs, ";
+                                                System.out.println(WEB_NAME+"[GestionFemase."
+                                                    + "CalculoAsistenciaNew]"
+                                                    + "procesaAsistencia. "
+                                                    + "Ausencia x horas, msgAusencias: " + auxMsgAusencias);
+                                                //restar hrs con fecha
+                                                DiferenciaHorasVO difAusencia = Utilidades.getTimeDifference(_fechasCalculo[i] + " " + ausencia.getHorainiciofullasstr() +":00", 
+                                                    _fechasCalculo[i] + " " + ausencia.getHorafinfullasstr()+":00");
+                                                if (ausencia.getTipoausencia() == 1){
+                                                    if (ausencia.getJustificahoras().compareTo("S") == 0){
+                                                        listaHrsAusencias.add(difAusencia.getStrDiferenciaHorasMinutos());
+                                                    }
+                                                    if (ausencia.getPagadaporempleador().compareTo("S") == 0){
+                                                        listaHrsAusenciasPagadasPorEmpleador.add(difAusencia.getStrDiferenciaHorasMinutos());
+                                                    }
+                                                }else{
+                                                    listaHrsNoRemuneradas.add(difAusencia.getStrDiferenciaHorasMinutos());
                                                 }
                                             }else{
-                                                listaHrsNoRemuneradas.add(difAusencia.getStrDiferenciaHorasMinutos());
+                                                auxMsgAusencias += ausencia.getNombreausencia()+". Verificar rango horario.";
                                             }
                                         }else{
                                             auxMsgAusencias += ausencia.getNombreausencia();

@@ -38,7 +38,7 @@ public class CalculaAsistenciaFMCJob extends BaseJobs implements Job {
     public void execute(JobExecutionContext arg0) throws JobExecutionException {
         DepartamentoBp deptosBp         = new DepartamentoBp(new PropertiesVO());
         CentroCostoBp cencosBp          = new CentroCostoBp(new PropertiesVO());
-        CalculoAsistenciaBp calculoBp   = new CalculoAsistenciaBp(new PropertiesVO());
+        CalculoAsistenciaBp calculoBp   = new CalculoAsistenciaBp(new PropertiesVO(), new UsuarioVO("sistemas","",""));
         EmpleadosBp empleadosBp         = new EmpleadosBp(new PropertiesVO());
         
         JobDataMap data = arg0.getJobDetail().getJobDataMap();

@@ -98,7 +98,7 @@ public class ReporteAsistenciaOLd extends BaseServlet {
         ServletContext application = this.getServletContext();
         appProperties=(PropertiesVO)application.getAttribute("appProperties");
         PdfUtilWriter auxpdfWriter=new PdfUtilWriter(session);
-        DetalleAsistenciaBp calculoBp = new DetalleAsistenciaBp(appProperties);
+        DetalleAsistenciaBp calculoBp = new DetalleAsistenciaBp(appProperties, userConnected);
         
         if (userConnected != null){
             List<DetalleAsistenciaVO> listaAsistencia = new ArrayList<>();

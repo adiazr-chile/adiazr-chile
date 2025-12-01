@@ -1055,7 +1055,11 @@ public class UsersDAO extends BaseDAO{
                             cenco.getEmpresaId(),
                             cenco.getDeptoId());
                     uc.setEmpresaId(cenco.getEmpresaId());
-                    uc.setEmpresaNombre(cenco.getEmpresaNombre());
+                    
+                    if (cenco.getEmpresaNombre().compareTo("Fundacion Mi Casa")==0){
+                        uc.setEmpresaNombre("FMC");
+                    }else uc.setEmpresaNombre(cenco.getEmpresaNombre());
+                    
                     uc.setDeptoId(cenco.getDeptoId());
                     uc.setDeptoNombre(cenco.getDeptoNombre());
                     uc.setZonaExtrema(cenco.getZonaExtrema());
@@ -1212,14 +1216,17 @@ public class UsersDAO extends BaseDAO{
                 + "	 left outer join centro_costo on (empleado.cenco_id = centro_costo.ccosto_id) "
                 + "  left outer join marcacion_virtual mv "
                     + "on (usuario.empresa_id = mv.empresa_id and usuario.usr_username = mv.rut_empleado)"
-                + " where usr_username = '" + _user.getUsername() + "' "
-                + " and usr_password = '" + _user.getPassword() + "' "
+                + " where usr_username = ? "
+                + " and usr_password = ? "
                 + "	and usuario.estado_id = 1";
             System.out.println(WEB_NAME+"[UsersDAO.getLogin]sql: " + sql);    
-            PreparedStatement stmt = dbConn.prepareStatement(sql);
+            PreparedStatement ps = dbConn.prepareStatement(sql);
+            
+            ps.setString(1, _user.getUsername());
+            ps.setString(2, _user.getPassword());
             
             try {
-               ResultSet rs = stmt.executeQuery();
+               ResultSet rs = ps.executeQuery();
                try {
                     // do whatever it is you want to do
                     if (rs.next()){
@@ -1292,7 +1299,7 @@ public class UsersDAO extends BaseDAO{
                   rs.close();
                }
             } finally {
-               stmt.close();
+               ps.close();
             }
         }catch(SQLException error){
             System.err.println(WEB_NAME +"[UsersDAO.getLogin]Error: "+error.toString());

@@ -35,6 +35,7 @@ import cl.femase.gestionweb.dao.LogErrorDAO;
 import cl.femase.gestionweb.dao.ProveedorCorreoDAO;
 import cl.femase.gestionweb.vo.CentroCostoVO;
 import cl.femase.gestionweb.vo.DepartamentoVO;
+import cl.femase.gestionweb.vo.DetalleAusenciaVO;
 import cl.femase.gestionweb.vo.DispositivoVO;
 import cl.femase.gestionweb.vo.EmpleadoVO;
 import cl.femase.gestionweb.vo.EmpresaVO;
@@ -58,6 +59,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.stream.Collectors;
 import org.apache.log4j.Logger;
 import org.json.JSONObject;
 
@@ -82,7 +84,7 @@ public class UserAuth extends BaseServlet {
         PrintWriter out     = response.getWriter();
         LogErrorDAO logDao  = new LogErrorDAO();
         LogErrorVO log      = new LogErrorVO();
-        
+        UsuarioVO userOk    = null;
         try {
             System.out.println(WEB_NAME+"UserAuth]Intentando login para "
                 + "username: "+ request.getParameter("username"));
@@ -111,7 +113,7 @@ public class UserAuth extends BaseServlet {
             UsuarioBp userBp    = new UsuarioBp(appProperties);
                         
             userBp.openDbConnection();
-            UsuarioVO userOk = userBp.getLogin(user);
+            userOk = userBp.getLogin(user);
             
             System.out.println(WEB_NAME+"UserAuth]Intentando Autenticar "
                 + "usuario: " + user.getUsername());
@@ -289,9 +291,30 @@ public class UserAuth extends BaseServlet {
                 /** a ser usados en jsp detalle_ausencias*/
                 System.out.println(WEB_NAME+"UserAuth]Cargar en sesion "
                     + "lista de autorizadores de ausencias...");
-                session.setAttribute("autorizadores", 
-                    autorizaAusenciaBp.getAutorizadoresDisponibles(userOk));
+                List<DetalleAusenciaVO> autorizadoresAusencias = autorizaAusenciaBp.getAutorizadoresDisponibles(userOk);
+                session.setAttribute("autorizadores",autorizadoresAusencias);
+                
+                System.out.println(WEB_NAME+"UserAuth]setear un hashMap con los autorizadores de ausencias por cada centro de costo del usuario");
+                         
+                HashMap<Integer, List<DetalleAusenciaVO>> autorizadoresPorCenco = new HashMap<>();
+                for (UsuarioCentroCostoVO centro : userOk.getCencos()) {
+                    int ccostoId = centro.getCcostoId();
+                    String auxEmpresaId = centro.getEmpresaId();
 
+                    List<DetalleAusenciaVO> autorizadoresGroup = new ArrayList<>();
+
+                    for (DetalleAusenciaVO autorizador : autorizadoresAusencias) {
+                        if (auxEmpresaId.equals(autorizador.getEmpresaId()) && ccostoId == autorizador.getCencoIdEmpleado()) 
+                        {
+                            autorizadoresGroup.add(autorizador);
+                        }
+                    }
+
+                    autorizadoresPorCenco.put(ccostoId, autorizadoresGroup);
+                }
+                
+                session.setAttribute("autorizadoresPorCenco",autorizadoresPorCenco); 
+                
                 session.setAttribute("empleados", 
                     empleadosBp.getEmpleados(userOk.getEmpresaId(),null,-1,-1,null,null,null,null,0,0,"empl_rut"));
                 session.setAttribute("empleados_cenco_usuario", 
@@ -490,6 +513,7 @@ public class UserAuth extends BaseServlet {
             JSONObject jsonObj = 
                 Utilidades.generateErrorMessage(this.getClass().getName(), ex);
             System.out.println(WEB_NAME+"-->JsonStr: " + jsonObj.toString());
+            log.setUserName(userOk.getUsername());
             log.setModulo(Constantes.LOG_MODULO_AUTENTICACION);
             log.setEvento(Constantes.LOG_EVENTO_AUTENTICACION);
             log.setLabel(exclabel);

@@ -172,7 +172,8 @@ public class PermisosAdministrativosReport extends BaseServlet {
                 
         System.out.println(WEB_NAME+"[servlet.reportes."
             + "PermisosAdministrativosReport.getParameters]. "
-            + "Param rut= " + _rutEmpleado);
+            + "Param rut= " + _rutEmpleado
+            + ", paramSemestre= " + semestreParam);
         EmpleadoVO infoEmpleado = empleadosBp.getEmpleado(empresaParam, _rutEmpleado);
         Date fechaInicioContrato = infoEmpleado.getFechaInicioContrato();
         Date fechaDesvinculacion = infoEmpleado.getFechaDesvinculacion();
@@ -191,6 +192,13 @@ public class PermisosAdministrativosReport extends BaseServlet {
         PermisoAdministrativoVO saldoPA = new PermisoAdministrativoVO();
         if (!infoPA.isEmpty()){
             saldoPA = infoPA.get(0);
+            
+            System.out.println(WEB_NAME+"[servlet.reportes."
+                + "PermisosAdministrativosReport.getParameters]. "
+                + "dias_disponibles_semestre1= " + saldoPA.getDiasDisponiblesSemestre1()
+                + ", dias_utilizados_semestre1= " + saldoPA.getDiasUtilizadosSemestre1()    
+                + ", dias_disponibles_semestre2= " + saldoPA.getDiasDisponiblesSemestre2()
+                + ", dias_utilizados_semestre2= " + saldoPA.getDiasUtilizadosSemestre2());
             
             if (semestreParam == 1)
             {

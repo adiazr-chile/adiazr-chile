@@ -91,6 +91,14 @@
         .jtable-input-readonly{
             background-color:lightgray;
        }
+       
+       .highlighted-row {
+            background-color: #ff5757 !important; /* Rojo de alerta */
+            color: white !important;
+            font-weight: bold;
+            transition: background-color 0.4s ease-in-out;
+        }
+
     </style>
 
 
@@ -241,6 +249,8 @@
    
     </script>
     
+    
+    
 </head>
 <body>
     <div class="site-container">
@@ -325,7 +335,7 @@
 <script type="text/javascript">
     <% 
         String readonly="readonly";
-        if (theUser.getIdPerfil() == Constantes.ID_PERFIL_ADMIN){
+        if (theUser.getIdPerfil() == Constantes.ID_PERFIL_ADMIN || theUser.getIdPerfil() == Constantes.ID_PERFIL_CONTROL_INTERNO){
             readonly="";
         }
     %>
@@ -360,7 +370,7 @@
                         });
                     }
                 <%}%>
-                <% if (theUser.getIdPerfil() == Constantes.ID_PERFIL_ADMIN){%>
+                <% if (theUser.getIdPerfil() == Constantes.ID_PERFIL_ADMIN || theUser.getIdPerfil() == Constantes.ID_PERFIL_CONTROL_INTERNO){%>
                     ,deleteAction: '<%=request.getContextPath()%>/MarcasController?action=delete'
                 <%}%>
             },
@@ -756,19 +766,33 @@
               }//else alert('nadaaaa');
             },
             recordsLoaded: function (event, data) {
+                // Ocultar el botón agregar según la selección del combo existente
                 var cencoSelected = $("select#cencoId").val();
-                                
-                //alert('recordsLoaded. data.tipoMarca: ' + data.tipoMarca);
-                //if (typeof $memberReviewExists != 'undefined' && $memberReviewExists == true){
-                if (cencoSelected === '-1'){
-                    //alert('ocultar boton new record');
+                if (cencoSelected === '-1') {
                     $('#MarcasTableContainer').find('.jtable-toolbar-item.jtable-toolbar-item-add-record').hide();
-                                                
-                    //$(".jtable-add-record").hide();   
-                    //$memberReviewExists = null;
-                }else {
-                    //No review currently exists for this user so show the Add review link                                      $(".jtable-add-record").show();
                 }
+
+                // Manejar el resaltado y remoción
+                var table = $('#MarcasTableContainer');
+
+                table.find('.jtable-delete-command-button')
+                    .off('click.resaltar')
+                    .on('click.resaltar', function () {
+                        table.find('tr').removeClass('highlighted-row');
+                        var fila = $(this).closest('tr');
+                        fila.addClass('highlighted-row');
+
+                        // Observar el diálogo de confirmación para detectar si el usuario cancela
+                        var observer = new MutationObserver(function (mutations, obs) {
+                            var dialog = $('.jtable-confirm-message');
+                            // Si desaparece el diálogo, se limpia el resaltado
+                            if (dialog.length === 0) {
+                                fila.removeClass('highlighted-row');
+                                obs.disconnect();
+                            }
+                        });
+                        observer.observe(document.body, { childList: true, subtree: true });
+                    });
             },
             //Initialize validation logic when a form is created
             formCreated: function (event, data) {
@@ -827,7 +851,7 @@
                 <%//}%>
 
                 data.form.find('input[name="fechaHora"]').datepicker({dateFormat: 'yy-mm-dd',minDate: -180});
-                <%if (theUser.getIdPerfil() == Constantes.ID_PERFIL_ADMIN){%>
+                <%if (theUser.getIdPerfil() == Constantes.ID_PERFIL_ADMIN || theUser.getIdPerfil() == Constantes.ID_PERFIL_CONTROL_INTERNO){%>
                     data.form.find('input[name="fechaHora"]').datepicker({dateFormat: 'yy-mm-dd',maxDate: 0});
                 <%}else{%>
                     if (data.formType=='create'){
@@ -847,6 +871,14 @@
                 data.form.validationEngine('hide');
                 data.form.validationEngine('detach');
             }
+        });
+
+        $('#MarcasTableContainer').on('click', '.jtable-delete-command-button', function(e) {
+            // Eliminar resaltado previo
+            $('#MarcasTableContainer tr').removeClass('highlighted-row');
+
+            // Agregar la clase a la fila de la cual proviene el botón delete
+            $(this).closest('tr').addClass('highlighted-row');
         });
 
         //Re-load records when user click 'load records' button.
@@ -903,6 +935,7 @@
             $('#endDate').datepick({dateFormat: 'yyyy-mm-dd'});
         });
 
+      
     </script>                                         
                                             
 </body>

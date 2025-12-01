@@ -9,6 +9,7 @@ import cl.femase.gestionweb.common.Constantes;
 import cl.femase.gestionweb.common.DatabaseException;
 import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.DetalleAusenciaVO;
+import cl.femase.gestionweb.vo.EmpleadoVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import cl.femase.gestionweb.vo.UsuarioCentroCostoVO;
 import cl.femase.gestionweb.vo.UsuarioVO;
@@ -1073,13 +1074,116 @@ public class DetalleAusenciaDAO extends BaseDAO{
     }
     
     /**
+    * 
+    * @param _empresaId
+    * @param _runEmpleado
+    * @param _fechaInicio
+    * @param _fechaFin
+    * @param _tipoAusencia
+    * @return 
+    */
+    public List<DetalleAusenciaVO> getAusenciasFiltro(String _empresaId,
+            String _runEmpleado, 
+            String _fechaInicio, 
+            String _fechaFin, 
+            int _tipoAusencia){
+        
+        List<DetalleAusenciaVO> lista = new ArrayList<>();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        DetalleAusenciaVO data;
+
+        try{
+            String sql = "select da.rut_empleado, " +
+                "empleado.empl_nombres || ' ' || empleado.empl_ape_paterno || ' ' || empleado.empl_ape_materno nombre_empleado, " +
+                "cargo.cargo_nombre cargo_empleado, " +
+                "da.correlativo correlativo_ausencia, " +
+                "da.fecha_inicio, da.fecha_fin, " + 
+                "da.ausencia_id, " +
+                "a.ausencia_nombre, " +
+                "da.allow_hour ausencia_por_horas, " +
+                "coalesce(hora_inicio, '00:00:00') hora_inicio," + 
+                "coalesce(hora_fin, '00:00:00') hora_fin, " + 
+                "da.ausencia_autorizada, " +
+                "da.rut_autoriza_ausencia, " +
+                "autorizador.empl_nombres || ' ' || autorizador.empl_ape_paterno || ' ' || autorizador.empl_ape_materno nombre_autorizador, " +
+                "cargo_autorizador.cargo_nombre cargo_autorizador,"
+                + "cc.ccosto_id cencoIdEmpleado,"
+                + "cc.ccosto_nombre cencoNombreEmpleado " +
+            " from detalle_ausencia da " +
+                " inner join ausencia a on (a.ausencia_id = da.ausencia_id) " +
+                " inner join empleado on (da.rut_empleado = empleado.empl_rut and empleado.empresa_id = ?) " +
+                " inner join empleado autorizador on (da.rut_autoriza_ausencia = autorizador.empl_rut and autorizador.empresa_id = ?) " +
+                " inner join cargo on (empleado.empl_id_cargo = cargo.cargo_id) " +
+                " inner join cargo cargo_autorizador on (autorizador.empl_id_cargo = cargo_autorizador.cargo_id) "
+                + " inner join centro_costo cc on (empleado.cenco_id = cc.ccosto_id) "
+            + " where a.ausencia_estado = 1 "
+            + " and da.fecha_inicio <= '" + _fechaFin + "' and da.fecha_fin >= '" + _fechaInicio + "' " // <-- solape!
+            + " and da.ausencia_id != " + Constantes.ID_AUSENCIA_VACACIONES
+            + " and da.rut_empleado = ? ";
+            if (_tipoAusencia != -1){
+                sql+= " and da.ausencia_id= ? ";
+            }
+            sql += "order by da.fecha_inicio desc";
+
+            dbConn = dbLocator.getConnection(m_dbpoolName, "[DetalleAusenciaDAO.getAusenciasFiltro]");
+            ps = dbConn.prepareStatement(sql);
+
+            int idx = 1;
+            ps.setString(idx++, _empresaId);
+            ps.setString(idx++, _empresaId);
+            //ps.setString(idx++, _fechaFin);    // <= ? (fecha_inicio)
+            //ps.setString(idx++, _fechaInicio); // >= ? (fecha_fin)
+            ps.setString(idx++, _runEmpleado);
+            if (_tipoAusencia != -1) {
+                ps.setInt(idx++, _tipoAusencia);
+            }
+
+            rs = ps.executeQuery();
+
+            while (rs.next()){
+                data = new DetalleAusenciaVO();
+                data.setRutEmpleado(rs.getString("rut_empleado"));
+                data.setNombreEmpleado(rs.getString("nombre_empleado"));
+                data.setNombreCargoEmpleado(rs.getString("cargo_empleado"));
+                data.setCorrelativo(rs.getInt("correlativo_ausencia"));
+                data.setFechaInicioAsStr(rs.getString("fecha_inicio"));
+                data.setFechaFinAsStr(rs.getString("fecha_fin"));
+                data.setIdAusencia(rs.getInt("ausencia_id"));
+                data.setNombreAusencia(rs.getString("ausencia_nombre"));
+                data.setPermiteHora(rs.getString("ausencia_por_horas"));
+                data.setHoraInicioFullAsStr(rs.getString("hora_inicio"));
+                data.setHoraFinFullAsStr(rs.getString("hora_fin"));
+                data.setAusenciaAutorizada(rs.getString("ausencia_autorizada"));
+                data.setRutAutorizador(rs.getString("rut_autoriza_ausencia"));
+                data.setNombreAutorizador(rs.getString("nombre_autorizador"));
+                data.setNombreCargoAutorizador(rs.getString("cargo_autorizador"));
+                data.setCencoIdEmpleado(rs.getInt("cencoIdEmpleado"));
+                data.setCencoNombreEmpleado(rs.getString("cencoNombreEmpleado"));
+                lista.add(data);
+            }
+        }catch(Exception sqle){
+            sqle.printStackTrace();
+        }finally{
+            try {
+                if (ps != null) ps.close();
+                if (rs != null) rs.close();
+                dbLocator.freeConnection(dbConn);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        return lista;
+    }
+
+    /**
     * Retorna lista con detalle ausencias
     * 
     * @param _source: indica si el listado de ausencias se muestra desde ausencias-detalle o desde admin vacaciones
     * @param _rutEmpleado
     * @param _rutAutorizador
-    * @param _fechaIngresoInicio
-    * @param _fechaIngresoFin
+     * @param _fechaInicio
+     * @param _fechaFin
     * @param _ausenciaId
     * @param _jtStartIndex
     * @param _jtPageSize
@@ -1119,7 +1223,7 @@ public class DetalleAusenciaDAO extends BaseDAO{
                 + "to_char(detalle_ausencia.fecha_inicio, 'yyyy-MM-dd') fecha_inicio_str,"
                 + "to_char(detalle_ausencia.fecha_fin, 'yyyy-MM-dd') fecha_fin_str,"
                 + "to_char(detalle_ausencia.hora_inicio, 'HH24:MI:SS') hora_inicio_str,"
-                + "coalesce(to_char(detalle_ausencia.hora_inicio, 'HH24'),'VACIO') solohora_inicio_str,"
+                + "coalesce(to_char(detalle_ausencia.hora_inicio, 'HH24'),'') solohora_inicio_str,"
                 + "to_char(detalle_ausencia.hora_inicio, 'MI') solomins_inicio_str,"
                 + "to_char(detalle_ausencia.hora_fin, 'HH24:MI:SS') hora_fin_str,"
                 + "to_char(detalle_ausencia.hora_fin, 'HH24') solohora_fin_str,"
@@ -1215,7 +1319,7 @@ public class DetalleAusenciaDAO extends BaseDAO{
                 
                 String strHoraInicio    = data.getSoloHoraInicio();
                 String strMinsInicio    = data.getSoloMinsInicio();
-                if (strHoraInicio.compareTo("VACIO")!=0){
+                if (strHoraInicio.compareTo("VACIO")!=0 && strHoraInicio.compareTo("") != 0){
                     System.err.println("[DetalleAusenciaDAO."
                         + "getDetallesAusencias]parseo "
                         + "a entero Hra Inicio: "+strHoraInicio);
@@ -1366,7 +1470,7 @@ public class DetalleAusenciaDAO extends BaseDAO{
                 + "to_char(detalle_ausencia.fecha_inicio, 'yyyy-MM-dd') fecha_inicio_str,"
                 + "to_char(detalle_ausencia.fecha_fin, 'yyyy-MM-dd') fecha_fin_str,"
                 + "to_char(detalle_ausencia.hora_inicio, 'HH24:MI:SS') hora_inicio_str,"
-                + "coalesce(to_char(detalle_ausencia.hora_inicio, 'HH24'),'VACIO') solohora_inicio_str,"
+                + "coalesce(to_char(detalle_ausencia.hora_inicio, 'HH24'),'') solohora_inicio_str,"
                 + "to_char(detalle_ausencia.hora_inicio, 'MI') solomins_inicio_str,"
                 + "to_char(detalle_ausencia.hora_fin, 'HH24:MI:SS') hora_fin_str,"
                 + "to_char(detalle_ausencia.hora_fin, 'HH24') solohora_fin_str,"
@@ -1449,7 +1553,7 @@ public class DetalleAusenciaDAO extends BaseDAO{
                 
                 String strHoraInicio    = data.getSoloHoraInicio();
                 String strMinsInicio    = data.getSoloMinsInicio();
-                if (strHoraInicio.compareTo("VACIO")!=0){
+                if (strHoraInicio.compareTo("VACIO")!=0 && strHoraInicio.compareTo("") != 0){
                     System.err.println("[DetalleAusenciaDAO."
                         + "getPermisosAdministrativos]parseo "
                         + "a entero Hra Inicio: "+strHoraInicio);
@@ -1658,7 +1762,7 @@ public class DetalleAusenciaDAO extends BaseDAO{
                 
                 String strHoraInicio    = data.getSoloHoraInicio();
                 String strMinsInicio    = data.getSoloMinsInicio();
-                if (strHoraInicio.compareTo("VACIO")!=0){
+                if (strHoraInicio.compareTo("VACIO")!=0 && strHoraInicio.compareTo("") != 0){
                     System.err.println("[DetalleAusenciaDAO."
                         + "getPermisosExamenSaludPreventiva]parseo "
                         + "a entero Hra Inicio: "+strHoraInicio);
@@ -2200,7 +2304,7 @@ public class DetalleAusenciaDAO extends BaseDAO{
                 + "to_char(detalle_ausencia.fecha_inicio, 'yyyy-MM-dd') fecha_inicio_str,"
                 + "to_char(detalle_ausencia.fecha_fin, 'yyyy-MM-dd') fecha_fin_str,"
                 + "to_char(detalle_ausencia.hora_inicio, 'HH24:MI:SS') hora_inicio_str,"
-                + "coalesce(to_char(detalle_ausencia.hora_inicio, 'HH24'),'VACIO') solohora_inicio_str,"
+                + "coalesce(to_char(detalle_ausencia.hora_inicio, 'HH24'),'') solohora_inicio_str,"
                 + "to_char(detalle_ausencia.hora_inicio, 'MI') solomins_inicio_str,"
                 + "to_char(detalle_ausencia.hora_fin, 'HH24:MI:SS') hora_fin_str,"
                 + "to_char(detalle_ausencia.hora_fin, 'HH24') solohora_fin_str,"
@@ -2274,7 +2378,7 @@ public class DetalleAusenciaDAO extends BaseDAO{
                 
                 String strHoraInicio    = data.getSoloHoraInicio();
                 String strMinsInicio    = data.getSoloMinsInicio();
-                if (strHoraInicio.compareTo("VACIO")!=0){
+                if (strHoraInicio.compareTo("VACIO") != 0 && strHoraInicio.compareTo("") != 0){
                     System.err.println("[DetalleAusenciaDAO."
                         + "getDetallesAusencias]parseo "
                         + "a entero Hra Inicio: "+strHoraInicio);
@@ -2719,9 +2823,9 @@ public class DetalleAusenciaDAO extends BaseDAO{
             }
             String sql = "SELECT "
                     + "empleado.empl_rut rut,"
-                + "coalesce(empleado.empl_nombres, '') || ' ' || coalesce(empleado.empl_ape_paterno, '') nombre,"
-                + "empleado.depto_id, depto.depto_nombre,"
-                + "empleado.cenco_id, cenco.ccosto_nombre "
+                    + "coalesce(empleado.empl_nombres, '') || ' ' || coalesce(empleado.empl_ape_paterno, '') nombre,"
+                    + "empleado.empresa_id,empleado.depto_id, depto.depto_nombre,"
+                    + "empleado.cenco_id, cenco.ccosto_nombre "
                 + "FROM empleado "
                 + " inner join departamento depto "
                 + "on (empleado.depto_id = depto.depto_id "
@@ -2756,10 +2860,13 @@ public class DetalleAusenciaDAO extends BaseDAO{
 
             while (rs.next()){
                 data = new DetalleAusenciaVO();
+                data.setEmpresaId(rs.getString("empresa_id"));
+                data.setCencoIdEmpleado(rs.getInt("cenco_id"));
                 data.setRutAutorizador(rs.getString("rut"));
                 data.setNombreAutorizador(rs.getString("nombre"));
                 data.setNomDeptoAutorizador(rs.getString("depto_nombre"));
                 data.setNomCencoAutorizador(rs.getString("ccosto_nombre"));
+                
                 lista.add(data);
             }
 

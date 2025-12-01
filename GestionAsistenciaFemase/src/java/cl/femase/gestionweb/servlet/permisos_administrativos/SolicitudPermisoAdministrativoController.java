@@ -566,6 +566,8 @@ public class SolicitudPermisoAdministrativoController extends BaseServlet {
                         mensajes.add(new MensajeUsuarioVO("Saldo Dias Post Permiso Administrativo", "" + saldoPostPA));
                     }
                     
+                    
+                    
                     mensajes.add(new MensajeUsuarioVO("Destinatario(s)", strDestinatarios));
                     request.setAttribute("fechaDesde", reqDesde);
                     request.setAttribute("fechaHasta", reqHasta);

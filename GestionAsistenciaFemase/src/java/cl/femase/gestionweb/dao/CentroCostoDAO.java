@@ -619,7 +619,12 @@ public class CentroCostoDAO extends BaseDAO{
                 data = new UsuarioCentroCostoVO(_username,
                     rs.getInt("ccosto_id"),0,rs.getString("ccosto_nombre"),
                     rs.getString("empresa_id"),rs.getString("depto_id"));
-                data.setEmpresaNombre(rs.getString("empresa_nombre"));
+                
+                String empresaNombre = rs.getString("empresa_nombre");
+                if (empresaNombre.compareTo("Fundacion Mi Casa") == 0){
+                    data.setEmpresaNombre("FMC");
+                }else data.setEmpresaNombre(empresaNombre);
+                
                 data.setDeptoNombre(rs.getString("depto_nombre"));
                 data.setZonaExtrema(rs.getString("es_zona_extrema"));
                 lista.add(data);

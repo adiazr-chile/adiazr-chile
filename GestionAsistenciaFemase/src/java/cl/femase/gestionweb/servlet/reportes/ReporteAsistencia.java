@@ -316,7 +316,7 @@ public class ReporteAsistencia extends BaseServlet {
                 + ", endDate: " + _endDate);
             CentroCostoBp cencoBp                   = new CentroCostoBp(appProperties);
             EmpleadosBp empleadoBp  = new EmpleadosBp(appProperties);
-            DetalleAsistenciaBp detalleAsistenciaBp = new DetalleAsistenciaBp(appProperties);
+            DetalleAsistenciaBp detalleAsistenciaBp = new DetalleAsistenciaBp(appProperties, userConnected);
             List<EmpleadoVO> empleadosList = new ArrayList<>();
             empleadosList.add(_empleado);
             
@@ -494,7 +494,7 @@ public class ReporteAsistencia extends BaseServlet {
             List<EmpleadoVO> empleadosList = new ArrayList<>();
             empleadosList.add(_empleado);
             
-            DetalleAsistenciaBp detalleAsistenciaBp = new DetalleAsistenciaBp(appProperties);
+            DetalleAsistenciaBp detalleAsistenciaBp = new DetalleAsistenciaBp(appProperties, userConnected);
             LinkedHashMap<String,List<DetalleAsistenciaVO>> listaDetalles = 
                 detalleAsistenciaBp.getDetallesInforme(empleadosList, 
                     _startDate, _endDate, _idTurno);
@@ -643,7 +643,7 @@ public class ReporteAsistencia extends BaseServlet {
             List<EmpleadoVO> empleadosList = new ArrayList<>();
             empleadosList.add(_empleado);
             
-            DetalleAsistenciaBp detalleAsistenciaBp = new DetalleAsistenciaBp(appProperties);
+            DetalleAsistenciaBp detalleAsistenciaBp = new DetalleAsistenciaBp(appProperties, userConnected);
             LinkedHashMap<String,List<DetalleAsistenciaVO>> listaDetalles = 
                 detalleAsistenciaBp.getDetallesInforme(empleadosList, 
                     _startDate, _endDate, _idTurno);
@@ -794,7 +794,7 @@ public class ReporteAsistencia extends BaseServlet {
                 + ", idTurno: " + _idTurno);
             CentroCostoBp cencoBp   = new CentroCostoBp(appProperties);
             EmpleadosBp empleadoBp  = new EmpleadosBp(appProperties);
-            DetalleAsistenciaBp detalleAsistenciaBp = new DetalleAsistenciaBp(appProperties);
+            DetalleAsistenciaBp detalleAsistenciaBp = new DetalleAsistenciaBp(appProperties, userConnected);
             
             List<EmpleadoVO> empleadosList = new ArrayList<>();
             empleadosList.add(_empleado);

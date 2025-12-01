@@ -275,6 +275,183 @@ public class DetalleAsistenciaDAO extends BaseDAO{
 
         return objresultado;
     }
+    
+    /**
+    * Autoriza un numero determinado de horas extras a un empleado
+    * 
+    * @param _empresaId
+    * @param _rutEmpleado
+    * @param _fechaMarca
+    * @param _authHextras
+    * @param _hhmmExtrasAutorizadas
+    * @return 
+    */
+    public ResultCRUDVO autorizaHorasExtras(String _empresaId,
+            String _rutEmpleado,
+            String _fechaMarca,
+            String _authHextras,
+            String _hhmmExtrasAutorizadas){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
+        PreparedStatement psupdate = null;
+        int result=0;
+        String msgError = "Error al actualizar "
+            + "detalle_asistencia: "
+            + "empresa_id: " + _empresaId
+            + ", rut: "+_rutEmpleado
+            + ", fecha: "+_fechaMarca
+            + ", authHextras: "+_authHextras
+            + ", hhmmExtrasAutorizadas: "+_hhmmExtrasAutorizadas;
+        
+        try{
+            String msgFinal = " Actualizar detalle_asistencia:"
+                + "empresaId [" + _empresaId + "]" 
+                + ", rut [" + _rutEmpleado + "]" 
+                + ", fecha [" + _fechaMarca + "]"
+                + ", authHextras [" + _authHextras + "]"
+                + ", hhmmExtrasAutorizadas [" + _hhmmExtrasAutorizadas + "]";
+            
+            System.out.println(msgFinal);
+            objresultado.setMsg(msgFinal);
+            String sql ="update "
+                + "detalle_asistencia "
+                + "set "
+                    + "autoriza_hrsextras = ?,"
+                    + "hhmm_extras_autorizadas = ? "
+                + "where empresa_id = ? "
+                    + "and rut_empleado = ? "
+                    + "and fecha_marca_entrada = '" + _fechaMarca + "'";
+            
+            if (dbConn==null) dbConn = 
+                dbLocator.getConnection(m_dbpoolName,
+                    "DetalleAsistenciaDAO.autorizaHorasExtras");
+            psupdate = dbConn.prepareStatement(sql);
+            psupdate.setString(1,  _authHextras);
+            psupdate.setString(2,  _hhmmExtrasAutorizadas);
+            psupdate.setString(3,  _empresaId);
+            psupdate.setString(4,  _rutEmpleado);
+                       
+            int rowAffected = psupdate.executeUpdate();
+            if (rowAffected == 1){
+                System.out.println(WEB_NAME+"[autorizaHorasExtras]"
+                    + "detalle_asistencia: "
+                    + " empresa_id:" + _empresaId
+                    + ", rut:" + _rutEmpleado
+                    + ", fecha:" + _fechaMarca
+                    + ", authHextras: " + _authHextras
+                    +" actualizado OK!");
+            }
+
+            psupdate.close();
+            dbLocator.freeConnection(dbConn);
+        }catch(SQLException sqle){
+            System.err.println("[autorizaHorasExtras]"
+                + "detalle_asistencia. Error: "+sqle.toString());
+            objresultado.setThereError(true);
+            objresultado.setCodError(result);
+            objresultado.setMsgError(msgError+" :"+sqle.toString());
+        }catch(DatabaseException dbex){
+            System.err.println("[update]detalle_asistencia. "
+                + "Error: " + dbex.toString());
+            objresultado.setThereError(true);
+            objresultado.setCodError(result);
+            objresultado.setMsgError(msgError+" :" + dbex.toString());
+        }
+        finally{
+            try {
+                if (psupdate != null) psupdate.close();
+                dbLocator.freeConnection(dbConn);
+            } catch (SQLException ex) {
+                System.err.println("[autorizaHorasExtras]"
+                    + "Error: " + ex.toString());
+            }
+        }
+
+        return objresultado;
+    }
+    
+    /**
+    * Modifica data de horas extras
+    * 
+    * @param _rutEmpleado
+    * @param _fechaMarca
+    * @param _hhmmExtras
+    * @param _autorizaHrsExtras
+    * @param _hhmmExtrasAutorizadas
+    * @return 
+    */
+    public ResultCRUDVO updateDataHorasExtras(String _rutEmpleado,
+            String _fechaMarca,
+            String _hhmmExtras,
+            String _autorizaHrsExtras,
+            String _hhmmExtrasAutorizadas){
+        
+        ResultCRUDVO objresultado = new ResultCRUDVO();
+        PreparedStatement psupdate = null;
+        int result=0;
+        String msgError = "Error al actualizar "
+            + "detalle_asistencia "
+            + ", rut: " + _rutEmpleado
+            + ", fecha: " + _fechaMarca
+            + ", hhmmExtras: " + _hhmmExtras
+            + ", autorizaHrsExtras: " + _autorizaHrsExtras
+            + ", hhmmExtrasAutorizadas: " + _hhmmExtrasAutorizadas;
+        
+        try{
+            String msgFinal = " Actualizar columnas de hrs extras en tabla detalle_asistencia:"
+                + "rut [" + _rutEmpleado + "]" 
+                + ", fecha [" + _fechaMarca + "]"
+                + ", hhmmExtras [" + _hhmmExtras + "]"
+                + ", autorizaHrsExtras [" + _autorizaHrsExtras + "]"
+                + ", hhmmExtrasAutorizadas [" + _hhmmExtrasAutorizadas + "]";
+            
+            System.out.println(msgFinal);
+            objresultado.setMsg(msgFinal);
+            String sql ="update "
+                + "detalle_asistencia "
+                + "set "
+                + "hhmm_extras = ?,"
+                + "autoriza_hrsextras = ?,"
+                + "hhmm_extras_autorizadas = ? "
+                + " where rut_empleado = ? "
+                + " and fecha_marca_entrada = '" + _fechaMarca + "'";
+            
+            //if (dbConn==null) dbConn = dbLocator.getConnection(m_dbpoolName,"DetalleAsistenciaDAO.updateDataHorasExtras");
+            psupdate = dbConn.prepareStatement(sql);
+            psupdate.setString(1,  _hhmmExtras);
+            psupdate.setString(2,  _autorizaHrsExtras);
+            psupdate.setString(3,  _hhmmExtrasAutorizadas);
+            psupdate.setString(4,  _rutEmpleado);
+                       
+            int rowAffected = psupdate.executeUpdate();
+            if (rowAffected == 1){
+                System.out.println(WEB_NAME+"[updateDataHorasExtras]detalle_asistencia "
+                    + ", rut: " +_rutEmpleado
+                    + ", fecha: "  +_fechaMarca
+                    + ", hhmmExtras: " + _hhmmExtras
+                    + ", autorizaHrsExtras: " + _autorizaHrsExtras
+                    + ", hhmmExtrasAutorizadas: " + _hhmmExtrasAutorizadas    
+                    +" actualizado OK!");
+            }
+
+            psupdate.close();
+            //dbLocator.freeConnection(dbConn);
+        }catch(SQLException sqle){
+            System.err.println("[updateDataHorasExtras]detalle_asistencia. Error: "+sqle.toString());
+            objresultado.setThereError(true);
+            objresultado.setCodError(result);
+            objresultado.setMsgError(msgError+" :"+sqle.toString());
+        }
+        finally{
+            try {
+                if (psupdate != null) psupdate.close();
+//                dbLocator.freeConnection(dbConn);
+            } catch (SQLException ex) {
+                System.err.println("updateDataHorasExtras Error: "+ex.toString());
+            }
+        }
+
+        return objresultado;
+    }
 
  /**
     * Agrega un nuevo detalle_Asistencia
@@ -864,6 +1041,100 @@ public class DetalleAsistenciaDAO extends BaseDAO{
     }
     
     /**
+    * 
+    * @param _empresaId
+    * @param _runEmpleado
+    * @param _fechaInicio
+    * @param _fechaFin
+    * @return 
+    */
+    public List<DetalleAsistenciaVO> getDetalleAsistenciaFiltro(String _empresaId,
+            String _runEmpleado, 
+            String _fechaInicio, 
+            String _fechaFin){
+        
+        List<DetalleAsistenciaVO> lista = new ArrayList<>();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        DetalleAsistenciaVO data;
+
+        try{
+           String sql = "select "
+                    + "empleado.empresa_id, "
+                    + "da.rut_empleado, "
+                    + "empleado.empl_nombres || ' ' || empleado.empl_ape_paterno || ' ' || empleado.empl_ape_materno nombre_empleado, "
+                    + "cargo.cargo_nombre cargo_empleado, "
+                    + "cc.ccosto_id cencoIdEmpleado, "
+                    + "cc.ccosto_nombre cencoNombreEmpleado, "
+                    + "to_char(da.fecha_hora_calculo, 'YYYY-MM-DD HH24:MI:SS') fecha_hora_calculo, "
+                    + "to_char(da.fecha_marca_entrada, 'YYYY-MM-DD') fecha_marca_entrada, "
+                    + "to_char(da.hora_entrada, 'HH24:MI:SS') hora_entrada, "
+                    + "to_char(da.hora_salida, 'HH24:MI:SS') hora_salida, "
+                    + "da.horas_teoricas, "
+                    + "to_char(da.hora_entrada_teorica, 'HH24:MI:SS') hora_entrada_teorica, "
+                    + "to_char(da.hora_salida_teorica, 'HH24:MI:SS') hora_salida_teorica, "
+                    + "coalesce(da.hrs_presenciales,'') hrs_presenciales, "
+                    + "coalesce(da.hrs_trabajadas,'') hrs_trabajadas, "
+                    + "coalesce(da.observacion,'') observacion, "
+                    + "coalesce(da.hhmm_extras,'') hhmm_extras, "
+                    + "coalesce(da.autoriza_hrsextras,'N') autoriza_hrsextras, "
+                    + "coalesce(da.hhmm_extras_autorizadas,'') hhmm_extras_autorizadas "
+                + "from detalle_asistencia da "
+                    + "inner join empleado on (da.rut_empleado = empleado.empl_rut and empleado.empresa_id = ?) "
+                    + "inner join cargo on (empleado.empl_id_cargo = cargo.cargo_id) "
+                    + "inner join centro_costo cc on (empleado.cenco_id = cc.ccosto_id) "
+                + "where da.rut_empleado = ? "
+                    + "and da.fecha_marca_entrada between '" + _fechaInicio + "' and '" + _fechaFin + "' "
+                + "order by da.fecha_marca_entrada";
+
+            dbConn = dbLocator.getConnection(m_dbpoolName, "[DetalleAusenciaDAO.getDetalleAsistenciaFiltro]");
+            ps = dbConn.prepareStatement(sql);
+
+            int idx = 1;
+            ps.setString(idx++, _empresaId);
+            ps.setString(idx++, _runEmpleado);
+            
+            rs = ps.executeQuery();
+
+            while (rs.next()){
+                data = new DetalleAsistenciaVO();
+                data.setEmpresaId(rs.getString("rut_empleado"));
+                data.setRutEmpleado(rs.getString("rut_empleado"));
+                data.setNombreEmpleado(rs.getString("nombre_empleado"));
+                data.setCargoNombre(rs.getString("cargo_empleado"));
+                data.setCencoId(rs.getInt("cencoIdEmpleado"));
+                data.setCencoNombre(rs.getString("cencoNombreEmpleado"));
+                data.setFechaHoraCalculo(rs.getString("fecha_hora_calculo"));
+                data.setFechaEntradaMarca(rs.getString("fecha_marca_entrada"));
+                data.setHoraEntrada(rs.getString("hora_entrada"));
+                data.setHoraSalida(rs.getString("hora_salida"));
+                data.setHorasTeoricas(rs.getInt("horas_teoricas"));
+                data.setHoraEntradaTeorica(rs.getString("hora_entrada_teorica"));
+                data.setHoraSalidaTeorica(rs.getString("hora_salida_teorica"));
+                data.setHrsPresenciales(rs.getString("hrs_presenciales"));
+                data.setHrsTrabajadas(rs.getString("hrs_trabajadas"));
+                data.setObservacion(rs.getString("observacion"),null);
+                data.setHoraMinsExtras(rs.getString("hhmm_extras"));
+                data.setAutorizaHrsExtras(rs.getString("autoriza_hrsextras"));
+                data.setHorasMinsExtrasAutorizadas(rs.getString("hhmm_extras_autorizadas"));
+                
+                lista.add(data);
+            }
+        }catch(Exception sqle){
+            sqle.printStackTrace();
+        }finally{
+            try {
+                if (ps != null) ps.close();
+                if (rs != null) rs.close();
+                dbLocator.freeConnection(dbConn);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        return lista;
+    }
+    
+    /**
     * Obtiene lista de detalles de asistencia para la lista de empleados
     * entregada como parametro
     *  
@@ -1239,6 +1510,204 @@ public class DetalleAsistenciaDAO extends BaseDAO{
         }
         
         return fullList;
+    }
+    
+    /**
+    * Obtiene lista de detalles de asistencia para la lista de empleados
+    * entregada como parametro
+    *  
+    * @param _listaEmpleados
+    * @param _startDate
+    * @param _endDate
+    * @return
+    */
+    public ArrayList<DetalleAsistenciaVO> getDetallesHorasExtras(
+            List<EmpleadoVO> _listaEmpleados,
+            String _startDate, 
+            String _endDate){
+        
+        ArrayList<DetalleAsistenciaVO> detalles = new ArrayList<>();
+        DetalleAsistenciaVO data;
+        String cadenaRuts = "";
+        
+        System.out.println(WEB_NAME+"[DetalleAsistenciaDAO.getDetallesHorasExtras]inicio");
+        if (_listaEmpleados != null && !_listaEmpleados.isEmpty()){
+            System.out.println(WEB_NAME+"[DetalleAsistenciaDAO.getDetallesHorasExtras]"
+                + "num empleados: "+ _listaEmpleados.size());
+            for (EmpleadoVO empleado : _listaEmpleados) {
+                cadenaRuts += "'" + empleado.getRut() + "',";
+            }
+            cadenaRuts = cadenaRuts.substring(0, cadenaRuts.length()-1);
+        }
+        
+        String sql ="SELECT "
+                + "empresa_id, "
+                + "rut_empleado, "
+                + "fecha_marca_entrada::date,"
+                + "coalesce(hhmm_extras,'00:00') hhmm_extras,"
+                + "coalesce(autoriza_hrsextras,'N') autoriza_hrsextras,"
+                + "coalesce(hhmm_extras_autorizadas,'00:00') hhmm_extras_autorizadas "
+            + " FROM detalle_asistencia "
+            + " where rut_empleado in ("+ cadenaRuts+") "
+                + " and fecha_marca_entrada between '"+_startDate+"' "
+                + " and '" + _endDate + "' "
+            + "order by rut_empleado,fecha_marca_entrada";
+       
+        try {
+           dbConn = dbLocator.getConnection(m_dbpoolName,
+                "[DetalleAsistenciaDAO.getDetallesHorasExtras]");
+           PreparedStatement stmt = dbConn.prepareStatement(sql);
+           try {
+              ResultSet rs = stmt.executeQuery();
+              String rutEmpleado = "";
+              String empresaId  = "";
+              String fecha      = "";
+              String rowKey     = "";
+              try {
+                // do whatever it is you want to do
+                while (rs.next()){
+                    data = new DetalleAsistenciaVO();
+                    rutEmpleado = rs.getString("rut_empleado");
+                    empresaId = rs.getString("empresa_id");
+                    fecha = rs.getString("fecha_marca_entrada");
+                    
+                    data.setEmpresaId(empresaId);
+                    data.setRut(rutEmpleado);
+                    data.setFechaEntradaMarca(fecha);
+                    
+                    rowKey = empresaId + "|" + rutEmpleado + "|" + fecha;
+                    
+                    data.setHoraMinsExtras(rs.getString("hhmm_extras"));
+                    data.setHorasMinsExtrasAutorizadas(rs.getString("hhmm_extras_autorizadas"));
+                    data.setAutorizaHrsExtras(rs.getString("autoriza_hrsextras"));
+                    
+                    data.setRowKey(rowKey);
+                    detalles.add(data);
+                } 
+              } finally {
+                 rs.close();
+              }
+           } finally {
+              stmt.close();
+           }
+        }catch(SQLException|DatabaseException sqlex){
+            System.err.println("[DetalleAsistenciaDAO]getDetallesHorasExtras error: "+sqlex.toString());
+        } 
+        finally {
+            try {
+                dbConn.close();
+            } catch (SQLException ex) {
+                System.err.println("DetalleAsistenciaDAO.getDetallesHorasExtras "
+                    + "Error: " + ex.toString());
+            }
+        }
+        
+        return detalles;
+    }
+    
+    /**
+    * Obtiene lista de detalles de asistencia para la lista de empleados
+    * entregada como parametro
+    *  
+    * @param _listaEmpleados
+    * @param _startDate
+    * @param _endDate
+    * @return
+    */
+    public ArrayList<DetalleAsistenciaVO> getDetalleAsistencia(
+            List<EmpleadoVO> _listaEmpleados,
+            String _startDate, 
+            String _endDate){
+        
+        ArrayList<DetalleAsistenciaVO> detalles = new ArrayList<>();
+        DetalleAsistenciaVO data;
+        String cadenaRuts = "";
+        
+        System.out.println(WEB_NAME+"[DetalleAsistenciaDAO.getDetalleAsistencia]inicio");
+        if (_listaEmpleados != null && !_listaEmpleados.isEmpty()){
+            System.out.println(WEB_NAME+"[DetalleAsistenciaDAO.getDetalleAsistencia]"
+                + "num empleados: "+ _listaEmpleados.size());
+            for (EmpleadoVO empleado : _listaEmpleados) {
+                cadenaRuts += "'" + empleado.getRut() + "',";
+            }
+            cadenaRuts = cadenaRuts.substring(0, cadenaRuts.length()-1);
+        }
+        
+        String sql = "select "
+                + "ve.rut rut_empleado,"
+                + "ve.nombre,"
+                + "ve.ccosto_nombre,"
+                + "da.empresa_id,"
+                + "da.fecha_marca_entrada::date,"
+                + "da.hora_entrada_teorica,"
+                + "da.hora_salida_teorica,"
+                + "da.hora_entrada,"
+                + "da.hora_salida,"
+                + "coalesce(da.hrs_presenciales,'00:00') hrs_presenciales,"
+                + "coalesce(da.hhmm_extras_autorizadas,'00:00') hhmm_extras_autorizadas,"
+                + "coalesce(da.observacion,'') observacion "
+            + "from detalle_asistencia da "
+            + "	inner join view_empleado ve "
+                + "on (da.empresa_id =ve.empresa_id and da.rut_empleado = ve.rut) "
+            + "where da.fecha_marca_entrada between '" + _startDate + "' and '" + _endDate + "' "
+                + "and da.rut_empleado in (" + cadenaRuts + ") "
+            + "order by "
+                + "da.fecha_marca_entrada desc";
+       
+        try {
+           dbConn = dbLocator.getConnection(m_dbpoolName,
+                "[DetalleAsistenciaDAO.getDetalleAsistencia]");
+           PreparedStatement stmt = dbConn.prepareStatement(sql);
+           try {
+              ResultSet rs = stmt.executeQuery();
+              String rutEmpleado = "";
+              String empresaId  = "";
+              String fecha      = "";
+              String rowKey     = "";
+              try {
+                // do whatever it is you want to do
+                while (rs.next()){
+                    data = new DetalleAsistenciaVO();
+                    rowKey = empresaId + "|" + rutEmpleado + "|" + fecha;
+                    rutEmpleado = rs.getString("rut_empleado");
+                    empresaId = rs.getString("empresa_id");
+                    fecha = rs.getString("fecha_marca_entrada");
+                    
+                    data.setEmpresaId(empresaId);
+                    data.setRut(rutEmpleado);
+                    data.setNombreEmpleado(rs.getString("nombre"));
+                    data.setFechaEntradaMarca(fecha);
+                    data.setCencoNombre(rs.getString("ccosto_nombre"));
+                    data.setHoraEntradaTeorica(rs.getString("hora_entrada_teorica"));
+                    data.setHoraSalidaTeorica(rs.getString("hora_salida_teorica"));
+                    data.setHoraEntrada(rs.getString("hora_entrada"));
+                    data.setHoraSalida(rs.getString("hora_salida"));
+                    data.setHrsPresenciales(rs.getString("hrs_presenciales"));
+                    data.setHorasMinsExtrasAutorizadas(rs.getString("hhmm_extras_autorizadas"));
+                    data.setObservacion(rs.getString("observacion"),"DetalleAsistenciaDAO.getDetalleAsistencia");
+                    
+                    data.setRowKey(rowKey);
+                    detalles.add(data);
+                } 
+              } finally {
+                 rs.close();
+              }
+           } finally {
+              stmt.close();
+           }
+        }catch(SQLException|DatabaseException sqlex){
+            System.err.println("[DetalleAsistenciaDAO]getDetalleAsistencia error: "+sqlex.toString());
+        } 
+        finally {
+            try {
+                dbConn.close();
+            } catch (SQLException ex) {
+                System.err.println("DetalleAsistenciaDAO.getDetalleAsistencia "
+                    + "Error: " + ex.toString());
+            }
+        }
+        
+        return detalles;
     }
     
     /**

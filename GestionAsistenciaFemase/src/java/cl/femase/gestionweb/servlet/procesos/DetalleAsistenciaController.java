@@ -13,6 +13,7 @@ import cl.femase.gestionweb.business.TurnosBp;
 import cl.femase.gestionweb.common.Utilidades;
 import cl.femase.gestionweb.dao.ProcesosDAO;
 import cl.femase.gestionweb.vo.DetalleAsistenciaVO;
+import cl.femase.gestionweb.vo.EmpleadoConDetallesAsistenciaVO;
 import cl.femase.gestionweb.vo.EmpleadoVO;
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
 import cl.femase.gestionweb.vo.ResultCRUDVO;
@@ -33,15 +34,15 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpSession;
+import java.util.Map;
+import java.util.stream.Collectors;
 import org.apache.log4j.Logger;
 
 public class DetalleAsistenciaController extends BaseServlet {
@@ -82,6 +83,8 @@ public class DetalleAsistenciaController extends BaseServlet {
         if (session!=null) session.removeAttribute("mensaje");else session = request.getSession();
         UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
 
+        System.out.println(WEB_NAME+"[DetalleAsistenciaController.doPost]"
+            + "Entrando...");
         if (userConnected != null){
             setResponseHeaders(response);processRequest(request, response);
         }else{
@@ -103,7 +106,7 @@ public class DetalleAsistenciaController extends BaseServlet {
         
         TurnosBp turnosBp = new TurnosBp(appProperties);
         DetalleTurnosBp detalleTurnoBp = new DetalleTurnosBp(appProperties);
-        DetalleAsistenciaBp detalleAsistenciaBp = new DetalleAsistenciaBp(appProperties);
+        DetalleAsistenciaBp detalleAsistenciaBp = new DetalleAsistenciaBp(appProperties,userConnected);
         CalendarioFeriadoBp feriadosBp = new CalendarioFeriadoBp(appProperties);
         TiempoExtraBp tiempoExtraBp = new TiempoExtraBp(appProperties);
         EmpleadosBp empleadosBp = new EmpleadosBp(appProperties);
@@ -118,10 +121,12 @@ public class DetalleAsistenciaController extends BaseServlet {
         resultado.setUserIP(request.getRemoteAddr());
         resultado.setType("DTA");
         resultado.setEmpresaIdSource(userConnected.getEmpresaId());
-            
+        
+        System.out.println(WEB_NAME+"[DetalleAsistenciaController]"
+            + "action is: " + request.getParameter("action"));
+        
         if (request.getParameter("action") != null){
-            System.out.println(WEB_NAME+"[DetalleAsistenciaController]"
-                + "action is: " + request.getParameter("action"));
+            
             
             Gson gson = new Gson();
             response.setContentType("application/json");
@@ -194,7 +199,7 @@ public class DetalleAsistenciaController extends BaseServlet {
 
           if (request.getParameter("action").compareTo("calcular") == 0){
               ResultCRUDVO resultadoCalculo = new ResultCRUDVO();
-              CalculoAsistenciaBp calculoBp=new CalculoAsistenciaBp(appProperties);
+              CalculoAsistenciaBp calculoBp=new CalculoAsistenciaBp(appProperties, userConnected);
               if (filtroEmpresa.compareTo("-1") != 0 
                         && filtroDepto.compareTo("-1") != 0
                         && filtroCenco != -1){
@@ -217,23 +222,40 @@ public class DetalleAsistenciaController extends BaseServlet {
                     //set lista de empleados seleccionados como lista de string
                     ArrayList<String> listaStrEmpleados=new ArrayList<>();
                     try {
-                        Enumeration<String> parameterNames = request.getParameterNames();
-                        while (parameterNames.hasMoreElements()) {
-                            String paramName = parameterNames.nextElement();
-                            if (paramName.compareTo("rut[]") == 0){
-                                String[] paramValues = request.getParameterValues(paramName);
-                                listaStrEmpleados.addAll(Arrays.asList(paramValues));
+                        
+                        String[] rutsSeleccionados = request.getParameterValues("rut");
+                        if (rutsSeleccionados != null) {
+                            for (String rut : rutsSeleccionados) {
+                                System.out.println("Rut seleccionado: " + rut);
                                 System.out.println(WEB_NAME+"[GestionFemase."
                                     + "DetalleAsistenciaController]"
-                                    + "Calcular asistencia para los empleados seleccionados");
-                                for (String aux: listaStrEmpleados) {
-                                    System.out.println(WEB_NAME+"[GestionFemase."
-                                        + "DetalleAsistenciaController]"
-                                        + "rut seleccionado: "+aux);
-                                }
-
+                                    + "Rut seleccionado: " + rut);
+                                listaStrEmpleados.add(rut);
                             }
+                        } else {
+                            System.out.println(WEB_NAME+"[GestionFemase."
+                                + "DetalleAsistenciaController]"
+                                + "No se seleccionó ningún rut....");
                         }
+                        
+//                        Enumeration<String> parameterNames = request.getParameterNames();
+//                        while (parameterNames.hasMoreElements()) {
+//                            String paramName = parameterNames.nextElement();
+//                            if (paramName.compareTo("rut[]") == 0){
+//                                String[] paramValues = request.getParameterValues(paramName);
+//                                listaStrEmpleados.addAll(Arrays.asList(paramValues));
+//                                System.out.println(WEB_NAME+"[GestionFemase."
+//                                    + "DetalleAsistenciaController]"
+//                                    + "Calcular asistencia para los empleados seleccionados");
+//                                for (String aux: listaStrEmpleados) {
+//                                    System.out.println(WEB_NAME+"[GestionFemase."
+//                                        + "DetalleAsistenciaController]"
+//                                        + "rut seleccionado: "+aux);
+//                                }
+//
+//                            }
+//                        }
+                        
                         if (listaStrEmpleados.contains("todos")){
                             listaStrEmpleados = new ArrayList<>();
                             System.out.println(WEB_NAME+"[GestionFemase."
@@ -248,7 +270,10 @@ public class DetalleAsistenciaController extends BaseServlet {
                             }
                         }
 
-                        } catch (Exception e) { e.printStackTrace(); }
+                    } catch (Exception e) { 
+                        e.printStackTrace(); 
+                    }
+                    
                     empleados = empleadosBp.getListaEmpleadosComplete(filtroEmpresa, 
                         filtroDepto, 
                         filtroCenco, 
@@ -302,31 +327,64 @@ public class DetalleAsistenciaController extends BaseServlet {
                     daoProcesos.insertItinerario(ejecucion);
                      
                     if (!resultadoCalculo.isThereError()){
-                        //mostrar header de calculos: ruts empleados
-                        try{
-                            //Get Total Record Count for Pagination
-                            int objectsCount = empleados.size();
-                            System.out.println(WEB_NAME+"[GestionFemase."
-                                + "DetalleAsistenciaController]"
-                                + "Calcular asistencia. Size empleados: "+objectsCount);
-                            //Convert Java Object to Json
-                            JsonElement element = gson.toJsonTree(empleados,
-                                new TypeToken<List<EmpleadoVO>>() {}.getType());
+                        
+                        ArrayList<DetalleAsistenciaVO> detalle = 
+                            detalleAsistenciaBp.getDetalleAsistencia(empleados, startDate, endDate);
+                        
+                        request.setAttribute("detalle_asistencia_resumen", detalle);
+                        
+                        Map<String, List<DetalleAsistenciaVO>> agrupado = detalle.stream()
+                            .collect(Collectors.groupingBy(DetalleAsistenciaVO::getRut));
+                        List<EmpleadoConDetallesAsistenciaVO> empleadosDetalles = new ArrayList<>();
 
-                            JsonArray jsonArray = element.getAsJsonArray();
-                            String listData=jsonArray.toString();
-                            //Return Json in the format required by jTable plugin
-                            listData="{\"Result\":\"OK\",\"Records\":" + 
-                                listData+",\"TotalRecordCount\": " + 
-                                objectsCount + "}";
-                            //System.out.println(WEB_NAME+"[CalHrasTrabajadasController]json data: "+listData);
-                            response.getWriter().print(listData);
-                                //request.getRequestDispatcher("/mantenedores/mantenedoresFrmSet.jsp").forward(request, response);
-                        }catch(IOException ex){
-                            String error="{\"Result\":\"ERROR\",\"Message\":"+ex.getMessage()+"}";
-                            response.getWriter().print(error);
-                            ex.printStackTrace();
-                        }   
+                        for (Map.Entry<String, List<DetalleAsistenciaVO>> entry : agrupado.entrySet()) {
+                            String rut = entry.getKey();
+                            List<DetalleAsistenciaVO> detalles = entry.getValue();
+
+                            // Obtenemos los datos generales desde el primer detalle
+                            String nombre = detalles.get(0).getNombreEmpleado();
+                            String centro = detalles.get(0).getCencoNombre();
+
+                            EmpleadoConDetallesAsistenciaVO emp = new EmpleadoConDetallesAsistenciaVO();
+                            emp.setRut(rut);
+                            emp.setNombre(nombre);
+                            emp.setCencoNombre(centro);
+                            emp.setDetalles(detalles);
+
+                            empleadosDetalles.add(emp);
+                        }
+                        
+                        
+                        request.setAttribute("empleados_detalle_asistencia", empleadosDetalles);
+                        
+                        
+                        request.getRequestDispatcher("/procesos/calculo_asistencia_new.jsp").forward(request, response);
+                        
+//                        //mostrar header de calculos: ruts empleados
+//                        try{
+//                            //Get Total Record Count for Pagination
+//                            int objectsCount = empleados.size();
+//                            System.out.println(WEB_NAME+"[GestionFemase."
+//                                + "DetalleAsistenciaController]"
+//                                + "Calcular asistencia. Size empleados: "+objectsCount);
+//                            //Convert Java Object to Json
+//                            JsonElement element = gson.toJsonTree(empleados,
+//                                new TypeToken<List<EmpleadoVO>>() {}.getType());
+//
+//                            JsonArray jsonArray = element.getAsJsonArray();
+//                            String listData=jsonArray.toString();
+//                            //Return Json in the format required by jTable plugin
+//                            listData="{\"Result\":\"OK\",\"Records\":" + 
+//                                listData+",\"TotalRecordCount\": " + 
+//                                objectsCount + "}";
+//                            //System.out.println(WEB_NAME+"[CalHrasTrabajadasController]json data: "+listData);
+//                            response.getWriter().print(listData);
+//                                //request.getRequestDispatcher("/mantenedores/mantenedoresFrmSet.jsp").forward(request, response);
+//                        }catch(IOException ex){
+//                            String error="{\"Result\":\"ERROR\",\"Message\":"+ex.getMessage()+"}";
+//                            response.getWriter().print(error);
+//                            ex.printStackTrace();
+//                        }   
                     }else{
                         //mostrar error en vista jsp
                         System.err.println("[DetalleAsistenciaController"

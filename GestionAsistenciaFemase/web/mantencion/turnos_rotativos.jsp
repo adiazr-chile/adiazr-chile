@@ -158,14 +158,14 @@
                     width: '10%',
                     edit:true,
                     create:true,
-                    sorting: false
+                    sorting: true
                 },
                 horaSalida:{
                     title: 'Hora Salida',
                     width: '10%',
                     edit:true,
                     create:true,
-                    sorting: false
+                    sorting: true
                 },
                 holgura:{
                     title: 'Holgura(mins)',

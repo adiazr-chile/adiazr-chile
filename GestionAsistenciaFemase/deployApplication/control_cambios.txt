@@ -4012,14 +4012,174 @@
 						.- En todos los reportes se deshabilita la opción 'todos' para el filtro Empleado/trabajador
 						.- También: Deshabilitar el filtro 'Turno', reemplazado en combo por un campo oculto con el valor 'cualquiera':
 					
-					
-					
+					Versión 5.1.01 corre con wildfly 16.
 					
 				***************************************************************************
-				************** Versión 5.1.01 parcial. en Produccion desde el 11-05-2025. 
+				************** Versión 5.1.02 (corre con wildfly 36) en Produccion desde el 29-06-2025. 
+				***************************************************************************
+			
+			5.1.03	11-08-2025
+				.- Autorización de horas extras cuando el empleado asiste a trabajar (registra marcas) un día en que no tiene turno asignado.
+				Pasos para replicar y hacer QA:
+					.- Se ingresan las marcas para un día donde el trabajador NO tiene turno asignado.
+					.- Se calcula asistencia para rango de fechas. 
+					.- Se aprueban las hrs extras en base a las horas presenciales registradas.
+					.- Se genera reporte de asistencia semanal.
+						
+					Cambio en base de datos:	
+					.- Se aumenta el largo de la columna notificacion.mail_body:
+						ALTER TABLE admingestionweb.notificacion ALTER COLUMN mail_body TYPE varchar(2000) USING mail_body::varchar(2000);
+				
+				***************************************************************************
+				************** Versión 5.1.03 en Produccion desde el 12-08-2025. 
 				***************************************************************************
 				
-		
+			5.1.04	28-08-2025	
+				.- Mejora a la Interfaz gráfica del módulo de generación de reportes para perfil Fiscalizador.
+				
+				***************************************************************************
+				************** Versión 5.1.04 en Produccion desde el 28-08-2025. 
+				***************************************************************************
+			
+			5.1.05	30-08-2025	
+				.- Correccion a formato fecha en página de generación de reportes para el Fiscalizador.
+			
+				***************************************************************************
+				************** Versión 5.1.05 en Produccion desde el 31-08-2025. 
+				***************************************************************************
+			
+			5.1.06	06-09-2025
+				.- Nuevo Módulo Dashboard.
+					Como SuperAdmin, módulo Configuración Sistema - Admin Accesos. Crear nuevo acceso:
+						Nombre: dashboard	
+						Label: Dashboard
+						Url: AdminDashboardServlet
+					
+					Luego asignar este nuevo acceso al Perfil de usuario 'Super Admin', 'Administrador' y 'Director'. 
+					Esto se hace con un usuario Super Admin --> Usuarios --> Adm Accesos Perfil.--> Perfil Super Admin --> Módulo Sistema = Auditoria.
+			
+					En esta primera entrega: El Dashboard muestra: Usuarios conectados y ausencias de la empresa asociada al usuario.
+					Los usuarios con perfil Superadmin, ven todas las empresas.
+					
+					En la sgte versión: el dashboard debe mostrar: empleados con atraso y empleados sin marcas.
+			
+				***************************************************************************
+				************** Versión 5.1.06 en Produccion desde el 19-09-2025. 
+				***************************************************************************	
+			
+			5.1.09	05-10-2025
+				.- Módulo Dashboard: Quitar este acceso al perfil de usuario "Superadmin".
+				.- Se actualiza y recrea la tabla 'alertas_sistema'.
+				.- Reporte PA: Se agrega parámetro 'semestre'. Se modifica el Sql para que filtre por el semestre correspondiente
+				  al permiso administrativo existente en la tabla 'detalle_ausencia'.
+				   Archivo modificado: 'permisos_administrativos.jasper'
+				
+				***************************************************************************
+				************** Versión 5.1.09 en Produccion desde el 08-10-2025. 
+				***************************************************************************	
+				
+			5.1.10	11-10-2025	
+				.- Módulo Dashboard: Se agrega tabla para ver los empleados con turno rotativo y que no tienen turno asignado para la fecha actual.
+				
+			***************************************************************************
+			************** Versión 5.1.10 en Produccion desde el 11-10-2025. 
+			***************************************************************************
+			
+			5.1.11	13-10-2025	
+				.- Autenticación de usuario: se usa Prepared Statement para proteger el login de usuario del uso de Sql Inyection.
+				
+			***************************************************************************
+			************** Versión 5.1.11 en Produccion desde el 13-10-2025 22:55 hrs. 
+			***************************************************************************	
+			
+			5.1.12	13-10-2025	
+				
+				.- 20251022-01: Admin Marcas: Mejorar selección de fila para eliminar. 
+					La fila seleccionada al eliminar se muestra en fondo rojo.
+				
+				.- Administración de PA (ausencias): Se agrega filtro 'Año' y 'Semestre', para facilitar las búsquedas. Opciones: 1o, 2o, Ambos
+				
+			
+			***************************************************************************
+			************** Versión 5.1.12 en Produccion desde el 23-10-2025 23:04 hrs. 
+			***************************************************************************	
+			
+			5.1.13	24-10-2025	
+				.- 20251024-01: Cálculo de asistencia: No se deben eliminar las Horas extras ya aprobadas.
+					Acción a realizar: Al inicio del cálculo de asistencia, se deben rescatar los datos existentes respecto a horas extras autorizadas existentes en la tabla 'detalle_asistencia':
+						hhmm_extras
+						autoriza_hrsextras
+						hhmm_extras_autorizadas
+						Al final del cálculo de asistencia, se deben setear estas columnas con los correspondientes valores en memoria.
+			
+			
+			***************************************************************************
+			************** Versión 5.1.13 en Produccion desde el 25-10-2025 18:28 hrs. 
+			*******************4*******************************************************	
+			5.1.14	24-10-2025
+				.- Cambio en página para calcular asistencia.
+			
+			***************************************************************************
+			************** Versión 5.1.14 en Produccion desde el 27-10-2025 23:17 hrs. 
+			***************************************************************************
+			5.1.15	28-10-2025
+				.- 20251021-02: Solicitar Permiso administrativo: 
+						Si los días solicitados superan los dias  disponibles: Impedir que se realice la solicitud de PA.
+				
+				.- 20251021-01: Solicitar vacaciones: Si los días solicitados superan los dias  disponibles: 
+						Impedir que se realice la solicitud de vacaciones.
+					
+						Insertar nuevo parámetro desde Admin Parámetros:
+						ID= FLG_VAC_SALDO
+						Label= Flag que indica si se debe validar saldo al solicitar vacaciones
+						Value= 1
+				
+
+			***************************************************************************
+			************** Versión 5.1.15 en Produccion desde el 30-10-2025 23:25 hrs. 
+			***************************************************************************
+			5.1.16	01-11-2025
+				.- 20251101-01: Página para calcular asistencia. Mejoras
+					- Agregar spinner de procesando
+					- En la tabla de resultados, agrupar por empleado.
+									
+			***************************************************************************
+			************** Versión 5.1.15 en Produccion desde el 02-11-2025 
+			***************************************************************************
+			5.1.17	08-11-2025
+				.- 20251107-01: No se genera reporte de Aistencia.
+					Detalle de ausencia por hora no tiene hora de inicio definida.
+					Esto arroja error durante el cálculo de asistencia---> no hay datos para el reporte de asistencia.
+					
+					Ejecutar Sql: 
+						ALTER TABLE admingestionweb.log_error ALTER COLUMN label_error TYPE varchar(200) USING label_error::varchar(200);
+			
+				.- Control de error al calcular asistencia. (relacionado con 20251107-01: No se genera reporte de Aistencia)
+				.- Nuevo Perfil de usuario "Controil Interno". Se modifica Admin marcas para que permita editar y eliminar marcas sin restricción.
+				.- Mejora Interfaz de usuario en página Inicio de sesión del Sistema.
+				.- Ingreso de Solicitud de Permiso Administrativo: Agregar notificación.
+					Si hay una solicitud previa para el día solicitado: El sistema señalará, que ya cuenta con una solicitud en curso 
+					y esta a la espera de la aprobación.
+					De igual modo para las solicitudes de media jornada. (AM-PM)
+			
+			***************************************************************************
+			************** Versión 5.1.17 en Produccion desde el 29-11-2025 
+			***************************************************************************
+			5.1.18	29-11-2025
+				.- 20251128-01: Asistencia Horas Extras. Modificar interfaz gráfica.
+					Usando el usuario superadmin: 
+						Crear nuevo acceso "Autorizar horas extras".
+						url: /mantencion/admin_horas_extras.jsp
+						Asignar este nuevo acceso a los perfiles: Administrador, Director TR y Control Interno.
+					
+					Este nuevo acceso reemplaza al acceso "Asistencia - Horas Extras". En caso de vuelta atrás, volver a asignar este acceso.
+			
+			
+			
+			
+			
+			
+			
 			
 			
 			5.1.1 29-10-2024

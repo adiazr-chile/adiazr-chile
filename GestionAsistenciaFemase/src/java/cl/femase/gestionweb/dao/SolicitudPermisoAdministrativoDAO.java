@@ -18,6 +18,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
 import org.apache.log4j.Logger;
 
 /**
@@ -172,6 +173,72 @@ public class SolicitudPermisoAdministrativoDAO extends BaseDAO{
         
         return lista;
     }
+    
+    /**
+    * 
+    * @param usernameSolicita
+    * @param empresaId
+    * @param anio
+    * @param semestre
+    * @return 
+    * 
+    * @throws java.sql.SQLException 
+    */
+    public List<SolicitudPermisoAdministrativoVO> getSolicitudesPendientes(
+        String usernameSolicita,
+        String empresaId,
+        int semestre) throws SQLException {
+
+        List<SolicitudPermisoAdministrativoVO> resultado = new ArrayList<>();
+        String sql = "select spa.solic_id, " +
+            "spa.solic_inicio, " +
+            "spa.solic_fin, " +
+            "to_char(spa.solic_fec_ingreso, 'YYYY-MM-DD HH24:MI:SS') AS fec_ingreso, " +
+            "spa.anio, " +
+            "spa.semestre " +
+            "from solicitud_permiso_administrativo spa " +
+            "where spa.username_solicita = ? " +
+            "  and spa.empresa_id = ? " +
+            "  and spa.status_id = '" + Constantes.ESTADO_SOLICITUD_PENDIENTE + "' " +
+            "  and spa.anio =EXTRACT(YEAR FROM CURRENT_DATE) " +
+            "  and spa.semestre = ? "
+            + " and spa.solic_fec_ingreso::date = current_date";
+
+        try {
+            dbConn = dbLocator.getConnection(m_dbpoolName,
+                "[SolicitudPermisoAdministrativoDAO.getSolicitudesPendientes]");
+
+            try (PreparedStatement ps = dbConn.prepareStatement(sql)) {
+                ps.setString(1, usernameSolicita);
+                ps.setString(2, empresaId);
+                ps.setInt(3, semestre);
+
+                try (ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        SolicitudPermisoAdministrativoVO vo = new SolicitudPermisoAdministrativoVO();
+                        vo.setId(rs.getInt("solic_id"));
+                        vo.setFechaInicioPA(rs.getString("solic_inicio"));
+                        vo.setFechaFinPA(rs.getString("solic_fin"));
+                        vo.setFechaIngreso(rs.getString("fec_ingreso"));
+                        vo.setAnio(rs.getInt("anio"));
+                        vo.setSemestre(rs.getInt("semestre"));
+                        
+                        resultado.add(vo);
+                    }
+                }
+            }
+        } catch (DatabaseException ex) {
+            java.util.logging.Logger.getLogger(SolicitudPermisoAdministrativoDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            if (dbConn != null) {
+                dbLocator.freeConnection(dbConn);
+            }
+        }
+
+        return resultado;
+    }
+
+
     
     /**
     * Retorna lista con solicitudes de permiso administrativo pendientes para aprobar/rechazar

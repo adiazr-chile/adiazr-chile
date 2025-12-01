@@ -86,6 +86,27 @@ public class Utilidades {
     
     /**
     * 
+    * @param anio
+    * @param semestre
+    * @return 
+    */
+    public static Map<String, LocalDate> obtenerFechasSemestre(int anio, int semestre) {
+        Map<String, LocalDate> fechas = new HashMap<>();
+        if (semestre == 1) {
+            fechas.put("inicio", LocalDate.of(anio, 1, 1));
+            fechas.put("fin", LocalDate.of(anio, 6, 30));
+        } else if (semestre == 2) {
+            fechas.put("inicio", LocalDate.of(anio, 7, 1));
+            fechas.put("fin", LocalDate.of(anio, 12, 31));
+        } else {
+            throw new IllegalArgumentException("El semestre debe ser 1 o 2");
+        }
+        return fechas;
+    }
+    
+    
+    /**
+    * 
     * @return 
     */
     public static Map<String, String> getPeriodosFuturos() {

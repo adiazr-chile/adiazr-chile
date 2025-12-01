@@ -38,7 +38,7 @@
 	</target>
 
 	<target name="configProd" depends="set" description="Modifica el archivo de properties">
-		<echo message="------------------- INICIO CONFIGURACION WAR PRODUCCION ----------------" />
+		<echo message="------------------- INICIO CONFIGURACION WAR PRODUCCION. App version ${version} ----------------" />
 		<!-- *************************** -->
 		<!-- CONFIGURACION log4j.xml -->
 		<!-- *************************** -->
@@ -91,7 +91,7 @@
 		<replace file="gestionfemase.temp" token="_TXT_PA" value="${txtAprobarSolicPA}" />
 		<replace file="gestionfemase.temp" token="_CHECKINTERVAL" value="${SystemAlertCheckInterval}" />
 		<replace file="gestionfemase.temp" token="_DOMINIO_DT_MAILSERVER" value="${DTmailServerDomain}" />
-		                                                                           
+										
 		<echo message="-------------------_DOMINIO_DT_MAILSERVER: ${DTmailServerDomain} ----------------" />		
 			
 		<echo message="Version del Sistema: ${version}, anio de lanzamiento: ${launchYear}" />
@@ -125,7 +125,7 @@
 	</target>
 	
 	<target name="configDummy" depends="set" description="Modifica el archivo de properties">
-		<echo message="------------------- INICIO CONFIGURACION WAR DUMMY ----------------" />
+		<echo message="------------------- INICIO CONFIGURACION WAR DUMMY. App version ${version}  ----------------" />
 		<!-- *************************** -->
 		<!-- CONFIGURACION log4j.xml -->
 		<!-- *************************** -->
@@ -178,7 +178,7 @@
 		<replace file="gestionfemase.temp" token="_TXT_PA" value="${txtAprobarSolicPA}" />
 		<replace file="gestionfemase.temp" token="_CHECKINTERVAL" value="${SystemAlertCheckInterval}" />
 		<replace file="gestionfemase.temp" token="_DOMINIO_DT_MAILSERVER" value="${DTmailServerDomain}" />
-		                                                                           
+	    
 		<echo message="-------------------_DOMINIO_DT_MAILSERVER: ${DTmailServerDomain} ----------------" />		
 		
 		<echo message="Version del Sistema: ${version}, anio de lanzamiento: ${launchYear}" />
@@ -212,7 +212,7 @@
 	<!-- INSTALAR WAR PRODUCCION -->
 	<!-- ************************************* -->
 	<target name="deployProd" depends="set" description="Copia War Prod a Wildfly-deployments">
-		<echo message="-------------- Instalando WAR de produccion y archivos utilizados --------------" />
+		<echo message="-------------- Instalando WAR de produccion y archivos utilizados. App version ${version}  --------------" />
 		<mkdir dir="${installPath}/images" />
 		<mkdir dir="${installPath}/log" />
 		<mkdir dir="${installPath}/output" />
@@ -239,7 +239,7 @@
 	<!-- INSTALAR WAR DUMMY -->
 	<!-- ************************************* -->
 	<target name="deployDummy" depends="set" description="Copia War Dummy a Wildfly-deployments">
-		<echo message="-------------- Instalando WAR Dummy y archivos utilizados --------------" />
+		<echo message="-------------- Instalando WAR Dummy y archivos utilizados. App version ${version}  --------------" />
 		<mkdir dir="${installPath}/images" />
 		<mkdir dir="${installPath}/log" />
 		<mkdir dir="${installPath}/output" />

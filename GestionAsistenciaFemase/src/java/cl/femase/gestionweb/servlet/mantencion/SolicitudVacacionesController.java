@@ -10,6 +10,7 @@ import cl.femase.gestionweb.business.VacacionesBp;
 import cl.femase.gestionweb.common.ClientInfo;
 import cl.femase.gestionweb.common.Constantes;
 import cl.femase.gestionweb.common.Utilidades;
+import cl.femase.gestionweb.dao.ParametroDAO;
 import cl.femase.gestionweb.vo.DestinatarioSolicitudVO;
 import cl.femase.gestionweb.vo.DetalleAusenciaVO;
 import cl.femase.gestionweb.vo.DiasEfectivosVacacionesVO;
@@ -19,6 +20,7 @@ import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.MensajeUsuarioVO;
 import cl.femase.gestionweb.vo.NotificacionSolicitudVacacionesVO;
 import cl.femase.gestionweb.vo.NotificacionVO;
+import cl.femase.gestionweb.vo.ParametroVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import cl.femase.gestionweb.vo.UsuarioVO;
 import cl.femase.gestionweb.vo.SolicitudVacacionesVO;
@@ -449,6 +451,24 @@ public class SolicitudVacacionesController extends BaseServlet {
                     mensajes.add(new MensajeUsuarioVO("Saldo VP Pre Vacaciones", "" + objDE.getSaldoVPPreVacaciones()));
                     mensajes.add(new MensajeUsuarioVO("Saldo VBA Post Vacaciones", "" + objDE.getSaldoVBAPostVacaciones()));
                     mensajes.add(new MensajeUsuarioVO("Saldo VP Post Vacaciones", "" + objDE.getSaldoVPPostVacaciones()));
+                    
+                    request.setAttribute("seguir", true);
+                    ParametroDAO daoParams = new cl.femase.gestionweb.dao.ParametroDAO(appProperties);
+                    ParametroVO parametroSistema =
+                        daoParams.getParametroByKey(userConnected.getEmpresaId(), 
+                            Constantes.FLG_VAC_SALDO);
+                    
+                    if (parametroSistema.getValor() == 1){
+                        System.out.println(WEB_NAME+"[SolicitudVacacionesController]"
+                            + "Parametro de Sistema: Indica que se debe validar saldo de vacaciones disponible.");
+                        if (objDE.getSaldoVBAPreVacaciones()<diasEfectivosSolicitados){
+                            request.setAttribute("seguir", false);
+                            request.setAttribute("errorMessage", "Dias solicitados superan los dias disponibles.");
+                        }
+                    }else{
+                        System.out.println(WEB_NAME+"[SolicitudVacacionesController]"
+                            + "Parametro de Sistema: No validar saldo de vacaciones.");
+                    }
                     
                     //mensajes.add(new MensajeUsuarioVO("Saldo post vacaciones", "" + saldoPostVacaciones));
                     mensajes.add(new MensajeUsuarioVO("Destinatario(s)", strDestinatarios));

@@ -21,6 +21,8 @@ public class DetalleAusenciaVO implements Serializable{
     private String empresaId;
     private String empresaNombre;
     private String nombreEmpleado;
+    private int cencoIdEmpleado;
+    private String cencoNombreEmpleado;
     private String cencoNombre;
     private String deptoNombre;
     private Date fechaIngreso;
@@ -84,10 +86,50 @@ public class DetalleAusenciaVO implements Serializable{
     //Saldo de dias administrativos post permiso examen salud preventiva
     private int saldoPostPESP;
     
+    private String nombreCargoEmpleado;
+    private String nombreCargoAutorizador;
+   
     public DetalleAusenciaVO() {
         
+    
     }
 
+    public int getCencoIdEmpleado() {
+        return cencoIdEmpleado;
+    }
+
+    public void setCencoIdEmpleado(int cencoIdEmpleado) {
+        this.cencoIdEmpleado = cencoIdEmpleado;
+    }
+
+    public String getCencoNombreEmpleado() {
+        return cencoNombreEmpleado;
+    }
+
+    public void setCencoNombreEmpleado(String cencoNombreEmpleado) {
+        this.cencoNombreEmpleado = cencoNombreEmpleado;
+    }
+
+    
+    
+    public String getNombreCargoEmpleado() {
+        return nombreCargoEmpleado;
+    }
+
+    public void setNombreCargoEmpleado(String nombreCargoEmpleado) {
+        this.nombreCargoEmpleado = nombreCargoEmpleado;
+    }
+
+    public String getNombreCargoAutorizador() {
+        return nombreCargoAutorizador;
+    }
+
+    public void setNombreCargoAutorizador(String nombreCargoAutorizador) {
+        this.nombreCargoAutorizador = nombreCargoAutorizador;
+    }
+
+    
+    
     public int getSaldoPostPESP() {
         return saldoPostPESP;
     }

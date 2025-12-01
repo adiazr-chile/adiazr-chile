@@ -101,6 +101,7 @@ public class LoadParams extends BaseServlet {
         
         System.out.println(WEB_NAME+"[GestionFemase.LoadParams.init]Version del Sistema: " + appProperties.getVersion());
         
+        
 //        appProperties.setCalendarWSEndPoint(m_properties.getKeyValue("calendarWSEndPoint"));
         appProperties.setMailHost(m_properties.getKeyValue("mailHost"));
         appProperties.setMailPort(m_properties.getKeyValue("mailPort"));

@@ -43,6 +43,8 @@ import java.util.Locale;
 import java.util.StringTokenizer;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpSession;
+import java.time.LocalDate;
+import java.util.Map;
 import org.apache.log4j.Logger;
 
 public class DetalleAusenciaController extends BaseServlet {
@@ -346,12 +348,31 @@ public class DetalleAusenciaController extends BaseServlet {
                 int rowsCount =0;
                                 
                 try{
+                    if (source.compareTo("detalle_ausencias") == 0){}
+                    
+                    
                     if ( (paramEmpresa != null && paramEmpresa.compareTo("-1") != 0)
                         && (paramDepto != null && paramDepto.compareTo("-1") != 0
                             && (request.getParameter("paramRutEmpleado") != null && request.getParameter("paramRutEmpleado").compareTo("-1") != 0))
                         && (intCenco != -1) ){
                         
                             if (source != null && source.compareTo("adm_pa") == 0){
+                                String paramAnioStr = request.getParameter("paramAnio");
+                                int paramAnio = Integer.parseInt(paramAnioStr);
+                                String paramSemestreStr = request.getParameter("paramSemestre");
+                                int paramSemestre = Integer.parseInt(paramSemestreStr);
+                                //obtenerFechasSemestre(2025, 1)
+                                Map<String, LocalDate> semestre = Utilidades.obtenerFechasSemestre(paramAnio, paramSemestre);
+                                
+                                System.out.println("[DetalleAusenciaController.list]"
+                                    + "Buscar Permisos administrativos, rango de fechas segun anio/semestre:");
+                                
+                                System.out.println("[DetalleAusenciaController.list]Inicio semestre: " + semestre.get("inicio"));
+                                System.out.println("[DetalleAusenciaController.list]Fin semestre: " + semestre.get("fin"));
+                                
+                                fechaIngresoInicio = semestre.get("inicio").toString();
+                                fechaIngresoFin = semestre.get("fin").toString();
+                                
                                 listaObjetos = detAusenciaBp.getPermisosAdministrativos(source,
                                     rutEmpleado,
                                     rutAutorizador, 

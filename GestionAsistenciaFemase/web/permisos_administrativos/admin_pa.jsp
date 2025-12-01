@@ -1,3 +1,6 @@
+<%@page import="java.util.TreeMap"%>
+<%@page import="java.util.Comparator"%>
+<%@page import="cl.femase.gestionweb.common.Utilidades"%>
 <%@page import="cl.femase.gestionweb.common.Constantes"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="java.util.Locale"%>
@@ -32,13 +35,29 @@
     if (theUser.getIdPerfil() == Constantes.ID_PERFIL_FISCALIZADOR || theUser.getIdPerfil() == Constantes.ID_PERFIL_EMPLEADO){
         readOnly = true;
     }
+    
+    //Calendar mycal=Calendar.getInstance();
+    int anioActual = mycal.get(Calendar.YEAR);
+    LinkedHashMap<Integer,String> listaAnios = new LinkedHashMap<>();
+    listaAnios.put(anioActual-5, String.valueOf(anioActual-5));
+    listaAnios.put(anioActual-4, String.valueOf(anioActual-4));
+    listaAnios.put(anioActual-3, String.valueOf(anioActual-3));
+    listaAnios.put(anioActual-2, String.valueOf(anioActual-2));
+    listaAnios.put(anioActual-1, String.valueOf(anioActual-1));
+    listaAnios.put(anioActual, String.valueOf(anioActual));
+    
+    TreeMap<Integer, String> mapaDesc = new TreeMap<>(Comparator.reverseOrder());
+    mapaDesc.putAll(listaAnios);
+    
+    //Date currentDate = mycal.getTime();
+    int semestreActual = Utilidades.getSemestre(currentDate);
 %>
 
 <!DOCTYPE html>
 
 <html>
 <head>
-    <meta charset="utf-8" />
+    <meta charset="UTF-8" />
 
     <meta name="keywords" content="femase,gestion,web">
     <meta name="description" content="Sistema de Gestion FEMASE-RRHH-Control Asistencia">
@@ -77,6 +96,9 @@
     <script type="text/javascript">
         
         $(document).ready(function() {
+            $("select[name='paramSemestre']").val("<%=semestreActual%>");
+            $("select[name='paramAnio']").val("<%=anioActual%>");
+                
              //evento para combo centro costo
              $('#cencoId').change(function(event) {
                  var empresaSelected  = null;
@@ -232,6 +254,13 @@
         .jtable-input-readonly{
             background-color:lightgray;
         }
+        
+        #paramFechaIngresoInicio {
+            width: 80px;
+        }
+        #paramFechaIngresoFin {
+            width: 80px;
+        }
     </style>
 
 </head>
@@ -246,7 +275,7 @@
 <!-- paramRutEmpleado-->
     <form>
             <label>Centro Costo
-                <select name="cencoId" id="cencoId">
+                <select name="cencoId" id="cencoId" style="width: 200px;">
                     <option value="-1" selected>----------</option>
                     <%
                     String valueCenco="";
@@ -274,27 +303,42 @@
         <label>
             <input type="hidden" id="paramRutAutorizador" name="paramRutAutorizador" value="-1">
         </label>
-        <label>Fecha Inicio ausencia, desde:
-            <input name="paramFechaIngresoInicio" type="text" id="paramFechaIngresoInicio">
-            hasta <input name="paramFechaIngresoFin" type="text" id="paramFechaIngresoFin">
-        </label> 
-                    
-        </label>
-        <label>Tipo Ausencia:
-            <!--<input type="hidden" id="paramAusenciaId" name="paramAusenciaId" value="-1">-->
-            <select name="paramAusenciaId" id="paramAusenciaId">
-                <%
+            <input type="hidden" name="paramFechaIngresoInicio"  id="paramFechaIngresoInicio" value="">
+            <input type="hidden" name="paramFechaIngresoFin"  id="paramFechaIngresoFin" value="">
+        <label>
+            
+            <%
                     Iterator<AusenciaVO> itera3 = ausencias.iterator();
                     while(itera3.hasNext() ) {
                         AusenciaVO auxausencia = itera3.next();
                         if (auxausencia.getId() == Constantes.ID_AUSENCIA_PERMISO_ADMINISTRATIVO)
                         {%>
-                        <option value="<%=auxausencia.getId()%>" selected=""><%=auxausencia.getNombre()%></option>
+                        <input type="hidden" id="paramAusenciaId" name="paramAusenciaId" value="<%=auxausencia.getId()%>">
                         <%}
                     }
                 %>
-            </select>
+           
         </label>
+           <label>A&ntilde;o:
+                <select id="paramAnio" name="paramAnio" style="width:150px;" tabindex="2" required>
+                    <%
+                        for(Integer anioKey : listaAnios.keySet()) {
+                            String anioLabel = listaAnios.get(anioKey);
+                           %>
+                           <option value="<%=anioKey%>"><%=anioLabel%></option>
+                        <%}%>
+                </select>
+            </label>
+                        
+                    <label>Semestre:
+                        <select id="paramSemestre" name="paramSemestre" style="width:150px;" tabindex="2" required>
+                            <option value="1">Primer Semestre</option>
+                            <option value="2">Segundo Semestre</option>
+                        </select>
+                    </label> 
+                
+                
+                
         <button type="submit" id="LoadRecordsButton">Buscar</button>
         <!--<a href="<%=request.getContextPath()%>/jqueryform-detalle-ausencias/form_crear_detalle_ausencia.jsp">;nbsp;[Nuevo registro]</a>-->
         <%//if (!readOnly){%>
@@ -604,12 +648,12 @@
             $('#PATableContainer').jtable('load', {
                 paramRutEmpleado: $('#paramRutEmpleado').val(),
                 paramRutAutorizador: $('#paramRutAutorizador').val(),
-                paramFechaIngresoInicio: $('#paramFechaIngresoInicio').val(),
-                paramFechaIngresoFin: $('#paramFechaIngresoFin').val(),
                 paramAusenciaId: $('#paramAusenciaId').val(),
                 empresaId: $('#empresaId').val(),
                 deptoId: $('#deptoId').val(),
-                cencoId: $('#cencoId').val()
+                cencoId: $('#cencoId').val(),
+                paramAnio: $('#paramAnio').val(),
+                paramSemestre: $('#paramSemestre').val()
             });
         });
 
@@ -673,20 +717,7 @@
 <script type="text/javascript">
 
     $(function() {
-        $('#paramFechaIngresoInicio').datepick(
-            {
-                dateFormat: 'yyyy-mm-dd',
-                //minDate: -180,
-                directionReverse: true
-            }
-        );
-        $('#paramFechaIngresoFin').datepick(
-                {
-                    dateFormat: 'yyyy-mm-dd',
-                    //minDate: -180,
-                    directionReverse: true
-                }
-        );
+        
     });
 
 </script>

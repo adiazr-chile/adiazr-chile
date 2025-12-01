@@ -29,6 +29,7 @@ public class EmpleadoVO implements Serializable{
     private String codInternoCaracterAdicional;
     private String rutParam;
     private String nombres;
+    private String nombreYpaterno;
     private String apePaterno;
     private String apeMaterno;
     private Date fechaNacimiento;
@@ -112,6 +113,16 @@ public class EmpleadoVO implements Serializable{
     private Date nuevaFechaIniContrato;
     private String nuevaFechaIniContratoAsStr;
 
+    public String getNombreYpaterno() {
+        return nombreYpaterno;
+    }
+
+    public void setNombreYpaterno(String nombreYpaterno) {
+        this.nombreYpaterno = nombreYpaterno;
+    }
+
+    
+    
     public String getEmailPersonal() {
         return emailPersonal;
     }

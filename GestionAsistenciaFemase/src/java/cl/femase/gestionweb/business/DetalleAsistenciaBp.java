@@ -16,6 +16,7 @@ import cl.femase.gestionweb.vo.LogErrorVO;
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
 import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
+import cl.femase.gestionweb.vo.UsuarioVO;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -28,25 +29,55 @@ import org.json.JSONObject;
 */
 public class DetalleAsistenciaBp  extends BaseBp{
 
+    private static UsuarioVO usuarioEnSesion;
     public PropertiesVO props;
     /** para guardar los eventos de mantencion de informacion*/
     private final cl.femase.gestionweb.dao.MaintenanceEventsDAO eventsService;
-    private final cl.femase.gestionweb.dao.DetalleAsistenciaDAO calculoHorasService;
+    private final cl.femase.gestionweb.dao.DetalleAsistenciaDAO calculoAsistenciaDao;
     
-    public DetalleAsistenciaBp(PropertiesVO props) {
+    /**
+    * 
+     * @param props
+    */
+    public DetalleAsistenciaBp(PropertiesVO props, UsuarioVO _usuario) {
         this.props = props;
         eventsService = new cl.femase.gestionweb.dao.MaintenanceEventsDAO(this.props);
-        calculoHorasService = new cl.femase.gestionweb.dao.DetalleAsistenciaDAO(this.props);
+        calculoAsistenciaDao = new cl.femase.gestionweb.dao.DetalleAsistenciaDAO(this.props);
+        this.usuarioEnSesion = _usuario;
     }
 
+    /**
+    * 
+    * @param _rutEmpleado
+    * @param _startDate
+    * @param _endDate
+    * @return 
+    */
     public List<DetalleAsistenciaVO> getDetalles(String _rutEmpleado,
             String _startDate, String _endDate){
     
         List<DetalleAsistenciaVO> lista = 
-            calculoHorasService.getDetalles(_rutEmpleado, _startDate, _endDate);
+            calculoAsistenciaDao.getDetalles(_rutEmpleado, _startDate, _endDate);
 
         return lista;
     }
+    
+    /**
+    * Lista resumen con detalles de asistencia
+    * 
+     * @param _listaEmpleados
+     * @param _startDate
+     * @param _endDate
+     * @return 
+    */
+    public ArrayList<DetalleAsistenciaVO> getDetalleAsistencia(
+            List<EmpleadoVO> _listaEmpleados,
+            String _startDate, 
+            String _endDate){
+     
+        return calculoAsistenciaDao.getDetalleAsistencia(_listaEmpleados, _startDate, _endDate);
+    }
+    
     
     /**
     * 
@@ -61,21 +92,39 @@ public class DetalleAsistenciaBp  extends BaseBp{
             String _startDate, String _endDate, int _idTurno){
     
         LinkedHashMap<String,List<DetalleAsistenciaVO>> lista = 
-            calculoHorasService.getDetallesInforme(_listaEmpleados, 
+            calculoAsistenciaDao.getDetallesInforme(_listaEmpleados, 
                 _startDate, _endDate, _idTurno);
 
         return lista;
     }
     
+    /**
+    * 
+    * @param _rutEmpleado
+    * @param _startDate
+    * @param _endDate
+    * @return 
+    */
     public List<DetalleAsistenciaVO> getDetallesHist(String _rutEmpleado,
             String _startDate, String _endDate){
     
         List<DetalleAsistenciaVO> lista = 
-            calculoHorasService.getDetallesHist(_rutEmpleado, _startDate, _endDate);
+            calculoAsistenciaDao.getDetallesHist(_rutEmpleado, _startDate, _endDate);
 
         return lista;
     }
     
+    /**
+    * 
+    * @param _empresaId
+    * @param _deptoId
+    * @param _cencoId
+    * @param _rutEmpleado
+    * @param _jtStartIndex
+    * @param _jtPageSize
+    * @param _jtSorting
+    * @return 
+    */
     public List<CalculoHorasVO> getHeaders(String _empresaId,
             String _deptoId, int _cencoId,
             String _rutEmpleado,
@@ -84,7 +133,7 @@ public class DetalleAsistenciaBp  extends BaseBp{
             String _jtSorting){
         
         List<CalculoHorasVO> lista = 
-            calculoHorasService.getHeaders(_empresaId, _deptoId, _cencoId, _rutEmpleado, _jtStartIndex, _jtPageSize, _jtSorting);
+            calculoAsistenciaDao.getHeaders(_empresaId, _deptoId, _cencoId, _rutEmpleado, _jtStartIndex, _jtPageSize, _jtSorting);
 
         return lista;
     }
@@ -92,7 +141,7 @@ public class DetalleAsistenciaBp  extends BaseBp{
 //    public ResultCRUDVO delete(String _rutEmpleado,
 //            String _fechaMarca, 
 //            MaintenanceEventVO _eventdata){
-//        ResultCRUDVO deletedValues = calculoHorasService.delete(_rutEmpleado,_fechaMarca);
+//        ResultCRUDVO deletedValues = calculoAsistenciaDao.delete(_rutEmpleado,_fechaMarca);
 //        
 //        //if (!updValues.isThereError()){
 //            String msgFinal = deletedValues.getMsg();
@@ -105,6 +154,16 @@ public class DetalleAsistenciaBp  extends BaseBp{
 //        return deletedValues;
 //    }
     
+    /**
+    * 
+     * @param _rutEmpleado
+     * @param _fechaMarca
+     * @param _authAtraso
+     * @param _authHextras
+     * @param _hhmmExtrasAutorizadas
+     * @param _eventdata
+     * @return 
+    */
     public ResultCRUDVO update(String _rutEmpleado,
             String _fechaMarca,
             String _authAtraso,
@@ -112,7 +171,7 @@ public class DetalleAsistenciaBp  extends BaseBp{
             String _hhmmExtrasAutorizadas, 
             MaintenanceEventVO _eventdata){
         ResultCRUDVO updatedValues = 
-            calculoHorasService.update(_rutEmpleado,
+            calculoAsistenciaDao.update(_rutEmpleado,
                 _fechaMarca,
                 _authAtraso,
                 _authHextras,
@@ -135,7 +194,7 @@ public class DetalleAsistenciaBp  extends BaseBp{
     */
     public void saveList(ArrayList<DetalleAsistenciaToInsertVO> _entities){
         try {
-            calculoHorasService.saveList(_entities);
+            calculoAsistenciaDao.saveList(_entities);
         } catch (SQLException ex) {
             System.err.println("[DetalleAsistenciaBp]"
                 + "Error: " + ex.toString());
@@ -144,6 +203,7 @@ public class DetalleAsistenciaBp  extends BaseBp{
             JSONObject jsonObj = Utilidades.generateErrorMessage(clase, ex);
             LogErrorDAO logDao  = new LogErrorDAO();
             LogErrorVO log      = new LogErrorVO();
+            log.setUserName(usuarioEnSesion.getUsername());
             log.setModulo(Constantes.LOG_MODULO_ASISTENCIA);
             log.setEvento(Constantes.LOG_EVENTO_CONSULTA_ASISTENCIA);
             log.setLabel(exclabel);
@@ -154,9 +214,31 @@ public class DetalleAsistenciaBp  extends BaseBp{
         }
     }
     
+    /**
+    * 
+    * @param _rutEmpleado
+    * @param _fechaMarca
+    * @param _hhmmExtras
+    * @param _autorizaHrsExtras
+    * @param _hhmmExtrasAutorizadas
+    * @return 
+    */
+    public ResultCRUDVO updateDataHorasExtras(String _rutEmpleado,
+            String _fechaMarca,
+            String _hhmmExtras,
+            String _autorizaHrsExtras,
+            String _hhmmExtrasAutorizadas){
+    
+        ResultCRUDVO updatedValues = calculoAsistenciaDao.updateDataHorasExtras(_rutEmpleado, 
+            _fechaMarca, _hhmmExtras,
+            _autorizaHrsExtras, _hhmmExtrasAutorizadas);
+
+        return updatedValues;
+    }
+    
 //    public void setMarcasProcesadas(ArrayList<DetalleAsistenciaToInsertVO> _entities){
 //        try {
-//            calculoHorasService.setMarcasProcesadas(_entities); 
+//            calculoAsistenciaDao.setMarcasProcesadas(_entities); 
 //        } catch (SQLException ex) {
 //            System.err.println("[setMarcasProcesadas]Error al "
 //                + "setear marcas como procesadas: " 
@@ -165,23 +247,28 @@ public class DetalleAsistenciaBp  extends BaseBp{
 //    }
 
     /**
-     *
-     * @param _entities
-     */
-    
+    *
+    * @param _entities
+    */
     public void deleteList(ArrayList<DetalleAsistenciaToInsertVO> _entities){
         try {
-            calculoHorasService.deleteList(_entities);
+            calculoAsistenciaDao.deleteList(_entities);
         } catch (SQLException ex) {
             System.err.println("Error al eliminar "
                 + "detalles asistencia: "+ex.toString());
         }
     }
     
+    /**
+    * 
+    * @param _detalle
+    * @param _eventdata
+    * @return 
+    */
     public ResultCRUDVO insert(DetalleAsistenciaVO _detalle, 
             MaintenanceEventVO _eventdata){
         
-        ResultCRUDVO insValues = calculoHorasService.insert(_detalle);
+        ResultCRUDVO insValues = calculoAsistenciaDao.insert(_detalle);
         
         //if (!updValues.isThereError()){
             String msgFinal = insValues.getMsg();
@@ -195,28 +282,39 @@ public class DetalleAsistenciaBp  extends BaseBp{
     }
     
     /**
-     *
-     * @param _empresaId
-     * @param _deptoId
-     * @param _cencoId
-     * @return
-     */
+    *
+    * @param _empresaId
+    * @param _deptoId
+    * @param _cencoId
+    * @return
+    */
     public int getHeadersCount(String _empresaId,
             String _deptoId, int _cencoId){
-        return calculoHorasService.getHeadersCount(_empresaId, _deptoId, _cencoId, _empresaId);
+        return calculoAsistenciaDao.getHeadersCount(_empresaId, _deptoId, _cencoId, _empresaId);
     }
     
+    /**
+    * 
+    * @param _rutEmpleado
+    * @param _fechaMarca
+    * @return 
+    */
     public boolean existeCalculo(String _rutEmpleado,
-            String _fechaMarca){
-    
-        return calculoHorasService.existeCalculo(_rutEmpleado, _fechaMarca);
+        String _fechaMarca){
+      return calculoAsistenciaDao.existeCalculo(_rutEmpleado, _fechaMarca);
     }
 
+    /**
+    * 
+    */
     public void openDbConnection(){
-        calculoHorasService.openDbConnection();
+        calculoAsistenciaDao.openDbConnection();
     }
     
+    /**
+    * 
+    */
     public void closeDbConnection(){
-        calculoHorasService.closeDbConnection();
+        calculoAsistenciaDao.closeDbConnection();
     }
 }
