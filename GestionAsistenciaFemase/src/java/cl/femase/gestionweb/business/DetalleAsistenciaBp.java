@@ -100,6 +100,29 @@ public class DetalleAsistenciaBp  extends BaseBp{
     
     /**
     * 
+    * @param _empresaId
+    * @param _rutEmpleado
+    * @param _startDate
+    * @param _endDate
+    * 
+    * @return 
+    */
+    public List<DetalleAsistenciaVO> getDetallesInformeEmpleado(String _empresaId, 
+            String _rutEmpleado,
+            String _startDate,
+            String _endDate){
+    
+        List<DetalleAsistenciaVO> lista = 
+            calculoAsistenciaDao.getDetallesInformeEmpleado(_empresaId, 
+                _rutEmpleado, 
+                _startDate, 
+                _endDate);
+
+        return lista;
+    }
+    
+    /**
+    * 
     * @param _rutEmpleado
     * @param _startDate
     * @param _endDate

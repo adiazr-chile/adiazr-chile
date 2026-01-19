@@ -4174,9 +4174,59 @@
 					
 					Este nuevo acceso reemplaza al acceso "Asistencia - Horas Extras". En caso de vuelta atrás, volver a asignar este acceso.
 			
+			***************************************************************************
+			************** Versión 5.1.18 en Produccion desde el 30-11-2025 
+			***************************************************************************
+			5.1.19	08-12-2025
+				.- 20251205-01: Autorizar Horas extras.
+					Módulo de autorización de hrs extras: Se muestran las hrs extras correctas respecto a la hora de entrada y de salida.
+					Lo que permite autorizar las hrs de sobretiempo reales.
 			
+			***************************************************************************
+			************** Versión 5.1.19 en Produccion desde el 08-12-2025 
+			***************************************************************************
+			5.1.191	09-12-2025
+				.- 20251208: Mejora Interfaz de usuario 'Reporte de asistencia Semanal'
+				Modificar: asistencia_semanal.jasper
 			
+				Cambio de configuracion: Acceso/item del menú:
+				Donde dice:
+					Nombre: info_asistencia_semana
+					Label: Informe Asistencia Completo
+					Url: reportes/reporte_asistencia_semanal.jsp
+				
+				Debe decir:
+					Nombre: info_asistencia_semana
+					Label: Informe Asistencia Completo
+					Url: reportes/reporte_asistencia_semanal_new.jsp
 			
+			***************************************************************************
+			************** Versión 5.1.191 en Produccion desde el 15-12-2025 
+			***************************************************************************
+			5.1.192	18-12-2025
+				.- 20251209-01: Editar registro de vacaciones para cargar certificado de AFP vacaciones progresivas: 
+					Después de guardar los datos se debe ejecutar un cálculo de vacaciones y así tener actualizado el saldo de VP.
+						
+				.- Nueva función: "calcular_dias_vacacion_progresiva"
+				
+			
+			***************************************************************************
+			************** Versión 5.1.192 en Produccion desde el 21-12-2025 
+			***************************************************************************
+			5.1.193	21-12-2025
+				.- 20251209-02: Mejora visual de módulo de cálculo de vacaciones.
+				.- Con usuario superadmin: Crear nuevo acceso a la nueva página para calcular vacaciones-->vacaciones/calcular_vacaciones_new.jsp
+					Luego asignar este acceso a los perfiles: Administrador, Director y Control Interno
+			
+			***************************************************************************
+			************** Versión 5.1.193 en Produccion desde el 28-12-2025 
+			***************************************************************************
+			5.1.194	31-12-2025
+			
+				20251229-01: Mejora visual de módulo de Admin Marcas
+					Con usuario superadmin, admin Accesos: Modificar la url del acceso nombre='adm_marcas'.
+					Url: 'mantencion/admin_marcas_new.jsp'
+					
 			
 			
 			

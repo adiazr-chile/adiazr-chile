@@ -410,6 +410,9 @@ public class UserAuth extends BaseServlet {
                     cicloBp.getCiclos(userOk.getEmpresaId(), 0, null, 0, -1, "ciclo_num_dias");
                 session.setAttribute("ciclos", ciclos);
                 
+                HashMap<Integer, String> hashTiposMarcas = marcasBp.getTiposMarca();
+                session.setAttribute("tiposDeMarcas", hashTiposMarcas);
+                                
                 //Buscar los centros de costo asignados al usuario tipo empleado
                 if (userOk.getIdPerfil() == Constantes.ID_PERFIL_EMPLEADO 
                         || userOk.getIdPerfil() == Constantes.ID_PERFIL_DIRECTOR){

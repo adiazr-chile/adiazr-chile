@@ -5,6 +5,7 @@
 
 package cl.femase.gestionweb.business;
 
+import cl.femase.gestionweb.common.Constantes;
 import cl.femase.gestionweb.vo.CentroCostoVO;
 import cl.femase.gestionweb.vo.InfoMarcaVO;
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
@@ -111,6 +112,16 @@ public class MarcasBp  extends BaseBp{
         return marcasDao.getMarcaByKey(_empresaId, 
                 _rutEmpleado, 
                 _fechaHora, _tipoMarca, _historico);
+    }
+    
+    /**
+    * 
+    * @param _correlativo
+    * @param _historico
+    * @return 
+    */
+    public MarcaVO getMarcaByCorrelativo(int _correlativo, boolean _historico){
+        return marcasDao.getMarcaByCorrelativo(_correlativo, _historico);
     }
     
     /**
@@ -304,7 +315,7 @@ public class MarcasBp  extends BaseBp{
                 visorMarcasBp.setMarcasTurnoNormal(_empresaId, _rutEmpleado , _startDate, _endDate, _hashcode, _regionIdEmpleado, _comunaIdEmpleado, infoCenco);
         }
         
-        fechasMarcas.forEach((key,value) -> {
+        fechasMarcas.forEach((String key,InfoMarcaVO value) -> {
             InfoMarcaVO registro = value;
             MarcaVO marcaFinal = new MarcaVO();
             System.out.println(WEB_NAME + "itera row final. "
@@ -320,6 +331,8 @@ public class MarcasBp  extends BaseBp{
                 marcaFinal.setFechaHoraStr(registro.getFieldFecha() + " " + registro.getHoraMarca());
             }
             marcaFinal.setTipoMarca(registro.getTipoMarca());
+            marcaFinal.setNombreTipoMarca(Constantes.HASH_TIPO_MARCAS.get(registro.getTipoMarca()));
+            
             marcaFinal.setComentario(registro.getComentario());
             
             System.out.println(WEB_NAME + ". (1)Set rowKey: "
@@ -359,6 +372,8 @@ public class MarcasBp  extends BaseBp{
             if (registro.getFechaHoraMarca()!=null){
                 marcaFinal.setFechaHora(registro.getFechaHoraMarca());
             }else{
+                marcaFinal.setCodDispositivo("-");
+                marcaFinal.setHashcode("-");
                 marcaFinal.setFechaHora(registro.getFecha());
             }
             marcaFinal.setSoloHora(registro.getHoraMarca());
@@ -370,7 +385,7 @@ public class MarcasBp  extends BaseBp{
             marcaFinal.setSegundos(registro.getSegundos());
             marcaFinal.setTipoMarca(registro.getTipoMarca());
             marcaFinal.setId(registro.getId());
-            marcaFinal.setHashcode(registro.getHashcode());
+            if (registro.getHashcode()!=null) marcaFinal.setHashcode(registro.getHashcode());
             marcaFinal.setComentario(registro.getComentario());
             marcaFinal.setFechaHoraActualizacion(registro.getFechaHoraActualizacion());
             marcaFinal.setCodTipoMarcaManual(registro.getCodTipoMarcaManual());

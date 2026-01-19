@@ -262,10 +262,40 @@ public class DetalleAsistenciaVO implements Serializable{
     */
     private String hrsNoTrabajadas;
     
+    private String duracionTeorica;
+    private String duracionReal;
+    private String diferenciaHoras;
+    
     public DetalleAsistenciaVO() {
             
     }
 
+    public String getDiferenciaHoras() {
+        return diferenciaHoras;
+    }
+
+    public void setDiferenciaHoras(String diferenciaHoras) {
+        this.diferenciaHoras = diferenciaHoras;
+    }
+
+    public String getDuracionTeorica() {
+        return duracionTeorica;
+    }
+
+    public void setDuracionTeorica(String duracionTeorica) {
+        this.duracionTeorica = duracionTeorica;
+    }
+
+    public String getDuracionReal() {
+        return duracionReal;
+    }
+
+    public void setDuracionReal(String duracionReal) {
+        this.duracionReal = duracionReal;
+    }
+
+    
+    
     public String getHrsNoTrabajadas() {
         return hrsNoTrabajadas;
     }
@@ -314,9 +344,9 @@ public class DetalleAsistenciaVO implements Serializable{
     * @param _source
     */
     public void setObservacion(String _observacion, String _source) {
-        System.out.println("[GestionFemase.DetalleAsistenciaVO."
-            + "setObservacion]Observacion: " + _observacion 
-            + ", source: " + _source);
+//        System.out.println("[GestionFemase.DetalleAsistenciaVO."
+//            + "setObservacion]Observacion: " + _observacion 
+//            + ", source: " + _source);
         this.observacion = _observacion;
     }
 

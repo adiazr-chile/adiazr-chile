@@ -159,6 +159,85 @@ public class VacacionesDAO extends BaseDAO{
     }
     
     /**
+    * Actualiza dias especiales y dias adicionales
+    * 
+    * @param _empresaId
+    * @param _runEmpleado
+    * @param _diasEspeciales
+    * @param _diasAdicionales
+    * @return 
+    */
+    public ResultCRUDVO setParcialData(String _empresaId, 
+            String _runEmpleado, 
+            String _diasEspeciales, 
+            double _diasAdicionales){
+        ResultCRUDVO objresultado = new ResultCRUDVO();
+        PreparedStatement psupdate = null;
+        int result=0;
+        String msgError = "Error al actualizar "
+            + "Info de Vacaciones, "
+            + "EmpresaId: " + _empresaId
+            + ", rutEmpleado: " + _runEmpleado    
+            + ", dias_especiales: " + _diasEspeciales
+            + ", dias_adicionales: " + _diasAdicionales;
+        
+        try{
+            String msgFinal = " Actualiza info de vacaciones:"
+                + "EmpresaId [" + _empresaId + "]" 
+                + ", rutEmpleado [" + _runEmpleado + "]"    
+                + ", dias_especiales [" + _diasEspeciales + "]"
+                + ", dias_adicionales [" + _diasAdicionales + "]";
+                        
+            System.out.println(msgFinal);
+            objresultado.setMsg(msgFinal);
+            
+            String sql = "UPDATE vacaciones "
+                + "SET "
+                    + "dias_especiales = ?,"
+                    + "dias_adicionales = ? "
+                + "WHERE empresa_id = ? "
+                    + "and rut_empleado = ?";
+
+            dbConn = dbLocator.getConnection(m_dbpoolName,"[VacacionesDAO.setParcialData]");
+            psupdate = dbConn.prepareStatement(sql);
+            psupdate.setString(1,  _diasEspeciales);
+            psupdate.setDouble(2,  _diasAdicionales);
+            
+            //filtro update            
+            psupdate.setString(3, _empresaId);
+            psupdate.setString(4, _runEmpleado);
+            
+            int rowAffected = psupdate.executeUpdate();
+            if (rowAffected == 1){
+                System.out.println(WEB_NAME+"[VacacionesDAO.setParcialData]"
+                    + "vacaciones. "
+                    + "EmpresaId: " + _empresaId
+                    + ", rutEmpleado: " + _runEmpleado    
+                    + ", dias_especiales: " +_diasEspeciales
+                    + ", dias_adicionales:" + _diasAdicionales    
+                    +" actualizada OK!");
+            }
+
+            psupdate.close();
+            dbLocator.freeConnection(dbConn);
+        }catch(SQLException|DatabaseException sqle){
+            System.err.println("update vacaciones Error: "+sqle.toString());
+            objresultado.setThereError(true);
+            objresultado.setCodError(result);
+            objresultado.setMsgError(msgError+" :"+sqle.toString());
+        }finally{
+            try {
+                if (psupdate!=null) psupdate.close();
+                dbLocator.freeConnection(dbConn);
+            } catch (SQLException ex) {
+                System.err.println("Error: "+ex.toString());
+            }
+        }
+
+        return objresultado;
+    }
+    
+    /**
     * Actualiza dias acumulados, dias_progresivos y saldo de dias de vacaciones
     * 
     * @param _data
@@ -876,6 +955,138 @@ public class VacacionesDAO extends BaseDAO{
     }
     
     /**
+    * Retorna lista con saldo de vacaciones para uno o mas empleados
+    * 
+    * @param _empresaId
+    * @param _rutsEmpleados
+    * 
+    * @return 
+    */
+    public List<VacacionesVO> getVacacionesCalculadasEmpleados(String _empresaId, 
+            String[] _rutsEmpleados){
+        
+        List<VacacionesVO> lista = new ArrayList<>();
+        if (_rutsEmpleados == null || _rutsEmpleados.length == 0) {
+            return lista; 
+        }
+        // Construir la lista de ?, ?, ? según cantidad de ruts
+        String placeholders = String.join(",", java.util.Collections.nCopies(_rutsEmpleados.length, "?"));
+    
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        VacacionesVO data;
+        
+        try{
+            String sql = "select "
+                + "vac.empresa_id, "
+                    + "empleado.depto_id,empleado.depto_nombre,"
+                    + "empleado.cenco_id,empleado.ccosto_nombre,"
+                    + "vac.rut_empleado,"
+                    + "empleado.nombre || ' ' || empleado.materno nombre_empleado,"
+                    + "to_char(vac.fecha_calculo, 'yyyy-MM-dd HH24:MI:SS') fecha_calculo,"
+                    + "vac.dias_acumulados,"
+                    + "vac.dias_progresivos,"
+                    + "vac.saldo_dias,"
+                    + "coalesce(vac.inicio_ult_vacacion::text,'') inicio_ult_vacacion,"
+                    + "coalesce(vac.fin_ult_vacacion::text,'') fin_ult_vacacion,"
+                    + "coalesce(vac.dias_especiales, 'N') dias_especiales,"
+                    + "vac.current_num_cotizaciones,"
+                    + "vac.dias_zona_extrema,"
+                    + "coalesce(vac.comentario,'') comentario,"
+                    + "empleado.fecha_inicio_contrato,"
+                    + "coalesce(empleado.es_zona_extrema,'N') es_zona_extrema,"
+                    + "coalesce(vac.afp_code,'NINGUNA') afp_code," 
+                    + "coalesce(afp.afp_name,'NINGUNA') afp_name, " 
+                    + "coalesce(vac.fec_certif_vac_progresivas::text,'') fec_certif_vac_progresivas,"
+                    + "vac.dias_adicionales,"
+                    + "vac.dias_efectivos_tomados,"
+                    + "to_char(vac.fecha_base_vp, 'yyyy-MM-dd') fecha_base_vp, "
+                    + "coalesce(vac.num_cotizaciones, 0) num_cotizaciones, "
+                    + "coalesce(vac.otra_institucion_emisora_certif,'') institucion_emisora_certif,"
+                    + "coalesce(vac.mensaje_vp, '') mensaje_vp,"
+                    + "saldo_dias_vba,"
+                    + "saldo_dias_vp "
+                + "from vacaciones vac "
+                    + "inner join view_empleado empleado "
+                    + "on (empleado.empresa_id = vac.empresa_id "
+                    + "and empleado.rut=vac.rut_empleado) "
+                    + "left outer join afp on (vac.afp_code = afp.afp_code) "
+                    + "where vac.empresa_id = '" + _empresaId + "' "
+                    + "and rut_empleado IN (" + placeholders + ") ";
+            sql += " order by empleado.nombre || ' ' || empleado.materno asc"; 
+            
+            System.out.println(WEB_NAME+"[VacacionesDAO."
+                + "getVacacionesCalculadasEmpleados]sql: " + sql);
+            
+            dbConn = dbLocator.getConnection(m_dbpoolName,
+                "[VacacionesDAO.getVacacionesCalculadasEmpleados]");
+            ps = dbConn.prepareStatement(sql);
+            for (int i = 0; i < _rutsEmpleados.length; i++) {
+                ps.setString(i + 1, _rutsEmpleados[i]);
+            }
+            rs = ps.executeQuery();
+
+            while (rs.next()){
+                data = new VacacionesVO();
+                
+                data.setEmpresaId(rs.getString("empresa_id"));
+                data.setDeptoId(rs.getString("depto_id"));
+                data.setDeptoNombre(rs.getString("depto_nombre"));
+                data.setCencoId(rs.getInt("cenco_id"));
+                data.setCencoNombre(rs.getString("ccosto_nombre"));
+                data.setRutEmpleado(rs.getString("rut_empleado"));
+                data.setNombreEmpleado(rs.getString("nombre_empleado"));
+                data.setFechaCalculo(rs.getString("fecha_calculo"));
+                data.setDiasAcumulados(rs.getDouble("dias_acumulados"));
+                data.setDiasProgresivos(rs.getDouble("dias_progresivos"));
+                data.setDiasEspeciales(rs.getString("dias_especiales"));
+                data.setSaldoDias(rs.getDouble("saldo_dias"));
+                data.setFechaInicioUltimasVacaciones(rs.getString("inicio_ult_vacacion"));
+                data.setFechaFinUltimasVacaciones(rs.getString("fin_ult_vacacion"));
+                
+                data.setNumActualCotizaciones(rs.getInt("current_num_cotizaciones"));
+                
+                data.setDiasZonaExtrema(rs.getDouble("dias_zona_extrema"));
+                data.setComentario(rs.getString("comentario"));
+                data.setFechaInicioContrato(rs.getString("fecha_inicio_contrato"));
+                data.setEsZonaExtrema(rs.getString("es_zona_extrema"));
+                
+                data.setAfpCode(rs.getString("afp_code"));
+                data.setAfpName(rs.getString("afp_name"));
+                data.setFechaCertifVacacionesProgresivas(rs.getString("fec_certif_vac_progresivas"));
+                data.setDiasAdicionales(rs.getDouble("dias_adicionales"));
+                data.setDiasEfectivos(rs.getDouble("dias_efectivos_tomados"));
+                
+                data.setFechaBaseVp(rs.getString("fecha_base_vp"));
+                data.setNumCotizaciones(rs.getInt("num_cotizaciones"));
+                data.setOtraInstitucionEmisoraCertif(rs.getString("institucion_emisora_certif"));
+                data.setMensajeVp(rs.getString("mensaje_vp"));
+                
+                data.setSaldoDiasVBA(rs.getDouble("saldo_dias_vba"));
+                data.setSaldoDiasVP(rs.getDouble("saldo_dias_vp"));
+                
+                data.setRowKey(data.getEmpresaId()+"|"+data.getRutEmpleado());
+                lista.add(data);
+            }
+
+            ps.close();
+            rs.close();
+            dbLocator.freeConnection(dbConn);
+        }catch(SQLException|DatabaseException sqle){
+            m_logger.error("Error: "+sqle.toString());
+        }finally{
+            try {
+                if (ps != null) ps.close();
+                if (rs != null) rs.close();
+                dbLocator.freeConnection(dbConn);
+            } catch (SQLException ex) {
+                System.err.println("Error: "+ex.toString());
+            }
+        }
+        return lista;
+    }
+    
+    /**
     * Retorna lista con saldo de vacaciones para un empleado o todos los
     * empleados de un centro de costo.
     * 
@@ -903,7 +1114,7 @@ public class VacacionesDAO extends BaseDAO{
         
         try{
             String sql = "select "
-                    + "vac.empresa_id, "
+                + "vac.empresa_id, "
                     + "empleado.depto_id,empleado.depto_nombre,"
                     + "empleado.cenco_id,empleado.ccosto_nombre,"
                     + "vac.rut_empleado,"
@@ -917,11 +1128,12 @@ public class VacacionesDAO extends BaseDAO{
                     + "coalesce(vac.dias_especiales, 'N') dias_especiales,"
                     + "vac.current_num_cotizaciones,"
                     + "vac.dias_zona_extrema,"
-                    + "vac.comentario,empleado.fecha_inicio_contrato,"
+                    + "coalesce(vac.comentario,'') comentario,"
+                    + "empleado.fecha_inicio_contrato,"
                     + "coalesce(empleado.es_zona_extrema,'N') es_zona_extrema,"
                     + "coalesce(vac.afp_code,'NINGUNA') afp_code," 
                     + "coalesce(afp.afp_name,'NINGUNA') afp_name, " 
-                    + "vac.fec_certif_vac_progresivas,"
+                    + "coalesce(vac.fec_certif_vac_progresivas::text,'') fec_certif_vac_progresivas,"
                     + "vac.dias_adicionales,"
                     + "vac.dias_efectivos_tomados,"
                     + "to_char(vac.fecha_base_vp, 'yyyy-MM-dd') fecha_base_vp, "

@@ -366,8 +366,8 @@ public class MarcasController extends BaseServlet {
                     
                 }
                 /**
-                 *  Empl_rut + Fecha + Hora + Evento
-                 */
+                *  Empl_rut + Fecha + Hora + Evento
+                */
                 String keyPhrase = infomarca.getRutEmpleado()+infomarca.getFechaHora()+infomarca.getTipoMarca();
                 infomarca.setHashcode(Utilidades.getMD5EncryptedValue(keyPhrase));
                 

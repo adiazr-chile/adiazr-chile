@@ -15,44 +15,44 @@ import java.util.StringTokenizer;
 public class MarcaVO implements Serializable{
     private static final long serialVersionUID = 7899472338799776220L;
    
-    private String fechaHoraKey;
+    private String fechaHoraKey="";;
     private String id;
-    private String hashcode;
-    private String codDispositivo;
-    private String empresaKey;
-    private String empresaCod;
-    private String rutEmpleado;
-    private String nombreEmpleado;
-    private String codInternoEmpleado;
-    private String rutKey;
+    private String hashcode="";
+    private String codDispositivo="";
+    private String empresaKey="";
+    private String empresaCod="";
+    private String rutEmpleado="";
+    private String nombreEmpleado="";
+    private String codInternoEmpleado="";
+    private String rutKey="";
     private int cencoId;
-    private String fechaHora;
-    private String fechaHoraStr;
-    private String fechaHoraCalculos;
+    private String fechaHora="";
+    private String fechaHoraStr="";
+    private String fechaHoraCalculos="";
     private int tipoMarca;
-    private String nombreTipoMarca;
+    private String nombreTipoMarca="";
     private int anioMarca;
     private int mesMarca;
     private int diaMarca;
-    private String fecha;
-    private String hora;
-    private String minutos;
-    private String segundos;
+    private String fecha="";
+    private String hora="";
+    private String minutos="";
+    private String segundos="";
     private boolean insertOk;
-    private String message;
-    private String comentario;
-    private String uploadMessageError;
-    private String rowKey;
-    private String fechaHoraActualizacion;
+    private String message="";
+    private String comentario="";
+    private String uploadMessageError="";
+    private String rowKey="";
+    private String fechaHoraActualizacion="";
     private int codTipoMarcaManual;
-    private String nombreTipoMarcaManual;
-    private String soloHora;
-    private String labelTurno;
-    private String masInfo;
-    private String latitud;
-    private String longitud;
+    private String nombreTipoMarcaManual="";
+    private String soloHora="";
+    private String labelTurno="";
+    private String masInfo="";
+    private String latitud="";
+    private String longitud="";
     private int correlativo;    
-    private String googleMapUrl;
+    private String googleMapUrl="";
 
     public String getGoogleMapUrl() {
         return googleMapUrl;
@@ -76,6 +76,7 @@ public class MarcaVO implements Serializable{
 
     public void setNombreTipoMarca(String nombreTipoMarca) {
         this.nombreTipoMarca = nombreTipoMarca;
+        if (this.nombreTipoMarca == null) this.nombreTipoMarca="";
     }
 
     public int getCorrelativo() {
@@ -376,14 +377,15 @@ public class MarcaVO implements Serializable{
     public void setFechaHora(String fechaHora) {
         this.fechaHora = fechaHora;
         StringTokenizer tokenInicial = new StringTokenizer(this.fechaHora, " ");
-        String solofecha=tokenInicial.nextToken();
-        
-        StringTokenizer tokenfecha=new StringTokenizer(solofecha, "-");
-        
-        this.anioMarca = Integer.parseInt(tokenfecha.nextToken());
-        this.mesMarca = Integer.parseInt(tokenfecha.nextToken());
-        this.diaMarca = Integer.parseInt(tokenfecha.nextToken());
-                
+        try{
+            String solofecha=tokenInicial.nextToken();
+            StringTokenizer tokenfecha=new StringTokenizer(solofecha, "-");
+            this.anioMarca = Integer.parseInt(tokenfecha.nextToken());
+            this.mesMarca = Integer.parseInt(tokenfecha.nextToken());
+            this.diaMarca = Integer.parseInt(tokenfecha.nextToken());
+        }catch(java.util.NoSuchElementException nex){
+            
+        }     
     }
 
     /**

@@ -872,6 +872,115 @@ public class MarcasDAO extends BaseDAO{
         return data;
     }
     
+    /**
+    * Retorna marca existente
+    * 
+    * @param _correlativo
+    * @param _historico
+    * @return 
+    */
+    public MarcaVO getMarcaByCorrelativo(int _correlativo, boolean _historico){
+        MarcaVO data=null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        String tabla =  "marca";
+        if (_historico) tabla = "marca_historica";
+        
+        try{
+            String sql = "SELECT "
+                + "cod_dispositivo,"
+                + "empresa_cod,"
+                + "rut_empleado,"
+                + "fecha_hora,"
+                + "to_char(fecha_hora, 'TMday dd/MM/yyyy HH24:mi:ss') fecha_hora_str,"
+                + "to_char(fecha_hora, 'HH24:mi:ss') solohora_str,"
+                + "coalesce(to_char(fecha_hora, 'HH24'),'VACIO') solohora,"
+                + "to_char(fecha_hora, 'yyyy-MM-dd HH24:MI:00') fecha_hora_fmt," 
+                + "to_char(fecha_hora, 'MI') solomins,"
+                + "to_char(fecha_hora, 'SS') solosecs,"
+                + "to_char(fecha_hora, 'yyyy-MM-dd') solofecha," 
+                + "cod_tipo_marca," 
+                + "tipo_marca.nombre_tipo,"
+                + "fecha_hora_actualizacion,"
+                //+ "to_char(fecha_hora_actualizacion, 'TMday dd/MM/yyyy HH24:mi:ss') fecha_actualizacion,"
+                + "CASE WHEN (id ='null' or id is null) THEN '' ELSE id END as id,"
+                + "hashcode,"
+                + "empleado.empresa_id,"
+                + "empleado.depto_id,"
+                + "empleado.cenco_id,"
+                + "marca.comentario, "
+                + "marca.correlativo,"
+                + "CASE "
+                    + "WHEN (DATE_PART('second', fecha_hora_actualizacion - fecha_hora) > 10) "
+                    + "	THEN to_char(fecha_hora_actualizacion, 'TMday dd/MM/yyyy HH24:mi:ss') "
+                    + "	ELSE null END AS fecha_actualizacion,"
+                    + "tipo_marca_manual.code,"
+                    + "tipo_marca_manual.display_name "     
+                + "FROM marca "
+                    + "inner join empleado on (empleado.empl_rut = marca.rut_empleado) " +
+                    " inner join tipo_marca on marca.cod_tipo_marca = tipo_marca.cod_tipo "
+                    + "left outer join tipo_marca_manual on (marca.cod_tpo_marca_manual = tipo_marca_manual.code) "
+                + " where marca.correlativo = " + _correlativo;
+            
+            if (dbConn==null || (dbConn!=null && dbConn.isClosed())) dbConn = dbLocator.getConnection(m_dbpoolName,"[MarcasDAO.getMarcaByCorrelativo]");
+            System.out.println(WEB_NAME+"[MarcasDAO.getMarcaByCorrelativo]"
+                + "sql: " + sql);
+            ps = dbConn.prepareStatement(sql);
+            rs = ps.executeQuery();
+
+            if (rs.next()){
+                data = new MarcaVO();
+                
+                data.setCodDispositivo(rs.getString("cod_dispositivo"));
+                data.setEmpresaCod(rs.getString("empresa_cod"));
+                data.setRutEmpleado(rs.getString("rut_empleado"));
+                data.setRutKey(data.getRutEmpleado());
+                data.setCencoId(rs.getInt("cod_tipo_marca"));
+                data.setFechaHora(rs.getString("fecha_hora"));
+                data.setSoloHora(rs.getString("solohora_str"));
+                
+                data.setFechaHoraStr(rs.getString("fecha_hora_str"));
+                data.setFechaHoraKey(data.getFechaHora());
+                data.setFechaHoraCalculos(rs.getString("fecha_hora_fmt"));
+                data.setHora(rs.getString("solohora"));
+                data.setFecha(rs.getString("solofecha"));
+                data.setMinutos(rs.getString("solomins"));
+                data.setSegundos(rs.getString("solosecs"));
+                data.setTipoMarca(rs.getInt("cod_tipo_marca"));
+                data.setId(rs.getString("id"));
+                data.setHashcode(rs.getString("hashcode"));
+                data.setComentario(rs.getString("comentario"));
+                data.setFechaHoraActualizacion(rs.getString("fecha_actualizacion"));
+                data.setCodTipoMarcaManual(rs.getInt("code"));
+                data.setNombreTipoMarcaManual(rs.getString("display_name"));
+                data.setCorrelativo(rs.getInt("correlativo"));
+                
+                data.setRowKey(data.getEmpresaCod()
+                    + "|" + data.getRutEmpleado()
+                    + "|" + data.getFechaHora()
+                    + "|" + data.getTipoMarca());
+                
+            }
+
+            ps.close();
+            rs.close();
+            //dbLocator.freeConnection(dbConn);
+        }catch(SQLException|DatabaseException sqle){
+            System.err.println("[MarcasDAO.getMarcaByCorrelativo]"
+                + "Error: " + sqle.toString());
+        }finally{
+            try {
+                if (ps != null) ps.close();
+                if (rs != null) rs.close();
+                //dbLocator.freeConnection(dbConn);
+            } catch (SQLException ex) {
+                System.err.println("Error: "+ex.toString());
+            }
+        }
+        
+        return data;
+    }
+    
     
     
     /**
@@ -2179,21 +2288,21 @@ public class MarcasDAO extends BaseDAO{
             MarcaVO _marcaOriginal){
         ResultCRUDVO objresultado = new ResultCRUDVO();
         int result=0;
-        StringTokenizer tkfechaHora = new StringTokenizer(_marcaModificada.getFechaHora()," ");
-        String auxfecha = tkfechaHora.nextToken();
-        String auxhora = tkfechaHora.nextToken();
-        String newfechaHora = auxfecha+" "+_marcaModificada.getHora()+":"+_marcaModificada.getMinutos()+":"+_marcaModificada.getSegundos();
+//        StringTokenizer tkfechaHora = new StringTokenizer(_marcaModificada.getFechaHora()," ");
+//        String auxfecha = tkfechaHora.nextToken();
+//        String auxhora = tkfechaHora.nextToken();
+//        String newfechaHora = auxfecha+" "+_marcaModificada.getHora()+":"+_marcaModificada.getMinutos()+":"+_marcaModificada.getSegundos();
         String msgError = "Error al actualizar "
             + "marca. "
-            + ",rutEmpleado: "+_marcaModificada.getRutEmpleado()
-            + ",fechaHora_original: "+_marcaOriginal.getFechaHora()
-            + ",hora_modificada: "+_marcaModificada.getHora()+":"+_marcaModificada.getMinutos()+":"+_marcaModificada.getSegundos()
-            + ",tipoMarca: "+_marcaModificada.getTipoMarca();
+            + ",rutEmpleado: " + _marcaModificada.getRutEmpleado()
+            + ",fechaHora_original: " + _marcaOriginal.getFechaHora()
+            + ",hora_modificada: "+ _marcaModificada.getFechaHora()
+            + ",tipoMarca: " + _marcaModificada.getTipoMarca();
         
        String msgFinal = " Actualiza marca:"
             + ", rutEmpleado [" + _marcaModificada.getRutEmpleado() + "]"
             + ", fechaHoraOriginal [" + _marcaOriginal.getFechaHora() + "]"
-            + ", nuevaFechaHora [" + newfechaHora + "]"   
+            + ", nuevaFechaHora [" + _marcaModificada.getFechaHora() + "]"   
             + ", tipoMarca [" + _marcaModificada.getTipoMarca() + "]"
             + ", comentario [" + _marcaModificada.getComentario() + "]";
         
@@ -2212,7 +2321,7 @@ public class MarcasDAO extends BaseDAO{
                     + "fecha_hora_actualizacion = current_timestamp,"
                     + " modificada = true,"
                     + "comentario = ?,"
-                    + "fecha_hora = '" + newfechaHora + "',"
+                    + "fecha_hora = '" + _marcaModificada.getFechaHora() + "',"
                     + "hashcode = ? "
                 + "where "
                     + "rut_empleado = ? "

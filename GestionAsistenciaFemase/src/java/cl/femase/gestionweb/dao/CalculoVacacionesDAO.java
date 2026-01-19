@@ -5,6 +5,7 @@ import cl.femase.gestionweb.common.Constantes;
 import cl.femase.gestionweb.common.DatabaseException;
 import cl.femase.gestionweb.vo.FilasAfectadasJsonVO;
 import cl.femase.gestionweb.vo.ResultCRUDVO;
+import cl.femase.gestionweb.vo.VacacionProgJsonVO;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
@@ -12,6 +13,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.sql.Connection;
 
 /**
 * Clase encargada de implementar las llamadas a las funciones en base de datos Postgresql.
@@ -102,9 +104,13 @@ public class CalculoVacacionesDAO extends BaseDAO{
             while (rs.next()) {
                 strJson += rs.getString("strjson");
             }
-
-            FilasAfectadasJsonVO filasAfectadadaObj = (FilasAfectadasJsonVO)new Gson().fromJson(strJson, FilasAfectadasJsonVO.class);
-            CRUDResult.setFilasAfectadasObj(filasAfectadadaObj);
+            System.out.println("[CalculoVacacionesDAO.setFechaBaseVP]strJson from funcion: " + strJson);
+            
+//            FilasAfectadasJsonVO filasAfectadadaObj = (FilasAfectadasJsonVO)new Gson().fromJson(strJson, FilasAfectadasJsonVO.class);
+            FilasAfectadasJsonVO[] filasAfectadadaObj =
+                new Gson().fromJson(strJson, FilasAfectadasJsonVO[].class);
+                    CRUDResult.setFilasAfectadasObj(filasAfectadadaObj[0]);
+                    
             //System.out.println("Fila afectada Objeto: " + filasAfectadadaObj.toString());
             
 //            callableStatement = dbConn.prepareCall(sqlFunctionInvoke);
@@ -160,11 +166,13 @@ public class CalculoVacacionesDAO extends BaseDAO{
     * o de la nueva fecha de inicio de contrato 
     * si es que cuenta con continuidad laboral.
     * 
+     * @param _databaseConnection
     * @param _empresaId 
     * @param _runEmpleado 
     * @return 
     */
-    public ResultCRUDVO setVBA_Empleado(String _empresaId, 
+    public ResultCRUDVO setVBA_Empleado(Connection _databaseConnection, 
+            String _empresaId, 
             String _runEmpleado){
         
         ResultCRUDVO CRUDResult = new ResultCRUDVO();
@@ -191,8 +199,8 @@ public class CalculoVacacionesDAO extends BaseDAO{
         System.out.println("[CalculoVacacionesDAO.setVBA_Empleado]Sql: " + sqlFunctionInvoke);
         
         try{
-            dbConn = dbLocator.getConnection(m_dbpoolName, "[CalculoVacacionesDAO.setVBA_Empleado]");
-            ps = dbConn.prepareStatement(sqlFunctionInvoke);
+            //dbConn = dbLocator.getConnection(m_dbpoolName, "[CalculoVacacionesDAO.setVBA_Empleado]");
+            ps = _databaseConnection.prepareStatement(sqlFunctionInvoke);
             rs = ps.executeQuery();
 
             while (rs.next()) {
@@ -207,12 +215,6 @@ public class CalculoVacacionesDAO extends BaseDAO{
             CRUDResult.setThereError(true);
             CRUDResult.setCodError(result);
             CRUDResult.setMsgError(msgError+" :"+sqle.toString());
-        }catch(DatabaseException dbex){
-            System.err.println("[CalculoVacacionesDAO.setVBA_Empleado]"
-                + "Error_2: " + dbex.toString());
-            CRUDResult.setThereError(true);
-            CRUDResult.setCodError(result);
-            CRUDResult.setMsgError(msgError+" :"+dbex.toString());
         }
         finally{
             try {
@@ -220,7 +222,6 @@ public class CalculoVacacionesDAO extends BaseDAO{
                     ps.close();
                     rs.close();
                 }
-                dbLocator.freeConnection(dbConn);
             } catch (SQLException ex) {
                 System.err.println("[CalculoVacacionesDAO.setVBA_Empleado]"
                 + "Error_3:" + ex.toString());
@@ -394,73 +395,118 @@ public class CalculoVacacionesDAO extends BaseDAO{
     * Esta función realiza el cálculo de saldo de VP para un empleado, 
     *  basándose en la fecha base VP y con la ultima fecha de inicio de vacación.
     * 
+    * @param _dbConn
+    * @param _empresaId 
+    * @param _runEmpleado 
+    * @return 
+    * @throws java.sql.SQLException 
+    */
+    public VacacionProgJsonVO setVP_Empleado(Connection _dbConn,
+            String _empresaId, 
+            String _runEmpleado) throws SQLException {
+        
+        //ResultCRUDVO CRUDResult = new ResultCRUDVO();
+        String sql = "SELECT " + Constantes.fnSET_VP_EMPLEADO + " (?, ?)::text AS json_result";
+        System.out.println("[CalculoVacacionesDAO.setVP_Empleado]invocar funcion Sql: " + sql);
+        Gson gson = new Gson();
+        
+//        try {
+//            _dbConn = dbLocator.getConnection(m_dbpoolName, "[CalculoVacacionesDAO.setVP_Empleado]");
+//        } catch (DatabaseException ex) {
+//            System.err.println("[CalculoVacacionesDAO.setVP_Empleado]Error: " + ex.toString());
+//        }
+        
+        try (PreparedStatement ps = _dbConn.prepareStatement(sql)) {
+            ps.setString(1, _empresaId);
+            ps.setString(2, _runEmpleado);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    String json = rs.getString("json_result"); // o rs.getString(1)
+                    // Deserializar a tu VO
+                    return gson.fromJson(json, VacacionProgJsonVO.class);
+                } else {
+                    return null; // o lanzar excepción si esperas siempre una fila
+                }
+            }
+        }
+        
+        //return CRUDResult;
+    }
+    
+    /**
+    * Cálculo de vacaciones progresivas por empleado
+    * 
+    * Esta función realiza el cálculo de saldo de VP para un empleado, 
+    *  basándose en la fecha base VP y con la ultima fecha de inicio de vacación.
+    * 
     * @param _empresaId 
     * @param _runEmpleado 
     * @return 
     */
-    public ResultCRUDVO setVP_Empleado(String _empresaId, 
-            String _runEmpleado){
-        
-        ResultCRUDVO CRUDResult = new ResultCRUDVO();
-        String strJson = "";
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        int result = 0;
-        String msgError = "Error calling the function '" + Constantes.fnSET_VP_EMPLEADO + "'" 
-            + ". Empresa_id: " + _empresaId
-            + ", RUN empleado: " + _runEmpleado;
-        String msgFinal = "Calling the function '" + Constantes.fnSET_VP_EMPLEADO + "'"
-            + ". Empresa_id [" + _empresaId + "]"
-            + ", RUN empleado [" + _runEmpleado + "]";
-        
-        CRUDResult.setMsg(msgFinal);
-        /**
-        * Ejemplo: select set_saldo_vacaciones_progresivas_empleado('9967722-8','emp01');
-        * 
-        */
-        String sqlFunctionInvoke = "select " + Constantes.fnSET_VP_EMPLEADO + "('" + _runEmpleado + "',"
-                + "'" + _empresaId + "') "
-            + "strjson";
-
-        System.out.println("[CalculoVacacionesDAO.setVP_Empleado]Sql: " + sqlFunctionInvoke);
-        
-        try{
-            dbConn = dbLocator.getConnection(m_dbpoolName, "[CalculoVacacionesDAO.setVP_Empleado]");
-            ps = dbConn.prepareStatement(sqlFunctionInvoke);
-            rs = ps.executeQuery();
-
-            while (rs.next()) {
-                strJson += rs.getString("strjson");
-            }
-
-            FilasAfectadasJsonVO filasAfectadadaObj = (FilasAfectadasJsonVO)new Gson().fromJson(strJson, FilasAfectadasJsonVO.class);
-            CRUDResult.setFilasAfectadasObj(filasAfectadadaObj);
-        }catch(SQLException sqle){
-            System.err.println("[CalculoVacacionesDAO.setVP_Empleado]"
-                + "Error_1: " + sqle.toString());
-            CRUDResult.setThereError(true);
-            CRUDResult.setCodError(result);
-            CRUDResult.setMsgError(msgError+" :"+sqle.toString());
-        }catch(DatabaseException dbex){
-            System.err.println("[CalculoVacacionesDAO.setVP_Empleado]"
-                + "Error_2: " + dbex.toString());
-            CRUDResult.setThereError(true);
-            CRUDResult.setCodError(result);
-            CRUDResult.setMsgError(msgError+" :"+dbex.toString());
-        }finally{
-            try {
-                if (ps != null) {
-                    ps.close();
-                    rs.close();
-                }
-                dbLocator.freeConnection(dbConn);
-            } catch (SQLException ex) {
-                System.err.println("[CalculoVacacionesDAO.setVP_Empleado]"
-                + "Error:" + ex.toString());
-            }
-        }
-        return CRUDResult;
-    }
+//    public ResultCRUDVO setVP_Empleado(String _empresaId, 
+//            String _runEmpleado){
+//        
+//        ResultCRUDVO CRUDResult = new ResultCRUDVO();
+//        String strJson = "";
+//        PreparedStatement ps = null;
+//        ResultSet rs = null;
+//        int result = 0;
+//        String msgError = "Error calling the function '" + Constantes.fnSET_VP_EMPLEADO + "'" 
+//            + ". Empresa_id: " + _empresaId
+//            + ", RUN empleado: " + _runEmpleado;
+//        String msgFinal = "Calling the function '" + Constantes.fnSET_VP_EMPLEADO + "'"
+//            + ". Empresa_id [" + _empresaId + "]"
+//            + ", RUN empleado [" + _runEmpleado + "]";
+//        
+//        CRUDResult.setMsg(msgFinal);
+//        /**
+//        * Ejemplo: select set_saldo_vacaciones_progresivas_empleado('9967722-8','emp01');
+//        * 
+//        */
+//        String sqlFunctionInvoke = "select " + Constantes.fnSET_VP_EMPLEADO + "('" + _runEmpleado + "',"
+//                + "'" + _empresaId + "') "
+//            + "strjson";
+//
+//        System.out.println("[CalculoVacacionesDAO.setVP_Empleado]Sql: " + sqlFunctionInvoke);
+//        
+//        try{
+//            dbConn = dbLocator.getConnection(m_dbpoolName, "[CalculoVacacionesDAO.setVP_Empleado]");
+//            ps = dbConn.prepareStatement(sqlFunctionInvoke);
+//            rs = ps.executeQuery();
+//
+//            while (rs.next()) {
+//                strJson += rs.getString("strjson");
+//            }
+//
+//            FilasAfectadasJsonVO filasAfectadadaObj = (FilasAfectadasJsonVO)new Gson().fromJson(strJson, FilasAfectadasJsonVO.class);
+//            CRUDResult.setFilasAfectadasObj(filasAfectadadaObj);
+//        }catch(SQLException sqle){
+//            System.err.println("[CalculoVacacionesDAO.setVP_Empleado]"
+//                + "Error_1: " + sqle.toString());
+//            CRUDResult.setThereError(true);
+//            CRUDResult.setCodError(result);
+//            CRUDResult.setMsgError(msgError+" :"+sqle.toString());
+//        }catch(DatabaseException dbex){
+//            System.err.println("[CalculoVacacionesDAO.setVP_Empleado]"
+//                + "Error_2: " + dbex.toString());
+//            CRUDResult.setThereError(true);
+//            CRUDResult.setCodError(result);
+//            CRUDResult.setMsgError(msgError+" :"+dbex.toString());
+//        }finally{
+//            try {
+//                if (ps != null) {
+//                    ps.close();
+//                    rs.close();
+//                }
+//                dbLocator.freeConnection(dbConn);
+//            } catch (SQLException ex) {
+//                System.err.println("[CalculoVacacionesDAO.setVP_Empleado]"
+//                + "Error:" + ex.toString());
+//            }
+//        }
+//        return CRUDResult;
+//    }
     
     /**
     * "Cálculo de vacaciones progresivas por CENCO"

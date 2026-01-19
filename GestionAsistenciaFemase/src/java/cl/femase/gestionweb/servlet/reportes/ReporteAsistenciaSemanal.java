@@ -124,7 +124,7 @@ public class ReporteAsistenciaSemanal extends BaseServlet {
         System.out.println(WEB_NAME+"[servlet.reportes."
             + "ReporteAsistenciaSemanal.processRequestRut]"
             + "tipoParam: "+tipoParam
-            +", usuario conectado: "+userConnected.getUsername());
+            + ", usuario conectado: "+userConnected.getUsername());
         if (_empleado == null) return null;
         String jasperFilename   = "asistencia_semanal.jasper";
         String jasperFullPath   = appProperties.getReportesPath() + File.separator + jasperFilename;

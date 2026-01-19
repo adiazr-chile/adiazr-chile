@@ -157,7 +157,7 @@ public class AusenciasReport extends BaseServlet {
         parameters.put("rut", _rutEmpleado);//cod_interno
         parameters.put("rut_full", infoempleado.getCodInterno());
         parameters.put("cod_interno", _rutEmpleado);
-        parameters.put("nombre", infoempleado.getNombres() + " " +infoempleado.getApeMaterno());
+        parameters.put("nombre", infoempleado.getNombres() + " " + infoempleado.getApePaterno() + " " + infoempleado.getApeMaterno());
         parameters.put("cargo", infoempleado.getNombreCargo());
         parameters.put("empresa_id", infoempleado.getEmpresa().getId());
         parameters.put("empresa_nombre", infoempleado.getEmpresa().getNombre());

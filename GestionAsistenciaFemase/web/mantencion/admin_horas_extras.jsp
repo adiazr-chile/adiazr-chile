@@ -161,6 +161,7 @@
                 <table id="horasExtrasTable" class="table table-striped table-hover" style="width:100%">
                     <thead>
                         <tr>
+                            <th>Acciones</th>
                             <th>RUT Empleado</th>
                             <th>Nombre Empleado</th>
                             <th>Centro Costo</th>
@@ -171,12 +172,12 @@
                             <th>Hora salida</th>
                             <th>Entrada te&oacute;rica</th>
                             <th>Salida te&oacute;rica</th>
-                            <th>Horas presenciales</th>
+                            <th>Duracion turno</th>
+                            <th>Hrs presenciales</th>
                             <th>Observaci&oacute;n</th>
-                            <th>Horas extras</th>
-                            <th>Hrs extras autorizadas (SI/NO)</th>
-                            <th>Horas extras autorizadas</th>
-                            <th>Acciones</th>
+                            <th>HE autorizadas</th>
+                            <th>HE Autorizadas? (SI/NO)</th>
+                            
                         </tr>
                     </thead>
                     <tbody>
@@ -240,17 +241,29 @@
             <label class="form-label">Entrada turno</label>
             <input type="time" step="1" class="form-control" id="editHoraEntradaTeorica" name="horaEntradaTeorica" readonly>
           </div>
-          <div class="mb-2 col-md-3">
-            <label class="form-label">Salida turno</label>
-            <input type="time" step="1" class="form-control" id="editHoraSalidaTeorica" name="horaSalidaTeorica" readonly>
-          </div>
+          
+            <div class="mb-2 col-md-3">
+                <label class="form-label">Salida turno</label>
+                <input type="time" step="1" class="form-control" id="editHoraSalidaTeorica" name="horaSalidaTeorica" readonly>
+            </div>
+            
+            <div class="mb-2 col-md-3">
+                <label class="form-label">Horas turno</label>
+                <input type="time" step="1" class="form-control" id="editDuracionTeorica" name="duracionTeorica" readonly>
+            </div>
          
           <div class="mb-2 col-md-3">
             <label class="form-label">Horas presenciales</label>
             <input type="text" class="form-control" id="editHorasPresenciales" name="horasPresenciales" readonly>
           </div>
+          <!--  
+            <div class="mb-2 col-md-3">
+                <label class="form-label">Diferencia Horas</label>
+                <input type="text" class="form-control" id="editDiferenciaHoras" name="diferenciaHoras" readonly>
+            </div>
+          -->
           <div class="mb-2 col-md-3">
-            <label class="form-label">Horas extras (sobretiempo)</label>
+            <label class="form-label">Horas extras (En base a las horas presenciales)</label>
             <input type="text" class="form-control" id="editHorasExtras" name="horasExtras" readonly>
           </div>
 
@@ -379,6 +392,15 @@
             tabla = $('#horasExtrasTable').DataTable({
                 scrollX: true,
                 columns: [
+                    {
+                        data: null,
+                        orderable: false,
+                        render: function(data, type, row, meta) {
+                            return `<button class="btn btn-sm btn-primary actions-btn editRow" title="Editar registro">
+                                        <span class="material-icons">edit</span>
+                                    </button>`;
+                        }
+                    },
                     { data: "rutEmpleado" },             // RUT Empleado
                     { data: "nombreEmpleado" },         // Nombre Empleado
                     { data: "cencoNombre" },            // Centro Costo
@@ -389,20 +411,12 @@
                     { data: "horaSalida" },             // Hora salida
                     { data: "horaEntradaTeorica" },     // Hora entrada teórica
                     { data: "horaSalidaTeorica" },      // Hora salida teórica
+                    { data: "duracionTeorica" },      // Duracion turno en hh:mm
                     { data: "hrsPresenciales" },        // Horas presenciales
                     { data: "observacion" },            // Observación
-                    { data: "horaMinsExtras" },         // Horas extras (hh:mm)
-                    { data: "autorizaHrsExtras" },      // Hrs extras autorizadas (SI/NO)
                     { data: "horasMinsExtrasAutorizadas" }, // Horas extras autorizadas (hh:mm)
-                    {
-                        data: null,
-                        orderable: false,
-                        render: function(data, type, row, meta) {
-                            return `<button class="btn btn-sm btn-primary actions-btn editRow">
-                                        <span class="material-icons">edit</span>
-                                    </button>`;
-                        }
-                    }
+                    { data: "autorizaHrsExtras" }      // Hrs extras autorizadas (SI/NO)
+                    
                 ],
                 paging: true,
                 searching: true,
@@ -471,8 +485,11 @@
                 $('#editHoraEntradaTeorica').val(data.horaEntradaTeorica);
                 $('#editHoraSalidaTeorica').val(data.horaSalidaTeorica);
                 $('#editHorasPresenciales').val(data.hrsPresenciales);
-                $('#editHorasExtras').val(data.horaMinsExtras);
-
+                $('#editHorasExtras').val(data.diferenciaHoras);
+                
+                $('#editDuracionTeorica').val(data.duracionTeorica);
+                ////$('#editDiferenciaHoras').val(data.diferenciaHoras);
+                
                 // NUEVO: si horas presenciales = 0 -> toast + deshabilitar guardar
                 let hrsPres = data.hrsPresenciales || "00:00";
                 let presMins = hhmmToMinutes(hrsPres);
@@ -485,7 +502,7 @@
 
                 // Máximo permitido para horas extras autorizadas = horas extras (sobretiempo)
                 // (ya NO usamos hrsPresenciales como límite)
-                let maxMins = hhmmToMinutes(data.horaMinsExtras || "00:00"); // ejemplo "03:10"
+                let maxMins = hhmmToMinutes(data.diferenciaHoras || "00:00"); // ejemplo "03:10"
                 let maxHHMM = minutesToHHMM(maxMins);                        // "HH:MM"
                 $('#editHorasExtrasAutorizadas').attr('max', maxHHMM);
 
@@ -520,6 +537,8 @@
                 let sn  = $('#editHorasExtrasAutorizadasSN').val();
                 let hrsAut = $('#editHorasExtrasAutorizadas').val() || "00:00";
                 let hrsSobretiempo = $('#editHorasExtras').val() || "00:00"; // Horas extras (sobretiempo)
+
+                //alert('hrsSobretiempo: ' + hrsSobretiempo);
 
                 // Si es SI, obligar a que no sea 00:00
                 if (sn === "S" && hhmmToMinutes(hrsAut) === 0) {

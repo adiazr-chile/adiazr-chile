@@ -84,8 +84,8 @@ public class EmpleadosDAO extends BaseDAO{
 
     /**
     * 
-     * @param _empresaId
-     * @param _cencosUsuario
+    * @param _empresaId
+    * @param _cencosUsuario
     * @param term   
     * @return 
     * @throws java.sql.SQLException
@@ -101,7 +101,7 @@ public class EmpleadosDAO extends BaseDAO{
                 .collect(Collectors.joining(","));
             
             dbConn = dbLocator.getConnection(m_dbpoolName,
-                "[EmpleadosDAO.getEmpleado]");
+                "[EmpleadosDAO.buscarEmpleadosPorFiltro]");
             String sql = "SELECT ve.rut, ve.nombre, "
                     + "ve.ccosto_nombre cencoNombre,"
                     + "ve.cargo_nombre "
@@ -145,6 +145,58 @@ public class EmpleadosDAO extends BaseDAO{
         return empleados;
     }
 
+    /**
+    * 
+    * @param _empresaId   
+    * @param _cencoId   
+    * @return 
+    * @throws java.sql.SQLException
+    */
+    public List<EmpleadoVO> buscarEmpleadosPorCenco(String _empresaId, 
+            int _cencoId) throws SQLException {
+        List<EmpleadoVO> empleados = new ArrayList<>();
+        try {
+            dbConn = dbLocator.getConnection(m_dbpoolName,
+                "[EmpleadosDAO.buscarEmpleadosPorCenco]");
+            String sql = "SELECT "
+                    + "ve.rut, "
+                    + "ve.nombre, "
+                    + "ve.ccosto_nombre cencoNombre,"
+                    + "ve.cargo_nombre,"
+                    + "ve.nombre_turno "
+                + "FROM view_empleado ve "
+                + "WHERE ve.empl_estado = 1 "
+                    + "and ve.empresa_id = ? "
+                    + "and ve.cenco_id = ? ";
+            sql += "ORDER BY ve.nombre";
+            try (PreparedStatement ps = dbConn.prepareStatement(sql)) {
+                ps.setString(1, _empresaId);
+                ps.setInt(2, _cencoId);
+                
+                try (ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        EmpleadoVO e = new EmpleadoVO();
+                        e.setRut(rs.getString("rut"));
+                        e.setNombreYpaterno(rs.getString("nombre"));
+                        e.setCencoNombre(rs.getString("cencoNombre"));
+                        e.setNombreCargo(rs.getString("cargo_nombre"));
+                        e.setNombreTurno(rs.getString("nombre_turno"));
+                        
+                        empleados.add(e);
+                    }
+                }
+            }
+        }catch(DatabaseException dbex){
+            
+        }  
+        finally {
+            if (dbConn != null) try {
+                dbLocator.freeConnection(dbConn); 
+            } catch (Exception ignore) {
+            }
+        }
+        return empleados;
+    }
 
     
     /**

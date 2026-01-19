@@ -243,8 +243,9 @@ public class Constantes {
     * Esta función realiza el cálculo de saldo de VP para un empleado, 
     * basándose en la fecha base VP y con la ultima fecha de inicio de vacación.
     */
-    public static String fnSET_VP_EMPLEADO    = "set_saldo_vacaciones_progresivas_empleado";
-    
+    //public static String fnSET_VP_EMPLEADO    = "set_saldo_vacaciones_progresivas_empleado";
+    public static String fnSET_VP_EMPLEADO    = "calcular_dias_vacacion_progresiva";
+        
     /**
     *   Db Function: 'set_saldo_vacaciones_progresivas' 
     * 
@@ -270,6 +271,27 @@ public class Constantes {
         ESTADO_LABEL = new HashMap<>();
         ESTADO_LABEL.put(1, "Vigente");
         ESTADO_LABEL.put(2, "No Vigente");
+    }
+    
+    /**
+    * 
+    */
+    public static Map<Integer, String> HASH_TIPO_MARCAS;
+    static {
+        HASH_TIPO_MARCAS = new HashMap<>();
+        HASH_TIPO_MARCAS.put(1, "Entrada");
+        HASH_TIPO_MARCAS.put(2, "Salida");
+        HASH_TIPO_MARCAS.put(3, "Inicio colacion");
+        HASH_TIPO_MARCAS.put(4, "Termino colacion");
+
+        HASH_TIPO_MARCAS.put(100, "Falta marca entrada");
+        HASH_TIPO_MARCAS.put(200, "Falta marca salida");
+        HASH_TIPO_MARCAS.put(300, "Ausencia");
+        HASH_TIPO_MARCAS.put(400, "Faltan ambas marcas");
+        HASH_TIPO_MARCAS.put(500, "Libre");
+        HASH_TIPO_MARCAS.put(600, "Feriado");
+        HASH_TIPO_MARCAS.put(700, "Hay Marca");
+        
     }
     
     /**

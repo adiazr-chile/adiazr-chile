@@ -1185,14 +1185,14 @@ public class Utilidades {
         // Obtiene fecha y hora actuales
         Calendar fecha = Calendar.getInstance();
         fecha.setTime(fechaAux);
-        System.out.println("La fecha actual es: " +fechahoraFormat.format(fechaAux));
+        //System.out.println("La fecha actual es: " +fechahoraFormat.format(fechaAux));
         
         // Restar minutos a la fecha
         fecha.add(Calendar.MINUTE, _minutosASumar);
         
         String result = horaFormat.format(fecha.getTimeInMillis());
-        System.out.println("La fecha actual nueva es: " + result);
-        System.out.println("[Utilidades.sumarMinsHora](new)resultado: " + result);
+        //System.out.println("La fecha actual nueva es: " + result);
+        //System.out.println("[Utilidades.sumarMinsHora](new)resultado: " + result);
         
         return result;
     }
@@ -1852,8 +1852,8 @@ public class Utilidades {
     */
     public static String restarMinsHora(String _horaHHMM, int _minutosARestar){
         //******************* restar minutos a una hora
-        System.out.println(WEB_NAME+"[Utilidades.restarMinsHora](new)hora: " + _horaHHMM
-            + ", minutosRestar: "+_minutosARestar);
+//        System.out.println(WEB_NAME+"[Utilidades.restarMinsHora](new)hora: " + _horaHHMM
+//            + ", minutosRestar: "+_minutosARestar);
         SimpleDateFormat fechaFormat = new SimpleDateFormat("yyyy-MM-dd");
         SimpleDateFormat horaFormat = new SimpleDateFormat("HH:mm:ss");
         SimpleDateFormat fechahoraFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");

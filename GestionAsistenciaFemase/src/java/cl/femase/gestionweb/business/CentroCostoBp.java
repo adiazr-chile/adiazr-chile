@@ -82,6 +82,18 @@ public class CentroCostoBp  extends BaseBp{
     
     /**
     * 
+    * @param _empresaId
+    * @param _cencoId
+    * @return 
+    */
+    public CentroCostoVO getDepartamentoByCentroCosto(String _empresaId,
+            int _cencoId){
+        return centrocostoDao.getDepartamentoByCentroCosto(_empresaId, _cencoId);
+    }
+    
+    
+    /**
+    * 
     * @param _deptoId
     * @param _cencoId
     * @return 

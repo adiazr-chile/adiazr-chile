@@ -83,6 +83,20 @@ public class VacacionesBp  extends BaseBp{
     /**
     * 
     * @param _empresaId
+    * @param _rutsEmpleados
+    * @return 
+    */
+    public List<VacacionesVO> getVacacionesCalculadasEmpleados(String _empresaId, 
+            String[] _rutsEmpleados){
+        
+        List<VacacionesVO> lista = 
+            vacacionesdao.getVacacionesCalculadasEmpleados(_empresaId, _rutsEmpleados);
+
+        return lista;
+    }
+    /**
+    * 
+    * @param _empresaId
     * @param _rutEmpleado
     * @param _cencoId
     * @param _jtStartIndex

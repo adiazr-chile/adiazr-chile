@@ -2,6 +2,8 @@ package cl.femase.gestionweb.business;
 
 import cl.femase.gestionweb.common.CalculadoraPeriodo;
 import cl.femase.gestionweb.common.Constantes;
+import cl.femase.gestionweb.common.DatabaseException;
+import cl.femase.gestionweb.common.DatabaseLocator;
 import cl.femase.gestionweb.common.Utilidades;
 import cl.femase.gestionweb.dao.EmpleadosDAO;
 import cl.femase.gestionweb.vo.EmpleadoVO;
@@ -9,6 +11,7 @@ import cl.femase.gestionweb.vo.MaintenanceEventVO;
 import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import cl.femase.gestionweb.vo.SetVBAEmpleadoVO;
+import cl.femase.gestionweb.vo.VacacionProgJsonVO;
 import cl.femase.gestionweb.vo.VacacionesSaldoPeriodoVO;
 import cl.femase.gestionweb.vo.VacacionesVO;
 import com.google.gson.Gson;
@@ -19,11 +22,12 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
 *
@@ -37,6 +41,7 @@ public class CalculoVacacionesBp  extends BaseBp{
     private final cl.femase.gestionweb.dao.CalculoVacacionesDAO calculoDao;
     private final cl.femase.gestionweb.dao.VacacionesSaldoPeriodoDAO periodosDao;
     private final cl.femase.gestionweb.dao.VacacionesDAO vacacionesDao;
+    private final cl.femase.gestionweb.dao.EmpleadosDAO empleadosDao;
     
     public CalculoVacacionesBp(PropertiesVO props) {
         this.props = props;
@@ -44,6 +49,7 @@ public class CalculoVacacionesBp  extends BaseBp{
         calculoDao = new cl.femase.gestionweb.dao.CalculoVacacionesDAO();
         periodosDao = new cl.femase.gestionweb.dao.VacacionesSaldoPeriodoDAO(this.props);
         vacacionesDao = new cl.femase.gestionweb.dao.VacacionesDAO(this.props);
+        empleadosDao = new cl.femase.gestionweb.dao.EmpleadosDAO(this.props);
     }
 
     /**
@@ -93,22 +99,31 @@ public class CalculoVacacionesBp  extends BaseBp{
     * Esta función realiza el cálculo de saldo de VP para un empleado, 
     *  basándose en la fecha base VP y con la ultima fecha de inicio de vacación.
     * 
+     * @param _databaseConnection
     * @param _empresaId 
     * @param _runEmpleado 
     * @param _eventdata 
     * @return  
     */
-    public ResultCRUDVO setVP_Empleado(String _empresaId, 
+    public VacacionProgJsonVO setVP_Empleado(java.sql.Connection _databaseConnection,
+            String _empresaId, 
             String _runEmpleado,
             MaintenanceEventVO _eventdata){
         
-        ResultCRUDVO modifiedInfo = calculoDao.setVP_Empleado(_empresaId, _runEmpleado);
-        String msgFinal = modifiedInfo.getMsg();
-        modifiedInfo.setMsg(msgFinal);
-        _eventdata.setDescription(msgFinal);
-        //insertar evento 
-        eventsService.addEvent(_eventdata); 
-        
+        //ResultCRUDVO modifiedInfo = calculoDao.setVP_Empleado(_empresaId, _runEmpleado);
+        VacacionProgJsonVO modifiedInfo = new VacacionProgJsonVO();
+        if (_databaseConnection != null){
+            try {
+                modifiedInfo = calculoDao.setVP_Empleado(_databaseConnection, _empresaId, _runEmpleado);
+                String msgFinal = modifiedInfo.getMessage();
+                _eventdata.setDescription(msgFinal);
+                //eventsService.addEvent(_eventdata);
+            } catch (SQLException ex) {
+                Logger.getLogger(CalculoVacacionesBp.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }else{
+            System.err.println("[CalculoVacacionesBp.setVP_Empleado]No se pudo obtener conexion a la Base de datos");
+        }    
         return modifiedInfo;
     }
     
@@ -119,16 +134,18 @@ public class CalculoVacacionesBp  extends BaseBp{
     * o de la nueva fecha de inicio de contrato 
     * si es que cuenta con continuidad laboral.
     * 
+     * @param _databaseConnection
     * @param _empresaId 
     * @param _runEmpleado 
     * @param _eventdata 
     * @return  
     */
-    public ResultCRUDVO setVBA_Empleado(String _empresaId, 
+    public ResultCRUDVO setVBA_Empleado(java.sql.Connection _databaseConnection, String _empresaId, 
             String _runEmpleado, 
             MaintenanceEventVO _eventdata){
         
-        ResultCRUDVO modifiedInfo = calculoDao.setVBA_Empleado(_empresaId, _runEmpleado);
+        ResultCRUDVO modifiedInfo = calculoDao.setVBA_Empleado(_databaseConnection, 
+                _empresaId, _runEmpleado);
         String msgFinal = modifiedInfo.getMsg();
         modifiedInfo.setMsg(msgFinal);
         _eventdata.setDescription(msgFinal);
@@ -158,7 +175,7 @@ public class CalculoVacacionesBp  extends BaseBp{
         modifiedInfo.setMsg(msgFinal);
         _eventdata.setDescription(msgFinal);
         //insertar evento 
-        eventsService.addEvent(_eventdata); 
+        //eventsService.addEvent(_eventdata); 
         
         return modifiedInfo;
     }
@@ -376,7 +393,7 @@ public class CalculoVacacionesBp  extends BaseBp{
         modifiedInfo.setMsg(msgFinal);
         _eventdata.setDescription(msgFinal);
         //insertar evento 
-        eventsService.addEvent(_eventdata); 
+        //eventsService.addEvent(_eventdata); 
         
         return modifiedInfo;
     }
@@ -394,13 +411,54 @@ public class CalculoVacacionesBp  extends BaseBp{
     * @param _eventdata 
     * @return  
     */
-    public ResultCRUDVO setVP_Cenco(String _empresaId, int _cencoId, MaintenanceEventVO _eventdata){
-        ResultCRUDVO modifiedInfo = calculoDao.setVP_Cenco(_empresaId, _cencoId);
-        String msgFinal = modifiedInfo.getMsg();
-        modifiedInfo.setMsg(msgFinal);
-        _eventdata.setDescription(msgFinal);
-        //insertar evento 
-        eventsService.addEvent(_eventdata); 
+    public VacacionProgJsonVO setVP_Cenco(String _empresaId, int _cencoId, MaintenanceEventVO _eventdata){
+        //ResultCRUDVO modifiedInfo = calculoDao.setVP_Cenco(_empresaId, _cencoId);
+        
+        System.out.println("[CalculoVacacionesBp.setVP_Cenco]Inicio - "
+            + "Calcular vacaciones progresivas empresa_id: " + _empresaId 
+            + ", cenco_id: " + _cencoId);
+        
+        java.sql.Connection databaseConnection = null;
+        try{
+            DatabaseLocator dbLocator = DatabaseLocator.getInstance();
+            databaseConnection = dbLocator.getConnection(props.getDbPoolName(), "[CalculoVacacionesDAO.procesarVP_CentroCosto]");
+        }catch(DatabaseException dbex){
+            System.err.println("[CalculoVacacionesBp.setVP_Cenco]Error:" + dbex.toString() );
+        }
+        VacacionProgJsonVO modifiedInfo = new VacacionProgJsonVO();
+        //ResultCRUDVO modifiedInfo = calculoDao.setVP_Empleado(_empresaId, _runEmpleado);
+        if (databaseConnection != null){
+            try {
+                EmpleadoVO filtroEmpleados = new EmpleadoVO();
+                filtroEmpleados.setEmpresaId(_empresaId);
+                filtroEmpleados.setCencoId(_cencoId);
+                filtroEmpleados.setEmpleadoVigente(true);
+                filtroEmpleados.setEstado(1);
+                List<EmpleadoVO> listaEmpleados = empleadosDao.getEmpleadosByFiltro(filtroEmpleados);
+                for (EmpleadoVO emp : listaEmpleados) {
+                    System.out.println("[CalculoVacacionesBp.setVP_Cenco]invocar funcion 'calcular_dias_vacacion_progresiva' "
+                        + "para el run: " + emp.getRut());
+                    modifiedInfo = calculoDao.setVP_Empleado(databaseConnection,_empresaId, emp.getRut());
+                }
+
+                String msgFinal = modifiedInfo.getMessage();
+                _eventdata.setDescription(msgFinal);
+                eventsService.addEvent(_eventdata);
+            } catch (SQLException ex) {
+                Logger.getLogger(CalculoVacacionesBp.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }else{
+            System.err.println("[CalculoVacacionesBp.setVP_Cenco]No se pudo obtener conexion a la Base de datos");
+        }
+        System.out.println("[CalculoVacacionesBp.setVP_Cenco]Fin - "
+            + "Calcular vacaciones progresivas empresa_id: " + _empresaId 
+            + ", cenco_id: " + _cencoId);
+        
+//        String msgFinal = modifiedInfo.getMsg();
+//        modifiedInfo.setMsg(msgFinal);
+//        _eventdata.setDescription(msgFinal);
+//        //insertar evento 
+//        eventsService.addEvent(_eventdata); 
         
         return modifiedInfo;
     }

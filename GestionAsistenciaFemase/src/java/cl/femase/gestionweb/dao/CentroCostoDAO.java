@@ -471,6 +471,64 @@ public class CentroCostoDAO extends BaseDAO{
     }
     
     /**
+    * 
+     * @param _empresaId
+     * @param _cencoId
+    * @return 
+    */
+    public CentroCostoVO getDepartamentoByCentroCosto(String _empresaId,
+            int _cencoId){
+        
+        CentroCostoVO cenco = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        
+        try{
+            String sql = "select centro_costo.depto_id, "
+                    + "ccosto_nombre,"
+                    + "email,"
+                    + "es_zona_extrema "
+                + "from centro_costo "
+                    + "inner join departamento d "
+                    + " on (centro_costo.depto_id = d.depto_id "
+                        + "and d.empresa_id = '" + _empresaId + "')"
+                + " where ccosto_id = " + _cencoId;
+            
+            System.out.println(WEB_NAME+"[CentroCostoDAO.getDepartamentoByCentroCosto]"
+                + "Sql: " + sql);
+             
+            dbConn = dbLocator.getConnection(m_dbpoolName,"[CentroCostoDAO.getDepartamentoByCentroCosto]");
+            ps = dbConn.prepareStatement(sql);
+            rs = ps.executeQuery();
+
+            if (rs.next()){
+                cenco = new CentroCostoVO();
+                cenco.setEmpresaId(_empresaId);
+                cenco.setDeptoId(rs.getString("depto_id"));
+                cenco.setId(_cencoId);
+                cenco.setNombre(rs.getString("ccosto_nombre"));
+                cenco.setEmail(rs.getString("email"));
+                cenco.setZonaExtrema(rs.getString("es_zona_extrema"));
+            }
+
+            ps.close();
+            rs.close();
+            if (!m_usedGlobalDbConnection) dbLocator.freeConnection(dbConn);
+        }catch(SQLException|DatabaseException sqle){
+            m_logger.error("Error: "+sqle.toString());
+        }finally{
+            try {
+                if (ps != null) ps.close();
+                if (rs != null) rs.close();
+                if (!m_usedGlobalDbConnection) dbLocator.freeConnection(dbConn);
+            } catch (SQLException ex) {
+                System.err.println("Error: "+ex.toString());
+            }
+        }
+        return cenco;
+    }
+    
+    /**
      * Retorna lista con los centro de costos existentes en el sistema.
      * Si el usuario no es asmin, se muestran solo los cencos asignados
      * 
@@ -786,8 +844,9 @@ public class CentroCostoDAO extends BaseDAO{
     * @param _usuario
     * 
     * @return 
+     * @throws java.sql.SQLException 
     */
-    public List<CentroCostoVO> getCentrosCostoEmpresa(UsuarioVO _usuario){
+    public List<CentroCostoVO> getCentrosCostoEmpresa(UsuarioVO _usuario) throws SQLException{
         List<CentroCostoVO> lista = new ArrayList<>();
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -860,6 +919,71 @@ public class CentroCostoDAO extends BaseDAO{
             } catch (SQLException ex) {
                 System.err.println("[CentroCostoDAO."
                     + "getCentrosCostoEmpresa]Error: " + ex.toString());
+            }
+        }
+        return lista;
+    }
+    
+    /**
+    * Retorna lista con los centro de costos
+    * 
+    * @param _usuario
+    * @param _term
+    * @return 
+    * @throws java.sql.SQLException 
+    */
+    public List<CentroCostoVO> buscarCentrosCostoPorFiltro(UsuarioVO _usuario, 
+            String _term) throws SQLException{
+        List<CentroCostoVO> lista = new ArrayList<>();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        CentroCostoVO cenco;
+        
+        try{
+            String sql = "select d.depto_id, d.depto_nombre, "
+                + "cc.ccosto_id cenco_id,"
+                + "cc.ccosto_nombre cenco_nombre "
+                + "from centro_costo cc "
+                + "inner join departamento d "
+                    + "on (d.empresa_id ='" + _usuario.getEmpresaId() + "' and d.depto_id = cc.depto_id) "
+                + "where cc.estado_id = 1 "
+                + "and (upper(cc.ccosto_nombre) like '%" + _term.toUpperCase() + "%') "
+                + "order by cc.ccosto_nombre";
+                    
+            System.out.println(WEB_NAME+"CentroCostoDAO]"
+                + "buscarCentrosCostoPorFiltro. "
+                + "SQL: " + sql);
+            dbConn = dbLocator.getConnection(m_dbpoolName,
+                "[CentroCostoDAO.buscarCentrosCostoPorFiltro]");
+            ps = dbConn.prepareStatement(sql);
+            rs = ps.executeQuery();
+
+            while (rs.next()){
+                cenco = new CentroCostoVO();
+                
+                cenco.setEmpresaId(_usuario.getEmpresaId());
+                cenco.setDeptoId(rs.getString("depto_id"));
+                cenco.setDeptoNombre(rs.getString("depto_nombre"));
+                cenco.setId(rs.getInt("cenco_id"));
+                cenco.setNombre(rs.getString("cenco_nombre"));
+                
+                lista.add(cenco);
+            }
+
+            ps.close();
+            rs.close();
+            dbLocator.freeConnection(dbConn);
+        }catch(SQLException|DatabaseException sqle){
+            System.err.println("[CentroCostoDAO."
+                + "buscarCentrosCostoPorFiltro]Error: " + sqle.toString());
+        }finally{
+            try {
+                if (ps != null) ps.close();
+                if (rs != null) rs.close();
+                dbLocator.freeConnection(dbConn);
+            } catch (SQLException ex) {
+                System.err.println("[CentroCostoDAO."
+                    + "buscarCentrosCostoPorFiltro]Error: " + ex.toString());
             }
         }
         return lista;

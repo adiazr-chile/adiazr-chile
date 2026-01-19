@@ -363,7 +363,7 @@ public class VacacionesReport extends BaseServlet {
         parameters.put("rut", _rutEmpleado);//cod_interno
         parameters.put("rut_full", infoEmpleado.getCodInterno());
         parameters.put("cod_interno", _rutEmpleado);
-        parameters.put("nombre", infoEmpleado.getNombres() + " " + infoEmpleado.getApeMaterno());
+        parameters.put("nombre", infoEmpleado.getNombres() + " " + infoEmpleado.getApePaterno() + " " + infoEmpleado.getApeMaterno());
         parameters.put("cargo", infoEmpleado.getNombreCargo());
         
         parameters.put("cenco_id", ""+infoEmpleado.getCentroCosto().getId());

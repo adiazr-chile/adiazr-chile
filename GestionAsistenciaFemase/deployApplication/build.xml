@@ -90,9 +90,9 @@
 		<replace file="gestionfemase.temp" token="_TXT_SV" value="${txtAprobarSolicVacaciones}" />
 		<replace file="gestionfemase.temp" token="_TXT_PA" value="${txtAprobarSolicPA}" />
 		<replace file="gestionfemase.temp" token="_CHECKINTERVAL" value="${SystemAlertCheckInterval}" />
-		<replace file="gestionfemase.temp" token="_DOMINIO_DT_MAILSERVER" value="${DTmailServerDomain}" />
+		<replace file="gestionfemase.temp" token="_DOMINIO_DT_MAILSERVER" value="${mail.server.domin.dt}" />
 										
-		<echo message="-------------------_DOMINIO_DT_MAILSERVER: ${DTmailServerDomain} ----------------" />		
+		<echo message="-------------------_DOMINIO_DT_MAILSERVER: ${mail.server.domin.dt} ----------------" />		
 			
 		<echo message="Version del Sistema: ${version}, anio de lanzamiento: ${launchYear}" />
 		<replace file="gestionfemase.temp" token="_VERSION" value="${version}" />
@@ -177,9 +177,9 @@
 		<replace file="gestionfemase.temp" token="_TXT_SV" value="${txtAprobarSolicVacaciones}" />
 		<replace file="gestionfemase.temp" token="_TXT_PA" value="${txtAprobarSolicPA}" />
 		<replace file="gestionfemase.temp" token="_CHECKINTERVAL" value="${SystemAlertCheckInterval}" />
-		<replace file="gestionfemase.temp" token="_DOMINIO_DT_MAILSERVER" value="${DTmailServerDomain}" />
+		<replace file="gestionfemase.temp" token="_DOMINIO_DT_MAILSERVER" value="${mail.server.domin.dt}" />
 	    
-		<echo message="-------------------_DOMINIO_DT_MAILSERVER: ${DTmailServerDomain} ----------------" />		
+		<echo message="-------------------_DOMINIO_DT_MAILSERVER: ${mail.server.domin.dt} ----------------" />		
 		
 		<echo message="Version del Sistema: ${version}, anio de lanzamiento: ${launchYear}" />
 		<replace file="gestionfemase.temp" token="_VERSION" value="${version}" />

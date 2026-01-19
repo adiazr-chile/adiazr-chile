@@ -163,6 +163,7 @@ public class VisorMarcasBp  extends BaseBp{
                     registroAux.setFieldFecha(fieldFechaAnt);
                     registroAux.setFieldEvento(fieldEventoAnt);
                     registroAux.setTipoEvento(tipoEvento);
+                    
                     registroAux.setTipoMarca(tipoEvento);
                     if (idTurnoAsignadoAnterior != -1){
                         registroAux.setLabelTurno("(" + idTurnoAsignadoAnterior + ") "

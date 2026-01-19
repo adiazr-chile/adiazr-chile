@@ -318,7 +318,7 @@ public class DetalleTurnosDAO extends BaseDAO{
                 + "where dt.id_turno=" + _idTurno
                     +" and dt.cod_dia= " + _codDia;
             
-            System.out.println(WEB_NAME+"[DetalleTurnosDAO.getDetalleTurno]Sql: "+sql);
+            //System.out.println(WEB_NAME+"[DetalleTurnosDAO.getDetalleTurno]Sql: "+sql);
             
             dbConn = dbLocator.getConnection(m_dbpoolName,"[DetalleTurnosDAO.getDetalleTurno]");
             ps = dbConn.prepareStatement(sql);

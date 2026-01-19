@@ -4,8 +4,8 @@
  */
 package cl.femase.gestionweb.servlet.consultas;
 
-import cl.femase.gestionweb.dao.EmpleadosDAO;
-import cl.femase.gestionweb.vo.EmpleadoVO;
+import cl.femase.gestionweb.dao.CentroCostoDAO;
+import cl.femase.gestionweb.vo.CentroCostoVO;
 import cl.femase.gestionweb.vo.UsuarioVO;
 import com.google.gson.Gson;
 import java.io.IOException;
@@ -23,8 +23,8 @@ import java.util.List;
 *
 * @author aledi
 */
-@WebServlet("/api/empleados")
-public class EmpleadoAutocompleteServlet extends HttpServlet {
+@WebServlet("/api/centros_costo")
+public class CentrosDeCostoServlet extends HttpServlet {
 
     /**
     * 
@@ -35,10 +35,6 @@ public class EmpleadoAutocompleteServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String term = req.getParameter("term");
-        String cencoId = req.getParameter("centroCosto");// Id centro de costo
-        int intCenco=0;
-        if (cencoId != null) intCenco=Integer.parseInt(cencoId);
-        
 //        resp.setContentType("application/json; charset=UTF-8");
 //        resp.setCharacterEncoding("UTF-8");
         
@@ -47,23 +43,14 @@ public class EmpleadoAutocompleteServlet extends HttpServlet {
         UsuarioVO userConnected = (UsuarioVO)session.getAttribute("usuarioObj");
 
         if (userConnected != null){
-            EmpleadosDAO daoEmpleados = new EmpleadosDAO(null);
+            CentroCostoDAO daoCencos = new CentroCostoDAO(null);
             try {
-                System.out.println("[EmpleadoAutocompleteServlet."
+                System.out.println("[CentrosDeCostoServlet."
                     + "doGet]term: " + term 
-                    + ", empresaId: " + userConnected.getEmpresaId()
-                    + ", cencoId: " + cencoId);
-                
-                List<EmpleadoVO> filtrados = new ArrayList<>();
-                if (cencoId == null){
-                    filtrados = (term != null && !term.trim().isEmpty())
-                        ? daoEmpleados.buscarEmpleadosPorFiltro(userConnected.getEmpresaId(),
-                            userConnected.getCencos(), term)
-                        : new ArrayList<>();
-                }else{
-                    filtrados = daoEmpleados.buscarEmpleadosPorCenco(userConnected.getEmpresaId(),
-                            intCenco);
-                }
+                    + ", empresaId: " + userConnected.getEmpresaId());
+                List<CentroCostoVO> filtrados = (term != null && !term.trim().isEmpty())
+                    ? daoCencos.buscarCentrosCostoPorFiltro(userConnected, term)
+                    : new ArrayList<>();
                
                 Gson gson = new Gson();
                 String json = gson.toJson(filtrados);
@@ -81,7 +68,7 @@ public class EmpleadoAutocompleteServlet extends HttpServlet {
             try{
                 req.getRequestDispatcher("/mensaje.jsp").forward(req, resp);
             }catch(ServletException sex){
-                System.err.println("[EmpleadoAutocompleteServlet]Error: " + sex.toString());
+                System.err.println("[CentrosDeCostoServlet]Error: " + sex.toString());
             }
         }
     }

@@ -1,3 +1,6 @@
+<%@page import="cl.femase.gestionweb.common.DatabaseException"%>
+<%@page import="cl.femase.gestionweb.common.DatabaseLocator"%>
+<%@page import="cl.femase.gestionweb.vo.VacacionProgJsonVO"%>
 <%@page import="java.util.Date"%>
 <%@page import="cl.femase.gestionweb.vo.MaintenanceEventVO"%>
 <%@page import="cl.femase.gestionweb.vo.ResultCRUDVO"%>
@@ -47,10 +50,23 @@
         ResultCRUDVO fnExec = null;
         System.out.println("[GestionFemaseWeb.ingreso_solic_vacaciones.jsp]"
             + "vacacionesPeriodo? " + vacacionesPeriodo);
+        
+        java.sql.Connection databaseConnection = null;
+        DatabaseLocator dbLocator = null;
+        try{
+            dbLocator = DatabaseLocator.getInstance();
+            databaseConnection = dbLocator.getConnection(appProperties.getDbPoolName(), 
+                "[jsp.ingresar_solicitud_vacaciones]");
+        }catch(DatabaseException dbex){
+            System.err.println("[CalculoVacacionesBp.setVP_Cenco]Error:" + dbex.toString() );
+        }    
+            
         if (!vacacionesPeriodo){
             System.out.println("[GestionFemaseWeb.ingreso_solic_vacaciones.jsp]"
                 + "Calculo VBA normal");
-            fnExec = calculoVacacionesBp.setVBA_Empleado(userConnected.getEmpresaId(), runEmpleado, resultVO);
+                
+                
+            fnExec = calculoVacacionesBp.setVBA_Empleado(databaseConnection, userConnected.getEmpresaId(), runEmpleado, resultVO);
         }else{
             System.out.println("[GestionFemaseWeb.ingreso_solic_vacaciones.jsp]"
                 + "Calculo VBA New. "
@@ -70,11 +86,11 @@
                 + "Filas afectadas, post ejecucion de la funcion " + Constantes.fnSET_VBA_EMPLEADO
                 + ": " + fnExec.getFilasAfectadasObj().toString());
         }
-        fnExec = calculoVacacionesBp.setVP_Empleado(userConnected.getEmpresaId(), runEmpleado, resultVO);
-        if (fnExec != null && fnExec.getFilasAfectadasObj() != null){
+        VacacionProgJsonVO fnExec2 = calculoVacacionesBp.setVP_Empleado(databaseConnection, userConnected.getEmpresaId(), runEmpleado, resultVO);
+        if (fnExec2 != null && fnExec2.getAffectedRows() != null){
             System.out.println("[GestionFemaseWeb.ingreso_solic_vacaciones.jsp]"
                 + "Filas afectadas, post ejecucion de la funcion " + Constantes.fnSET_VP_EMPLEADO
-                + ": " + fnExec.getFilasAfectadasObj().toString());
+                + ": " + fnExec2.getAffectedRows().toString().toString());
         }
         System.out.println("[GestionFemaseWeb.ingreso_solic_vacaciones.jsp]"
             + "Actualizar saldos de vacaciones "

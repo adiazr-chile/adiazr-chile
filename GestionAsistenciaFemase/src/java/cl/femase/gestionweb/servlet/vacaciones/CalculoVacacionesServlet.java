@@ -4,12 +4,15 @@ package cl.femase.gestionweb.servlet.vacaciones;
 import cl.femase.gestionweb.business.CalculoVacacionesBp;
 import cl.femase.gestionweb.business.DetalleAusenciaBp;
 import cl.femase.gestionweb.common.Constantes;
+import cl.femase.gestionweb.common.DatabaseException;
+import cl.femase.gestionweb.common.DatabaseLocator;
 import cl.femase.gestionweb.servlet.BaseServlet;
 import cl.femase.gestionweb.vo.FilasAfectadasJsonVO;
 import cl.femase.gestionweb.vo.MaintenanceEventVO;
 import cl.femase.gestionweb.vo.PropertiesVO;
 import cl.femase.gestionweb.vo.ResultCRUDVO;
 import cl.femase.gestionweb.vo.UsuarioVO;
+import cl.femase.gestionweb.vo.VacacionProgJsonVO;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -69,6 +72,17 @@ public class CalculoVacacionesServlet extends BaseServlet {
             if (paramCencoId.compareTo("") != 0)
                 intCencoId = Integer.parseInt(paramCencoId); 
             
+            java.sql.Connection databaseConnection = null;
+            DatabaseLocator dbLocator=null;
+            try{
+                dbLocator = DatabaseLocator.getInstance();
+                databaseConnection = dbLocator.getConnection(appProperties.getDbPoolName(), 
+                    "[CalculoVacacionesServlet.processRequest]");
+            }catch(DatabaseException dbex){
+                System.err.println("[CalculoVacacionesServlet.processRequest]"
+                    + "Error:" + dbex.toString() );
+            }
+            
             System.out.println(WEB_NAME+"[CalculoVacacionesServlet]"
                 + "Calcular vacaciones (usando funciones). "
                 + "empresa_id: " + paramEmpresa
@@ -79,17 +93,18 @@ public class CalculoVacacionesServlet extends BaseServlet {
                     + "Calcular saldo dias de vacaciones "
                     + "para un solo empleado.");
                 //ResultCRUDVO fnExec = null;
-                ResultCRUDVO fnExec = calculoVacacionesBp.setVBA_Empleado(paramEmpresa, rutEmpleado, resultVO);
+                ResultCRUDVO fnExec = calculoVacacionesBp.setVBA_Empleado(databaseConnection,
+                    paramEmpresa, rutEmpleado, resultVO);
                 if (fnExec != null && fnExec.getFilasAfectadasObj() != null){
                     System.out.println(WEB_NAME + "[CalculoVacacionesServlet]"
                         + "Filas afectadas, post ejecucion de la funcion " + Constantes.fnSET_VBA_EMPLEADO
                         + ": " + fnExec.getFilasAfectadasObj().toString());
                 }
-                fnExec = calculoVacacionesBp.setVP_Empleado(paramEmpresa, rutEmpleado, resultVO);
-                if (fnExec != null && fnExec.getFilasAfectadasObj() != null){
+                VacacionProgJsonVO fnExec2 = calculoVacacionesBp.setVP_Empleado(databaseConnection, paramEmpresa, rutEmpleado, resultVO);
+                if (fnExec2 != null && fnExec2.getAffectedRows() != null){
                     System.out.println(WEB_NAME + "[CalculoVacacionesServlet]"
                         + "Filas afectadas, post ejecucion de la funcion " + Constantes.fnSET_VP_EMPLEADO
-                        + ": " + fnExec.getFilasAfectadasObj().toString());
+                        + ": " + fnExec2.getAffectedRows().toString());
                 }
                 System.out.println(WEB_NAME+"[CalculoVacacionesServlet]"
                     + "Actualizar saldos de vacaciones "
@@ -97,7 +112,7 @@ public class CalculoVacacionesServlet extends BaseServlet {
                     + "Run: "+ rutEmpleado);
     
                 detAusenciaBp.actualizaSaldosVacaciones(rutEmpleado);
-                
+                 
             }else{
                 System.out.println(WEB_NAME+"[CalculoVacacionesServlet]"
                     + "Calcular saldo dias de vacaciones "
@@ -116,16 +131,10 @@ public class CalculoVacacionesServlet extends BaseServlet {
                             + "setVBA.Cenco -->Empleado afectado: " + empleado.toString() );
                     }
                 }
-                fnExec = calculoVacacionesBp.setVP_Cenco(paramEmpresa, intCencoId, resultVO);
-                if (fnExec != null){
-                    empleadosAfectados = fnExec.getEmpleadosAfectados();
-                    for (int x = 0; x < empleadosAfectados.size(); x++) {
-                        FilasAfectadasJsonVO empleado = empleadosAfectados.get(x);
-                        System.out.println(WEB_NAME+"[CalculoVacacionesServlet]"
-                            + "setVP.Cenco -->Empleado afectado: " + empleado.toString() );
-                    }
-                }
+                VacacionProgJsonVO fnExecVP = calculoVacacionesBp.setVP_Cenco(paramEmpresa, intCencoId, resultVO);
+                
             }
+            dbLocator.freeConnection(databaseConnection);
             response.sendRedirect(request.getContextPath()
                 + "/vacaciones/info_vacaciones.jsp");
         } else if (action.compareTo("calcula_vacaciones_desvincula2") == 0) {
@@ -142,6 +151,16 @@ public class CalculoVacacionesServlet extends BaseServlet {
                     int intCencoId=-1;
                     if (paramCencoId.compareTo("") != 0)
                         intCencoId = Integer.parseInt(paramCencoId); 
+                    java.sql.Connection databaseConnection = null;
+                    DatabaseLocator dbLocator=null;
+                    try{
+                        dbLocator = DatabaseLocator.getInstance();
+                        databaseConnection = dbLocator.getConnection(appProperties.getDbPoolName(), 
+                            "[CalculoVacacionesServlet.processRequest]");
+                    }catch(DatabaseException dbex){
+                        System.err.println("[CalculoVacacionesServlet.processRequest]"
+                            + "Error:" + dbex.toString() );
+                    }
                     
                     System.out.println(WEB_NAME+"[CalculoVacacionesServlet]"
                         + "Calcular vacaciones (desvinculado). "
@@ -153,17 +172,19 @@ public class CalculoVacacionesServlet extends BaseServlet {
                             + "Calcular vacaciones "
                             + "para un solo empleado desvinculado.");
                         //ResultCRUDVO fnExec = null;
-                        ResultCRUDVO fnExec = calculoVacacionesBp.setVBA_Empleado(paramEmpresa, rutEmpleado, resultVO);
+                        ResultCRUDVO fnExec = calculoVacacionesBp.setVBA_Empleado(databaseConnection, 
+                            paramEmpresa, rutEmpleado, resultVO);
                         if (fnExec != null && fnExec.getFilasAfectadasObj() != null){
                             System.out.println(WEB_NAME + "[CalculoVacacionesServlet]"
                                 + "Filas afectadas, post ejecucion de la funcion " + Constantes.fnSET_VBA_EMPLEADO
                                 + ": " + fnExec.getFilasAfectadasObj().toString());
                         }
-                        fnExec = calculoVacacionesBp.setVP_Empleado(paramEmpresa, rutEmpleado, resultVO);
-                        if (fnExec != null && fnExec.getFilasAfectadasObj() != null){
+                        VacacionProgJsonVO fnExec2 = calculoVacacionesBp.setVP_Empleado(databaseConnection, 
+                            paramEmpresa, rutEmpleado, resultVO);
+                        if (fnExec2 != null && fnExec2.getAffectedRows() != null){
                             System.out.println(WEB_NAME + "[CalculoVacacionesServlet]"
                                 + "Filas afectadas, post ejecucion de la funcion " + Constantes.fnSET_VP_EMPLEADO
-                                + ": " + fnExec.getFilasAfectadasObj().toString());
+                                + ": " + fnExec2.getAffectedRows().toString());
                         }
                         System.out.println(WEB_NAME+"[CalculoVacacionesServlet]"
                             + "Actualizar saldos de vacaciones "
@@ -192,18 +213,12 @@ public class CalculoVacacionesServlet extends BaseServlet {
                                     + "setVBA.Cenco -->Empleado desvinculado afectado: " + empleado.toString() );
                             }
                         }
-                        fnExec = calculoVacacionesBp.setVP_Cenco(paramEmpresa, intCencoId, resultVO);
-                        if (fnExec != null){
-                            empleadosAfectados = fnExec.getEmpleadosAfectados();
-                            for (int x = 0; x < empleadosAfectados.size(); x++) {
-                                FilasAfectadasJsonVO empleado = empleadosAfectados.get(x);
-                                System.out.println(WEB_NAME+"[CalculoVacacionesServlet]"
-                                    + "setVP.Cenco -->Empleado desvinculado afectado: " + empleado.toString() );
-                            }
-                        }
+                        VacacionProgJsonVO fnExecVP = calculoVacacionesBp.setVP_Cenco(paramEmpresa, intCencoId, resultVO);
+                        
                     }
                     response.sendRedirect(request.getContextPath()
                         + "/vacaciones/calculo_vacaciones_desvincula2.jsp");
+                    dbLocator.freeConnection(databaseConnection);
         }     
         
     }

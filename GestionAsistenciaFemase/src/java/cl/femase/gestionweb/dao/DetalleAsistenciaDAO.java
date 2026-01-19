@@ -900,7 +900,7 @@ public class DetalleAsistenciaDAO extends BaseDAO{
         List<DetalleAsistenciaVO> lista = new ArrayList<>();
         DetalleAsistenciaVO data;
         
-        System.out.println(WEB_NAME+"[DetalleAsistenciaDAO.getDetalles]inicio");
+//        System.out.println(WEB_NAME+"[DetalleAsistenciaDAO.getDetalles]inicio");
         
         String sql ="SELECT empresa_id, depto_id, "
             + "cenco_id, rut_empleado, "
@@ -1078,11 +1078,15 @@ public class DetalleAsistenciaDAO extends BaseDAO{
                     + "coalesce(da.observacion,'') observacion, "
                     + "coalesce(da.hhmm_extras,'') hhmm_extras, "
                     + "coalesce(da.autoriza_hrsextras,'N') autoriza_hrsextras, "
-                    + "coalesce(da.hhmm_extras_autorizadas,'') hhmm_extras_autorizadas "
-                + "from detalle_asistencia da "
-                    + "inner join empleado on (da.rut_empleado = empleado.empl_rut and empleado.empresa_id = ?) "
-                    + "inner join cargo on (empleado.empl_id_cargo = cargo.cargo_id) "
-                    + "inner join centro_costo cc on (empleado.cenco_id = cc.ccosto_id) "
+                    + "coalesce(da.hhmm_extras_autorizadas,'') hhmm_extras_autorizadas,"
+                   + "((EXTRACT(DOW FROM DATE '2025-11-11')::int + 6) % 7) + 1 dia_semana," +
+                    " (da.hora_salida_teorica::time - da.hora_entrada_teorica::time) AS duracion_turno," +
+                    " (da.hora_salida::time - da.hora_entrada::time) AS duracion_real," +
+                    " (da.hora_salida::time - da.hora_entrada::time) - (da.hora_salida_teorica::time - da.hora_entrada_teorica::time) AS diferencia "
+                + " from detalle_asistencia da "
+                    + " inner join empleado on (da.rut_empleado = empleado.empl_rut and empleado.empresa_id = ?) "
+                    + " inner join cargo on (empleado.empl_id_cargo = cargo.cargo_id) "
+                    + " inner join centro_costo cc on (empleado.cenco_id = cc.ccosto_id) "
                 + "where da.rut_empleado = ? "
                     + "and da.fecha_marca_entrada between '" + _fechaInicio + "' and '" + _fechaFin + "' "
                 + "order by da.fecha_marca_entrada";
@@ -1117,6 +1121,10 @@ public class DetalleAsistenciaDAO extends BaseDAO{
                 data.setHoraMinsExtras(rs.getString("hhmm_extras"));
                 data.setAutorizaHrsExtras(rs.getString("autoriza_hrsextras"));
                 data.setHorasMinsExtrasAutorizadas(rs.getString("hhmm_extras_autorizadas"));
+                
+                data.setDuracionReal(rs.getString("duracion_real"));
+                data.setDuracionTeorica(rs.getString("duracion_turno"));
+                data.setDiferenciaHoras(rs.getString("diferencia"));
                 
                 lista.add(data);
             }
@@ -1340,6 +1348,156 @@ public class DetalleAsistenciaDAO extends BaseDAO{
         return fullList;
     }
     
+    /**
+    * 
+    * @param _empresaId
+    * @param _rutEmpleado
+    * @param _startDate
+    * @param _endDate
+    * @return 
+    */
+    public List<DetalleAsistenciaVO> getDetallesInformeEmpleado(String _empresaId, 
+            String _rutEmpleado,
+            String _startDate, 
+            String _endDate){
+        
+        List<DetalleAsistenciaVO> detallesAsistenciaEmpleado = new ArrayList<>();
+        DetalleAsistenciaVO data;
+        
+        String sql ="SELECT "
+            + "detalle_asistencia.empresa_id, "
+            + "detalle_asistencia.depto_id, "
+            + "detalle_asistencia.cenco_id, "
+            + "rut_empleado, "
+            + "empleado.nombre nombreEmpleado,"
+            + "empleado.empl_id_turno,"
+            + "fecha_hora_calculo,"
+            + "fecha_marca_entrada,"
+            + "coalesce(fecha_marca_salida,fecha_marca_entrada) fecha_marca_salida, "
+            + "to_char(fecha_marca_entrada, 'TMDy dd/MM/yyyy') fecha_entrada_marca_str,"
+            + "to_char(fecha_marca_salida, 'TMDy dd/MM/yyyy') fecha_salida_marca_str,"
+            + "to_char(hora_entrada, 'HH24:MI:SS') hora_entrada, "
+            + "to_char(hora_salida, 'HH24:MI:SS') hora_salida, "
+            + "horas_teoricas, "
+            + "horas_trabajadas,"
+            + "minutos_extras_50, "
+            + "hora_inicio_ausencia, "
+            + "hora_fin_ausencia, "
+            + "minutos_trabajados,"
+            + "horas_extras, "
+            + "holgura_minutos, "
+            + "es_feriado,"
+            + "minutos_extras_100,"
+            + "hora_entrada_teorica,"
+            + "hora_salida_teorica,"
+            + "art22,"
+            + "minutos_atraso,minutos_extras,"
+            + "autoriza_mins_no_trab_entrada,"
+            + "autoriza_mins_no_trab_salida,"
+            + "minutos_no_trabajados_entrada,"
+            + "minutos_no_trabajados_salida,"
+            + "coalesce(hrs_presenciales,'') hrs_presenciales," 
+            + "coalesce(hrs_trabajadas,'') hrs_trabajadas," 
+            + "coalesce(observacion,'') observacion,"
+            + "hrs_ausencia,"
+            + "coalesce(hhmm_extras,'00:00') hhmm_extras, "
+            + "coalesce(hhmm_atraso,'') hhmm_atraso,"
+            + "coalesce(autoriza_atraso,'N') autoriza_atraso,"
+            + "coalesce(autoriza_hrsextras,'N') autoriza_hrsextras,"
+            + "coalesce(hhmm_justificadas,'') hhmm_justificadas,"
+            + "coalesce(hhmm_extras_autorizadas,'00:00') hhmm_extras_autorizadas,"
+            + "coalesce(hhmm_salida_anticipada,'') hhmm_salida_anticipada,"
+            + "CASE WHEN marca_entrada_comentario is not null THEN '*' ELSE '' END entrada_comentario,"
+            + "CASE "
+            + "WHEN fecha_marca_salida > fecha_marca_entrada THEN '+1' "
+            + "WHEN marca_salida_comentario is not null THEN '*' ELSE '' "
+            + "END salida_comentario,"
+                + "hrs_no_trabajadas "
+            + "FROM detalle_asistencia "
+                + "inner join view_empleado empleado "
+                + "on (detalle_asistencia.empresa_id = empleado.empresa_id "
+                + "and detalle_asistencia.rut_empleado = empleado.rut) "
+            + "where (empleado.empresa_id = '" + _empresaId + "') "
+                + " and (rut_empleado = '" + _rutEmpleado + "') "
+                + " and fecha_marca_entrada between '" + _startDate + "' "
+                + " and '" + _endDate + "' ";
+        
+        sql += " order by rut_empleado,fecha_marca_entrada";
+            
+        System.out.println(WEB_NAME+"[DetalleAsistenciaDAO."
+            + "getDetallesInformeEmpleado]Para lista empleados. "
+            + "sql: "+ sql);
+        try {
+           dbConn = dbLocator.getConnection(m_dbpoolName,"[DetalleAsistenciaDAO.getDetallesInformeEmpleado]");
+           PreparedStatement stmt = dbConn.prepareStatement(sql);
+           try {
+              ResultSet rs = stmt.executeQuery();
+              try {
+                while (rs.next()){
+                    data = new DetalleAsistenciaVO();
+                    data.setRut(rs.getString("rut_empleado"));
+                    data.setNombreEmpleado(rs.getString("nombreEmpleado"));
+                    data.setFechaEntradaMarca(rs.getString("fecha_marca_entrada"));
+                    data.setFechaSalidaMarca(rs.getString("fecha_marca_salida"));
+                    data.setLabelFechaEntradaMarca(rs.getString("fecha_entrada_marca_str"));
+                    data.setLabelFechaSalidaMarca(rs.getString("fecha_salida_marca_str"));
+                    data.setHoraEntrada(rs.getString("hora_entrada"));
+                    data.setHoraSalida(rs.getString("hora_salida"));
+                    data.setMinutosReales(rs.getInt("minutos_trabajados"));
+                    data.setMinutosExtrasAl50(rs.getInt("minutos_extras_50"));
+                    data.setMinutosExtrasAl100(rs.getInt("minutos_extras_100"));
+                    data.setHolguraMinutos(rs.getInt("holgura_minutos"));
+                    data.setEsFeriado(rs.getBoolean("es_feriado"));
+                    data.setHoraInicioAusencia(rs.getString("hora_inicio_ausencia"));
+                    data.setHoraFinAusencia(rs.getString("hora_fin_ausencia"));
+                    data.setHoraEntradaTeorica(rs.getString("hora_entrada_teorica"));
+                    data.setHoraSalidaTeorica(rs.getString("hora_salida_teorica"));
+                    data.setArt22(rs.getBoolean("art22"));
+                    data.setMinutosAtraso(rs.getInt("minutos_atraso"));
+                    data.setMinutosExtras(rs.getInt("minutos_extras"));
+                    data.setAutorizaMinsNoTrabajadosEntrada(rs.getString("autoriza_mins_no_trab_entrada"));
+                    data.setAutorizaMinsNoTrabajadosSalida(rs.getString("autoriza_mins_no_trab_salida"));
+                    data.setMinutosNoTrabajadosEntrada(rs.getInt("minutos_no_trabajados_entrada"));
+                    data.setMinutosNoTrabajadosSalida(rs.getInt("minutos_no_trabajados_salida"));
+                    data.setHrsPresenciales(rs.getString("hrs_presenciales"));
+                    data.setHrsTrabajadas(rs.getString("hrs_trabajadas"));
+                    data.setObservacion(rs.getString("observacion"), "DetalleAsistenciaDAO_2");
+                    data.setHrsAusencia(rs.getString("hrs_ausencia"));
+                    data.setHoraMinsExtras(rs.getString("hhmm_extras"));
+                    data.setHhmmAtraso(rs.getString("hhmm_atraso"));
+                    data.setAutorizaAtraso(rs.getString("autoriza_atraso"));
+                    data.setAutorizaHrsExtras(rs.getString("autoriza_hrsextras"));
+                    data.setHhmmJustificadas(rs.getString("hhmm_justificadas"));
+                    data.setHorasMinsExtrasAutorizadas(rs.getString("hhmm_extras_autorizadas"));
+                    data.setHoraMinsSalidaAnticipada(rs.getString("hhmm_salida_anticipada"));
+                    data.setComentarioMarcaEntrada(rs.getString("entrada_comentario"));
+                    data.setComentarioMarcaSalida(rs.getString("salida_comentario"));
+                    data.setHrsNoTrabajadas(rs.getString("hrs_no_trabajadas"));
+                    data.setRowKey(data.getRut() + "|" 
+                        + data.getFechaEntradaMarca());
+                    detallesAsistenciaEmpleado.add(data);
+                } 
+              } finally {
+                 rs.close();
+              }
+           } finally {
+              stmt.close();
+           }
+        }catch(SQLException|DatabaseException sqlex){
+            System.err.println("[DetalleAsistenciaDAO.getDetallesInformeEmpleado]"
+                + "Error: " + sqlex.toString());
+        } 
+        finally {
+            try {
+                dbConn.close();//dbLocator.freeConnection(dbConn);
+            } catch (SQLException ex) {
+                System.err.println("DetalleAsistenciaDAO.getDetallesInformeEmpleado "
+                    + "Error: " + ex.toString());
+            }
+        }
+        
+        return detallesAsistenciaEmpleado;
+    }
     
     
     /**
